@@ -1,0 +1,17 @@
+import os
+
+Import("build_info")
+
+root = Dir('#').abspath
+common_include_dir = root + "/include"
+
+target  = "instrument"
+sources = Glob("*cpp") + Glob("*/*cpp")
+
+env = Environment(LDFLAGS = "-lpthread")
+
+env['ENV']['TERM'] = os.environ['TERM']
+env["CXX"] = "clang++"
+
+obj = env.SharedLibrary(target = target, source = sources)
+env.Install(build_info['build_dir'] + "/lib", obj)

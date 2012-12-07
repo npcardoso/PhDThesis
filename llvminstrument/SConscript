@@ -1,0 +1,20 @@
+import os
+
+Import("build_info")
+
+root = Dir('#').abspath
+common_include_dir = root + "/include"
+
+target  = "llvminstrument"
+sources = Glob("*cpp") + Glob("*/*cpp")
+
+env = Environment(
+	CCFLAGS = "-O0 -g -I%s `llvm-config --cxxflags`" % build_info['common_include_dir'],
+	LDFLAGS = "-g -lpthread")
+
+
+env['ENV']['TERM'] = os.environ['TERM']
+env["CXX"] = "clang++"
+
+obj = env.SharedLibrary(target = target, source = sources)
+env.Install(build_info['build_dir'] + "/lib", obj)

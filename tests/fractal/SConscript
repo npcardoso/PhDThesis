@@ -1,0 +1,21 @@
+Import("build_info")
+
+root = Dir('#').abspath
+
+target  = "fractal"
+sources = Glob("*.cpp")
+
+llvm_instrument_lib = build_info['build_dir'] + "/llvminstrument/libllvminstrument.so"
+instrument_lib = build_info['build_dir'] + "/libinstrument/libinstrument.so"
+link_path = build_info['build_dir'] + "/libinstrument"
+
+env = Environment(
+	tools=['Instrument'],
+    LLVM_INSTRUMENT_LIB = llvm_instrument_lib,
+    INSTRUMENT_LIB = instrument_lib,
+    LINK_PATH = "-L"+link_path,
+    LINKFLAGS = "-lpthread -linstrument")
+env.Append(CPP_PATH = "-I"+build_info['common_include_dir'])
+
+obj = env.Instrument(target, sources, "-instrument_function -instrument_prepare")
+env.Install(build_info['build_dir'] + "/bin", obj)

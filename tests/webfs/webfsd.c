@@ -306,7 +306,7 @@ syslog_init(void)
 static void
 syslog_start(void)
 {
-  hit_probe();
+  hit_probe_metadata(metadata_item("name", "syslog_start"));
     syslog(LOG_NOTICE,
 	   "started (listen on %s:%d, root=%s, user=%s, group=%s)\n",
 	   listen_ip ? listen_ip : "*",

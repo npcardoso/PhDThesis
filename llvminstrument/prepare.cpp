@@ -1,7 +1,5 @@
 #include "prepare.h"
 
-#include <boost/lexical_cast.hpp>
-
 static RegisterPass<Instrument::PrepareInstrumentionPass> prepare_instrumentation("instrument_prepare", "Prepares instrumentation instructions");
 
 char Instrument::PrepareInstrumentionPass::ID = 1;
@@ -43,6 +41,11 @@ bool Instrument::PrepareInstrumentionPass::runOnModule(Module & M){
 
   changes = Pass::runOnModule(M);
 
+  foreach(item, metadata)
+    metadataSetup(M, item->second, item->first);
+  
+  metadata.clear();
+
   delete interface;
   return changes;
 }
@@ -54,6 +57,15 @@ bool Instrument::PrepareInstrumentionPass::handleFunctionCall(Module & M, CallIn
       call.setCalledFunction(instr_fun);
       return true;
     }
+
+    if(f->getName() == "_instr_probe_register_metadata")
+      return registerProbeMetadata(M, call);
+
+    if(f->getName() == "_instr_transaction_gate_register_metadata")
+      return registerTransactionGateMetadata(M, call);
+
+    if(f->getName() == "_instr_oracle_register_metadata")
+      return registerOracleMetadata(M, call);
 
     if(f->getName() == "_instr_probe_observation_register")
       return registerProbe(M, call);
@@ -68,6 +80,21 @@ bool Instrument::PrepareInstrumentionPass::handleFunctionCall(Module & M, CallIn
       return registerOracle(M, call);
   }
   return false;
+}
+
+bool Instrument::PrepareInstrumentionPass::metadataSetup(Module & M,
+                                                         CallInst & I,
+                                                         std::string id_var_name) {
+  GlobalVariable* id_holder = M.getGlobalVariable(id_var_name, true);
+
+  if(!id_holder)
+    return false;
+  
+  I.removeFromParent();
+  BasicBlock::iterator & it = interface->getRegisterAllIterator();
+  I.insertBefore(it);
+  I.setArgOperand(0, new LoadInst(id_holder, NULL, &I));
+  return true;
 }
 
 

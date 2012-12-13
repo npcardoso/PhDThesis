@@ -17,6 +17,7 @@ void *threadify(void * v) {
     pthread_detach(pthread_self());
 
   if(args->level > 0) {
+    hit_probe();
     pthread_t * thread = new pthread_t[args->count];
     long level = (long) v;
 

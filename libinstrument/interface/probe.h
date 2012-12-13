@@ -38,7 +38,7 @@ extern "C" {
 #define _probe_metadata_first(a, b) a
 #define _probe_metadata_second(a, b) b
 
-#define _probe_metadata_pass(item) _instr_probe_register_metadata(0, (_probe_metadata_first item), (_probe_metadata_second item));
+#define _probe_metadata_pass(item) _instr_probe_register_metadata(123, (_probe_metadata_first item), (_probe_metadata_second item));
 
 
 #define hit_probe(){ \
@@ -60,8 +60,8 @@ extern "C" {
 
 #define probe_metadata(state, metadata...) { \
   _instr_probe_observation_register(0);\
-  FOREACH(_probe_metadata_pass, (metadata))\
   FOREACH(_probe_read_pass, state)\
+  FOREACH(_probe_metadata_pass, (metadata))\
   _instr_probe_observation_commit();\
 }
 

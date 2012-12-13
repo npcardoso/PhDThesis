@@ -11,7 +11,8 @@ extern "C" {
 #ifdef NPROBE
 
 #define probe(...)
-#define _instr_hit_probe_observation(p_id)
+
+#define _instr_probe_register_metadata(id, key, val)
 
 #define _instr_probe_observation_register(p_id)
 #define _instr_probe_read(ptr, width)
@@ -20,16 +21,25 @@ extern "C" {
 #else
 
   /* Probes API */
+  void _instr_probe_register_metadata(probe_id_t id, 
+                                      const char * key, 
+                                      const char * val);
+  
   void _instr_probe_observation_register(probe_id_t p_id);
-  void _instr_probe_read(void * ptr, size_t width);
+
+  void _instr_probe_read(void * ptr,
+                         size_t width);
+  
   void _instr_probe_observation_commit();
 
 
 #define _probe_read_pass(item) _instr_probe_read((void *)&(item), sizeof(item));
 
-#define _probe_metadata_pass(item) _probe_expand_metadata_call item
+#define _probe_metadata_first(a, b) a
+#define _probe_metadata_second(a, b) b
 
-#define _probe_expand_metadata_call(type, args...) _instr_probe_metadata_##type(args);
+#define _probe_metadata_pass(item) _instr_probe_register_metadata(0, (_probe_metadata_first item), (_probe_metadata_second item));
+
 
 #define hit_probe(){ \
   _instr_probe_observation_register(0);\

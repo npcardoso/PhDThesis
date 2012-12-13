@@ -3,29 +3,25 @@
 #include "../lib.h"
 #include "../utils/debug.h"
 
-
-static probe_id_t num_probes = 0;
-
 extern "C"{
 probe_id_t _instr_probe_register(){
-  DataStore * ds = getDataStore();
-  probe_id_t p_id = num_probes++;
-  debug("Registering Probe with p_id %ld", p_id);
+  probe_id_t id =  getDataStore()->registerProbe();
   releaseDataStore();
-  return p_id;
+  return id;
 }
 
-void _instr_probe_register_location(probe_id_t p_id, const char * location) {
-  DataStore * ds = getDataStore();
-  debug("Registering Location of Probe %ld: '%s'", p_id, location);
+void _instr_probe_register_location(probe_id_t id, 
+                                    const char * val) {
+  getDataStore()->registerProbeMetadata(id, "Location", val);
   releaseDataStore();
+}
 }
 
-void _instr_probe_register_name(probe_id_t p_id, const char * name) {
-  DataStore * ds = getDataStore();
-  debug("Registering Name of Probe %ld: '%s'", p_id, name);
+void _instr_probe_register_metadata(probe_id_t id, 
+                                    const char * key, 
+                                    const char * val) {
+  getDataStore()->registerProbeMetadata(id, key, val);
   releaseDataStore();
-}
 }
 
 void _instr_probe_observation_register_atomic(probe_id_t p_id){

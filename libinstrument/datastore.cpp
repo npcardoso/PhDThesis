@@ -47,6 +47,19 @@ void DataStore::registerThreadEnd(time_interval_t time, pthread_t pthread_id){
 }
 
 //Transaction Related
+transaction_gate_id_t DataStore::registerTransactionGate() {
+  debug("Registering Transaction Gate with tg_id %ld", transaction_gate_metadata.size());
+  transaction_gate_metadata.push_back(instr_artifact_t());
+  return transaction_gate_metadata.size() - 1;
+}
+
+void DataStore::registerTransactionGateMetadata(transaction_gate_id_t tg_id, string key, string value) {
+  debug("Registering %s of Transaction Gate %ld: '%s'", key.c_str(), tg_id, value.c_str());
+  assert(tg_id < transaction_gate_metadata.size());
+  
+  transaction_gate_metadata[tg_id][key] = value;
+}
+
 
 void DataStore::registerTransaction(time_interval_t time,
                                     pthread_t pthread_id,
@@ -89,6 +102,19 @@ void DataStore::registerTransactionEnd(time_interval_t time,
 
 
 //Oracle Related
+oracle_id_t DataStore::registerOracle() {
+  debug("Registering Oracle with o_id %ld", oracle_metadata.size());
+  oracle_metadata.push_back(instr_artifact_t());
+  return oracle_metadata.size() - 1;
+}
+
+void DataStore::registerOracleMetadata(oracle_id_t id, string key, string value) {
+  debug("Registering %s of Oracle %ld: '%s'", key.c_str(), id, value.c_str());
+  assert(id < oracle_metadata.size());
+  
+  oracle_metadata[id][key] = value;
+}
+
 
 void DataStore::registerHealth(time_interval_t time,
                                pthread_t pthread_id,
@@ -103,6 +129,18 @@ void DataStore::registerHealth(time_interval_t time,
 }
 
 //Observation Related
+probe_id_t DataStore::registerProbe() {
+  debug("Registering Probe with p_id %ld", probe_metadata.size());
+  probe_metadata.push_back(instr_artifact_t());
+  return probe_metadata.size() - 1;
+}
+
+void DataStore::registerProbeMetadata(probe_id_t id, string key, string value) {
+  debug("Registering %s of Probe %ld: '%s'", key.c_str(), id, value.c_str());
+  assert(id < probe_metadata.size());
+  
+  probe_metadata[id][key] = value;
+}
 
 void DataStore::registerObservation(time_interval_t time, pthread_t pthread_id, probe_id_t p_id) {
   thread_id_t id = getThreadMapping(pthread_id);

@@ -11,6 +11,8 @@ fi
 
 TEST_NAME=$1
 
+shift
+
 TEST_RUNNER=$PWD/$TESTS_DIR/$TEST_NAME/$RUNNER_NAME
 
 if [[ ! -x $TEST_RUNNER ]]; then
@@ -23,4 +25,4 @@ export INSTR_TCP_PORT=12345
 export LD_LIBRARY_PATH=../lib
 
 echo "Starting $TEST_RUNNER" >&2
-$TEST_RUNNER
+$TEST_RUNNER $*

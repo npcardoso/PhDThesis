@@ -23,7 +23,7 @@ void *threadify(void * v) {
     transaction_start();
     for(int i = 0; i < args->count; i++){
       int tmp = rand();
-      probe(pstate(i, tmp));
+      probe_metadata(pstate(i, tmp), metadata_item("name", "Launcher loop"));
       oracle(i < 1, 1);
       pthread_create(&thread[i], NULL,  threadify, (void*)args->levelDown());
       if(args->load) load();

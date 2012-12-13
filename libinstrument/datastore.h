@@ -16,30 +16,46 @@ using namespace std;
 
 class DataStore{
 public:
-  typedef map<thread_id_t, ThreadInfo::ptr> thread_info_map_t;
-  typedef map<thread_id_t, Observation::ptr> observation_buffer_t;
-  typedef map<pthread_t, thread_id_t> thread_mappings_t;
-
-  typedef AllocationMonitor<Observation, thread_id_t> observation_storage_t;
-  typedef AllocationMonitor<Transaction, thread_id_t> transaction_storage_t;
-
-  /* Threads */
+  /* Initial Time */
+  
   time_interval_t i_time;
 
-                  /* Threads */
+  /* Threads */
+  
+  typedef map<pthread_t, thread_id_t> thread_mappings_t;
+  typedef map<thread_id_t, ThreadInfo::ptr> thread_info_map_t;
+  
   thread_id_t thread_count;
 
   thread_mappings_t thread_mappings;
   thread_info_map_t thread_info;
 
-  /* Storage */
+  /* Transactions */
+  
+  typedef AllocationMonitor<Transaction, thread_id_t> transaction_storage_t;
+  
   size_t max_storage_size;
 
-  observation_storage_t observation_storage;
   transaction_storage_t transaction_storage;
 
   /* Observations */
+  
+  typedef map<thread_id_t, Observation::ptr> observation_buffer_t;
+  typedef AllocationMonitor<Observation, thread_id_t> observation_storage_t;
+  
+  observation_storage_t observation_storage;
   observation_buffer_t observation_buffer;
+  
+  /* Instrumentation Artifacts Metadata */
+
+  typedef map<string, string> instr_artifact_t;
+  typedef vector<instr_artifact_t> artifact_metadata_storage_t;
+  
+  artifact_metadata_storage_t transaction_gate_metadata;
+  artifact_metadata_storage_t probe_metadata;
+  artifact_metadata_storage_t oracle_metadata;
+
+
 
 
   DataStore(time_interval_t time,
@@ -58,6 +74,12 @@ public:
                          pthread_t t_id);
 
   //Transaction Related
+  transaction_gate_id_t registerTransactionGate();
+  
+  void registerTransactionGateMetadata(transaction_gate_id_t tg_id, 
+                                       string key, 
+                                       string value);
+  
   void registerTransaction(time_interval_t time,
                            pthread_t pthread_id,
                            transaction_gate_id_t tr_id,
@@ -68,6 +90,12 @@ public:
                               transaction_gate_id_t tr_id);
 
   //Oracle Related
+  oracle_id_t registerOracle();
+  
+  void registerOracleMetadata(oracle_id_t o_id, 
+                              string key, 
+                              string value);
+  
   void registerHealth(time_interval_t time,
                       pthread_t pthread_id,
                       oracle_id_t o_id,
@@ -76,6 +104,12 @@ public:
 
 
   //Observation Related
+  probe_id_t registerProbe();
+  
+  void registerProbeMetadata(probe_id_t p_id, 
+                             string key, 
+                             string value);
+
   void registerObservation(time_interval_t time,
                            pthread_t t_id,
                            probe_id_t p_id);

@@ -3,28 +3,25 @@
 #include "../lib.h"
 #include "../utils/debug.h"
 
-static transaction_gate_id_t num_transaction_gates = 0;
-
 extern "C"{
 transaction_gate_id_t _instr_transaction_gate_register(){
-  DataStore * ds = getDataStore();
-  transaction_gate_id_t tg_id = num_transaction_gates++;
-  debug("Registering Transaction Gate with tg_id %ld", tg_id);
+  transaction_gate_id_t id = getDataStore()->registerTransactionGate();
   releaseDataStore();
-  return tg_id;
+  return id;
 }
 
-void _instr_transaction_gate_register_location(transaction_gate_id_t tg_id, const char * location) {
-  DataStore * ds = getDataStore();
-  debug("Registering Location of Transaction Gate %ld: '%s'", tg_id, location);
+void _instr_transaction_gate_register_location(transaction_gate_id_t id, 
+                                               const char * val) {
+  getDataStore()->registerTransactionGateMetadata(id, "Location", val);
   releaseDataStore();
+}
 }
 
-void _instr_transaction_gate_register_name(transaction_gate_id_t tg_id, const char * name) {
-  DataStore * ds = getDataStore();
-  debug("Registering Name of Transaction Gate %ld: '%s'", tg_id, name);
+void _instr_transaction_gate_register_metadata(probe_id_t id,
+                                               const char * key, 
+                                               const char * val) {
+  getDataStore()->registerTransactionGateMetadata(id, key, val);
   releaseDataStore();
-}
 }
 
 void _instr_transaction_start(transaction_gate_id_t tr_id,

@@ -50,10 +50,33 @@ inline ostream & StateSpectraTransaction(ostream & out,
   return out;
 }
 
+inline ostream & StateSpectraArtifacts(ostream & out,
+                                       const DataStore::artifact_metadata_storage_t & artifacts) {
+  artifact_id_t id = 0;
+  foreach(artifact, artifacts){
+    out << "[" << id++ << "]\n";
+    foreach(metadata, *artifact)
+      out << "\"" << metadata->first << "\"" << " = " << "\"" << metadata->second << "\"" << "\n"; 
+  }
+  return out;
+}
+
 ostream & StateSpectra(ostream & out, const DataStore & ds) {
+  out << "-- Start Probes --\n";
+  StateSpectraArtifacts(out, ds.probe_metadata);
+  out << "-- End Probes --\n";
+
+  out << "-- Start Transaction Gates --\n";
+  StateSpectraArtifacts(out, ds.transaction_gate_metadata);
+  out << "-- End Transaction Gates --\n";
+  
+  out << "-- Start Oracles --\n";
+  StateSpectraArtifacts(out, ds.oracle_metadata);
+  out << "-- End Oracles --\n";
+
   foreach(thr, ds.thread_info)
     foreach(tr, thr->second->transactions) {
-      out << "--Start Transaction--\n";
+      out << "-- Start Transaction --\n";
       StateSpectraTransaction(out, *(thr->second), **tr);
       out << "-- End Transaction --\n";
     }

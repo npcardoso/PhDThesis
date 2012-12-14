@@ -17,4 +17,6 @@ env['ENV']['TERM'] = os.environ['TERM']
 env["CXX"] = "clang++"
 
 obj = env.SharedLibrary(target = target, source = sources)
-env.Install(build_info['build_dir'] + "/lib", obj)
+lib_install = env.Install(build_info['build_dir'] + "/lib", obj)
+
+env.Default(lib_install)

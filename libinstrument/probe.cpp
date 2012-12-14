@@ -1,19 +1,13 @@
 #include "probe.h"
 
-#include "../lib.h"
-#include "../utils/debug.h"
+#include "lib.h"
+#include "utils/debug.h"
 
 extern "C"{
 probe_id_t _instr_probe_register(){
   probe_id_t id =  getDataStore()->registerProbe();
   releaseDataStore();
   return id;
-}
-
-void _instr_probe_register_location(probe_id_t id, 
-                                    const char * val) {
-  getDataStore()->registerProbeMetadata(id, "Location", val);
-  releaseDataStore();
 }
 }
 

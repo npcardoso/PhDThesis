@@ -30,8 +30,9 @@ def buildWebfs(target, passes):
     env["CXX"] = "clang++"
 
     obj = env.Instrument(target, sources, passes)
-    return env.Install(build_info['build_dir'] + "/bin", obj)
-
+    bin_install = env.Install(build_info['build_dir'] + "/bin", obj)
+    env.Default(bin_install)
+	
 buildWebfs('webfsd', "-instrument_prepare")
 #buildWebfs('webfsd_function', "-instrument_function -instrument_prepare")
 #buildWebfs('webfsd_block', "-instrument_block -instrument_prepare")

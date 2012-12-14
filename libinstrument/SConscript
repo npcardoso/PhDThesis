@@ -1,14 +1,16 @@
 import os
+import SCons
+from SCons.Scanner.C import CScanner
 
 Import("build_info")
-
 root = Dir('#').abspath
 common_include_dir = root + "/include"
 
 target  = "instrument"
-sources = Glob("*cpp") + Glob("*/*cpp")
+sources = Glob("*cpp") + Glob("*/*cpp") 
 
 env = Environment(
+    tools = ['default', 'RecursiveScanner'],
 	CCFLAGS = "-O0 -g",
 	LDFLAGS = "-lpthread")
 
@@ -16,4 +18,12 @@ env['ENV']['TERM'] = os.environ['TERM']
 env["CXX"] = "clang++"
 
 obj = env.SharedLibrary(target = target, source = sources)
-env.Install(build_info['build_dir'] + "/lib", obj)
+lib_install = env.Install(build_info['build_dir'] + "/lib", obj)
+
+main_header = File("instrument.h")
+install_headers = env.RecursiveScanner(CScanner().scan, main_header) + [main_header]
+install_headers_dest = [build_info['build_dir'] + "/include/libinstrument/" + str(f) for f in install_headers]
+
+header_install = env.InstallAs(install_headers_dest, install_headers)
+
+env.Default(lib_install, header_install)

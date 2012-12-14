@@ -86,6 +86,7 @@ class PrepareInstrumentionPass : public Pass {
     std::string id_var_name = std::string("_instr_o_id_") + 
       boost::lexical_cast<std::string>(num_oracles - 1);
     
+    errs() << "Found metadata for " << id_var_name << "\n";
     metadata.push_back(metadata_call(id_var_name, I));
     return false;
   }

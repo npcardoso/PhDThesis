@@ -2,7 +2,7 @@
 
 #include "io/spectra.h"
 #include "io/graphviz.h"
-#include "interface/pthread.h"
+#include "pthread.h"
 #include "utils/debug.h"
 
 #include <sys/socket.h>

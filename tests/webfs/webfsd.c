@@ -20,8 +20,7 @@
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <libinstrument/transaction.h>
-#include <libinstrument/probe.h>
+#include <libinstrument/instrument.h>
 #include "httpd.h"
 
 /* ---------------------------------------------------------------------- */
@@ -306,7 +305,7 @@ syslog_init(void)
 static void
 syslog_start(void)
 {
-  hit_probe_metadata(metadata_item("name", "syslog_start"));
+	instr_probe(instr_pmetadata("name", "syslog_start"));
     syslog(LOG_NOTICE,
 	   "started (listen on %s:%d, root=%s, user=%s, group=%s)\n",
 	   listen_ip ? listen_ip : "*",
@@ -370,7 +369,7 @@ xerror(int loglevel, char *txt, char *peerhost)
 static void*
 mainloop(void *thread_arg)
 {
-	transaction_start();
+	instr_transaction_start(instr_void);
     struct REQUEST *conns = NULL;
     int curr_conn = 0;
 
@@ -457,7 +456,7 @@ mainloop(void *thread_arg)
 			xperror(LOG_WARNING,"accept",NULL);
 		    free(req);
 		} else {
-		  transaction_start();
+		  instr_transaction_start(instr_void);
 		    close_on_exec(req->fd);
 		    fcntl(req->fd,F_SETFL,O_NONBLOCK);
 		    req->bfd = -1;
@@ -484,7 +483,7 @@ mainloop(void *thread_arg)
 		    if (debug)
 			fprintf(stderr,"%03d: connect from (%s)\n",
 				req->fd,req->peerhost);
-		  transaction_end();
+		  instr_transaction_end(instr_void);
 		}
 	    }
 	}
@@ -675,7 +674,7 @@ header_parsing:
 	    }
 	}
     }
-	transaction_end();
+	instr_transaction_end(instr_void);
     return NULL;
 }
 

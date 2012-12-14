@@ -76,7 +76,7 @@ bool Instrument::PrepareInstrumentionPass::handleFunctionCall(Module & M, CallIn
     if(f->getName() == "_instr_transaction_end")
       return registerTransactionGate(M, call);
 
-    if(f->getName() == "_instr_transaction_health")
+    if(f->getName() == "_instr_oracle_health")
       return registerOracle(M, call);
   }
   return false;
@@ -122,17 +122,6 @@ bool Instrument::PrepareInstrumentionPass::registerArtifact(Module & M,
 
   /* Inject correct p_id */
   I.setArgOperand(0, new LoadInst(id_holder, NULL, &I));
-
-  /* Inject artifact location registration if dbg metadata is available*/
-  if (reg_location_fun)
-    if(MDNode *N = I.getMetadata("dbg")) {
-      DILocation Loc(N);
-      unsigned Line = Loc.getLineNumber();
-      StringRef File = Loc.getFilename();
-      StringRef Dir = Loc.getDirectory();
-      std::string location_str = (Dir + "/" + File + ":" + boost::lexical_cast<std::string>(Line)).str();
-      registerStrProp(M, *id_holder, reg_location_fun, id_var_name + "location", location_str);
-    }
 
   return true;
 }

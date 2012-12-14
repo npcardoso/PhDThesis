@@ -1,19 +1,13 @@
 #include "oracle.h"
 
-#include "../lib.h"
-#include "../utils/debug.h"
+#include "lib.h"
+#include "utils/debug.h"
 
 extern "C"{
 oracle_id_t _instr_oracle_register(){
-  oracle_id_t id =  getDataStore()->registerProbe();
+  oracle_id_t id =  getDataStore()->registerOracle();
   releaseDataStore();
   return id;
-}
-
-void _instr_oracle_register_location(oracle_id_t id,
-                                     const char * val) {
-  getDataStore()->registerOracleMetadata(id, "Location", val);
-  releaseDataStore();
 }
 }
 

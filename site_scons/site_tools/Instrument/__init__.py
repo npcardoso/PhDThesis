@@ -52,6 +52,25 @@ _instrument_linker_builder = SCons.Builder.Builder(
     action = SCons.Action.Action('$GCC $LINK_PATH $LINKFLAGS -o $TARGET $SOURCES'),
     src_suffix = '$INSTR_ASM_SUFFIX')
 
+def RecursiveScanner(scanner, file):
+    #Scan header include tree
+    tmp = scanner(file)
+    header_depends = set()
+    header_pool = set(tmp)
+    while(len(header_pool)):
+        tmp = header_pool.pop()
+        header_depends.add(tmp)
+        for dep in scanner(tmp):
+            path = os.path.dirname(str(tmp))
+            if path:
+                header_pool.add(File(path + "/" + str(dep)))
+            else:
+                header_pool.add(dep)
+
+        header_pool -= header_depends
+        
+    return list(header_depends)
+
 def Instrument(env, target, source=None, passes="-instrument_prepare", *args, **kw):
     env['LLVM_INSTRUMENT_PASSES'] = passes
 
@@ -69,6 +88,8 @@ def Instrument(env, target, source=None, passes="-instrument_prepare", *args, **
     asm_objects = []
     for s in source:
         stem = src = str(s)
+        if(not isinstance(s, SCons.Node.FS.File)):
+            s = File(s)
         if src.endswith(source_suffix):
             stem = src[:-len(source_suffix)]
         else:
@@ -88,9 +109,9 @@ def Instrument(env, target, source=None, passes="-instrument_prepare", *args, **
                                                    stem + asm_suffix,
                                                    stem + llvm_instr_suffix,
                                                    **kw)
+        #Scan header include tree
+        env.Depends(llvm_obj, RecursiveScanner(scanner.scan, s))
 
-
-        env.Depends(llvm_obj, scanner.scan(s))
         env.Depends(llvm_instrument_obj, llvm_obj)
         env.Depends(llvm_instrument_obj, llvm_instrument_lib)
         env.Depends(asm_obj, llvm_instrument_obj)

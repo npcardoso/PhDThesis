@@ -1,6 +1,6 @@
 #include "pthread.h"
 
-#include "../lib.h"
+#include "lib.h"
 
 #ifdef  __cplusplus
 extern "C" {

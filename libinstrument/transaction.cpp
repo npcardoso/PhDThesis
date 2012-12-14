@@ -1,19 +1,13 @@
 #include "transaction.h"
 
-#include "../lib.h"
-#include "../utils/debug.h"
+#include "lib.h"
+#include "utils/debug.h"
 
 extern "C"{
 transaction_gate_id_t _instr_transaction_gate_register(){
   transaction_gate_id_t id = getDataStore()->registerTransactionGate();
   releaseDataStore();
   return id;
-}
-
-void _instr_transaction_gate_register_location(transaction_gate_id_t id, 
-                                               const char * val) {
-  getDataStore()->registerTransactionGateMetadata(id, "Location", val);
-  releaseDataStore();
 }
 }
 

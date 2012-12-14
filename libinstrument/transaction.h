@@ -1,16 +1,10 @@
 #ifndef __INSTR_TRANSACTION_H__
 #define __INSTR_TRANSACTION_H__
 
-#include "../types.h"
+#include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#ifdef NPROBE
-
-#define transaction_start()
-#define transaction_end()
+#ifdef NINSTR
 
 #define _instr_transaction_gate_register_metadata(id, key, val)
 
@@ -19,7 +13,10 @@ extern "C" {
 
 #else
 
-  /* Transactions API */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
   void _instr_transaction_gate_register_metadata(probe_id_t id,
                                                  const char * key, 
                                                  const char * val);
@@ -29,15 +26,8 @@ extern "C" {
 
   void _instr_transaction_end(transaction_gate_id_t tg_id); 
 
-
-
-#define transaction_start() _instr_transaction_start(0, 0)
-
-#define transaction_end() _instr_transaction_end(0)
-
-#endif
-
 #ifdef __cplusplus
 }
+#endif
 #endif
 #endif

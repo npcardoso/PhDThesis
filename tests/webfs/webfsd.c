@@ -483,6 +483,7 @@ mainloop(void *thread_arg)
 		    if (debug)
 			fprintf(stderr,"%03d: connect from (%s)\n",
 				req->fd,req->peerhost);
+			instr_oracle(1, 1, instr_void);
 		  instr_transaction_end(instr_void);
 		}
 	    }

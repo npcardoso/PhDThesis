@@ -22,12 +22,7 @@ public:
       return 0;
   }
 
-  //Deprecated
-  inline size_t rawSize() const {
-    return dataSize();
-  }
-
   inline size_t size() const {
-    return sizeof(State) + sizeof(size_t) * n_vars + dataSize();
+    return sizeof(size_t) * n_vars + dataSize();
   }
 };

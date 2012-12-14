@@ -29,7 +29,7 @@ void *threadify(void * v) {
 
       pthread_create(&thread[i], NULL,  threadify, (void*)args->levelDown());
       
-      instr_oracle(i < 1, 1, instr_void);
+      instr_oracle(1 - (i + 0.0) / (args->count - 1), (i + 0.0) / (args->count - 1), instr_void);
       if(args->load) load();
       if(args->load) 
         instr_probe(instr_void);

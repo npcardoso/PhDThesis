@@ -1,7 +1,6 @@
 #ifndef __INSTR_DATASTORE_H__
 #define __INSTR_DATASTORE_H__
 
-#include "datastore/allocationmonitor.h"
 #include "datastore/observation.h"
 #include "datastore/threadinfo.h"
 #include "datastore/transaction.h"
@@ -30,20 +29,14 @@ public:
   thread_mappings_t thread_mappings;
   thread_info_map_t thread_info;
 
-  /* Transactions */
+  /* Storage */
   
-  typedef AllocationMonitor<Transaction, thread_id_t> transaction_storage_t;
-  
-  size_t max_storage_size;
-
-  transaction_storage_t transaction_storage;
+  size_t max_storage_size, current_storage_size;
 
   /* Observations */
   
   typedef map<thread_id_t, Observation::ptr> observation_buffer_t;
-  typedef AllocationMonitor<Observation, thread_id_t> observation_storage_t;
   
-  observation_storage_t observation_storage;
   observation_buffer_t observation_buffer;
   
   /* Instrumentation Artifacts Metadata */
@@ -130,13 +123,8 @@ private:
     return thread_mappings.find(pthread_id)->second;
   }
 
-  inline void updateStorageCapacity() {
-    observation_storage.resize(max_storage_size - transaction_storage.getOccupancy());
-    transaction_storage.resize(max_storage_size - observation_storage.getOccupancy());
-  }
-
-  inline size_t getStorageOccupancy() const {
-    return observation_storage.getOccupancy() + transaction_storage.getOccupancy();
+  inline size_t canStore(size_t bytes) const {
+    return max_storage_size - current_storage_size >= bytes;
   }
 };
 

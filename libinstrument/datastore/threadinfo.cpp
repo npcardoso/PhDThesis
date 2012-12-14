@@ -11,6 +11,11 @@ void ThreadInfo::addObservation(Observation::const_ptr obs){
   observations.push_back(obs);
 }
 
+void ThreadInfo::addOracleResult(OracleResult::const_ptr o_res){
+  assert(oracle_results.empty() || o_res->time > oracle_results.back()->time);
+  oracle_results.push_back(o_res);
+}
+
 void ThreadInfo::pushTransaction(){
   transaction_stack.push(Transaction::ptr());
 }
@@ -38,19 +43,28 @@ void ThreadInfo::popTransaction(time_interval_t time,
   }
 }
 
-class ObsCompareTime{
+template <class T>
+class TimeCompare {
 public:
-  bool operator() (time_interval_t time, Observation::const_ptr obs){
-    return (*obs) > time;
+  bool operator() (time_interval_t time, typename T::const_ptr obj){
+    return (*obj) > time;
   }
-  bool operator() (Observation::const_ptr obs, time_interval_t time){
-    return (*obs) < time;
+  bool operator() (typename T::const_ptr obj, time_interval_t time){
+    return (*obj) < time;
   }
 };
+
 ThreadInfo::observation_storage_t::const_iterator ThreadInfo::getObservationsAfter(time_interval_t time, bool include) const {
   if(include)
-    return lower_bound(observations.begin(), observations.end(), time, ObsCompareTime());
+    return lower_bound(observations.begin(), observations.end(), time, TimeCompare<Observation>());
   else
-    return upper_bound(observations.begin(), observations.end(), time, ObsCompareTime());
+    return upper_bound(observations.begin(), observations.end(), time, TimeCompare<Observation>());
+}
+
+ThreadInfo::oracle_result_storage_t::const_iterator ThreadInfo::getOracleResultsAfter(time_interval_t time, bool include) const {
+  if(include)
+    return lower_bound(oracle_results.begin(), oracle_results.end(), time, TimeCompare<OracleResult>());
+  else
+    return upper_bound(oracle_results.begin(), oracle_results.end(), time, TimeCompare<OracleResult>());
 }
 

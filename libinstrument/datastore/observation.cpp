@@ -15,8 +15,8 @@ void Observation::readVariable(const void * var, size_t bytes) {
 
 size_t Observation::size() const {
   if(state)
-    return sizeof(Observation) + state->size();
-  return sizeof(Observation);
+    return sizeof(State) + state->size();
+  return 0;
 }
 
 Observation::~Observation() {

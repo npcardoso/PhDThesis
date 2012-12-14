@@ -7,11 +7,12 @@
 
 DataStore::DataStore(time_interval_t time,
                      pthread_t pthread_id,
-                     size_t max_storage_size):
-  observation_storage(max_storage_size),
-  transaction_storage(max_storage_size) {
+                     size_t max_storage_size) {
   this->max_storage_size = max_storage_size;
+  this->current_storage_size = 0;
+  
   i_time = time;
+  
   thread_count = 1;
   thread_mappings[pthread_id] = 0;
 }
@@ -69,22 +70,26 @@ void DataStore::registerTransaction(time_interval_t time,
   thread_id_t id = getThreadMapping(pthread_id);
 
 
-  if(transaction_storage.canStore(sizeof(Transaction))) {
+  size_t obj_size = sizeof(Transaction);
+  if(canStore(obj_size)) {
     Transaction::ptr tr(new Transaction(time - i_time, tg_id, explicit_end));
-    tr->alloc_id = transaction_storage.store(tr, sizeof(Transaction), id);
-    updateStorageCapacity();
+
     thread_info[id]->pushTransaction(tr);
+    
+    current_storage_size += obj_size;
+
     debug("Thread %ld, Transaction Gate %ld: Registered Transaction, Storage: %f%%",
           id,
           tg_id,
-          100.0 * getStorageOccupancy() / max_storage_size);
+          100.0 * current_storage_size / max_storage_size);
   }
   else {
     thread_info[id]->pushTransaction();
+    
     debug("Thread %ld, Transaction Gate %ld: Dropped Transaction, Storage: Full(%f%%)",
           id,
           tg_id,
-          100.0 * getStorageOccupancy() / max_storage_size);
+          100.0 * current_storage_size / max_storage_size);
   }
 }
 
@@ -104,7 +109,9 @@ void DataStore::registerTransactionEnd(time_interval_t time,
 //Oracle Related
 oracle_id_t DataStore::registerOracle() {
   debug("Registering Oracle with o_id %ld", oracle_metadata.size());
+  
   oracle_metadata.push_back(instr_artifact_t());
+  
   return oracle_metadata.size() - 1;
 }
 
@@ -124,8 +131,31 @@ void DataStore::registerHealth(time_interval_t time,
 
   thread_id_t id = getThreadMapping(pthread_id);
 
-  debug("Thread %ld, Oracle %ld: Registering Oracle Result (Health: %f, Confidence: %f)",
-        id, o_id, health, confidence);
+  size_t obj_size = sizeof(Transaction);
+  if(canStore(obj_size)) {
+    OracleResult::ptr o_res(new OracleResult(time - i_time, o_id, health, confidence));
+    
+    thread_info[id]->addOracleResult(o_res);
+    
+    current_storage_size += obj_size;
+
+    debug("Thread %ld, Oracle %ld: Registered Oracle Result (Health: %f, Confidence: %f), Storage: %f%%",
+          id, 
+          o_id, 
+          health, 
+          confidence,
+          100.0 * current_storage_size / max_storage_size);
+  }
+  else {
+    debug("Thread %ld, Oracle %ld: Dropped Oracle Result (Health: %f, Confidence: %f), Storage: Full(%f%%)",
+          id, 
+          o_id, 
+          health, 
+          confidence,
+          100.0 * current_storage_size / max_storage_size);
+  }
+
+
 }
 
 //Observation Related
@@ -160,22 +190,22 @@ void DataStore::commitObservation(pthread_t pthread_id) {
 
   Observation::ptr obs = observation_buffer[id];
 
-  if(observation_storage.canStore(obs->size())) {
-    obs->alloc_id = observation_storage.store(obs, obs->size(), id);
-    updateStorageCapacity();
+  size_t obj_size = sizeof(Observation) + obs->size();
+  if(canStore(obj_size)) {
+    current_storage_size += obj_size;
     thread_info[id]->addObservation(obs);
     debug("Thread %ld, Probe %ld: Commited Observation with size %ld, Storage: %f%%",
           id,
           obs->p_id,
           obs->size(),
-          100.0 * getStorageOccupancy() / max_storage_size);
+          100.0 * current_storage_size / max_storage_size);
   }
   else {
     debug("Thread %ld, Probe %ld: Dropped Observation with size %ld, Storage: Full(%f%%)",
           id,
           obs->p_id,
           obs->size(),
-          100.0 * getStorageOccupancy() / max_storage_size);
+          100.0 * current_storage_size / max_storage_size);
   }
   observation_buffer.erase(id);
 }

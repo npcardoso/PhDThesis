@@ -15,7 +15,6 @@
 
 #include "httpd.h"
 
-#include <libinstrument/instrument.h>
 /* ---------------------------------------------------------------------- */
 
 void
@@ -25,7 +24,6 @@ read_request(struct REQUEST *req, int pipelined)
     char            *h;
 
  restart:
-	instr_probe(instr_void); 
 #ifdef USE_SSL
     if (with_ssl)
 	rc = ssl_read(req, req->hreq + req->hdata, MAX_HEADER - req->hdata);

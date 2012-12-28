@@ -3,16 +3,33 @@
 #include "../types.h"
 #include "../utils/stl.h"
 
+#include <iomanip>
+
+inline ostream & StateSpectraVariable(ostream & out,
+                                      const void * buf,
+                                      size_t left,
+                                      size_t right) {
+  ios::fmtflags flags = out.flags();
+  char fill = out.fill('0');
+  out << hex << "0x";
+  while(right-- > left)
+    out << setw(2) << (unsigned)((const unsigned char*)buf)[right];
+  out.fill(fill);
+  out.flags(flags);
+  return out;
+}
+
 inline ostream & StateSpectraState(ostream & out,
                                    const State & st){
-  ios::fmtflags flags = out.flags();
+
   size_t i = 0;
   for(size_t j = 0; j < st.n_vars; j++) {
-    out << "," << j << ":";
-    for(;i < st.offset_end[j]; i++)
-      out << (unsigned)st.data[i];
+    out << "|";
+    StateSpectraVariable(out, st.data, i,
+                         st.offset_end[j]);
+    i=st.offset_end[j];
   }
-  out.flags(flags);
+
   return out;
 }
 
@@ -21,15 +38,14 @@ inline ostream & StateSpectraObservation(ostream & out,
                                          const Observation & obs){
 
   out << "obs,";
-  out << t_id << ",";
-  out << obs.time << ",";
   out << obs.p_id << ",";
-  if(obs.state) {
-    out << obs.state->n_vars << "";
+  out << t_id << ",";
+  out << "\"";
+  unsigned long time = obs.time;
+  StateSpectraVariable(out, &time, 0, sizeof(time));
+  if(obs.state)
     StateSpectraState(out, *obs.state);
-  }
-  else
-    out << "0";
+  out <<  "\"";
   return out;
 }
 
@@ -38,11 +54,12 @@ inline ostream & StateSpectraOracleResult(ostream & out,
                                           const OracleResult & o_res){
 
   out << "or,";
-  out << t_id << ",";
-  out << o_res.time << ",";
   out << o_res.o_id << ",";
-  out << o_res.health << ",";
-  out << o_res.confidence;
+  out << t_id << ",\"";
+  unsigned long time = o_res.time;
+  StateSpectraVariable(out, &time, 0, sizeof(time)) << "|";
+  out << o_res.health << "|";
+  out << o_res.confidence <<"\"";
   return out;
 }
 
@@ -96,6 +113,7 @@ inline ostream & StateSpectraArtifacts(ostream & out,
 }
 
 ostream & StateSpectra(ostream & out, const DataStore & ds) {
+  out << "type, id, first, second\n";
   StateSpectraArtifacts(out, "metapr", ds.probe_metadata);
   StateSpectraArtifacts(out, "metatg", ds.transaction_gate_metadata);
   StateSpectraArtifacts(out, "metaor", ds.oracle_metadata);

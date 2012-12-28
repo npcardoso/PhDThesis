@@ -135,23 +135,20 @@ void DataStore::registerHealth(time_interval_t time,
   if(canStore(obj_size)) {
     OracleResult::ptr o_res(new OracleResult(time - i_time, o_id, health, confidence));
     
-    thread_info[id]->addOracleResult(o_res);
-    
-    current_storage_size += obj_size;
+    if(thread_info[id]->addOracleResult(o_res)) {
+      current_storage_size += obj_size;
 
-    debug("Thread %ld, Oracle %ld: Registered Oracle Result (Health: %f, Confidence: %f), Storage: %f%%",
-          id, 
-          o_id, 
-          health, 
-          confidence,
-          100.0 * current_storage_size / max_storage_size);
+      debug("Thread %ld, Oracle %ld: Registered Oracle Result (Health: %f, Confidence: %f), Storage: %f%%",
+            id, o_id, health, confidence,
+            100.0 * current_storage_size / max_storage_size);
+    }
+    else
+      debug("Thread %ld, Oracle %ld: Ignored Oracle Result (Health: %f, Confidence: %f)",
+            id, o_id, health, confidence);
   }
   else {
     debug("Thread %ld, Oracle %ld: Dropped Oracle Result (Health: %f, Confidence: %f), Storage: Full(%f%%)",
-          id, 
-          o_id, 
-          health, 
-          confidence,
+          id, o_id, health, confidence,
           100.0 * current_storage_size / max_storage_size);
   }
 
@@ -192,19 +189,20 @@ void DataStore::commitObservation(pthread_t pthread_id) {
 
   size_t obj_size = sizeof(Observation) + obs->size();
   if(canStore(obj_size)) {
-    current_storage_size += obj_size;
-    thread_info[id]->addObservation(obs);
-    debug("Thread %ld, Probe %ld: Commited Observation with size %ld, Storage: %f%%",
-          id,
-          obs->p_id,
-          obs->size(),
-          100.0 * current_storage_size / max_storage_size);
+    if(thread_info[id]->addObservation(obs)){
+      current_storage_size += obj_size;
+
+      debug("Thread %ld, Probe %ld: Commited Observation with size %ld, Storage: %f%%",
+            id, obs->p_id, obs->size(),
+            100.0 * current_storage_size / max_storage_size);
+    }
+    else
+      debug("Thread %ld, Probe %ld: Ignored Observation with size %ld",
+            id, obs->p_id, obs->size());
   }
   else {
     debug("Thread %ld, Probe %ld: Dropped Observation with size %ld, Storage: Full(%f%%)",
-          id,
-          obs->p_id,
-          obs->size(),
+          id, obs->p_id, obs->size(),
           100.0 * current_storage_size / max_storage_size);
   }
   observation_buffer.erase(id);

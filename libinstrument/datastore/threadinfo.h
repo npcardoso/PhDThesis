@@ -31,9 +31,9 @@ public:
   ThreadInfo(time_interval_t launch_time,
              thread_id_t parent_id);
 
-  void addObservation(Observation::const_ptr obs);
+  bool addObservation(Observation::const_ptr obs);
   
-  void addOracleResult(OracleResult::const_ptr o_res);
+  bool addOracleResult(OracleResult::const_ptr o_res);
 
   void pushTransaction();
   void pushTransaction(Transaction::ptr tr);

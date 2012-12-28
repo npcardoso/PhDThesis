@@ -2,7 +2,7 @@
 
 BIN_DIR="obj/bin"
 TESTS_DIR="tests"
-RUNNER_NAME="run.sh"
+[[ -z $RUNNER_NAME ]] && RUNNER_NAME="run.sh"
 
 if [[ $# == 0 ]]; then
 	echo "Missing test name" >&2

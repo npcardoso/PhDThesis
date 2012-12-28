@@ -20,8 +20,10 @@
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <libinstrument/instrument.h>
 #include "httpd.h"
+
+#include <libinstrument/instrument.h>
+#include "bug.h"
 
 /* ---------------------------------------------------------------------- */
 /* public variables - server configuration                                */
@@ -305,7 +307,6 @@ syslog_init(void)
 static void
 syslog_start(void)
 {
-	instr_probe(instr_pmetadata("name", "syslog_start"));
     syslog(LOG_NOTICE,
 	   "started (listen on %s:%d, root=%s, user=%s, group=%s)\n",
 	   listen_ip ? listen_ip : "*",
@@ -369,7 +370,6 @@ xerror(int loglevel, char *txt, char *peerhost)
 static void*
 mainloop(void *thread_arg)
 {
-	instr_transaction_start(instr_void);
     struct REQUEST *conns = NULL;
     int curr_conn = 0;
 
@@ -456,7 +456,6 @@ mainloop(void *thread_arg)
 			xperror(LOG_WARNING,"accept",NULL);
 		    free(req);
 		} else {
-		  instr_transaction_start(instr_void);
 		    close_on_exec(req->fd);
 		    fcntl(req->fd,F_SETFL,O_NONBLOCK);
 		    req->bfd = -1;
@@ -483,14 +482,14 @@ mainloop(void *thread_arg)
 		    if (debug)
 			fprintf(stderr,"%03d: connect from (%s)\n",
 				req->fd,req->peerhost);
-			instr_oracle(1, 1, instr_void);
-		  instr_transaction_end(instr_void);
 		}
 	    }
 	}
 
 	/* check active connections */
 	for (req = conns, prev = NULL; req != NULL;) {
+		  instr_transaction_start(instr_void);
+      leak(0, 10, 100);
 	    /* handle I/O */
 	    switch (req->state) {
 	    case STATE_KEEPALIVE:
@@ -673,9 +672,9 @@ header_parsing:
 		prev = req;
 		req = req->next;
 	    }
+      instr_transaction_end(instr_void);
 	}
     }
-	instr_transaction_end(instr_void);
     return NULL;
 }
 

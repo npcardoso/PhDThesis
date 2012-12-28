@@ -17,22 +17,37 @@ static const char GvizObservationPre[] = "Observation";
 static const char GvizOracleResultPre[] = "OracleResult";
 #include "../utils/debug.h"
 
+ostream & GvizRGBA(ostream & out, float r, float g, float b, float a) {
+  ios::fmtflags flags = out.flags();
+  char fill = out.fill('0');
+
+  out << hex;
+  out << setw(2) << (unsigned) (255 * r);
+  out << setw(2) << (unsigned) (255 * g);
+  out << setw(2) << (unsigned) (255 * b);
+  out << setw(2) << (unsigned) (255 * a);
+
+  out.fill(fill);
+  out.flags(flags);
+  return out;
+
+}
+
 ostream & GvizStateLabel(ostream & out, const State & st) {
   ios::fmtflags flags = out.flags();
+  char fill = out.fill('0');
 
   out << "Data: ";
   out << hex;
   size_t i = 0;
   for(size_t j = 0; j < st.n_vars; j++) {
     out << " | ";
-    for(size_t k = st.offset_end[j]; k-- > i;){
-      out << (unsigned)st.data[k];
-      if((k - i) % 2 == 0)
-        out << ".";
-    }
+    for(size_t k = st.offset_end[j]; k-- > i;)
+      out << setw(2) << (unsigned)st.data[k];
     i=st.offset_end[j];
   }
   out << " | ";
+  out.fill(fill);
   out.flags(flags);
   return out;
 }
@@ -71,23 +86,6 @@ ostream & GvizObservationLinks(ostream & out, thread_id_t t_id, const ThreadInfo
   return out;
 }
 
-ostream & GvizRGBA(ostream & out, float r, float g, float b, float a) {
-  ios::fmtflags flags = out.flags();
-  streamsize width = out.width(2);
-  char fill = out.fill('0');
-
-  out << hex;
-  out << setw(2) << (unsigned) (255 * r);
-  out << setw(2) << (unsigned) (255 * g);
-  out << setw(2) << (unsigned) (255 * b);
-  out << setw(2) << (unsigned) (255 * a);
-
-  out.fill(fill);
-  out.width(width);
-  out.flags(flags);
-  return out;
-
-}
 
 ostream & GvizOracleResults(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
   size_t oracle_result_id = 0;

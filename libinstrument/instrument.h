@@ -57,7 +57,7 @@
 #else
 
 #define instr_pmetadata(key, value) (_instr_probe_register_metadata(0, (key), (value));)
-#define instr_var(item) (_instr_probe_read((void *)&(item), sizeof(item));)
+#define instr_pvar(item) (_instr_probe_read((void *)&(item), sizeof(item));)
 
 #define instr_probe(items...) { \
   _instr_probe_observation_register(0);\

@@ -6,14 +6,22 @@ ThreadInfo::ThreadInfo(time_interval_t start, thread_id_t parent_id) {
   this->parent_id = parent_id;
 }
 
-void ThreadInfo::addObservation(Observation::const_ptr obs){
+bool ThreadInfo::addObservation(Observation::const_ptr obs){
   assert(observations.empty() || obs->time > observations.back()->time);
+  if(transaction_stack.empty())  //Drop observations that are not related to any transaction
+    return false;
+
   observations.push_back(obs);
+  return true;
 }
 
-void ThreadInfo::addOracleResult(OracleResult::const_ptr o_res){
+bool ThreadInfo::addOracleResult(OracleResult::const_ptr o_res){
   assert(oracle_results.empty() || o_res->time > oracle_results.back()->time);
+  if(transaction_stack.empty())  //Drop oracle results that are not related to any transaction
+    return false;
+
   oracle_results.push_back(o_res);
+  return true;
 }
 
 void ThreadInfo::pushTransaction(){

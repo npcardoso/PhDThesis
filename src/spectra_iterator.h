@@ -15,9 +15,9 @@ class t_spectra_iterator {
   
   const t_spectra_filter * filter;
   
-  t_component_id next_component(t_component_id component) const;
+  t_component_id _next_component(t_component_id component) const;
   
-  t_transaction_id next_transaction(t_transaction_id transaction) const;
+  t_transaction_id _next_transaction(t_transaction_id transaction) const;
 
 public:
   inline t_spectra_iterator(t_count max_components, 
@@ -31,9 +31,9 @@ public:
   }
 
   
-  bool next_component();
+  t_component_id next_component(bool wrap=false);
 
-  bool next_transaction();
+  t_transaction_id next_transaction(bool wrap=false);
 
   bool next(bool transaction_oriented = false);
 

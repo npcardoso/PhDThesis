@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-t_component_id t_spectra_iterator::next_component(t_component_id component) const {
+t_component_id t_spectra_iterator::_next_component(t_component_id component) const {
   t_component_id next = 0;
   if(filter == NULL)
     next = component + 1;
@@ -14,7 +14,7 @@ t_component_id t_spectra_iterator::next_component(t_component_id component) cons
   return next;
 }
 
-t_transaction_id t_spectra_iterator::next_transaction(t_transaction_id transaction) const {
+t_transaction_id t_spectra_iterator::_next_transaction(t_transaction_id transaction) const {
   t_transaction_id next = 0;
   if(filter == NULL)
     next = transaction + 1;
@@ -26,60 +26,41 @@ t_transaction_id t_spectra_iterator::next_transaction(t_transaction_id transacti
   return next;
 }
 
-bool t_spectra_iterator::next_component() {
-  if(!transaction)
-    transaction = next_transaction(transaction);
-
-  while (true) {
-    t_component_id next_c = next_component(component);
-    if(!next_c) {
-      t_transaction_id next_t = next_transaction(transaction);
-      if(!next_t)
-        return false;
-      transaction = next_t;
-      component = 0;
-    }
-    else {
-      component = next_c;
-
-      assert(component <= max_components);
-      assert(transaction <= max_transactions);
-      return true;
-    }
+t_component_id t_spectra_iterator::next_component(bool wrap) {
+  component = _next_component(component);
+  if(!component && wrap) {
+    transaction = _next_transaction(transaction);
+    component = 0;
   }
+  assert(component <= max_components);
+  assert(transaction <= max_transactions);
+  return component;
 }
 
-bool t_spectra_iterator::next_transaction() {
-  if(!component)
-    component = next_component(component);
+t_transaction_id t_spectra_iterator::next_transaction(bool wrap) {
+  transaction = _next_transaction(transaction);
+  if(!transaction && wrap) {
+    component = _next_component(component);
+    transaction = 0;
+  } 
 
-  while (true) {
-    t_transaction_id next_t = next_transaction(transaction);
-    if(!next_t) {
-      t_component_id next_c = next_component(component);
-      if(!next_c)
-        return false;
-      component = next_c;
-      transaction = 0;
-    } 
-    else {
-      transaction = next_t;
-
-      assert(component <= max_components);
-      assert(transaction <= max_transactions);
-      return true;
-    }
-  }
+  assert(component <= max_components);
+  assert(transaction <= max_transactions);
+  return transaction;
 }
 
 bool t_spectra_iterator::next(bool transaction_oriented) {
   if(transaction_oriented) {
+    if(!(transaction || next_transaction()))
+        return false;
     if(!next_component())
-      return next_transaction();
+      return next_transaction() && next_component();
   }
   else {
+    if(!(component || next_component()))
+        return false;
     if(!next_transaction())
-      return next_component();
+      return next_component() && next_transaction();
   }
   return true;
 }

@@ -2,6 +2,7 @@
 #define __UTILS_H__
 
 #define iterators(C) (C).begin(), (C).end()
+#define riterators(C) (C).rbegin(), (C).rend()
 
 #define iteratorFor(C, N) typeof(C) N=(C)
 #define foreach(var, container) \

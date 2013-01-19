@@ -27,8 +27,8 @@ public:
            t_transaction_id transaction,
            t_count count = 1) const;
   
+  virtual std::ostream & print(std::ostream & out, 
+                               const t_spectra_filter * filter = NULL) const;
 };
-
-std::ostream & operator << (std::ostream & out, const t_count_spectra & spectra);
 
 #endif

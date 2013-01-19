@@ -1,6 +1,7 @@
 #ifndef __SPECTRA_H__
 #define __SPECTRA_H__
 
+#include "spectra_filter.h"
 #include "types.h"
 
 #include <cassert>
@@ -22,8 +23,18 @@ public:
 
   virtual bool is_error(t_transaction_id transaction) const = 0;
   
-  virtual std::unique_ptr<t_component_id[]> get_ordering_buffer() const = 0;
+  virtual std::unique_ptr<t_rank_element[]> get_ordering_buffer() const = 0;
+
+  inline virtual std::ostream & print(std::ostream & out, 
+                                      const t_spectra_filter * filter = NULL) const {
+    return out << "Filtered Spectra output";
+  }
 };
+
+template <class T_ACTIVITY>
+inline std::ostream & operator << (std::ostream & out, const t_spectra<T_ACTIVITY> & spectra){
+  return spectra.print(out);
+}
 
 
 template <class T_ACTIVITY>
@@ -69,8 +80,8 @@ public:
       errors.erase(transaction);
   }
 
-  inline virtual std::unique_ptr<t_component_id[]> get_ordering_buffer() const {
-    return std::unique_ptr<t_component_id[]> (new t_component_id[component_count]);
+  virtual std::unique_ptr<t_rank_element[]> get_ordering_buffer() const {
+    return std::unique_ptr<t_rank_element[]> (new t_rank_element[component_count]);
   }
 };
 

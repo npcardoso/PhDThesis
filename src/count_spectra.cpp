@@ -1,6 +1,9 @@
 #include "count_spectra.h"
 
+#include "spectra_iterator.h"
+
 #include <iomanip>
+
 
 
 t_count t_count_spectra::get_count(t_component_id component,
@@ -30,22 +33,27 @@ void t_count_spectra::hit(t_component_id component,
 
 }
 
-std::ostream & operator << (std::ostream & out, const t_count_spectra & spectra){
+std::ostream & t_count_spectra::print(std::ostream & out, 
+                                      const t_spectra_filter * filter) const {
+  if(filter) {
+    assert(filter->get_last_component() <= get_component_count());
+    assert(filter->get_last_transaction() <= get_transaction_count());
+  }
 
-  for(t_component_id component = 1; 
-      component <= spectra.get_component_count();
-      component++)
-    out << std::setw(3) << component << "|";
+  t_spectra_iterator it(get_component_count(), 
+                      get_transaction_count(), 
+                      filter);
+  out << "Tr |";
+  while(it.next_component())
+    out << std::setw(3) << it.get_component() << "|";
   out << "Err\n";
-
-  for(t_transaction_id transaction = 1; 
-      transaction <= spectra.get_transaction_count();
-      transaction++) {
-    for(t_component_id component = 1; 
-        component <= spectra.get_component_count();
-        component++)
-      out << std::setw(3) << spectra.get_activity(component, transaction) << "|";
-    out << " " <<  spectra.is_error(transaction) << "\n";
+  
+  while(it.next_transaction()){
+    out << std::setw(3) << it.get_transaction() << "|";
+    while(it.next_component())
+      out << std::setw(3) << get_count(it.get_component(), it.get_transaction()) << "|";
+    out << " " << is_error(it.get_transaction()) << "\n";
   }
   return out;
 }
+

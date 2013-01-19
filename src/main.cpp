@@ -1,3 +1,5 @@
+#include "spectra.h"
+#include "count_spectra.h"
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
 
@@ -20,6 +22,20 @@ int main(){
   while(it.next(true)){
     cout << it.get_component() << ", " << it.get_transaction() << endl; 
   }
+
+  t_count_spectra count_spectra(3,3);
+  count_spectra.hit(2,3, 10); 
+  count_spectra.hit(3,1); 
+  count_spectra.hit(3,1); 
+  count_spectra.hit(3,1); 
+  count_spectra.hit(3,1); 
+  count_spectra.hit(3,1); 
+  count_spectra.hit(3,1); 
+  count_spectra.error(3);
+  count_spectra.error(3);
+  count_spectra.error(3);
+  count_spectra.error(3);
+  cout << count_spectra;
 
 }
 

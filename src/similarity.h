@@ -16,13 +16,22 @@ public:
     t_spectra_iterator it(spectra.get_component_count(),
                           spectra.get_transaction_count,
                           filter);
-    t_transaction_id transaction = 0;
-    t_component_id component = 0;
+    t_transaction_id transaction = 1;
+    t_component_id component = 1;
     t_count n[2][2];
+    
+    while (it.next_component()){
+      memset(n, 0,  sizeof(t_count) * 4);
+      while (it.next_transaction()){
+        bool activity = spectra.get_count(it.get_component(), it.get_transaction());
+        bool error = spectra.is_error(transaction++);
+        n[activity?1:0][error?1:0]++;
+        similarity(n, ret);
+      }
+    }
     //  while()
 
 
-    similarity(n, ret);
   }
 
   virtual float similarity(const t_count n[2][2]) const = 0;

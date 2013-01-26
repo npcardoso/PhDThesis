@@ -1,7 +1,10 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#include <set>
+
 /* IDs */
+
 typedef unsigned int t_id;
 typedef t_id t_component_id;
 typedef t_id t_transaction_id;
@@ -44,5 +47,9 @@ public:
   }
 
 };
+
+/* Candidate */
+
+typedef std::set<t_component_id> t_candidate;
 
 #endif

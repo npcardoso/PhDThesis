@@ -6,7 +6,6 @@
 
 #include <cassert>
 #include <iostream>
-#include <memory>
 #include <set>
 
 template <class T_ACTIVITY>
@@ -23,7 +22,7 @@ public:
 
   virtual bool is_error(t_transaction_id transaction) const = 0;
   
-  virtual std::unique_ptr<t_rank_element[]> get_ordering_buffer() const = 0;
+  virtual t_order_buffer get_ordering_buffer(const t_spectra_filter * filter = NULL) const = 0;
 
   inline virtual std::ostream & print(std::ostream & out, 
                                       const t_spectra_filter * filter = NULL) const {
@@ -80,8 +79,11 @@ public:
       errors.erase(transaction);
   }
 
-  virtual std::unique_ptr<t_rank_element[]> get_ordering_buffer() const {
-    return std::unique_ptr<t_rank_element[]> (new t_rank_element[component_count]);
+  virtual t_order_buffer get_ordering_buffer(const t_spectra_filter * filter = NULL) const {
+    t_count component_count = this->component_count;
+    if(filter)
+      component_count -= filter->get_filtered_component_count();
+    return t_order_buffer(new t_rank_element[component_count]);
   }
 };
 

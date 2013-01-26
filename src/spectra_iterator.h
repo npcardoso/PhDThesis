@@ -44,5 +44,9 @@ public:
   inline t_component_id get_component() const {
     return component;
   }
+  
+  void set_transaction(t_transaction_id transaction);
+  
+  void set_component(t_component_id component);
 };
 #endif

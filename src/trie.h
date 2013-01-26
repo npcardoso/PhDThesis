@@ -1,53 +1,65 @@
+#ifndef __TRIE_H__
+#define __TRIE_H__
+
 #include "types.h"
 
 #include <map>
 #include <boost/lexical_cast.hpp>
 
+class t_trie_iterator;
+
 class t_trie {
   typedef std::map<t_component_id, t_trie> t_children;
 
+  const t_trie * parent;
   t_children children;
   bool exists;
-  
+
   bool add(const t_candidate & candidate, 
            t_candidate::const_iterator component,
            bool composites);
 
   bool purge_composites(const t_candidate & candidate,
                         t_candidate::const_iterator component);
-  
+
   bool is_composite(const t_candidate & candidate,
                     t_candidate::const_iterator component) const;
 
 public:
+  typedef t_trie_iterator iterator;
+
   inline t_trie() {
     exists = false;
+    parent = NULL;
   }
 
-  inline void add(const t_candidate & candidate, bool composites=false) {
-    if(!composites) {
-      if(is_composite(candidate))
-        return;
-      else
-        purge_composites(candidate, candidate.begin());
-    }
-    add(candidate, candidate.begin(), composites);  
-  }
+  void add(const t_candidate & candidate, bool composites=false);
 
   inline bool is_composite(const t_candidate & candidate) const {
     return is_composite(candidate, candidate.begin());  
   }
 
-  inline virtual std::ostream & print(std::ostream & out, std::string prefix = "") const {
-    if(exists)
-      out << prefix << std::endl;
-    t_children::const_iterator it = children.begin();
+  std::ostream & print(std::ostream & out) const;
 
-    while(it != children.end()) {
-      it->second.print(out, prefix + "," + boost::lexical_cast<std::string>(it->first));
-      it++;
-    }
-    return out;  
-  }
+  iterator begin() const;
+  iterator end() const;
 
+  friend class t_trie_iterator;
 };
+
+class t_trie_iterator {
+  t_candidate current;
+  const t_trie * level;
+public:
+
+  t_trie_iterator(const t_trie * level);
+  bool operator != (const t_trie_iterator & it) const;
+  bool operator == (const t_trie_iterator & it) const;
+
+  t_trie_iterator & operator++(int);
+
+  const t_candidate * operator->() const;
+  const t_candidate & operator*() const;
+};
+
+#endif

@@ -2,6 +2,7 @@
 #define __TYPES_H__
 
 #include <set>
+#include <memory>
 
 /* IDs */
 
@@ -47,6 +48,9 @@ public:
   }
 
 };
+
+typedef std::unique_ptr<t_rank_element[]> t_order_buffer;
+
 
 /* Candidate */
 

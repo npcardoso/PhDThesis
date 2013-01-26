@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+#include <cassert>
 #include <set>
 
 class t_spectra_filter {
@@ -34,13 +35,34 @@ public:
     return transactions.size();
   }
   
-  
+  inline bool is_component(t_component_id component) const {
+    assert(component > 0);
+    return components.count(component);
+  }
+
+  inline bool is_transaction(t_transaction_id transaction) const {
+    assert(transaction > 0);
+    return transactions.count(transaction);
+  }
+
   inline void filter_component(t_component_id component) {
+    assert(component > 0);
     components.insert(component);
   }
 
   inline void filter_transaction(t_transaction_id transaction) {
+    assert(transaction > 0);
     transactions.insert(transaction);
+  }
+  
+  inline void unfilter_component(t_component_id component) {
+    assert(component > 0);
+    components.erase(component);
+  }
+
+  inline void unfilter_transaction(t_transaction_id transaction) {
+    assert(transaction > 0);
+    transactions.erase(transaction);
   }
 
 };

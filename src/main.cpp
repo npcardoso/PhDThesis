@@ -6,6 +6,8 @@
 
 #include "trie.h"
 
+#include "mhs.cpp"
+
 #include <iostream>
 
 
@@ -13,6 +15,20 @@ using namespace std;
 
 
 
+void test_mhs() {
+  t_count_spectra count_spectra(3,3);
+  count_spectra.hit(1,1); 
+  count_spectra.hit(2,2); 
+  count_spectra.hit(3,3); 
+  count_spectra.hit(1,3); 
+  count_spectra.hit(3,1); 
+  count_spectra.hit(3,2); 
+  count_spectra.error(1);
+  count_spectra.error(2);
+  t_mhs<t_count> mhs((t_ochiai<t_count>()));
+  t_trie D;
+  mhs.calculate(count_spectra, D);
+}
 
 void test_spectra() {
   t_spectra_filter filter;

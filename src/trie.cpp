@@ -110,8 +110,9 @@ bool t_trie_iterator::operator == (const t_trie_iterator & it) const {
   return current == it.current;
 }
 
-t_trie_iterator & t_trie_iterator::operator++(int) {
+t_trie_iterator t_trie_iterator::operator++(int) {
   assert(level);
+  t_trie_iterator ret(*this);
   bool first = false;
   bool first_run = true;
   while(level) {
@@ -143,7 +144,7 @@ t_trie_iterator & t_trie_iterator::operator++(int) {
     first_run = false;
   }
 
-  return *this;
+  return ret;
 }
 
 const t_candidate * t_trie_iterator::operator->() const {

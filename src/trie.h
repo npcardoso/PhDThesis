@@ -56,7 +56,7 @@ public:
   bool operator != (const t_trie_iterator & it) const;
   bool operator == (const t_trie_iterator & it) const;
 
-  t_trie_iterator & operator++(int);
+  t_trie_iterator operator++(int);
 
   const t_candidate * operator->() const;
   const t_candidate & operator*() const;

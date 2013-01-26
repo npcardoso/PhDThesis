@@ -16,18 +16,22 @@ using namespace std;
 
 
 void test_mhs() {
-  t_count_spectra count_spectra(3,3);
+  t_count_spectra count_spectra(5,3);
   count_spectra.hit(1,1); 
   count_spectra.hit(2,2); 
   count_spectra.hit(3,3); 
   count_spectra.hit(1,3); 
   count_spectra.hit(3,1); 
   count_spectra.hit(3,2); 
+  count_spectra.hit(4,1); 
+  count_spectra.hit(5,2); 
   count_spectra.error(1);
   count_spectra.error(2);
   t_mhs<t_count> mhs((t_ochiai<t_count>()));
+  count_spectra.print(cout);
   t_trie D;
   mhs.calculate(count_spectra, D);
+  D.print(cout);
 }
 
 void test_spectra() {
@@ -111,7 +115,7 @@ void test_trie() {
 
 }
 int main(){
-  test_trie();
+  test_mhs();
 
 }
 

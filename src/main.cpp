@@ -13,25 +13,60 @@
 
 using namespace std;
 
+t_count_spectra * read_spectra(FILE * f){
+  t_count components, transactions;
+  if(fscanf(f, "%u %u", &components, &transactions) < 2)
+    return NULL;
 
+  t_count_spectra * ret = new t_count_spectra(components, transactions);
 
+  t_count value;
+  for(t_transaction_id transaction = 1;
+      transaction <= transactions;
+      transaction++)
+    for(t_component_id component = 1;
+        component <= components;
+        component++) {
+      if(fscanf(f, "%d", &value) < 1)
+        return ret;
+      if(value)
+        ret->hit(component, transaction);
+    }
+
+  for(t_transaction_id transaction = 1;
+      transaction <= transactions;
+      transaction++){
+    if(fscanf(f, "%d", &value) < 1)
+      return ret;
+    if(value)
+      ret->error(transaction);
+  }
+  return ret;
+}
+void test_trie_composite(const t_trie & trie) {
+  int option;
+  t_candidate candidate;
+  while (scanf(" %d", &option) > 0) {
+    if(option < 1)
+      break;
+    candidate.insert(option);
+  }
+  puts("------");
+  if(trie.is_composite(candidate))
+    puts("True");
+  else
+    puts("False");
+}
 void test_mhs() {
-  t_count_spectra count_spectra(5,3);
-  count_spectra.hit(1,1); 
-  count_spectra.hit(2,2); 
-  count_spectra.hit(3,3); 
-  count_spectra.hit(1,3); 
-  count_spectra.hit(3,1); 
-  count_spectra.hit(3,2); 
-  count_spectra.hit(4,1); 
-  count_spectra.hit(5,2); 
-  count_spectra.error(1);
-  count_spectra.error(2);
+
+  t_count_spectra * count_spectra = read_spectra(fopen("in.mhs.txt", "r"));
   t_mhs<t_count> mhs((t_ochiai<t_count>()));
-  count_spectra.print(cout);
+  count_spectra->print(cout);
   t_trie D;
-  mhs.calculate(count_spectra, D);
+  mhs.calculate(*count_spectra, D);
   D.print(cout);
+  while(true)
+    test_trie_composite(D);
 }
 
 void test_spectra() {
@@ -87,30 +122,22 @@ void test_trie() {
     candidate.clear();
     puts("---------");
     switch(option) {
-      case 1:
-        while (scanf("%d", &option) > 0) {
-          if(option < 1)
-            break;
-          candidate.insert(option);
-        }
-        trie.add(candidate);
-        trie.print(cout);
-        break;
-      case 2:
-        while (scanf("%d", &option) > 0) {
-          if(option < 1)
-            break;
-          candidate.insert(option);
-        }
-        if(trie.is_composite(candidate))
-          puts("True");
-        else
-          puts("False");
-        break;
-      default:
-        return;
+    case 1:
+      while (scanf("%d", &option) > 0) {
+        if(option < 1)
+          break;
+        candidate.insert(option);
+      }
+      trie.add(candidate);
+      trie.print(cout);
+      break;
+    case 2:
+      test_trie_composite(trie);
+      break;
+    default:
+      return;
     }
-  
+
   }
 
 }

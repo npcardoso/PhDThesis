@@ -48,8 +48,10 @@ class t_mhs {
 
 public:
   t_count max_candidate_size, max_candidates;
-
-  t_mhs(const t_heuristic<T_ACTIVITY> & heuristic):  heuristic(heuristic){}
+  float heuristic_cutoff;
+  t_mhs(const t_heuristic<T_ACTIVITY> & heuristic):  heuristic(heuristic){
+    heuristic_cutoff = 0.000000001;
+  }
 
   void calculate(const t_spectra <T_ACTIVITY> & spectra,
                  t_trie & D,
@@ -85,6 +87,9 @@ public:
     t_count remaining_components = spectra.get_component_count() - tmp_filter.get_filtered_component_count();
 
     for(t_id i = 0; i < remaining_components; i++) {
+      if(order_buffer[i].get_value() <= heuristic_cutoff)
+        break;
+
       t_spectra_filter strip_filter = tmp_filter;
       t_trie partial_D;
 

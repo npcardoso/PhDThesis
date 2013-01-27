@@ -51,15 +51,24 @@ public:
   float heuristic_cutoff;
   t_mhs(const t_heuristic<T_ACTIVITY> & heuristic):  heuristic(heuristic){
     heuristic_cutoff = 0.000000001;
+    max_candidate_size = 0;
   }
 
   void calculate(const t_spectra <T_ACTIVITY> & spectra,
                  t_trie & D,
-                 const t_spectra_filter * filter = NULL) const {
+                 const t_spectra_filter * filter = NULL,
+                 t_count candidate_size = 0) const {
     
     t_spectra_filter tmp_filter;
     if(filter)
       tmp_filter = *filter;
+
+    candidate_size++;
+
+    /* Candidate Length cutoff */
+
+    if(max_candidate_size && candidate_size > max_candidate_size)
+      return;
 
     /* Removing singleton candidates */
 
@@ -75,6 +84,11 @@ public:
         
         tmp_filter.filter_component(it.get_component());
       }
+
+    /* Candidate Length cutoff */
+
+    if(max_candidate_size && candidate_size >= max_candidate_size)
+      return;
 
     /* Ranking */
 
@@ -94,7 +108,7 @@ public:
       t_trie partial_D;
 
       strip(order_buffer[i].get_component(), spectra, strip_filter);
-      calculate(spectra, partial_D, &strip_filter);
+      calculate(spectra, partial_D, &strip_filter, candidate_size);
 
       /* Append partial candidates with current component */
       t_trie::iterator it = partial_D.begin();

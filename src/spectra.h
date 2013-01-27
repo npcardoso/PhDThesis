@@ -11,8 +11,9 @@
 template <class T_ACTIVITY>
 class t_spectra {
 public:
-  virtual t_count get_transaction_count() const = 0;
-  virtual t_count get_component_count() const = 0;
+  virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const = 0;
+  virtual t_count get_transaction_count(const t_spectra_filter * filter = NULL) const = 0;
+  virtual t_count get_component_count(const t_spectra_filter * filter = NULL) const = 0;
 
   virtual t_count get_count(t_component_id component,
                             t_transaction_id transaction) const = 0;
@@ -39,7 +40,8 @@ inline std::ostream & operator << (std::ostream & out, const t_spectra<T_ACTIVIT
 template <class T_ACTIVITY>
 class t_basic_spectra: public t_spectra <T_ACTIVITY> {
 
-  std::set <t_transaction_id> errors;
+  typedef std::set <t_transaction_id> t_errors;
+  t_errors errors;
   t_count component_count;
   t_count transaction_count;
 
@@ -52,12 +54,30 @@ public:
     this->component_count = component_count;
     this->transaction_count = transaction_count;
   }
+  
+  virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const {
+//FIXME: Improve performance
+    t_count filtered_errors = 0;
+    if(filter) {
+      t_errors::iterator it = errors.begin();
+      while(it != errors.end())
+        if(filter->is_transaction(*(it++)))
+          filtered_errors++;
+    }
+    return errors.size() - filtered_errors;
+  }
 
-  inline virtual t_count get_component_count() const {
+  virtual t_count get_component_count(const t_spectra_filter * filter = NULL) const {
+    assert(!filter || filter->get_last_component() <= component_count);
+    if(filter)
+      return component_count - filter->get_filtered_component_count();
     return component_count;
   }
 
-  inline virtual t_count get_transaction_count() const {
+  virtual t_count get_transaction_count(const t_spectra_filter * filter = NULL) const {
+    assert(!filter || filter->get_last_transaction() <= transaction_count);
+    if(filter)
+      return transaction_count - filter->get_filtered_transaction_count();
     return transaction_count;
   }
   
@@ -80,10 +100,7 @@ public:
   }
 
   virtual t_order_buffer get_ordering_buffer(const t_spectra_filter * filter = NULL) const {
-    t_count component_count = this->component_count;
-    if(filter)
-      component_count -= filter->get_filtered_component_count();
-    return t_order_buffer(new t_rank_element[component_count]);
+    return t_order_buffer(new t_rank_element[get_component_count(filter)]);
   }
 };
 

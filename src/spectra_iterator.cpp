@@ -67,12 +67,12 @@ bool t_spectra_iterator::next(bool transaction_oriented) {
 
 void t_spectra_iterator::set_transaction(t_transaction_id transaction) {
   assert(transaction <= max_transactions);
-  assert(filter || !filter->is_transaction(transaction));
+  assert(!filter || !filter->is_transaction(transaction));
   this->transaction = transaction;
 }
 
 void t_spectra_iterator::set_component(t_component_id component) {
   assert(component <= max_components);
-  assert(filter || !filter->is_component(component));
+  assert(!filter || !filter->is_component(component));
   this->component = component;
 }

@@ -1,3 +1,6 @@
+#ifndef __MHS_H__
+#define __MHS_H__
+
 #include "spectra.h"
 #include "count_spectra.h"
 #include "similarity.h"
@@ -116,9 +119,12 @@ public:
       while(it != partial_D.end()) {
         t_candidate tmp_candidate = *(it++);
         tmp_candidate.insert(order_buffer[i].get_component());
+        assert(spectra.is_candidate(tmp_candidate, &tmp_filter));
         D.add(tmp_candidate);
       }
 
     }
   }
 };
+
+#endif

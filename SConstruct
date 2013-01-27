@@ -6,7 +6,7 @@ root = Dir('#').abspath
 #common_include_dir = root + "/include"
 
 target  = "a.out"
-sources = Glob("*cpp") + Glob("*/*cpp")
+sources = Glob("src/*cpp")
 
 env = Environment(
 	CCFLAGS = "-O0 -g -std=c++0x",

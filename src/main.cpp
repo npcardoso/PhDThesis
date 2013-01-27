@@ -6,7 +6,7 @@
 
 #include "trie.h"
 
-#include "mhs.cpp"
+#include "mhs.h"
 
 #include <iostream>
 
@@ -43,30 +43,38 @@ t_count_spectra * read_spectra(FILE * f){
   }
   return ret;
 }
-void test_trie_composite(const t_trie & trie) {
-  int option;
+
+t_candidate read_candidate(FILE * f = stdin) {
   t_candidate candidate;
-  while (scanf(" %d", &option) > 0) {
-    if(option < 1)
+  t_component_id component;
+  while (fscanf(f, " %u", &component) > 0) {
+    if(component == 0)
       break;
-    candidate.insert(option);
+    candidate.insert(component);
   }
-  puts("------");
-  if(trie.is_composite(candidate))
+  return candidate;
+}
+
+void test_trie_composite(const t_trie & trie, FILE * f = stdin) {
+  if(trie.is_composite(read_candidate(f)))
     puts("True");
   else
     puts("False");
 }
-void test_mhs() {
 
+void test_mhs() {
   t_count_spectra * count_spectra = read_spectra(fopen("in.mhs.txt", "r"));
   t_mhs<t_count> mhs((t_ochiai<t_count>()));
   count_spectra->print(cout);
   t_trie D;
+  mhs.max_candidate_size = 3;
   mhs.calculate(*count_spectra, D);
   D.print(cout);
-  while(true)
-    test_trie_composite(D);
+  while(true) {
+    puts(count_spectra->is_candidate(read_candidate())?"True":"False"); 
+  
+    //test_trie_composite(D);
+  }
 }
 
 void test_spectra() {
@@ -76,10 +84,6 @@ void test_spectra() {
 //  filter.filter_component(1);
   //filter.filter_component(2);
   //filter.filter_component(4);
-  //filter.filter_transaction(4);
-  //filter.filter_transaction(2);
-  //filter.filter_transaction(1);
-  //filter.filter_transaction(3);
 
   while(it.next(true)){
     cout << it.get_component() << ", " << it.get_transaction() << endl; 
@@ -96,8 +100,18 @@ void test_spectra() {
   count_spectra.hit(1,3); 
   count_spectra.hit(3,1); 
   count_spectra.hit(3,2); 
+  cout << count_spectra.get_error_count() << endl;
   count_spectra.error(1);
+  cout << count_spectra.get_error_count() << endl;
   count_spectra.error(2);
+  cout << count_spectra.get_error_count() << endl;
+  cout << count_spectra.get_error_count(&filter) << endl;
+  filter.filter_transaction(3);
+  cout << count_spectra.get_error_count(&filter) << endl;
+  filter.filter_transaction(1);
+  cout << count_spectra.get_error_count(&filter) << endl;
+  filter.filter_transaction(2);
+  cout << count_spectra.get_error_count(&filter) << endl;
   cout << count_spectra;
   count_spectra.print(cout, NULL);
   count_spectra.print(cout, &filter);
@@ -110,6 +124,9 @@ void test_spectra() {
   }
   cout << endl;
   ochiai.order(count_spectra, &filter, order_buffer.get());
+  while(true) {
+    puts(count_spectra.is_candidate(read_candidate())?"True":"False"); 
+  }
 }
 
 void test_trie() {

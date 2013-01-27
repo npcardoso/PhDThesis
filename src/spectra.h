@@ -2,6 +2,7 @@
 #define __SPECTRA_H__
 
 #include "spectra_filter.h"
+#include "spectra_iterator.h"
 #include "types.h"
 
 #include <cassert>
@@ -22,7 +23,31 @@ public:
                                           t_transaction_id transaction) const = 0;
 
   virtual bool is_error(t_transaction_id transaction) const = 0;
-  
+
+  virtual bool is_candidate(const t_candidate & candidate,
+                            const t_spectra_filter * filter = NULL) const {
+
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          filter);
+
+    while(it.next_transaction()){
+      bool hit = false;
+      if(!is_error(it.get_transaction()))
+        continue;
+
+      t_candidate::iterator candidate_it = candidate.begin();
+      while(candidate_it != candidate.end())
+        if(get_count(*(candidate_it++), it.get_transaction())) {
+          hit = true;
+          break;
+        }
+      if(!hit)
+        return false;
+    }
+    return true;
+  }
+
   virtual t_order_buffer get_ordering_buffer(const t_spectra_filter * filter = NULL) const = 0;
 
   inline virtual std::ostream & print(std::ostream & out, 
@@ -54,9 +79,9 @@ public:
     this->component_count = component_count;
     this->transaction_count = transaction_count;
   }
-  
+
   virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const {
-//FIXME: Improve performance
+    //FIXME: Improve performance
     t_count filtered_errors = 0;
     if(filter) {
       t_errors::iterator it = errors.begin();
@@ -80,7 +105,7 @@ public:
       return transaction_count - filter->get_filtered_transaction_count();
     return transaction_count;
   }
-  
+
   inline virtual bool is_error(t_transaction_id transaction) const {
     assert(transaction > 0);
     assert(transaction <= transaction_count);

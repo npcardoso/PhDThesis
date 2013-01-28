@@ -6,55 +6,31 @@
 #include "similarity.h"
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
-
 #include "trie.h"
+
+#include <boost/shared_ptr.hpp>
+#include <map>
 
 template <class T_ACTIVITY>
 class t_mhs {
+  typedef boost::shared_ptr<t_heuristic<T_ACTIVITY> > t_heuristic_ptr;
+  typedef std::map<t_count, t_heuristic_ptr> t_heuristics;
 
-  const t_heuristic<T_ACTIVITY> & heuristic;
-
-  bool all_failed(t_component_id component, 
-                  const t_spectra <T_ACTIVITY> & spectra,
-                  const t_spectra_filter & filter) const {
-
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
-                          &filter);
-    it.set_component(component);
-
-    while (it.next_transaction()){
-      bool activity = spectra.get_count(it.get_component(), it.get_transaction());
-      bool error = spectra.is_error(it.get_transaction());
-      if(error && !activity)
-        return false;
-    }
-    return true;
-  }
-
-  void strip(t_component_id component,
-             const t_spectra <T_ACTIVITY> & spectra,
-             t_spectra_filter & filter) const {
-
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
-                          &filter);
-    it.set_component(component);
-
-    while (it.next_transaction()){
-      bool activity = spectra.get_count(it.get_component(), it.get_transaction());
-      if(activity)
-        filter.filter_transaction(it.get_transaction());
-    }
-    filter.filter_component(component);
-  }
+  t_heuristics heuristics;
 
 public:
   t_count max_candidate_size, max_candidates;
   float heuristic_cutoff;
-  t_mhs(const t_heuristic<T_ACTIVITY> & heuristic):  heuristic(heuristic){
+  
+  t_mhs(t_heuristic<T_ACTIVITY> * heuristic) {
     heuristic_cutoff = 0.000000001;
     max_candidate_size = 0;
+    set_heuristic(0, heuristic);
+  }
+
+  void set_heuristic(t_count start_level, t_heuristic<T_ACTIVITY> * heuristic) {
+    assert(heuristic != NULL);
+    heuristics[start_level] = t_heuristic_ptr(heuristic);
   }
 
   void calculate(const t_spectra <T_ACTIVITY> & spectra,
@@ -97,7 +73,8 @@ public:
 
     t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
 
-    heuristic.order(spectra, &tmp_filter, order_buffer.get());
+    std::cout << std::endl << candidate_size<< " ";
+    get_heuristic(candidate_size).order(spectra, &tmp_filter, order_buffer.get());
 
     /* Creating complex candidates */
 
@@ -125,6 +102,49 @@ public:
 
     }
   }
+
+private:
+  bool all_failed(t_component_id component, 
+                  const t_spectra <T_ACTIVITY> & spectra,
+                  const t_spectra_filter & filter) const {
+
+    t_spectra_iterator it(spectra.get_component_count(),
+                          spectra.get_transaction_count(),
+                          &filter);
+    it.set_component(component);
+
+    while (it.next_transaction()){
+      bool activity = spectra.get_count(it.get_component(), it.get_transaction());
+      bool error = spectra.is_error(it.get_transaction());
+      if(error && !activity)
+        return false;
+    }
+    return true;
+  }
+
+  void strip(t_component_id component,
+             const t_spectra <T_ACTIVITY> & spectra,
+             t_spectra_filter & filter) const {
+
+    t_spectra_iterator it(spectra.get_component_count(),
+                          spectra.get_transaction_count(),
+                          &filter);
+    it.set_component(component);
+
+    while (it.next_transaction()){
+      bool activity = spectra.get_count(it.get_component(), it.get_transaction());
+      if(activity)
+        filter.filter_transaction(it.get_transaction());
+    }
+    filter.filter_component(component);
+  }
+
+  const t_heuristic<T_ACTIVITY> & get_heuristic(t_count level) const {
+    typename t_heuristics::const_iterator it = heuristics.upper_bound(level);
+    it--;
+    return *(it->second);
+  }
+
 };
 
 #endif

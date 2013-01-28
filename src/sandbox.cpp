@@ -23,16 +23,30 @@ void test_trie_composite(const t_trie & trie, istream & in = cin) {
     puts("False");
 }
 
+template<class T_ACTIVITY>
+class t_ochiai_verb: public t_ochiai<T_ACTIVITY> {
+  t_count level;
+public:
+  t_ochiai_verb(t_count level):level(level){}
+  virtual t_heuristic_value similarity(const t_count n[2][2]) const {
+    std::cout << level << " ";
+    return t_ochiai<T_ACTIVITY>::similarity(n);
+  }
+
+};
+
 void test_mhs(const char * filename = "in.mhs.txt") {
   ifstream f(filename);
   t_count_spectra count_spectra;
-  t_mhs<t_count> mhs((t_ochiai<t_count>()));
+  t_mhs<t_count> mhs(new t_ochiai_verb<t_count>(0));
   t_trie D;
+
+  mhs.set_heuristic(3, new t_ochiai_verb<t_count>(3));
   
   f >> count_spectra;
   cout << count_spectra;
   
-  mhs.max_candidate_size = 3;
+//  mhs.max_candidate_size = 3;
   mhs.calculate(count_spectra, D);
   D.print(cout);
   while(true) {
@@ -130,6 +144,6 @@ void test_trie() {
 
 void sandbox(int argc, char ** argv) {
   cout << "Sandbox\n";
-  test_spectra();
+  test_mhs();
 }
 

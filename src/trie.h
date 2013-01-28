@@ -1,6 +1,7 @@
 #ifndef __TRIE_H__
 #define __TRIE_H__
 
+#include "candidate.h"
 #include "types.h"
 
 #include <map>

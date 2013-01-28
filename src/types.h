@@ -52,8 +52,5 @@ public:
 typedef std::unique_ptr<t_rank_element[]> t_order_buffer;
 
 
-/* Candidate */
-
-typedef std::set<t_component_id> t_candidate;
 
 #endif

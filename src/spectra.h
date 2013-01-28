@@ -1,6 +1,8 @@
 #ifndef __SPECTRA_H__
 #define __SPECTRA_H__
 
+#include "candidate.h"
+#include "exceptions.h"
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
 #include "types.h"
@@ -54,7 +56,16 @@ public:
                                       const t_spectra_filter * filter = NULL) const {
     return out << "Filtered Spectra output";
   }
+
+  inline virtual std::istream & read (std::istream & in) {
+    throw e_not_implemented();
+  }
 };
+
+template <class T_ACTIVITY>
+inline std::istream & operator >> (std::istream & in, t_spectra<T_ACTIVITY> & spectra){
+  return spectra.read(in);
+}
 
 template <class T_ACTIVITY>
 inline std::ostream & operator << (std::ostream & out, const t_spectra<T_ACTIVITY> & spectra){
@@ -70,14 +81,36 @@ class t_basic_spectra: public t_spectra <T_ACTIVITY> {
   t_count component_count;
   t_count transaction_count;
 
+protected:
+  virtual void set_transaction_count(t_count transaction_count) {
+    this->transaction_count = transaction_count;
+    t_errors::reverse_iterator it = errors.rbegin();
+    while(it != errors.rend() && *it > transaction_count)
+      it++;
+    errors.erase(it.base(), errors.rbegin().base());
+  }
+  
+  virtual void set_component_count(t_count component_count) {
+    this->component_count = component_count;
+  }
+
+  virtual void set_element_count(t_count component_count,
+                                t_count transaction_count) {
+    set_component_count(component_count);
+    set_transaction_count(transaction_count);
+  }
+
 public:
+  inline t_basic_spectra() {
+    set_transaction_count(0);
+    set_component_count(0);
+  }
+  
   inline t_basic_spectra(t_count component_count, 
                          t_count transaction_count) {
-    assert(component_count > 0);
-    assert(transaction_count > 0);
-
-    this->component_count = component_count;
+    set_transaction_count(transaction_count);
     this->transaction_count = transaction_count;
+    set_component_count(component_count);
   }
 
   virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const {

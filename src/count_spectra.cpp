@@ -4,7 +4,23 @@
 
 #include <iomanip>
 
+void t_count_spectra::set_element_count(t_count component_count, 
+                                        t_count transaction_count) {
+  t_activity_ptr old_activity(activity.release());
 
+  t_component_id max_component = std::min(component_count, get_component_count());
+  t_component_id max_transaction = std::min(transaction_count, get_transaction_count());
+
+  activity = t_activity_ptr(new t_count[component_count * transaction_count]);
+  for(t_component_id component = 0; component < max_component; component++)
+    for(t_transaction_id transaction = 0; transaction < max_transaction; transaction++) {
+      activity[transaction * component_count + component] = 
+      old_activity[transaction * get_component_count() + component];
+    }
+
+  t_basic_spectra::set_element_count(component_count, 
+                                     transaction_count);
+}
 
 t_count t_count_spectra::get_count(t_component_id component,
                                    t_transaction_id transaction) const {
@@ -57,3 +73,32 @@ std::ostream & t_count_spectra::print(std::ostream & out,
   return out;
 }
 
+std::istream & t_count_spectra::read(std::istream & in) {
+  t_count component_count, transaction_count;
+  t_transaction_id transaction_offset = get_transaction_count();
+
+  in >> component_count >> transaction_count;
+  set_element_count(std::max(component_count, get_component_count()), 
+                    transaction_offset + transaction_count);
+
+  t_count value;
+  for(t_transaction_id transaction = 1;
+      transaction <= transaction_count;
+      transaction++)
+    for(t_component_id component = 1;
+        component <= component_count;
+        component++) {
+      in >> value;
+      if(value)
+        hit(component, transaction_offset + transaction);
+    }
+
+  for(t_transaction_id transaction = 1;
+      transaction <= transaction_count;
+      transaction++){
+    in >> value;
+    if(value)
+      error(transaction_offset + transaction);
+  }
+  return in;
+}

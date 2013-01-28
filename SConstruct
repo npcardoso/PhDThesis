@@ -10,7 +10,7 @@ sources = Glob("src/*cpp")
 
 env = Environment(
 	CCFLAGS = "-O0 -g -std=c++0x",
-	LDFLAGS = "-g -lpthread")
+	LINKFLAGS = "-g -lpthread -pthread -L/usr/lib/openmpi -lmpi_cxx -lmpi -ldl -lhwloc")
 
 
 env['ENV']['TERM'] = os.environ['TERM']

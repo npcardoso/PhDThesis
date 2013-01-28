@@ -73,7 +73,6 @@ public:
 
     t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
 
-    std::cout << std::endl << candidate_size<< " ";
     get_heuristic(candidate_size).order(spectra, &tmp_filter, order_buffer.get());
 
     /* Creating complex candidates */

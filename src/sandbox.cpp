@@ -23,14 +23,13 @@ void test_trie_composite(const t_trie & trie, istream & in = cin) {
     puts("False");
 }
 
-template<class T_ACTIVITY>
-class t_ochiai_verb: public t_ochiai<T_ACTIVITY> {
+class t_ochiai_verb: public t_ochiai {
   t_count level;
 public:
   t_ochiai_verb(t_count level):level(level){}
-  virtual t_heuristic_value similarity(const t_count n[2][2]) const {
+  virtual t_heuristic_value operator()(const t_count n[2][2]) const {
     std::cout << level << " ";
-    return t_ochiai<T_ACTIVITY>::similarity(n);
+    return t_ochiai::operator()(n);
   }
 
 };
@@ -38,10 +37,10 @@ public:
 void test_mhs(const char * filename = "in.mhs.txt") {
   ifstream f(filename);
   t_count_spectra count_spectra;
-  t_mhs<t_count> mhs(new t_ochiai_verb<t_count>(0));
+  t_mhs<t_count> mhs(new t_similarity<t_count>(new t_ochiai_verb(0)));
   t_trie D;
 
-  mhs.set_heuristic(3, new t_ochiai_verb<t_count>(3));
+  mhs.set_heuristic(3, new t_similarity<t_count>(new t_ochiai_verb(3)));
   
   f >> count_spectra;
   cout << count_spectra;
@@ -96,7 +95,7 @@ void test_spectra() {
   cout << count_spectra.get_error_count(&filter) << endl;
   cout << count_spectra;
   count_spectra.print(cout, &filter);
-  t_ochiai<t_count> ochiai;
+  t_similarity<t_count> ochiai;
   unique_ptr<t_rank_element[]> order_buffer = count_spectra.get_ordering_buffer();
 
   ochiai.order(count_spectra, NULL, order_buffer.get());

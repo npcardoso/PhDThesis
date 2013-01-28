@@ -15,7 +15,7 @@ int main(int argc, char ** argv){
   else if(!strcmp(exec_name, "mpi"));
   else {
     t_count_spectra count_spectra;
-    t_mhs<t_count> mhs(new t_ochiai<t_count>());
+    t_mhs<t_count> mhs(new t_similarity<t_count>());
     t_trie D;
     
     std::cin >> count_spectra;

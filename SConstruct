@@ -9,7 +9,8 @@ target  = "a.out"
 sources = Glob("src/*cpp")
 
 env = Environment(
-	CCFLAGS = "-O0 -g -std=c++0x",
+#CCFLAGS = " -DNDEBUG -O3 -g -std=c++0x",
+	CCFLAGS = "-O3 -g -std=c++0x",
 	LINKFLAGS = "-g -lpthread -pthread -L/usr/lib/openmpi -lmpi_cxx -lmpi -ldl -lhwloc")
 
 

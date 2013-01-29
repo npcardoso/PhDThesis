@@ -1,43 +1,57 @@
 import sys
 import random
 
-if not (len(sys.argv)):
-    sys.exit('Usage: %s <c_1> ... <c_n>' % sys.argv[0])
+if len(sys.argv) != 2:
+    sys.exit('Usage: %s <file>' % sys.argv[0])
 
 
-candidate = set((int(x) for x in sys.argv[1:]))
+class Spectra:
+    def __init__(self, ncomps, ntrans, activity, error):
+        self.ncomps = ncomps
+        self.ntrans = ntrans
+        self.activity = activity
+        self.error = error
 
-print(candidate)
+    def get(self, comp, trans):
+        return self.activity[(trans - 1) * self.ncomps + (comp - 1)]
+
+    def get_error(self, trans):
+        return self.error[(trans - 1)]
+
+def read_spectra(file):
+    buffer = str()
+    for line in file:
+        buffer += " "+line
+
+    buffer = [int(x) for x in buffer.split()];
+
+    component_count = int(buffer[0])
+    transaction_count = int(buffer[1])
+
+    activity = buffer[2:2 + transaction_count * component_count]
+    error = buffer[2 + transaction_count * component_count:]
+    return Spectra(component_count, transaction_count, activity, error)
+
+def is_candidate(spectra, candidate):
+    for transaction in range(1, spectra.ntrans + 1):
+        if not spectra.get_error(transaction) > 0:
+            continue
+        hit = False
+        for component in candidate:
+            if(spectra.get(component, transaction) > 0):
+                hit = True
+                break
+        if not hit:
+            return False
+    return True
+    
+
+spectra = read_spectra(open(sys.argv[1], 'r'))
 
 try:
-    buffer = str()
     while True:
-        buffer += " "+input()
+        candidate = [int(x) for x in input().split()]
+        print(is_candidate(spectra, candidate))
+        
 except EOFError:
     pass
-
-buffer = buffer.split();
-print(buffer)
-
-component_count = int(buffer[0])
-transaction_count = int(buffer[1])
-
-hit = [False] * transaction_count
-
-i = 2
-for transaction in range(transaction_count):
-    for component in range(component_count):
-        if(int(buffer[i]) != 0 and (component + 1)  in candidate):
-            hit[transaction] = True
-        i += 1
-print(hit)
-
-is_candidate = True
-
-for transaction in range(transaction_count):
-    if(int(buffer[i]) and not hit[transaction]):
-        is_candidate = False
-        break
-    i += 1
-
-print(is_candidate)

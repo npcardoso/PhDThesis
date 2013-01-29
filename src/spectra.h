@@ -81,26 +81,9 @@ class t_basic_spectra: public t_spectra <T_ACTIVITY> {
   t_count component_count;
   t_count transaction_count;
 
-protected:
-  virtual void set_transaction_count(t_count transaction_count) {
-    this->transaction_count = transaction_count;
-    t_errors::reverse_iterator it = errors.rbegin();
-    while(it != errors.rend() && *it > transaction_count)
-      it++;
-    errors.erase(it.base(), errors.rbegin().base());
-  }
-  
-  virtual void set_component_count(t_count component_count) {
-    this->component_count = component_count;
-  }
-
-  virtual void set_element_count(t_count component_count,
-                                t_count transaction_count) {
-    set_component_count(component_count);
-    set_transaction_count(transaction_count);
-  }
 
 public:
+  
   inline t_basic_spectra() {
     set_transaction_count(0);
     set_component_count(0);
@@ -138,6 +121,26 @@ public:
       return transaction_count - filter->get_filtered_transaction_count();
     return transaction_count;
   }
+  
+  virtual void set_element_count(t_count component_count,
+                                 t_count transaction_count) {
+    this->component_count = component_count;
+    
+    this->transaction_count = transaction_count;
+    t_errors::reverse_iterator it = errors.rbegin();
+    while(it != errors.rend() && *it > transaction_count)
+      it++;
+    errors.erase(it.base(), errors.rbegin().base());
+  }
+  
+  virtual void set_component_count(t_count component_count) {
+    set_element_count(component_count, get_transaction_count());
+  }
+  
+  virtual void set_transaction_count(t_count transaction_count) {
+    set_element_count(get_component_count(), transaction_count);
+  }
+
 
   inline virtual bool is_error(t_transaction_id transaction) const {
     assert(transaction > 0);

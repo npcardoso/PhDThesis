@@ -1,33 +1,121 @@
+#include "mpi.h"
+
+#include "mhs.h"
+#include "similarity.h"
+
 #include <mpi.h>
 #include <iostream>
+#include <fstream>
 
+void send_trie(const t_trie & trie,
+              t_count chunk_size,
+              int destination,
+              int tag,
+              MPI_Comm communicator) {
 
-class t_mpi {
-  bool ready;
-  t_mpi();
-public:
-  ~t_mpi();
-  static bool init(int argc, char **argv);
-  static t_mpi mpi_environment;
-};
+  t_trie::iterator it = trie.begin();
 
-t_mpi t_mpi::mpi_environment;
+  t_count buffer_size = 0;
+  t_component_id * buffer = new t_component_id[chunk_size];
 
-t_mpi::t_mpi(){
-  std::cout << "MPI construct\n"; 
+  while(it != trie.end()) {
+    t_candidate::iterator candidate_it = it->begin();
+    while(candidate_it != it->end()){
+      if(buffer_size >= chunk_size) {
+        MPI_Send(buffer, buffer_size, MPI::UNSIGNED, 
+                 destination, tag, communicator);
+        buffer_size = 0;
+      }
+      buffer[buffer_size++] = *(candidate_it++);
+    }
+    
+    if(buffer_size >= chunk_size) {
+      MPI_Send(buffer, buffer_size, MPI::UNSIGNED, 
+               destination, tag, communicator);
+      buffer_size = 0;
+    }
+    buffer[buffer_size++] = 0;
+    it++;
+  }
+  
+  MPI_Send(buffer, buffer_size, MPI::UNSIGNED, 
+           destination, tag, communicator);
+  delete[]buffer;
 }
 
-t_mpi::~t_mpi(){
-  std::cout << "MPI destruct\n"; 
-  if(ready)
-    MPI_Finalize();
+void receive_trie(t_trie & trie,
+                 t_count chunk_size,
+                 int destination,
+                 int tag,
+                 MPI_Comm communicator) {
+  
+  t_component_id * buffer = new t_component_id[chunk_size];
+
+  t_candidate candidate;
+  int buffer_size = 0;
+  do {
+    MPI_Status status;
+
+    MPI_Recv(buffer, chunk_size, MPI::UNSIGNED, 
+             destination, tag, MPI_COMM_WORLD, &status);
+    MPI_Get_count(&status, MPI::UNSIGNED, &buffer_size);
+    for(t_id i = 0; i < buffer_size; i++)
+      if(buffer[i])
+        candidate.insert(buffer[i]);
+      else {
+        trie.add(candidate);
+        candidate.clear();
+      }
+
+  } while(buffer_size == chunk_size);
+  
+  delete[]buffer;
 }
+
+
+int mpi_main(int argc, char **argv) {
+
 
   /* Initialize MPI */
+  MPI_Init(&argc, &argv);
+  
+  /* Find out my identity in the default communicator */
+  int ntasks, rank;
+  MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-bool t_mpi::init(int argc,  char**argv){
-  std::cout << "MPI init\n"; 
-  if(!MPI_Init(&argc, &argv))
-    mpi_environment.ready = true;
-  return mpi_environment.ready;
+
+  t_count_spectra count_spectra;
+  t_mhs<t_count> mhs(new t_parallel_similarity<t_count>(rank, ntasks));
+  mhs.set_heuristic(2, new t_similarity<t_count>());
+
+  t_trie D;
+  
+  std::ifstream f("in.mhsbig.txt");
+  f >> count_spectra;
+
+  if(rank == 0)  std::cout << count_spectra;
+
+  time_interval_t time_begin = get_time_interval();
+  mhs.calculate(count_spectra, D);
+  
+  time_interval_t time_end_calculate = get_time_interval();
+  std::cerr << "Process " << rank << " Calculation Time: " << (time_end_calculate - time_begin) << std::endl;
+  
+  if(rank == 0) {
+    for(t_count i = 1; i < ntasks; i++)
+      receive_trie(D, 102400, i, 0, MPI_COMM_WORLD);
+    D.print(std::cout);
+  } else
+      send_trie(D, 102400, 0, 0, MPI_COMM_WORLD);
+  time_interval_t time_end_transfer = get_time_interval();
+  std::cerr << "Process " << rank << " Transfer Time: " << (time_end_transfer - time_end_calculate) << std::endl;
+
+  /* Shut down MPI */
+  
+
+  MPI_Finalize();
+  return 0;
 }
+
+

@@ -10,8 +10,6 @@ class t_count_spectra: public t_basic_spectra <t_count> {
   typedef std::unique_ptr<t_count[]> t_activity_ptr;
   t_activity_ptr activity;
 
-  virtual void set_element_count(t_count component_count, 
-                                 t_count transaction_count);
 public:
 
   inline t_count_spectra() {
@@ -28,6 +26,9 @@ public:
 
   virtual const t_count & get_activity(t_component_id component,
                                        t_transaction_id transaction) const;
+  
+  virtual void set_element_count(t_count component_count, 
+                                 t_count transaction_count);
 
   void hit(t_component_id component,
            t_transaction_id transaction,

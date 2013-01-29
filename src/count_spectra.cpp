@@ -2,7 +2,9 @@
 
 #include "spectra_iterator.h"
 
+#include <cstring>
 #include <iomanip>
+
 
 void t_count_spectra::set_element_count(t_count component_count, 
                                         t_count transaction_count) {
@@ -12,6 +14,8 @@ void t_count_spectra::set_element_count(t_count component_count,
   t_component_id max_transaction = std::min(transaction_count, get_transaction_count());
 
   activity = t_activity_ptr(new t_count[component_count * transaction_count]);
+  memset(activity.get(), 0, component_count * transaction_count);
+  
   for(t_component_id component = 0; component < max_component; component++)
     for(t_transaction_id transaction = 0; transaction < max_transaction; transaction++) {
       activity[transaction * component_count + component] = 

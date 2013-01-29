@@ -13,14 +13,17 @@
 using namespace std;
 
 
-
-void test_trie_composite(const t_trie & trie, istream & in = cin) {
-  t_candidate candidate;
-  in >> candidate;
-  if(trie.is_composite(candidate))
-    puts("True");
-  else
-    puts("False");
+void example_count_spectra(t_count_spectra & count_spectra) {
+  count_spectra.set_element_count(3,3);
+  count_spectra.hit(1,1); 
+  count_spectra.hit(2,2); 
+  count_spectra.hit(3,3); 
+  count_spectra.hit(1,3); 
+  count_spectra.hit(3,1); 
+  count_spectra.hit(3,2); 
+  count_spectra.error(1);
+  count_spectra.error(2);
+  count_spectra.error(3);
 }
 
 class t_ochiai_verb: public t_ochiai {
@@ -56,6 +59,29 @@ void test_mhs(const char * filename = "in.mhs.txt") {
     //test_trie_composite(D);
   }
 }
+void test_parallel_similarity() {
+  t_count_spectra count_spectra;
+  example_count_spectra(count_spectra);
+  
+  t_parallel_similarity<t_count> ochiai(0, 2);
+  
+  t_order_buffer order_buffer = count_spectra.get_ordering_buffer();
+
+  ochiai.order(count_spectra, order_buffer.get());
+  for(int i = 0; i < count_spectra.get_component_count(); i++){
+    cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
+  }
+  
+  t_parallel_similarity<t_count> ochiai2(1, 2);
+  
+  ochiai2.order(count_spectra, order_buffer.get());
+  for(int i = 0; i < count_spectra.get_component_count(); i++){
+    cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
+  }
+
+
+}
+
 
 void test_spectra() {
   t_spectra_filter filter;
@@ -73,37 +99,19 @@ void test_spectra() {
     cout << it.get_component() << ", " << it.get_transaction() << endl; 
   }
 
-  t_count_spectra count_spectra(3,3);
-  count_spectra.hit(1,1); 
-  count_spectra.hit(2,2); 
-  count_spectra.hit(3,3); 
-  count_spectra.hit(1,3); 
-  count_spectra.hit(3,1); 
-  count_spectra.hit(3,2); 
-  cout << count_spectra.get_error_count() << endl;
-  count_spectra.error(1);
-  cout << count_spectra.get_error_count() << endl;
-  count_spectra.error(2);
-  count_spectra.error(3);
-  cout << count_spectra.get_error_count() << endl;
-  cout << count_spectra.get_error_count(&filter) << endl;
-  filter.filter_transaction(3);
-  cout << count_spectra.get_error_count(&filter) << endl;
-  filter.filter_transaction(1);
-  cout << count_spectra.get_error_count(&filter) << endl;
-  filter.filter_transaction(2);
-  cout << count_spectra.get_error_count(&filter) << endl;
+  t_count_spectra count_spectra;
+  example_count_spectra(count_spectra);
   cout << count_spectra;
   count_spectra.print(cout, &filter);
   t_similarity<t_count> ochiai;
   unique_ptr<t_rank_element[]> order_buffer = count_spectra.get_ordering_buffer();
 
-  ochiai.order(count_spectra, NULL, order_buffer.get());
+  ochiai.order(count_spectra, order_buffer.get());
   for(int i = 0; i < count_spectra.get_component_count(); i++){
     cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
   }
   cout << endl;
-  ochiai.order(count_spectra, &filter, order_buffer.get());
+  ochiai.order(count_spectra, order_buffer.get(), &filter);
   while(true) {
     t_candidate candidate;
     cin >> candidate;
@@ -122,16 +130,13 @@ void test_trie() {
     puts("---------");
     switch(option) {
     case 1:
-      while (scanf("%d", &option) > 0) {
-        if(option < 1)
-          break;
-        candidate.insert(option);
-      }
+      cin >> candidate;
       trie.add(candidate);
       trie.print(cout);
       break;
     case 2:
-      test_trie_composite(trie);
+      cin >> candidate;
+      cout << (trie.is_composite(candidate))<<endl;
       break;
     default:
       return;
@@ -143,6 +148,6 @@ void test_trie() {
 
 void sandbox(int argc, char ** argv) {
   cout << "Sandbox\n";
-  test_mhs();
+  test_parallel_similarity();
 }
 

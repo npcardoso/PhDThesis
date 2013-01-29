@@ -10,8 +10,8 @@ class t_heuristic {
 
 public:
   virtual void order(const t_spectra <T_ACTIVITY> & spectra, 
-                     const t_spectra_filter * filter, 
-                     t_rank_element * ret) const = 0;
+                     t_rank_element * ret,
+                     const t_spectra_filter * filter = NULL) const = 0;
 };
 
 

@@ -1,9 +1,9 @@
 #ifndef __MHS_H__
 #define __MHS_H__
 
-#include "spectra.h"
+#include "heuristic.h"
 #include "count_spectra.h"
-#include "similarity.h"
+#include "spectra.h"
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
 #include "trie.h"
@@ -20,10 +20,8 @@ class t_mhs {
 
 public:
   t_count max_candidate_size, max_candidates;
-  float heuristic_cutoff;
   
   t_mhs(t_heuristic<T_ACTIVITY> * heuristic) {
-    heuristic_cutoff = 0.000000001;
     max_candidate_size = 0;
     set_heuristic(0, heuristic);
   }
@@ -73,20 +71,31 @@ public:
 
     t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
 
-    get_heuristic(candidate_size).order(spectra, &tmp_filter, order_buffer.get());
+    get_heuristic(candidate_size).order(spectra, order_buffer.get(), &tmp_filter);
 
     /* Creating complex candidates */
 
     t_count remaining_components = spectra.get_component_count() - tmp_filter.get_filtered_component_count();
 
     for(t_id i = 0; i < remaining_components; i++) {
-      if(order_buffer[i].get_value() <= heuristic_cutoff)
+
+      /* Heuristic signalling end of ranking */
+      if(order_buffer[i].get_component() == 0)
         break;
 
+      /* Strip component from spectra */
+      
       t_spectra_filter strip_filter = tmp_filter;
-      t_trie partial_D;
+      
+      tmp_filter.filter_component(order_buffer[i].get_component());
+
+      /* Heuristic signalling skip */
+      if(order_buffer[i].get_value() <= 0)
+        continue;
 
       strip(order_buffer[i].get_component(), spectra, strip_filter);
+      
+      t_trie partial_D;
       calculate(spectra, partial_D, &strip_filter, candidate_size);
 
       /* Append partial candidates with current component */

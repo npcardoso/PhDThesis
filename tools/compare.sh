@@ -11,19 +11,20 @@ SECOND=$3
 IFS="
 "
 for TEST_CASE in `command ls -1 $INPUT_DIR`; do
-  FIRST_OUT=$OUTPUT_DIR"/"$TEST_CASE".first"
-  SECOND_OUT=$OUTPUT_DIR"/"$TEST_CASE".second"
+  FIRST_OUT=$OUTPUT_DIR"/first"
+  SECOND_OUT=$OUTPUT_DIR"/second"
 
-  $FIRST < $TEST_CASE > $FIRST_OUT
-  $SECOND < $TEST_CASE > $SECOND_OUT
+  $FIRST < $INPUT_DIR"/"$TEST_CASE > $FIRST_OUT
+  $SECOND < $INPUT_DIR"/"$TEST_CASE > $SECOND_OUT
   
   diff $FIRST_OUT $SECOND_OUT > /dev/null
   
-  if [[ $? ]]; then
+  if [[ $? != 0  ]]; then
 	echo -n "Entering inspection shell"
 	cd $OUTPUT_DIR
 	$SHELL
 	rm -rf $OUTPUT_DIR
 	break
   fi
+  rm -f $FIRST_OUT $SECOND_OUT
 done

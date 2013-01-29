@@ -86,12 +86,20 @@ int mpi_main(int argc, char **argv) {
 
 
   t_count_spectra count_spectra;
+  t_mhs<t_count> mhs(new t_similarity<t_count>());
+  mhs.set_heuristic(2, new t_parallel_similarity<t_count>(rank, ntasks));
+  mhs.set_heuristic(3, new t_similarity<t_count>());
+/*
   t_mhs<t_count> mhs(new t_parallel_similarity<t_count>(rank, ntasks));
   mhs.set_heuristic(2, new t_similarity<t_count>());
-
+*/
   t_trie D;
   
-  std::ifstream f("in.mhsbig.txt");
+  std::ifstream f;
+  if(argc > 1)
+    f.open(argv[1]);
+  else
+    f.open("in.mhsbig.txt");
   f >> count_spectra;
 
   if(rank == 0)  std::cout << count_spectra;

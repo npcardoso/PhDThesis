@@ -148,6 +148,6 @@ void test_trie() {
 
 void sandbox(int argc, char ** argv) {
   cout << "Sandbox\n";
-  test_parallel_similarity();
+  test_trie();
 }
 

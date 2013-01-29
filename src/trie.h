@@ -34,7 +34,7 @@ public:
     parent = NULL;
   }
 
-  void add(const t_candidate & candidate, bool composites=false);
+  void add(const t_candidate & candidate, bool composites = false);
 
   inline bool is_composite(const t_candidate & candidate) const {
     return is_composite(candidate, candidate.begin());  

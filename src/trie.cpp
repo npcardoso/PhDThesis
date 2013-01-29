@@ -33,6 +33,8 @@ bool t_trie::purge_composites(const t_candidate & candidate,
     t_candidate::const_iterator tmp = component;
     if(it->first == *component)
       tmp++;
+    if(it->first > *component)
+      break;
 
     if(it->second.purge_composites(candidate, tmp))
       children.erase(it++);
@@ -120,7 +122,8 @@ t_trie_iterator t_trie_iterator::operator++(int) {
     if(first && level->exists) 
       break;
     /* go down */
-    else if((first || first_run) && level->children.size()){
+    else if((first || first_run) && 
+            level->children.size()){
       current.insert(level->children.begin()->first);
       level = &(level->children.begin()->second);
       first = true;

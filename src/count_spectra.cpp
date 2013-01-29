@@ -14,10 +14,14 @@ void t_count_spectra::set_element_count(t_count component_count,
   t_component_id max_transaction = std::min(transaction_count, get_transaction_count());
 
   activity = t_activity_ptr(new t_count[component_count * transaction_count]);
-  memset(activity.get(), 0, component_count * transaction_count);
+  memset(activity.get(), 0, component_count * transaction_count * sizeof(t_count));
   
-  for(t_component_id component = 0; component < max_component; component++)
-    for(t_transaction_id transaction = 0; transaction < max_transaction; transaction++) {
+  for(t_component_id component = 0; 
+      component < max_component; 
+      component++)
+    for(t_transaction_id transaction = 0; 
+        transaction < max_transaction; 
+        transaction++) {
       activity[transaction * component_count + component] = 
       old_activity[transaction * get_component_count() + component];
     }
@@ -50,7 +54,6 @@ void t_count_spectra::hit(t_component_id component,
   assert(transaction <= get_transaction_count());
 
   activity[(transaction - 1) * get_component_count() + (component - 1)] += count;
-
 }
 
 std::ostream & t_count_spectra::print(std::ostream & out, 

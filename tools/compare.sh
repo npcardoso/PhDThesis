@@ -4,13 +4,14 @@ if [[ $# < 3 ]]; then
 fi
 
 OUTPUT_DIR=`mktemp -d`
-INPUT_DIR=$1
+INPUT=$1
+INPUT_DIR=`dirname $1`
 
 FIRST=$2
 SECOND=$3
 IFS="
 "
-for TEST_CASE in `command ls -1 $INPUT_DIR`; do
+for TEST_CASE in `command ls -1 $INPUT`; do
   FIRST_OUT=$OUTPUT_DIR"/first"
   SECOND_OUT=$OUTPUT_DIR"/second"
 

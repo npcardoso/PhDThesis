@@ -32,7 +32,7 @@ for transaction in range(transaction_count):
 print()
 
 for transaction in range(transaction_count):
-    if(random.random() < selection_rate):
+    if(random.random() < error_rate):
         print("1 ", end="")
     else:
         print("0 ", end="")

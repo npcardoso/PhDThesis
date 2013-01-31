@@ -41,10 +41,12 @@ bool t_trie::purge_composites(const t_candidate & candidate,
       break;
 
     elements -= it->second.size();
-    if(it->second.purge_composites(candidate, tmp))
-      children.erase(it);
+    bool remove = it->second.purge_composites(candidate, tmp);
     elements += it->second.size();
-    it++;
+    if(remove)
+      children.erase(it++);
+    else
+      it++;
   }
   return !exists && !children.size();
 }

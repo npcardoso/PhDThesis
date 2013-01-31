@@ -1,10 +1,13 @@
-#include "count_spectra.h"
-#include "mhs.h"
-#include "similarity.h"
-#include "spectra.h"
-#include "spectra_filter.h"
-#include "spectra_iterator.h"
-#include "trie.h"
+#include "algorithms/mhs.h"
+#include "common/trie.h"
+#include "heuristic/parallelization.h"
+#include "heuristic/similarity.h"
+#include "heuristic/sort.h"
+
+#include "spectra/count_spectra.h"
+#include "spectra/spectra.h"
+#include "spectra/spectra_filter.h"
+#include "spectra/spectra_iterator.h"
 
 
 #include <fstream>
@@ -26,55 +29,28 @@ void example_count_spectra(t_count_spectra & count_spectra) {
   count_spectra.error(3);
 }
 
-class t_ochiai_verb: public t_ochiai {
-  t_count level;
-public:
-  t_ochiai_verb(t_count level):level(level){}
-  virtual t_heuristic_value operator()(const t_count n[2][2]) const {
-    std::cout << level << " ";
-    return t_ochiai::operator()(n);
-  }
-
-};
-
-void test_mhs(const char * filename = "in.mhs.txt") {
-  ifstream f(filename);
-  t_count_spectra count_spectra;
-  t_mhs<t_count> mhs(new t_similarity<t_count>(new t_ochiai_verb(0)));
-  t_trie D;
-
-  mhs.set_heuristic(3, new t_similarity<t_count>(new t_ochiai_verb(3)));
-  
-  f >> count_spectra;
-  cout << count_spectra;
-  
-//  mhs.max_candidate_size = 3;
-  mhs.calculate(count_spectra, D);
-  D.print(cout);
-  while(true) {
-    t_candidate candidate;
-    cin >> candidate;
-    puts(count_spectra.is_candidate(candidate)?"True":"False"); 
-  
-    //test_trie_composite(D);
-  }
-}
 void test_parallel_similarity() {
   t_count_spectra count_spectra;
   example_count_spectra(count_spectra);
   
-  t_parallel_similarity<t_count> ochiai(0, 2);
-  
+  t_heuristic<t_count> heuristic;
+  heuristic.push(new t_filter_ochiai<t_count>());
+  heuristic.push(new t_filter_sort<t_count>());
+  heuristic.push(new t_filter_divide<t_count>(0,2));
+
   t_order_buffer order_buffer = count_spectra.get_ordering_buffer();
 
-  ochiai.order(count_spectra, order_buffer.get());
+  heuristic(count_spectra, order_buffer.get());
   for(int i = 0; i < count_spectra.get_component_count(); i++){
     cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
   }
   
-  t_parallel_similarity<t_count> ochiai2(1, 2);
+  heuristic = t_heuristic<t_count>();
+  heuristic.push(new t_filter_ochiai<t_count>());
+  heuristic.push(new t_filter_sort<t_count>());
+  heuristic.push(new t_filter_divide<t_count>(1,2));
   
-  ochiai2.order(count_spectra, order_buffer.get());
+  heuristic(count_spectra, order_buffer.get());
   for(int i = 0; i < count_spectra.get_component_count(); i++){
     cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
   }
@@ -103,15 +79,19 @@ void test_spectra() {
   example_count_spectra(count_spectra);
   cout << count_spectra;
   count_spectra.print(cout, &filter);
-  t_similarity<t_count> ochiai;
+  
+  t_heuristic<t_count> heuristic;
+  heuristic.push(new t_filter_ochiai<t_count>());
+  heuristic.push(new t_filter_sort<t_count>());
+  
   unique_ptr<t_rank_element[]> order_buffer = count_spectra.get_ordering_buffer();
 
-  ochiai.order(count_spectra, order_buffer.get());
+  heuristic(count_spectra, order_buffer.get());
   for(int i = 0; i < count_spectra.get_component_count(); i++){
     cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
   }
   cout << endl;
-  ochiai.order(count_spectra, order_buffer.get(), &filter);
+  heuristic(count_spectra, order_buffer.get(), &filter);
   while(true) {
     t_candidate candidate;
     cin >> candidate;

@@ -1,11 +1,12 @@
 #ifndef __SPECTRA_H__
 #define __SPECTRA_H__
 
-#include "candidate.h"
-#include "exceptions.h"
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
-#include "types.h"
+
+#include "../common/candidate.h"
+#include "../common/exceptions.h"
+#include "../common/types.h"
 
 #include <cassert>
 #include <iostream>

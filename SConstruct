@@ -1,23 +1,11 @@
-import os
+build_dir = 'obj'
 
-#Import("build_info")
+build_info = {}
+build_info['build_name'] = "a.out"
+build_info['build_dir'] = str(Dir('#').abspath) + '/' + build_dir
+build_info['common_include_dir'] = build_info['build_dir'] + "/include"
+build_info['clang'] = 'clang'
 
-root = Dir('#').abspath
-#common_include_dir = root + "/include"
+Export('build_info')
 
-target  = "a.out"
-sources = Glob("src/*cpp")
-
-env = Environment(
-#CCFLAGS = " -DNDEBUG -O3 -g -std=c++0x",
-	CCFLAGS = "-O3 -g -std=c++0x",
-	LINKFLAGS = "-g -lpthread -pthread -L/usr/lib/openmpi -lmpi_cxx -lmpi -ldl -lhwloc")
-
-
-env['ENV']['TERM'] = os.environ['TERM']
-env["CXX"] = "clang++"
-
-obj = env.Program(target = target, source = sources)
-#lib_install = env.Install(build_info['build_dir'] + "/lib", obj)
-
-env.Default(obj)
+SConscript('SConscript', variant_dir=build_dir)

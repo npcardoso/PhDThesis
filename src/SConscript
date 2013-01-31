@@ -1,0 +1,20 @@
+import os
+
+Import("build_info")
+
+root = Dir('#').abspath
+
+target  = build_info['build_name']
+sources = Glob("*cpp") + Glob("*/*cpp")
+
+
+env = Environment(
+#CCFLAGS = " -DNDEBUG -O3 -g -std=c++0x",
+	CCFLAGS = "-O3 -g -std=c++0x",
+	LINKFLAGS = "-g -lpthread -pthread -L/usr/lib/openmpi -lmpi_cxx -lmpi -ldl -lhwloc")
+
+env['ENV']['TERM'] = os.environ['TERM']
+env["CXX"] = "clang++"
+
+obj = env.Program(target = target, source = sources)
+#lib_install = env.Install(build_info['build_dir'] + "/lib", obj)

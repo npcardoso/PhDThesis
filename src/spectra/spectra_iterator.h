@@ -1,8 +1,9 @@
 #ifndef __SPECTRA_ITERATOR_H__
 #define __SPECTRA_ITERATOR_H__
 
-#include "types.h"
 #include "spectra_filter.h"
+
+#include "../common/types.h"
 
 #include <cstdlib>
 

@@ -1,21 +1,19 @@
 #ifndef __MHS_H__
 #define __MHS_H__
 
-#include "heuristic.h"
-#include "count_spectra.h"
-#include "spectra.h"
-#include "spectra_filter.h"
-#include "spectra_iterator.h"
-#include "trie.h"
-#include "utils.h"
+#include "../heuristic/heuristic.h"
+#include "../spectra/count_spectra.h"
+#include "../spectra/spectra.h"
+#include "../spectra/spectra_filter.h"
+#include "../spectra/spectra_iterator.h"
+#include "../common/trie.h"
+#include "../common/utils.h"
 
-#include <boost/shared_ptr.hpp>
 #include <map>
 
 template <class T_ACTIVITY>
 class t_mhs {
-  typedef boost::shared_ptr<t_heuristic<T_ACTIVITY> > t_heuristic_ptr;
-  typedef std::map<t_count, t_heuristic_ptr> t_heuristics;
+  typedef std::map<t_count, t_heuristic<T_ACTIVITY> > t_heuristics;
 
   t_heuristics heuristics;
 
@@ -23,16 +21,15 @@ public:
   t_count max_candidate_size, max_candidates;
   t_time_interval max_time;
 
-  t_mhs(t_heuristic<T_ACTIVITY> * heuristic) {
+  t_mhs(const t_heuristic<T_ACTIVITY> & heuristic) {
     max_candidate_size = 0;
     max_candidates = 0;
     max_time = 0;
     set_heuristic(0, heuristic);
   }
 
-  void set_heuristic(t_count start_level, t_heuristic<T_ACTIVITY> * heuristic) {
-    assert(heuristic != NULL);
-    heuristics[start_level] = t_heuristic_ptr(heuristic);
+  void set_heuristic(t_count start_level, const t_heuristic<T_ACTIVITY> & heuristic) {
+    heuristics[start_level] = heuristic;
   }
 
   void calculate(const t_spectra <T_ACTIVITY> & spectra,
@@ -92,7 +89,7 @@ public:
 
     t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
 
-    get_heuristic(candidate.size()).order(spectra, order_buffer.get(), &tmp_filter);
+    get_heuristic(candidate.size())(spectra, order_buffer.get(), &tmp_filter);
 
     /* Creating complex candidates */
 
@@ -176,7 +173,7 @@ private:
   const t_heuristic<T_ACTIVITY> & get_heuristic(t_count level) const {
     typename t_heuristics::const_iterator it = heuristics.upper_bound(level);
     it--;
-    return *(it->second);
+    return it->second;
   }
 
 };

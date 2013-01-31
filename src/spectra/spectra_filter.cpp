@@ -1,6 +1,6 @@
 #include "spectra_filter.h"
 
-#include "utils.h"
+#include "../common/utils.h"
 
 #include <algorithm>
 

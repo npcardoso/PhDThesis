@@ -1,0 +1,1 @@
+a = SConscript('src/SConscript')

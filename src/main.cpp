@@ -1,7 +1,9 @@
-#include "mhs.h"
+#include "algorithms/mhs.h"
+#include "heuristic/parallelization.h"
+#include "heuristic/similarity.h"
+#include "heuristic/sort.h"
 #include "mpi.h"
 #include "sandbox.h"
-#include "similarity.h"
 
 
 #include <cstring>
@@ -20,7 +22,13 @@ int main(int argc, char ** argv){
     mpi_main(argc, argv);
   else {
     t_count_spectra count_spectra;
-    t_mhs<t_count> mhs(new t_similarity<t_count>());
+    t_heuristic<t_count> heuristic;
+    heuristic.push(new t_filter_ochiai<t_count>());
+    //  heuristic.push(new t_filter_cutoff<t_count>());
+    heuristic.push(new t_filter_sort<t_count>());
+
+    t_mhs<t_count> mhs(heuristic);
+    
     t_trie D;
     
     std::cin >> count_spectra;

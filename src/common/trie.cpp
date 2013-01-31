@@ -28,6 +28,7 @@ bool t_trie::purge_composites(const t_candidate & candidate,
                               t_candidate::const_iterator component) {
   if(component == candidate.end()) {
     elements = 0;
+    exists = false;
     return true;
   }
 
@@ -40,10 +41,8 @@ bool t_trie::purge_composites(const t_candidate & candidate,
       break;
 
     elements -= it->second.size();
-//    std::cout << "Child size: before "<< it->second.size() << std::endl;
     if(it->second.purge_composites(candidate, tmp))
       children.erase(it);
-//    std::cout << "Child size: after "<< it->second.size() << std::endl;
     elements += it->second.size();
     it++;
   }

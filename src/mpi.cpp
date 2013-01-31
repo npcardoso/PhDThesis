@@ -1,7 +1,9 @@
 #include "mpi.h"
 
-#include "mhs.h"
-#include "similarity.h"
+#include "algorithms/mhs.h"
+#include "heuristic/parallelization.h"
+#include "heuristic/similarity.h"
+#include "heuristic/sort.h"
 
 #include <mpi.h>
 #include <iostream>
@@ -86,9 +88,17 @@ int mpi_main(int argc, char **argv) {
 
 
   t_count_spectra count_spectra;
-  t_mhs<t_count> mhs(new t_similarity<t_count>());
-  mhs.set_heuristic(2, new t_parallel_similarity<t_count>(rank, ntasks));
-  mhs.set_heuristic(3, new t_similarity<t_count>());
+  
+  t_heuristic<t_count> heuristic;
+  heuristic.push(new t_filter_ochiai<t_count>());
+//  heuristic.push(new t_filter_cutoff<t_count>());
+  heuristic.push(new t_filter_sort<t_count>());
+
+  t_mhs<t_count> mhs(heuristic);
+  mhs.set_heuristic(3, heuristic);
+
+  heuristic.push(new t_filter_divide<t_count>(rank, ntasks));
+  mhs.set_heuristic(2, heuristic);
 /*
   t_mhs<t_count> mhs(new t_parallel_similarity<t_count>(rank, ntasks));
   mhs.set_heuristic(2, new t_similarity<t_count>());

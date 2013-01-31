@@ -51,6 +51,7 @@ public:
 
 typedef std::unique_ptr<t_rank_element[]> t_order_buffer;
 
-
+/* Time */
+typedef long double t_time_interval;
 
 #endif

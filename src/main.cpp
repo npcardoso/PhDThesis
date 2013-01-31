@@ -10,9 +10,8 @@
 #include <libgen.h>
 
 int main(int argc, char ** argv){
-  time_interval_t time_begin = get_time_interval();
+  t_time_interval time_begin = get_time_interval();
   char * exec_name = basename(argv[0]);
-  std::cout << "dev.a.out" << std::endl;
   std::cerr << exec_name << std::endl;
 
   if(!strcmp(exec_name, "sandbox"))
@@ -30,7 +29,7 @@ int main(int argc, char ** argv){
     mhs.calculate(count_spectra, D);
     D.print(std::cout);
   }
-  time_interval_t time_end = get_time_interval();
+  t_time_interval time_end = get_time_interval();
   std::cerr << "Run Time: " << (time_end - time_begin) << std::endl;
 }
 

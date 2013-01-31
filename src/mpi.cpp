@@ -104,10 +104,10 @@ int mpi_main(int argc, char **argv) {
 
   if(rank == 0)  std::cout << count_spectra;
 
-  time_interval_t time_begin = get_time_interval();
+  t_time_interval time_begin = get_time_interval();
   mhs.calculate(count_spectra, D);
   
-  time_interval_t time_end_calculate = get_time_interval();
+  t_time_interval time_end_calculate = get_time_interval();
   std::cerr << "Process " << rank << " Calculation Time: " << (time_end_calculate - time_begin) << std::endl;
   
   if(rank == 0) {
@@ -116,7 +116,7 @@ int mpi_main(int argc, char **argv) {
     D.print(std::cout);
   } else
       send_trie(D, 102400, 0, 0, MPI_COMM_WORLD);
-  time_interval_t time_end_transfer = get_time_interval();
+  t_time_interval time_end_transfer = get_time_interval();
   std::cerr << "Process " << rank << " Transfer Time: " << (time_end_transfer - time_end_calculate) << std::endl;
 
   /* Shut down MPI */

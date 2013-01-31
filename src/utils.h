@@ -1,6 +1,8 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
+#include "types.h"
+
 #include <iostream>
 #include <list>
 #include <map>
@@ -18,8 +20,7 @@
             ++var)
 
 
-typedef long double time_interval_t;
-inline time_interval_t get_time_interval(){
+inline t_time_interval get_time_interval(){
   timeval time;
   gettimeofday(&time, NULL);
   return time.tv_sec + time.tv_usec / 1e6;

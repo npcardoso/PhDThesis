@@ -11,20 +11,23 @@ bool t_trie::add(const t_candidate & candidate,
     if(exists)
       return false;
     exists = true;
+    elements ++;
     return true;
   }
 
   t_trie & tmp = children[*component];
   tmp.parent = this;
-  return tmp.add(candidate, 
-                 ++component,
-                 composites);
+  if(tmp.add(candidate, ++component, composites)) {
+    elements++;
+    return true;
+  }
+  return false;
 }
 
 bool t_trie::purge_composites(const t_candidate & candidate,
                               t_candidate::const_iterator component) {
   if(component == candidate.end()) {
-    exists = false;
+    elements = 0;
     return true;
   }
 
@@ -36,10 +39,13 @@ bool t_trie::purge_composites(const t_candidate & candidate,
     if(it->first > *component)
       break;
 
+    elements -= it->second.size();
+//    std::cout << "Child size: before "<< it->second.size() << std::endl;
     if(it->second.purge_composites(candidate, tmp))
-      children.erase(it++);
-    else
-      it++;
+      children.erase(it);
+//    std::cout << "Child size: after "<< it->second.size() << std::endl;
+    elements += it->second.size();
+    it++;
   }
   return !exists && !children.size();
 }

@@ -133,6 +133,7 @@ void test_trie() {
       cin >> candidate;
       trie.add(candidate);
       trie.print(cout);
+      cout <<"Size: "<< trie.size()<<std::endl;
       break;
     case 2:
       cin >> candidate;

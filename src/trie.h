@@ -16,6 +16,8 @@ class t_trie {
   t_children children;
   bool exists;
 
+  t_count elements;
+
   bool add(const t_candidate & candidate, 
            t_candidate::const_iterator component,
            bool composites);
@@ -32,12 +34,17 @@ public:
   inline t_trie() {
     exists = false;
     parent = NULL;
+    elements = 0;
   }
 
   void add(const t_candidate & candidate, bool composites = false);
 
   inline bool is_composite(const t_candidate & candidate) const {
     return is_composite(candidate, candidate.begin());  
+  }
+
+  inline t_count size() const {
+    return elements;
   }
 
   std::ostream & print(std::ostream & out) const;

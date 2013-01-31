@@ -67,8 +67,13 @@ public:
           std::pair<t_candidate::iterator, bool> tmp = candidate.insert(it.get_component());
           assert(tmp.second);
 
+          
           D.add(candidate);
           candidate.erase(tmp.first);
+          
+          /* Result Length cutoff */
+          if(D.size() >= max_candidates)
+            return;
 
           tmp_filter.filter_component(it.get_component());
         }
@@ -116,6 +121,10 @@ public:
       calculate(spectra, D, &strip_filter, candidate);
       
       candidate.erase(tmp.first);
+      
+      /* Result Length cutoff */
+      if(D.size() >= max_candidates)
+        return;
     }
   }
 

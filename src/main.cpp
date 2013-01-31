@@ -12,7 +12,9 @@
 int main(int argc, char ** argv){
   time_interval_t time_begin = get_time_interval();
   char * exec_name = basename(argv[0]);
-  puts(exec_name);
+  std::cout << "dev.a.out" << std::endl;
+  std::cerr << exec_name << std::endl;
+
   if(!strcmp(exec_name, "sandbox"))
     sandbox(argc, argv);
   else if(!strcmp(exec_name, "mpi"))

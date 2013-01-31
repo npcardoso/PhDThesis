@@ -7,6 +7,7 @@
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
 #include "trie.h"
+#include "utils.h"
 
 #include <boost/shared_ptr.hpp>
 #include <map>
@@ -30,84 +31,91 @@ public:
     assert(heuristic != NULL);
     heuristics[start_level] = t_heuristic_ptr(heuristic);
   }
-
+  
   void calculate(const t_spectra <T_ACTIVITY> & spectra,
                  t_trie & D,
-                 const t_spectra_filter * filter = NULL,
-                 t_count candidate_size = 0) const {
+                 const t_spectra_filter * filter = NULL) const {
+
+    t_candidate candidate;
+    calculate(spectra, D, filter, candidate);
+  
+  }
+  
+  void calculate(const t_spectra <T_ACTIVITY> & spectra,
+                 t_trie & D,
+                 const t_spectra_filter * filter,
+                 t_candidate & candidate) const {
     
     t_spectra_filter tmp_filter;
     if(filter)
       tmp_filter = *filter;
 
-    candidate_size++;
-
     /* Candidate Length cutoff */
 
-    if(max_candidate_size && candidate_size > max_candidate_size)
+    if(max_candidate_size && candidate.size() + 1 > max_candidate_size)
       return;
 
     /* Removing singleton candidates */
 
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
-                          &tmp_filter);
+    {
+      t_spectra_iterator it(spectra.get_component_count(),
+                            spectra.get_transaction_count(),
+                            &tmp_filter);
 
-    while(it.next_component())
-      if(all_failed(it.get_component(), spectra, tmp_filter)) {
-        t_candidate tmp_candidate;
-        tmp_candidate.insert(it.get_component());
-        D.add(tmp_candidate);
-        
-        tmp_filter.filter_component(it.get_component());
-      }
+      while(it.next_component())
+        if(all_failed(it.get_component(), spectra, tmp_filter)) {
+          std::pair<t_candidate::iterator, bool> tmp = candidate.insert(it.get_component());
+          assert(tmp.second);
+
+          D.add(candidate);
+          candidate.erase(tmp.first);
+
+          tmp_filter.filter_component(it.get_component());
+        }
+    }
 
     /* Candidate Length cutoff */
 
-    if(max_candidate_size && candidate_size >= max_candidate_size)
+    if(max_candidate_size && candidate.size() + 2 > max_candidate_size)
       return;
 
     /* Ranking */
 
     t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
 
-    get_heuristic(candidate_size).order(spectra, order_buffer.get(), &tmp_filter);
+    get_heuristic(candidate.size()).order(spectra, order_buffer.get(), &tmp_filter);
 
     /* Creating complex candidates */
 
     t_count remaining_components = spectra.get_component_count() - tmp_filter.get_filtered_component_count();
 
     for(t_id i = 0; i < remaining_components; i++) {
+      t_component_id component = order_buffer[i].get_component();
 
       /* Heuristic signalling end of ranking */
-      if(order_buffer[i].get_component() == 0)
+      if(component == 0)
         break;
 
       /* Strip component from spectra */
       
       t_spectra_filter strip_filter = tmp_filter;
       
-      tmp_filter.filter_component(order_buffer[i].get_component());
+      tmp_filter.filter_component(component);
 
       /* Heuristic signalling skip */
       if(order_buffer[i].get_value() <= 0)
         continue;
 
-      strip(order_buffer[i].get_component(), spectra, strip_filter);
+      strip(component, spectra, strip_filter);
       
-      t_trie partial_D;
-      calculate(spectra, partial_D, &strip_filter, candidate_size);
+      /* Insert the component into the candidate */
+      
+      std::pair<t_candidate::iterator, bool> tmp = candidate.insert(component);
+      assert(tmp.second);
 
-      /* Append partial candidates with current component */
-      t_trie::iterator it = partial_D.begin();
-
-      while(it != partial_D.end()) {
-        t_candidate tmp_candidate = *(it++);
-        tmp_candidate.insert(order_buffer[i].get_component());
-        assert(spectra.is_candidate(tmp_candidate, &tmp_filter));
-        D.add(tmp_candidate);
-      }
-
+      calculate(spectra, D, &strip_filter, candidate);
+      
+      candidate.erase(tmp.first);
     }
   }
 

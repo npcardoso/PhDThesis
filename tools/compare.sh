@@ -5,13 +5,19 @@ fi
 
 OUTPUT_DIR=`mktemp -d`
 INPUT=$1
-INPUT_DIR=`dirname $1`
+if [[ ! -d $1 ]]; then
+  INPUT_DIR=`dirname $1`
+else
+  INPUT_DIR=$1
+fi
+
 
 FIRST=$2
 SECOND=$3
 IFS="
 "
 for TEST_CASE in `command ls -1 $INPUT`; do
+  echo "-----$TEST_CASE-----"
   FIRST_OUT=$OUTPUT_DIR"/first"
   SECOND_OUT=$OUTPUT_DIR"/second"
 

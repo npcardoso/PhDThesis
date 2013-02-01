@@ -96,6 +96,8 @@ public:
     t_count remaining_components = spectra.get_component_count() - tmp_filter.get_filtered_component_count();
 
     for(t_id i = 0; i < remaining_components; i++) {
+      t_component_id component = order_buffer[i].get_component();
+      
       /* Result Length cutoff */
       if(max_candidate_size && D.size() >= max_candidates)
         return;
@@ -104,33 +106,29 @@ public:
       if(max_time > 0 && get_time_interval() - start_time > max_time)
         return;
 
-      t_component_id component = order_buffer[i].get_component();
-
-      /* Heuristic signalling end of ranking */
+      /* Heuristic cutoff */
       if(component == 0)
         break;
 
-      /* Strip component from spectra */
-
-      t_spectra_filter strip_filter = tmp_filter;
-
-      tmp_filter.filter_component(component);
 
       /* Heuristic signalling skip */
-      if(order_buffer[i].get_value() <= 0)
+      if(order_buffer[i].get_value() <= 0) {
+        tmp_filter.filter_component(component);
         continue;
+      }
 
+      /* Strip component from spectra */
+      t_spectra_filter strip_filter = tmp_filter;
+      tmp_filter.filter_component(component);
       strip(component, spectra, strip_filter);
 
       /* Insert the component into the candidate */
-
       std::pair<t_candidate::iterator, bool> tmp = candidate.insert(component);
       assert(tmp.second);
 
       calculate(spectra, D, &strip_filter, candidate, start_time);
 
       candidate.erase(tmp.first);
-
     }
   }
 
@@ -142,12 +140,14 @@ private:
     t_spectra_iterator it(spectra.get_component_count(),
                           spectra.get_transaction_count(),
                           &filter);
-    it.set_component(component);
 
     while (it.next_transaction()){
-      bool activity = spectra.get_count(it.get_component(), it.get_transaction());
-      bool error = spectra.is_error(it.get_transaction());
-      if(error && !activity)
+      t_transaction_id transaction = it.get_transaction();
+      if(!spectra.is_error(transaction))
+        continue;
+
+      bool activity = spectra.get_count(component, transaction);
+      if(!activity)
         return false;
     }
     return true;
@@ -160,12 +160,12 @@ private:
     t_spectra_iterator it(spectra.get_component_count(),
                           spectra.get_transaction_count(),
                           &filter);
-    it.set_component(component);
-
+    
     while (it.next_transaction()){
-      bool activity = spectra.get_count(it.get_component(), it.get_transaction());
+      t_transaction_id transaction = it.get_transaction();
+      bool activity = spectra.get_count(component, transaction);
       if(activity)
-        filter.filter_transaction(it.get_transaction());
+        filter.filter_transaction(transaction);
     }
     filter.filter_component(component);
   }

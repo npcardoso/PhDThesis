@@ -1,5 +1,6 @@
 #include "algorithms/mhs.h"
 #include "common/trie.h"
+#include "heuristic/cutoff.h"
 #include "heuristic/parallelization.h"
 #include "heuristic/similarity.h"
 #include "heuristic/sort.h"
@@ -44,11 +45,12 @@ void test_parallel_similarity() {
   for(int i = 0; i < count_spectra.get_component_count(); i++){
     cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
   }
-  
+  cout << std::endl;
   heuristic = t_heuristic<t_count>();
   heuristic.push(new t_filter_ochiai<t_count>());
   heuristic.push(new t_filter_sort<t_count>());
   heuristic.push(new t_filter_divide<t_count>(1,2));
+  heuristic.push(new t_filter_cutoff<t_count>(0,0.7));
   
   heuristic(count_spectra, order_buffer.get());
   for(int i = 0; i < count_spectra.get_component_count(); i++){
@@ -129,6 +131,6 @@ void test_trie() {
 
 void sandbox(int argc, char ** argv) {
   cout << "Sandbox\n";
-  test_trie();
+  test_parallel_similarity();
 }
 

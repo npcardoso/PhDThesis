@@ -1,6 +1,8 @@
 import os
 
 Import("build_info")
+def SymLink(target, source, env):
+  os.symlink(os.path.abspath(str(source[0])), os.path.abspath(str(target[0])))
 
 root = Dir('#').abspath
 
@@ -17,4 +19,6 @@ env['ENV']['TERM'] = os.environ['TERM']
 env["CXX"] = "clang++"
 
 obj = env.Program(target = target, source = sources)
-#lib_install = env.Install(build_info['build_dir'] + "/lib", obj)
+install = env.Install(root + "/bin", obj)
+env.Command(root + "/bin/mpi", install, SymLink)
+env.Command(root + "/bin/sandbox", install, SymLink)

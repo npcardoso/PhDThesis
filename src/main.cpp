@@ -2,6 +2,7 @@
 #include "heuristic/parallelization.h"
 #include "heuristic/similarity.h"
 #include "heuristic/sort.h"
+#include "spectra/count_spectra.h"
 #include "mpi.h"
 #include "sandbox.h"
 

@@ -2,7 +2,6 @@
 #define __MHS_H__
 
 #include "../heuristic/heuristic.h"
-#include "../spectra/count_spectra.h"
 #include "../spectra/spectra.h"
 #include "../spectra/spectra_filter.h"
 #include "../spectra/spectra_iterator.h"
@@ -10,6 +9,7 @@
 #include "../common/utils.h"
 
 #include <map>
+#include <list>
 
 template <class T_ACTIVITY>
 class t_mhs {
@@ -37,15 +37,14 @@ public:
                  const t_spectra_filter * filter = NULL) const {
 
     t_candidate candidate;
-    calculate(spectra, D, filter, candidate, get_time_interval());
-
+    calculate(spectra, D, filter, candidate);
   }
 
   void calculate(const t_spectra <T_ACTIVITY> & spectra,
                  t_trie & D,
                  const t_spectra_filter * filter,
                  t_candidate & candidate,
-                 t_time_interval start_time) const {
+                 t_time_interval start_time=get_time_interval()) const {
 
     t_spectra_filter tmp_filter;
     if(filter)
@@ -129,6 +128,49 @@ public:
       calculate(spectra, D, &strip_filter, candidate, start_time);
 
       candidate.erase(tmp.first);
+    }
+  }
+  
+  static void combine(const t_spectra <T_ACTIVITY> & spectra,
+                      t_trie & D,
+                      const t_trie & D_first,
+                      const t_trie & D_second,
+                      const t_spectra_filter & filter_first,
+                      const t_spectra_filter & filter_second) {
+
+    std::list <t_candidate> c_first, c_second;
+    
+    {
+      t_trie::iterator it = D_first.begin();
+      while(it != D_first.end()) {
+        if(spectra.is_candidate(*it, &filter_second))
+          D.add(*it);
+        else
+          c_first.push_back(*it);
+        it++;
+      }
+
+      it = D_second.begin();
+      while(it != D_second.end()) {
+        if(spectra.is_candidate(*it, &filter_first))
+          D.add(*it);
+        else
+          c_second.push_back(*it);
+        it++;
+      }
+    }
+    {
+      std::list<t_candidate>::iterator first_it = c_first.begin();
+      while(first_it != c_first.end()){
+        std::list<t_candidate>::iterator second_it = c_second.begin();
+        while(second_it != c_second.end()){
+          t_candidate tmp = *first_it;
+          tmp.insert(second_it->begin(), second_it->end());
+          D.add(tmp);
+          second_it++;
+        }
+        first_it++;
+      }
     }
   }
 

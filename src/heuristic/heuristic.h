@@ -35,14 +35,24 @@ public:
                   const t_spectra_filter * filter = NULL) const {
     assert(ret != NULL);
     
-    typename t_filters::const_iterator it = filters.begin();
     if(!spectra.get_transaction_count(filter))
       return;
 
-    ret[0] = t_rank_element(0, 0);
+    if(filters.size()) {
+      typename t_filters::const_iterator it = filters.begin();
+      ret[0] = t_rank_element(0, 0);
 
-    while(it != filters.end())
-      (**(it++))(spectra, ret, filter);
+      while(it != filters.end())
+        (**(it++))(spectra, ret, filter);
+    }
+    else {
+      t_spectra_iterator it(spectra.get_component_count(),
+                            spectra.get_transaction_count(),
+                            filter);
+      t_id i = 0;
+      while (it.next_component())
+        ret[i++] = t_rank_element(it.get_component(), 1);
+    }
   }
 };
 

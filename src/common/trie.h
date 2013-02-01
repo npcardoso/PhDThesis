@@ -55,6 +55,11 @@ public:
   friend class t_trie_iterator;
 };
 
+inline std::ostream & operator << (std::ostream & out, const t_trie & trie){
+  return trie.print(out);
+}
+
+
 class t_trie_iterator {
   t_candidate current;
   const t_trie * level;

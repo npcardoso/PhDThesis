@@ -56,10 +56,33 @@ void test_parallel_similarity() {
   for(int i = 0; i < count_spectra.get_component_count(); i++){
     cout << order_buffer[i].get_component() << "," << order_buffer[i].get_value() << " " ;
   }
-
-
 }
 
+void test_mhs_combine(const t_count_spectra & count_spectra) {
+  t_heuristic<t_count> heuristic;
+  t_mhs<t_count> mhs(heuristic);
+
+  t_trie D, D_first, D_second;
+  t_spectra_filter filter_first, filter_second;
+  
+  for(t_component_id component = 0;
+      component < count_spectra.get_component_count();
+      component++)
+    if(component > count_spectra.get_component_count() / 2)
+      filter_first.filter_transaction(component+1);
+    else
+      filter_second.filter_transaction(component+1);
+
+  cout << count_spectra << endl;
+  mhs.calculate(count_spectra, D_first, &filter_first);  
+  cout << "First:\n" << D_first <<endl;
+  mhs.calculate(count_spectra, D_second, &filter_second);  
+  cout << "Second:\n" << D_second <<endl;
+
+  mhs.combine(count_spectra, D, D_first, D_second, filter_first, filter_second);
+  cout << "Result:\n" << D <<endl;
+  
+}
 
 void test_spectra() {
   t_spectra_filter filter;
@@ -130,7 +153,8 @@ void test_trie() {
 }
 
 void sandbox(int argc, char ** argv) {
-  cout << "Sandbox\n";
-  test_parallel_similarity();
+  t_count_spectra count_spectra;
+  cin >> count_spectra;
+  test_mhs_combine(count_spectra);
 }
 

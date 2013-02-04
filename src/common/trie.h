@@ -26,7 +26,8 @@ class t_trie {
                         t_candidate::const_iterator component);
 
   bool is_composite(const t_candidate & candidate,
-                    t_candidate::const_iterator component) const;
+                    t_candidate::const_iterator component,
+                    bool strict = false) const;
 
 public:
   typedef t_trie_iterator iterator;
@@ -37,10 +38,12 @@ public:
     elements = 0;
   }
 
-  void add(const t_candidate & candidate, bool composites = false);
+  void add(const t_candidate & candidate, 
+           bool composites = false);
 
-  inline bool is_composite(const t_candidate & candidate) const {
-    return is_composite(candidate, candidate.begin());  
+  inline bool is_composite(const t_candidate & candidate,
+                           bool strict = false) const {
+    return is_composite(candidate, candidate.begin(), strict);  
   }
 
   inline t_count size() const {

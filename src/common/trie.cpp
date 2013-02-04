@@ -52,8 +52,9 @@ bool t_trie::purge_composites(const t_candidate & candidate,
 }
 
 bool t_trie::is_composite(const t_candidate & candidate,
-                          t_candidate::const_iterator component) const {
-  if(exists)
+                          t_candidate::const_iterator component,
+                          bool strict) const {
+  if(exists && (!strict || component != candidate.end()))
     return true;
 
   while(component != candidate.end()) {

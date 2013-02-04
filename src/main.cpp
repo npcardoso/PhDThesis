@@ -36,7 +36,7 @@ int main(int argc, char ** argv){
     std::cout << count_spectra;
     
     mhs.calculate(count_spectra, D);
-    D.print(std::cout);
+    std::cout << D;
   }
   t_time_interval time_end = get_time_interval();
   std::cerr << "Run Time: " << (time_end - time_begin) << std::endl;

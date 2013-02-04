@@ -131,6 +131,35 @@ public:
     }
   }
   
+  void update(const t_spectra <T_ACTIVITY> & spectra,
+              t_trie & D,
+              t_trie & old_D,
+              const t_spectra_filter & filter) const {
+
+    std::list <t_candidate> candidates;
+    
+    {
+      t_trie::iterator it = old_D.begin();
+      while(it != old_D.end()) {
+        if(spectra.is_candidate(*it, &filter))
+          D.add(*it, true);
+        else
+          candidates.push_back(*it);
+        it++;
+      }
+    }
+    {
+      std::list<t_candidate>::iterator it = candidates.begin();
+      while(it != candidates.end()){
+        t_candidate candidate = *it;
+        t_spectra_filter tmp_filter = filter;
+        strip(candidate, spectra, tmp_filter);
+        calculate(spectra, D, &tmp_filter, candidate);
+        it++;
+      }
+    }
+  }
+
   static void combine(const t_spectra <T_ACTIVITY> & spectra,
                       t_trie & D,
                       const t_trie & D_first,
@@ -145,7 +174,7 @@ public:
       while(it != D_first.end()) {
         if(spectra.is_candidate(*it, &filter_second))
           D.add(*it);
-        else
+        else if(!D_second.is_composite(*it, true))
           c_first.push_back(*it);
         it++;
       }
@@ -154,7 +183,7 @@ public:
       while(it != D_second.end()) {
         if(spectra.is_candidate(*it, &filter_first))
           D.add(*it);
-        else
+        else if(!D_first.is_composite(*it, true))
           c_second.push_back(*it);
         it++;
       }
@@ -195,6 +224,30 @@ private:
     return true;
   }
 
+  void strip(t_candidate candidate,
+             const t_spectra <T_ACTIVITY> & spectra,
+             t_spectra_filter & filter) const {
+
+    t_spectra_iterator it(spectra.get_component_count(),
+                          spectra.get_transaction_count(),
+                          &filter);
+    
+    while (it.next_transaction()) {
+      t_candidate::const_iterator c_it = candidate.begin();
+      while (c_it != candidate.end()) {
+        t_transaction_id transaction = it.get_transaction();
+        if(spectra.get_count(*(c_it++), transaction)) {
+          filter.filter_transaction(transaction);
+          break;
+        }
+      }
+    }
+  
+    t_candidate::const_iterator c_it = candidate.begin();
+    while (c_it != candidate.end())
+      filter.filter_component(*(c_it++));
+  }
+  
   void strip(t_component_id component,
              const t_spectra <T_ACTIVITY> & spectra,
              t_spectra_filter & filter) const {

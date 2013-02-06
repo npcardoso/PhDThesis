@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 import sys
 import random
 
@@ -18,7 +20,7 @@ if(len(sys.argv) > 4):
 else:
     error_rate = 0.3
 
-print("%d %d\n" % (component_count, transaction_count))
+print "%d %d\n" % (component_count, transaction_count)
 
 for transaction in range(transaction_count):
     tmp_str = ""
@@ -27,14 +29,14 @@ for transaction in range(transaction_count):
             tmp_str += "1 "
         else:
             tmp_str += "0 "
-    print(tmp_str)
+    print tmp_str
 
-print()
+print
 
 for transaction in range(transaction_count):
     if(random.random() < error_rate):
-        print("1 ", end="")
+        print "1 ",
     else:
-        print("0 ", end="")
+        print "0 ",
 
-print()
+print

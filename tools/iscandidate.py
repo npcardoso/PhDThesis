@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 import sys
 import random
 
@@ -50,8 +52,8 @@ spectra = read_spectra(open(sys.argv[1], 'r'))
 
 try:
     while True:
-        candidate = [int(x) for x in input().split()]
-        print(is_candidate(spectra, candidate))
+        candidate = [int(x) for x in raw_input().split()]
+        print is_candidate(spectra, candidate)
         
 except EOFError:
     pass

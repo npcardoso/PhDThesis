@@ -1,5 +1,7 @@
 #include "trie.h"
 
+#include <cassert>
+
 bool t_trie::add(const t_candidate & candidate, 
                  t_candidate::const_iterator component,
                  bool composites) {

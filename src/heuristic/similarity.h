@@ -26,9 +26,6 @@ public:
                           spectra.get_transaction_count(),
                           filter);
     t_count n[2][2];
-    t_count total_transactions = spectra.get_transaction_count(filter);
-    t_count total_components = spectra.get_component_count(filter);
-
 
     t_id i = 0;
     while (it.next_component()){
@@ -38,7 +35,7 @@ public:
         bool error = spectra.is_error(it.get_transaction());
         n[activity?1:0][error?1:0]++;
       }
-      assert(n[0][0] + n[0][1] + n[1][0] + n[1][1] == total_transactions);
+      assert(n[0][0] + n[0][1] + n[1][0] + n[1][1] == spectra.get_transaction_count(filter));
       t_heuristic_value value = similarity_coefficient(n);
       ret[i++] = t_rank_element (it.get_component(), value);
     }

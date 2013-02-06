@@ -6,6 +6,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <vector>
+
 template <class T_ACTIVITY>
 class t_heuristic_filter {
 public:

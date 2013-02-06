@@ -1,11 +1,18 @@
 build_dir = 'obj'
 
-build_info = {}
-build_info['build_name'] = "a.out"
-build_info['build_dir'] = str(Dir('#').abspath) + '/' + build_dir
-build_info['common_include_dir'] = build_info['build_dir'] + "/include"
-build_info['clang'] = 'clang'
+config = {}
+Export('config')
+config['build_name'] = "a.out"
+config['c++'] = 'clang++'
+config['mpi_cflags'] = '`mpic++ --showme:compile`'
+config['mpi_lflags'] = '`mpic++ --showme:link`'
 
-Export('build_info')
 
-SConscript('SConscript', variant_dir=build_dir)
+
+config['cflags'] = '-pg'
+config['lflags'] = ''
+SConscript('SConscript', variant_dir=build_dir + "/test")
+
+config['cflags'] = '-DNDEBUG'
+config['lflags'] = ''
+SConscript('SConscript', variant_dir=build_dir + "/performance")

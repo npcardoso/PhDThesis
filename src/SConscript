@@ -1,24 +1,26 @@
 import os
 
-Import("build_info")
 def SymLink(target, source, env):
   os.symlink(os.path.abspath(str(source[0])), os.path.abspath(str(target[0])))
 
+
+Import("config")
+
 root = Dir('#').abspath
 
-target  = build_info['build_name']
+target  = config['build_name']
 sources = Glob("*cpp") + Glob("*/*cpp")
 
 
 env = Environment(
-#CCFLAGS = " -DNDEBUG -O3 -g -std=c++0x",
-	CCFLAGS = "-O3 -g -std=c++0x",
-	LINKFLAGS = "-g -lpthread -pthread -L/usr/lib/openmpi -lmpi_cxx -lmpi -ldl -lhwloc")
+	CCFLAGS = "%s %s -std=c++0x" % (config['mpi_cflags'], config['cflags']),
+	LINKFLAGS = "%s %s -std=c++0x" % (config['mpi_lflags'], config['lflags']))
 
+env['ENV']['PATH'] = os.environ['PATH']
 env['ENV']['TERM'] = os.environ['TERM']
-env["CXX"] = "clang++"
+env["CXX"] = config['c++']
 
 obj = env.Program(target = target, source = sources)
-install = env.Install(root + "/bin", obj)
-env.Command(root + "/bin/mpi", install, SymLink)
-env.Command(root + "/bin/sandbox", install, SymLink)
+env.Command("../normal", obj, SymLink)
+env.Command("../mpi", obj, SymLink)
+env.Command("../sandbox", obj, SymLink)

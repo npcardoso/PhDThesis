@@ -7,12 +7,12 @@ config['c++'] = 'clang++'
 config['mpi_cflags'] = '`mpic++ --showme:compile`'
 config['mpi_lflags'] = '`mpic++ --showme:link`'
 
+cflags = "-Wall -ansi -pedantic"
 
-
-config['cflags'] = '-pg'
+config['cflags'] = '%s -pg -g' % cflags
 config['lflags'] = ''
 SConscript('SConscript', variant_dir=build_dir + "/test")
 
-config['cflags'] = '-DNDEBUG'
-config['lflags'] = ''
+config['cflags'] = '%s -DNDEBUG -O3' % cflags
+config['lflags'] = '-O3'
 SConscript('SConscript', variant_dir=build_dir + "/performance")

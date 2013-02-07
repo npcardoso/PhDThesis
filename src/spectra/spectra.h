@@ -10,7 +10,7 @@
 
 #include <cassert>
 #include <iostream>
-#include <set>
+#include <vector>
 
 template <class T_ACTIVITY>
 class t_spectra {
@@ -77,7 +77,7 @@ inline std::ostream & operator << (std::ostream & out, const t_spectra<T_ACTIVIT
 template <class T_ACTIVITY>
 class t_basic_spectra: public t_spectra <T_ACTIVITY> {
 
-  typedef std::set <t_transaction_id> t_errors;
+  typedef std::vector <bool> t_errors;
   t_errors errors;
   t_count component_count;
   t_count transaction_count;
@@ -100,12 +100,11 @@ public:
   virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const {
     //FIXME: Improve performance
     t_count filtered_errors = 0;
-    if(filter) {
-      t_errors::iterator it = errors.begin();
-      while(it != errors.end())
-        if(filter->is_transaction(*(it++)))
+    if(filter)
+      for(t_id i = 1; i <= get_component_count(); i++)
+        if(is_error(i) && filter->is_transaction(i))
           filtered_errors++;
-    }
+    
     return errors.size() - filtered_errors;
   }
 
@@ -128,10 +127,8 @@ public:
     this->component_count = component_count;
     
     this->transaction_count = transaction_count;
-    t_errors::reverse_iterator it = errors.rbegin();
-    while(it != errors.rend() && *it > transaction_count)
-      it++;
-    errors.erase(it.base(), errors.rbegin().base());
+
+    errors.resize(transaction_count, false);
   }
   
   virtual void set_component_count(t_count component_count) {
@@ -147,7 +144,7 @@ public:
     assert(transaction > 0);
     assert(transaction <= transaction_count);
 
-    return errors.count(transaction);
+    return errors[transaction - 1];
   }
 
   inline virtual void error(t_transaction_id transaction, 
@@ -155,10 +152,7 @@ public:
     assert(transaction > 0);
     assert(transaction <= transaction_count);
 
-    if(set)
-      errors.insert(transaction);
-    else
-      errors.erase(transaction);
+    errors[transaction - 1] = set;
   }
 
   virtual t_order_buffer get_ordering_buffer(const t_spectra_filter * filter = NULL) const {

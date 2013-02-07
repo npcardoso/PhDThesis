@@ -10,24 +10,25 @@
 #include "spectra/spectra_filter.h"
 #include "spectra/spectra_iterator.h"
 
-
+#include <cstdlib>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 
 using namespace std;
 
 
-void example_count_spectra(t_count_spectra & count_spectra) {
-  count_spectra.set_element_count(3,3);
-  count_spectra.hit(1,1); 
-  count_spectra.hit(2,2); 
-  count_spectra.hit(3,3); 
-  count_spectra.hit(1,3); 
-  count_spectra.hit(3,1); 
-  count_spectra.hit(3,2); 
-  count_spectra.error(1);
-  count_spectra.error(2);
-  count_spectra.error(3);
+void example_count_spectra(t_count_spectra & count_spectra, t_count component_count = 3, t_count transaction_count = 3, float activity=0.3, float error=0.5) {
+  count_spectra.set_element_count(component_count, transaction_count);
+  for(t_transaction_id t = 1; t <= transaction_count; t++) {
+    for(t_component_id c = 1; c <= component_count; c++)
+      if(rand() < RAND_MAX * activity)
+        count_spectra.hit(c, t);
+      
+    if(rand() < RAND_MAX * error)
+      count_spectra.error(t);
+  
+  }
 }
 
 void test_parallel_similarity() {
@@ -98,7 +99,7 @@ void test_mhs_update(const t_count_spectra & count_spectra) {
   for(t_component_id component = 0;
       component < count_spectra.get_component_count();
       component++)
-    if(component > 0 * count_spectra.get_component_count() / 2)
+    if(component > 0)// * count_spectra.get_component_count() / 2)
       filter_first.filter_transaction(component+1);
     else
       filter_second.filter_transaction(component+1);
@@ -116,10 +117,11 @@ void test_mhs_update(const t_count_spectra & count_spectra) {
 void test_spectra() {
   t_spectra_filter filter;
   //t_spectra_iterator it(4,4);
-  t_spectra_iterator it(3,3, &filter);
-//  filter.filter_component(1);
-  //filter.filter_component(2);
-  //filter.filter_component(4);
+  t_spectra_iterator it(5,5, &filter);
+  filter.filter_component(2);
+  filter.filter_component(1);
+  filter.filter_transaction(3);
+  filter.filter_transaction(1);
 
   while(it.next(true)){
     cout << it.get_component() << ", " << it.get_transaction() << endl; 
@@ -130,9 +132,10 @@ void test_spectra() {
   }
 
   t_count_spectra count_spectra;
-  example_count_spectra(count_spectra);
+  example_count_spectra(count_spectra, 5, 5, 0.5,1);
   cout << count_spectra;
   count_spectra.print(cout, &filter);
+  return;
   
   t_heuristic<t_count> heuristic;
   heuristic.push(new t_filter_ochiai<t_count>());
@@ -183,12 +186,8 @@ void test_trie() {
 
 void sandbox(int argc, char ** argv) {
   t_count_spectra count_spectra;
-  cin >> count_spectra;
-  if(argc > 2){
-    cerr << "FFFFFFFFFFFFFFFOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"<<endl ;
-    test_mhs_combine(count_spectra);
-  }
-  else
-    test_mhs_update(count_spectra);
+  srand(time(NULL));
+//  cin >> count_spectra;
+  test_spectra();
 }
 

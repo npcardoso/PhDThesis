@@ -64,16 +64,19 @@ public:
 
       while(it.next_component())
         if(all_failed(it.get_component(), spectra, tmp_filter)) {
+          /* Result Length cutoff */
+
+          if(max_candidates && D.size() >= max_candidates)
+            return;
+
           std::pair<t_candidate::iterator, bool> tmp = candidate.insert(it.get_component());
           assert(tmp.second);
 
-          /* Result Length cutoff */
-
-          if(max_candidate_size && D.size() >= max_candidates)
-            return;
-
           D.add(candidate);
           candidate.erase(tmp.first);
+
+          if(max_candidates && D.size() >= max_candidates)
+            return;
 
           tmp_filter.filter_component(it.get_component());
         }
@@ -96,9 +99,9 @@ public:
 
     for(t_id i = 0; i < remaining_components; i++) {
       t_component_id component = order_buffer[i].get_component();
-      
+
       /* Result Length cutoff */
-      if(max_candidate_size && D.size() >= max_candidates)
+      if(max_candidates && D.size() >= max_candidates)
         return;
 
       /* Time cutoff */
@@ -130,14 +133,14 @@ public:
       candidate.erase(tmp.first);
     }
   }
-  
+
   void update(const t_spectra <T_ACTIVITY> & spectra,
               t_trie & D,
               t_trie & old_D,
               const t_spectra_filter & filter) const {
 
     std::list <t_candidate> candidates;
-    
+
     {
       t_trie::iterator it = old_D.begin();
       while(it != old_D.end()) {
@@ -168,7 +171,7 @@ public:
                       const t_spectra_filter & filter_second) {
 
     std::list <t_candidate> c_first, c_second;
-    
+
     {
       t_trie::iterator it = D_first.begin();
       while(it != D_first.end()) {
@@ -231,7 +234,7 @@ private:
     t_spectra_iterator it(spectra.get_component_count(),
                           spectra.get_transaction_count(),
                           &filter);
-    
+
     while (it.next_transaction()) {
       t_candidate::const_iterator c_it = candidate.begin();
       while (c_it != candidate.end()) {
@@ -242,12 +245,12 @@ private:
         }
       }
     }
-  
+
     t_candidate::const_iterator c_it = candidate.begin();
     while (c_it != candidate.end())
       filter.filter_component(*(c_it++));
   }
-  
+
   void strip(t_component_id component,
              const t_spectra <T_ACTIVITY> & spectra,
              t_spectra_filter & filter) const {
@@ -255,7 +258,7 @@ private:
     t_spectra_iterator it(spectra.get_component_count(),
                           spectra.get_transaction_count(),
                           &filter);
-    
+
     while (it.next_transaction()){
       t_transaction_id transaction = it.get_transaction();
       bool activity = spectra.get_count(component, transaction);

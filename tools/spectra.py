@@ -1,42 +1,71 @@
-#!/usr/bin/env python2
+class Spectra:
+    
+    def __init__(self, ncomps=0, ntrans=0, activity=None, error=None):
+        self.ncomps = ncomps
+        self.ntrans = ntrans
 
-import sys
-import random
-
-if not (3 <= len(sys.argv) <= 5):
-    sys.exit('Usage: %s <#components> <#transactions> [selection_rate] [error_rate]' % sys.argv[0])
-
-
-component_count = int(sys.argv[1])
-transaction_count = int(sys.argv[2])
-
-if(len(sys.argv) > 3):
-    selection_rate = float(sys.argv[3])
-else:
-    selection_rate = 0.3
-
-if(len(sys.argv) > 4):
-    error_rate = float(sys.argv[4])
-else:
-    error_rate = 0.3
-
-print "%d %d\n" % (component_count, transaction_count)
-
-for transaction in range(transaction_count):
-    tmp_str = ""
-    for component in range(component_count):
-        if(random.random() < selection_rate):
-            tmp_str += "1 "
+        if activity is None:
+            self.activity = ntrans * ncomps * [0];
         else:
-            tmp_str += "0 "
-    print tmp_str
+            self.activity = activity
 
-print
+        if error is None:
+            self.error = ntrans * [0]
+        else:
+            self.error = error
 
-for transaction in range(transaction_count):
-    if(random.random() < error_rate):
-        print "1 ",
-    else:
-        print "0 ",
+    def set(self, comp, trans, val=1):
+        self.activity[(trans - 1) * self.ncomps + (comp - 1)] = val
 
-print
+    def set_error(self, trans, val=1):
+        self.error[(trans - 1)] = val
+    
+    def get(self, comp, trans):
+        return self.activity[(trans - 1) * self.ncomps + (comp - 1)]
+
+    def get_error(self, trans):
+        return self.error[(trans - 1)]
+
+    def write(self):
+        print self.ncomps, self.ntrans
+        for transaction in range(1, self.ntrans + 1):
+            for component in range(1, self.ncomps + 1):
+                print self.get(component, transaction),
+            print int(self.get_error(transaction))
+
+    def read(self, file):
+        buffer = str()
+        for line in file:
+            buffer += " "+line
+
+        buffer = buffer.split();
+        
+        self.ncomps = int(buffer[0])
+        self.ntrans = int(buffer[1])
+        
+        self.activity = self.ntrans * self.ncomps * [0]
+        self.error = self.ntrans * [0]
+        
+        i = 2
+        for transaction in range(1, self.ntrans + 1):
+            for component in range(1, self.ncomps + 1):
+                self.set(component, transaction, int(buffer[i]))
+                i = i + 1
+            self.set_error(transaction, buffer[i] == '1' or buffer[i] == 'x' or buffer[i] == '-');
+            i = i + 1
+
+        return self
+
+    def is_candidate(self, candidate):
+        for transaction in range(1, self.ntrans + 1):
+            if not self.get_error(transaction) > 0:
+                continue
+            hit = False
+            for component in candidate:
+                if(self.get(component, transaction) > 0):
+                    hit = True
+                    break
+            if not hit:
+                return False
+        return True
+

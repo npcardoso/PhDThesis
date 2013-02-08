@@ -91,7 +91,7 @@ std::istream & t_count_spectra::read(std::istream & in) {
   t_count value;
   for(t_transaction_id transaction = 1;
       transaction <= transaction_count;
-      transaction++)
+      transaction++) {
     for(t_component_id component = 1;
         component <= component_count;
         component++) {
@@ -99,13 +99,12 @@ std::istream & t_count_spectra::read(std::istream & in) {
       if(value)
         hit(component, transaction_offset + transaction);
     }
-
-  for(t_transaction_id transaction = 1;
-      transaction <= transaction_count;
-      transaction++){
-    in >> value;
-    if(value)
+    char result;
+    in >> result;
+    if(result == '1' || result == '-' || result == 'x')
       error(transaction_offset + transaction);
+  
   }
+
   return in;
 }

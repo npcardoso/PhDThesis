@@ -5,39 +5,48 @@
 #include "spectra/count_spectra.h"
 #include "mpi.h"
 #include "sandbox.h"
-
+#include "opts.h"
 
 #include <cstring>
 #include <cstdio>
 
-#include <libgen.h>
+template <class T_ACTIVITY>
+bool read_spectra(t_spectra<T_ACTIVITY> & spectra,
+                  const t_options<T_ACTIVITY> & options) {
+  if(options.input) {
+    std::ifstream in(options.input);
+    in >> spectra;
+    in.close();
+  }
+  else
+    std::cin >> spectra;
+  return false;
+}
+
 
 int main(int argc, char ** argv){
+
+  t_options<t_count> options;
+  if(configure(argc, argv, options))
+    return 1;
+
+  std::cerr << options << std::endl;
+  
+  t_count_spectra spectra;
+  
+  if(read_spectra(spectra, options))
+    return 1;
+
   t_time_interval time_begin = get_time_interval();
-  char * exec_name = basename(argv[0]);
-  std::cerr << exec_name << std::endl;
+  t_trie D;
 
-  if(!strcmp(exec_name, "sandbox"))
-    sandbox(argc, argv);
-  else if(!strcmp(exec_name, "mpi"))
-    mpi_main(argc, argv);
+  if(options.mpi)
+    mpi_main(argc, argv, options, spectra, D);
   else {
-    t_count_spectra count_spectra;
-    t_heuristic<t_count> heuristic;
-    heuristic.push(new t_filter_ochiai<t_count>());
-    //  heuristic.push(new t_filter_cutoff<t_count>());
-    heuristic.push(new t_filter_sort<t_count>());
-
-    t_mhs<t_count> mhs(heuristic);
-    
-    t_trie D;
-    
-    std::cin >> count_spectra;
-    std::cout << count_spectra;
-    
-    mhs.calculate(count_spectra, D);
+    options.mhs.calculate(spectra, D);
     std::cout << D;
   }
+  
   t_time_interval time_end = get_time_interval();
   std::cerr << "Run Time: " << (time_end - time_begin) << std::endl;
 }

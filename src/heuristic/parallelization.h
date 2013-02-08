@@ -27,6 +27,10 @@ public:
       if((i / stride) % division_count != division)
         ret[i] = t_rank_element(ret[i].get_component(), -1);
   }
+  
+  virtual std::ostream & print(std::ostream & out) const {
+    return out << "t_filter_divide(d:" << division << ", #d:"  << division_count << ", s:"  << stride << ")";
+  }
 
 };
 

@@ -52,6 +52,10 @@ protected:
       return n[1][1] / sqrt(tmp);
     return 0;
   }
+  
+  virtual std::ostream & print(std::ostream & out) const {
+    return out << "t_filter_ochiai";
+  }
 };
 
 

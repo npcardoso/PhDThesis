@@ -31,6 +31,12 @@ public:
   void set_heuristic(t_count start_level, const t_heuristic<T_ACTIVITY> & heuristic) {
     heuristics[start_level] = heuristic;
   }
+  
+  const t_heuristic<T_ACTIVITY> & get_heuristic(t_count level) const {
+    typename t_heuristics::const_iterator it = heuristics.upper_bound(level);
+    it--;
+    return it->second;
+  }
 
   void calculate(const t_spectra <T_ACTIVITY> & spectra,
                  t_trie & D,
@@ -268,11 +274,6 @@ private:
     filter.filter_component(component);
   }
 
-  const t_heuristic<T_ACTIVITY> & get_heuristic(t_count level) const {
-    typename t_heuristics::const_iterator it = heuristics.upper_bound(level);
-    it--;
-    return it->second;
-  }
 
 };
 

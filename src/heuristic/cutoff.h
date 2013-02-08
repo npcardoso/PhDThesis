@@ -35,6 +35,10 @@ public:
     while(i < component_count)
       ret[i++] = t_rank_element (0, -1);
   }
+  
+  virtual std::ostream & print(std::ostream & out) const {
+    return out << "t_filter_cutoff(l:" << lambda << ", v:"  << value_cutoff << ")";
+  }
 };
 
 

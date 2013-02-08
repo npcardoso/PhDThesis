@@ -14,7 +14,15 @@ public:
   virtual void operator()(const t_spectra <T_ACTIVITY> & spectra, 
                           t_rank_element * ret,
                           const t_spectra_filter * filter = NULL) const = 0;
+  virtual std::ostream & print(std::ostream & out) const {
+    return out << "Not Implemented";
+  }
 };
+
+template <class T_ACTIVITY>
+inline std::ostream & operator << (std::ostream & out, const t_heuristic_filter <T_ACTIVITY> & filter){
+  return filter.print(out);
+}
 
 template <class T_ACTIVITY>
 class t_heuristic {
@@ -56,7 +64,23 @@ public:
         ret[i++] = t_rank_element(it.get_component(), 1);
     }
   }
+
+  virtual std::ostream & print(std::ostream & out) const {
+    typename t_filters::const_iterator it = filters.begin();
+    out << "t_heuristic(";
+    if(it != filters.end())
+      out << **(it++);
+
+    while(it != filters.end())
+      out << ", " << **(it++);
+    return out << ")";
+  }
 };
+
+template <class T_ACTIVITY>
+inline std::ostream & operator << (std::ostream & out, const t_heuristic <T_ACTIVITY> & heuristic){
+  return heuristic.print(out);
+}
 
 
 

@@ -15,6 +15,9 @@ public:
     t_count component_count = spectra.get_component_count(filter);
     std::sort(ret, ret + component_count);
   }
+  virtual std::ostream & print(std::ostream & out) const {
+    return out << "t_filter_sort";
+  }
 };
 
 

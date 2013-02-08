@@ -8,13 +8,7 @@
 #include <mpi.h>
 #include <iostream>
 
-void send_trie(const t_trie & trie, t_count chunk_size,
-               int destination, int tag,
-               MPI_Comm communicator);
-
-void receive_trie(t_trie & trie, t_count chunk_size,
-                  int destination, int tag,
-                  MPI_Comm communicator);
+void mpi_reduce_trie(t_trie & trie);
 
 template <class T_ACTIVITY>
 int mpi_main(int argc, char **argv, const t_options<T_ACTIVITY> & options, 
@@ -51,11 +45,7 @@ int mpi_main(int argc, char **argv, const t_options<T_ACTIVITY> & options,
   t_time_interval time_end_calculate = get_time_interval();
   std::cerr << "Process " << rank << " Calculation Time: " << (time_end_calculate - time_begin) << std::endl;
 
-  if(rank == 0) {
-    for(t_count i = 1; i < ntasks; i++)
-      receive_trie(D, 102400, i, 0, MPI_COMM_WORLD);
-  } else
-    send_trie(D, 102400, 0, 0, MPI_COMM_WORLD);
+  mpi_reduce_trie(D);
 
   t_time_interval time_end_transfer = get_time_interval();
   std::cerr << "Process " << rank << " Transfer Time: " << (time_end_transfer - time_end_calculate) << std::endl;

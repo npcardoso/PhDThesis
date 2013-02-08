@@ -39,7 +39,8 @@ public:
   }
 
   void add(const t_candidate & candidate, 
-           bool composites = false);
+           bool purge_composites = true,
+           bool check_composite = true);
 
   inline bool is_composite(const t_candidate & candidate,
                            bool strict = false) const {
@@ -54,6 +55,11 @@ public:
 
   iterator begin() const;
   iterator end() const;
+  
+  inline void clear() {
+    children.clear();
+    exists = false;
+  }
 
   friend class t_trie_iterator;
 };

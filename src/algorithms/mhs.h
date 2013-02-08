@@ -151,7 +151,7 @@ public:
       t_trie::iterator it = old_D.begin();
       while(it != old_D.end()) {
         if(spectra.is_candidate(*it, &filter))
-          D.add(*it, true);
+          D.add(*it, false, false);
         else
           candidates.push_back(*it);
         it++;

@@ -101,7 +101,7 @@ std::istream & t_count_spectra::read(std::istream & in) {
     }
     char result;
     in >> result;
-    if(result == '1' || result == '-' || result == 'x')
+    if(result == '1' || result == '-' || result == 'x' || result == 'X')
       error(transaction_offset + transaction);
   
   }

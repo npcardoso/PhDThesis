@@ -23,6 +23,19 @@ bool read_spectra(t_spectra<T_ACTIVITY> & spectra,
   return false;
 }
 
+template <class T_ACTIVITY>
+bool write_candidates(const t_trie & trie,
+                      const t_options<T_ACTIVITY> & options) {
+  if(options.output) {
+    std::ofstream out(options.output);
+    out << trie;
+    out.close();
+  }
+  else
+    std::cout << trie;
+  return false;
+}
+
 
 int main(int argc, char ** argv){
 
@@ -40,11 +53,13 @@ int main(int argc, char ** argv){
   t_time_interval time_begin = get_time_interval();
   t_trie D;
 
-  if(options.mpi)
-    mpi_main(argc, argv, options, spectra, D);
+  if(options.mpi) {
+    if(mpi_main(argc, argv, options, spectra, D) == 0)
+      write_candidates(D, options);
+  }
   else {
     options.mhs.calculate(spectra, D);
-    std::cout << D;
+    write_candidates(D, options);
   }
   
   t_time_interval time_end = get_time_interval();

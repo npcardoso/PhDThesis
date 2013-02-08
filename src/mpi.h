@@ -60,13 +60,10 @@ int mpi_main(int argc, char **argv, const t_options<T_ACTIVITY> & options,
   t_time_interval time_end_transfer = get_time_interval();
   std::cerr << "Process " << rank << " Transfer Time: " << (time_end_transfer - time_end_calculate) << std::endl;
   
-  if(rank == 0)
-    D.print(std::cout);
-
   /* Shut down MPI */
   MPI_Finalize();
   
-  return 0;
+  return rank;
 }
 
 #endif

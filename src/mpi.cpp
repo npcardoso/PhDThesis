@@ -1,7 +1,5 @@
 #include "mpi.h"
 
-
-
 void send_trie(const t_trie & trie,
                t_count chunk_size,
                int destination,

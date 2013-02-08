@@ -19,11 +19,13 @@ struct t_options {
   t_count mpi_level;
   t_count mpi_stride;
 
+  bool verbose;
+
   char * input;
   char * output;
 
   t_mhs<T_ACTIVITY> mhs;
-  
+
   static t_heuristic<T_ACTIVITY> default_heuristic() {
     t_heuristic<T_ACTIVITY> heuristic;
     heuristic.push(new t_filter_ochiai<t_count>());
@@ -33,22 +35,36 @@ struct t_options {
 
   inline t_options():mhs(default_heuristic()){
     mpi = false;
-    input = NULL;
-    output = NULL;
     mpi_level = 0;
     mpi_stride = 0;
+
+    verbose = false;
+
+    input = NULL;
+    output = NULL;
   }
 };
 
 template <class T_ACTIVITY>
 std::ostream & operator<< (std::ostream & out, const t_options<T_ACTIVITY> & options) {
   out << "(MPI: " << options.mpi;
-  out << " MPI_level: " << options.mpi_level;
-  out << " MPI_stride: " << options.mpi_stride;
-  out << " Cardinality: " << options.mhs.max_candidate_size;
-  out << " Candidates: " << options.mhs.max_candidates;
-  out << " Time: " << options.mhs.max_time << ")";
-  return out;
+  out << ", MPI_level: " << options.mpi_level;
+  out << ", MPI_stride: " << options.mpi_stride;
+  out << ", Cardinality: " << options.mhs.max_candidate_size;
+  out << ", Candidates: " << options.mhs.max_candidates;
+  out << ", Time: " << options.mhs.max_time;
+
+  out << ", Input: ";
+  if(options.input)
+    out << '"' << options.input << '"';
+  else
+    out << "stdin";
+  out << ", Output: ";
+  if(options.output)
+    out << '"' << options.output << '"';
+  else
+    out << "stdout";
+  return out << ')';
 }
 
 template <class TYPE>
@@ -76,8 +92,25 @@ bool verb_strtoi(char * buf, TYPE & dest, bool non_negative = false) {
   dest = tmp;
   return false;
 }
+
 #define MPI_LEVEL 0
 #define MPI_STRIDE 1
+
+inline void show_help(int argc, char ** argv) {
+  std::cerr << "usage: " << argv[0] << " ";
+  std::cerr << "[-m|--mpi] ";
+  std::cerr << "[--mpi-level=<branch_level>] ";
+  std::cerr << "[--mpi-stride=<stride_count>] ";
+  std::cerr << "[-t|--time=<max_computation_time>] ";
+  std::cerr << "[-d|--candidates=<max_candidates>] ";
+  std::cerr << "[-c|--cardinality=<max_candidate_size>] ";
+//  std::cerr << "[-H|--heuristic=<level_start:filter_type,opt1,...,optn:filter_type,opt1,...,optn:...>] ";
+  std::cerr << "[-v|--verbose] ";
+  std::cerr << "[-i|--input=<filename>] ";
+  std::cerr << "[-o|--output=<filename>] ";
+  std::cerr << "[-h|--help]";
+  std::cerr << std::endl;  
+}
 
 template <class T_ACTIVITY>
 bool configure(int argc, char ** argv, t_options<T_ACTIVITY> & options){
@@ -90,25 +123,27 @@ bool configure(int argc, char ** argv, t_options<T_ACTIVITY> & options){
     {"candidates", 1, 0, 'd'},
     {"cardinality", 1, 0, 'c'},
     {"filter", 1, 0, 'f'},
+    {"verbose", 0, 0, 'v'},
     {"input", 1, 0, 'i'},
     {"output", 1, 0, 'o'},
+    {"help", 0, 0, 'h'},
     {NULL, 0, NULL, 0}
   };
 
   int c;
   int option_index = 0;
   bool errors = false;
-  while ((c = getopt_long(argc, argv, "mt:c:s:d:f:i:o:",
+  while ((c = getopt_long(argc, argv, "mt:c:s:d:H:i:o:vh",
                           long_options, &option_index)) != -1) {
     switch (c) {
     case 0:
       switch(long_option) {
-        case MPI_LEVEL:
-          errors |= verb_strtoi(optarg, options.mpi_level, true);
-          break;
-        case MPI_STRIDE:
-          errors |= verb_strtoi(optarg, options.mpi_stride, true);
-          break;
+      case MPI_LEVEL:
+        errors |= verb_strtoi(optarg, options.mpi_level, true);
+        break;
+      case MPI_STRIDE:
+        errors |= verb_strtoi(optarg, options.mpi_stride, true);
+        break;
       }
     case 'm':
       options.mpi = true;
@@ -128,19 +163,21 @@ bool configure(int argc, char ** argv, t_options<T_ACTIVITY> & options){
     case 'o':
       options.output = optarg;
       break;
-    case 'f':
-      printf ("Filter on: %s\n", optarg);
+    case 'v':
+      options.verbose = true;
       break;
-    default:
-//      printf ("?? getopt returned character code 0%o ??\n", c);
-      ;
+    case 'H':
+      std::cerr << "Heuristic flag not implemented" << std::endl;
+      break;
+    case 'h':
+      show_help(argc, argv);
+      return true;
     }
   }
   if (optind < argc) {
-    printf ("non-option ARGV-elements: ");
     while (optind < argc)
-      printf ("%s ", argv[optind++]);
-    printf ("\n");
+      std::cerr << "Extra argument: \"" << argv[optind++] <<"\"" << std::endl;
+    errors = true;
   }
   return errors;
 }

@@ -43,7 +43,8 @@ int main(int argc, char ** argv){
   if(configure(argc, argv, options))
     return 1;
 
-  std::cerr << options << std::endl;
+  if(options.verbose)
+    std::cerr << options << std::endl;
   
   t_count_spectra spectra;
   

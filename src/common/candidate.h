@@ -6,9 +6,19 @@
 #include <iostream>
 #include <set>
 
-typedef std::set<t_component_id> t_candidate;
+class t_candidate: public std::set<t_component_id> {
+public:
+  virtual std::istream & read(std::istream & in);
+  virtual std::ostream & print(std::ostream & out) const;
+};
 
-std::istream & operator >> (std::istream & in, t_candidate & candidate);
+inline std::istream & operator >> (std::istream & in, t_candidate & candidate) {
+  return candidate.read(in);
+}
+
+inline std::ostream & operator << (std::ostream & out, const t_candidate & candidate) {
+  return candidate.print(out);
+}
 
 
 #endif

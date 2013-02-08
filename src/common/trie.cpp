@@ -85,13 +85,8 @@ void t_trie::add(const t_candidate & candidate, bool composites) {
 
 std::ostream & t_trie::print(std::ostream & out) const {
   iterator it = begin();
-  while(it != end()){
-    t_candidate::iterator component = it->begin();
-    while(component != it->end())
-      out << *(component++) << ",";
-    out << std::endl;
-    it++;
-  }
+  while(it != end())
+    out << *(it++) << std::endl;
   return out;  
 }
 

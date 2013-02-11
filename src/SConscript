@@ -21,10 +21,7 @@ env['ENV']['TERM'] = os.environ['TERM']
 env["CXX"] = config['c++']
 
 obj = env.Program(target = target, source = sources)
-env.Command("../normal", obj, SymLink)
-env.Command("../mpi", obj, SymLink)
-env.Command("../sandbox", obj, SymLink)
-
+obj = env.Command(root + "/bin/" + config['target'], obj, SymLink)
 obj = env.Alias(config['target'], obj) 
 
 if config['default']:

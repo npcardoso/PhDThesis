@@ -24,3 +24,8 @@ obj = env.Program(target = target, source = sources)
 env.Command("../normal", obj, SymLink)
 env.Command("../mpi", obj, SymLink)
 env.Command("../sandbox", obj, SymLink)
+
+obj = env.Alias(config['target'], obj) 
+
+if config['default']:
+  env.Default(obj)

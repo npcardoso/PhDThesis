@@ -1,1 +1,2 @@
-a = SConscript('src/SConscript')
+env = Environment()
+env.SConscript('src/SConscript')

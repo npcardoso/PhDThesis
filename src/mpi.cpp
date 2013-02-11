@@ -84,7 +84,7 @@ void receive_candidates(t_candidate_pool<T> & candidate_pool,
     MPI_Recv(buffer, chunk_size, MPI::UNSIGNED, 
              destination, tag, MPI_COMM_WORLD, &status);
     MPI_Get_count(&status, MPI::UNSIGNED, &buffer_size);
-    for(t_id i = 0; i < buffer_size; i++)
+    for(t_id i = 0; i < (t_id)buffer_size; i++)
       if(buffer[i])
         candidate.insert(candidate.end(), buffer[i]);
       else {
@@ -92,7 +92,7 @@ void receive_candidates(t_candidate_pool<T> & candidate_pool,
         candidate.clear();
       }
 
-  } while(buffer_size == chunk_size);
+  } while((t_count) buffer_size == chunk_size);
 
   delete[]buffer;
 }
@@ -110,7 +110,7 @@ void mpi_reduce_trie(t_trie & trie) {
     candidate_pool.add(trie);
     trie.clear();
     
-    for(t_count i = 1; i < ntasks; i++)
+    for(t_count i = 1; i < (t_count) ntasks; i++)
       receive_candidates(candidate_pool, 102400, i, 0, MPI_COMM_WORLD);
     candidate_pool.trie(trie);
   } else

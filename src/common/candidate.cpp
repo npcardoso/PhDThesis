@@ -13,10 +13,7 @@ std::istream & t_candidate::read(std::istream & in) {
 
 std::ostream & t_candidate::print(std::ostream & out) const {
     iterator component = begin();
-    if(component != end())
-      out << *(component++);
-
     while(component != end())
-      out << "," << *(component++);
-    return out;
+      out << *(component++) << " ";
+    return out << "0";
 }

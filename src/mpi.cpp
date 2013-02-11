@@ -1,5 +1,12 @@
 #include "mpi.h"
 
+#include "common/types.h"
+
+#include <mpi.h>
+
+#include <list>
+#include <vector>
+
 void send_candidates(const t_trie & trie,
                      t_count chunk_size,
                      int destination,

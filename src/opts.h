@@ -14,15 +14,19 @@
 #include <fstream>
 
 template <class T_ACTIVITY>
-struct t_options {
+class t_options {
+  std::ofstream devnull;
+public:
   bool mpi;
   t_count mpi_level;
   t_count mpi_stride;
 
-  bool verbose;
+  std::ostream * verbose;
+  char * trie;
 
   char * input;
   char * output;
+
 
   t_mhs<T_ACTIVITY> mhs;
 
@@ -33,15 +37,19 @@ struct t_options {
     return heuristic;
   }
 
-  inline t_options():mhs(default_heuristic()){
+  inline t_options():devnull("/dev/null"), mhs(default_heuristic()) {
     mpi = false;
     mpi_level = 0;
     mpi_stride = 0;
 
-    verbose = false;
-
+    trie = NULL;
+    verbose = &devnull; 
     input = NULL;
     output = NULL;
+  }
+
+  inline std::ostream & debug() const {
+    return *verbose;
   }
 };
 
@@ -101,6 +109,7 @@ inline void show_help(int argc, char ** argv) {
   std::cerr << "[-m|--mpi] ";
   std::cerr << "[--mpi-level=<branch_level>] ";
   std::cerr << "[--mpi-stride=<stride_count>] ";
+  std::cerr << "[-T|--trie=<filename>] ";
   std::cerr << "[-t|--time=<max_computation_time>] ";
   std::cerr << "[-d|--candidates=<max_candidates>] ";
   std::cerr << "[-c|--cardinality=<max_candidate_size>] ";
@@ -119,6 +128,7 @@ bool configure(int argc, char ** argv, t_options<T_ACTIVITY> & options){
     {"mpi", 0, 0, 'm'},
     {"mpi-level", 1, &long_option, MPI_LEVEL},
     {"mpi-stride", 1, &long_option, MPI_STRIDE},
+    {"trie", 1, 0, 'T'},
     {"time", 1, 0, 't'},
     {"candidates", 1, 0, 'd'},
     {"cardinality", 1, 0, 'c'},
@@ -133,7 +143,7 @@ bool configure(int argc, char ** argv, t_options<T_ACTIVITY> & options){
   int c;
   int option_index = 0;
   bool errors = false;
-  while ((c = getopt_long(argc, argv, "mt:c:s:d:H:i:o:vh",
+  while ((c = getopt_long(argc, argv, "mt:c:s:d:H:i:o:T:vh",
                           long_options, &option_index)) != -1) {
     switch (c) {
     case 0:
@@ -147,6 +157,9 @@ bool configure(int argc, char ** argv, t_options<T_ACTIVITY> & options){
       }
     case 'm':
       options.mpi = true;
+      break;
+    case 'T':
+      options.trie = optarg;
       break;
     case 't':
       errors |= verb_strtof(optarg, options.mhs.max_time, true);
@@ -164,13 +177,15 @@ bool configure(int argc, char ** argv, t_options<T_ACTIVITY> & options){
       options.output = optarg;
       break;
     case 'v':
-      options.verbose = true;
+      options.verbose = &std::cerr;
       break;
     case 'H':
       std::cerr << "Heuristic flag not implemented" << std::endl;
       break;
     case 'h':
       show_help(argc, argv);
+      return true;
+    default:
       return true;
     }
   }

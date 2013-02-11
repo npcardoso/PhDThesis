@@ -64,9 +64,8 @@ public:
   friend class t_trie_iterator;
 };
 
-inline std::ostream & operator << (std::ostream & out, const t_trie & trie){
-  return trie.print(out);
-}
+std::ostream & operator << (std::ostream & out, const t_trie & trie);
+std::istream & operator >> (std::istream & in, t_trie & trie);
 
 
 class t_trie_iterator {

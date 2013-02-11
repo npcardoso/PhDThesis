@@ -2,6 +2,22 @@
 
 #include <cassert>
 
+std::ostream & operator << (std::ostream & out, const t_trie & trie) {
+  return trie.print(out);
+}
+
+std::istream & operator >> (std::istream & in, t_trie & trie) {
+  while(true) {
+    t_candidate c;
+    in >> c;
+    if(!c.size())
+      break;
+    trie.add(c);
+  }
+  in.clear();
+  return in;
+}
+
 bool t_trie::add(const t_candidate & candidate, 
                  t_candidate::const_iterator component,
                  bool composites) {

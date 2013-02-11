@@ -1,6 +1,6 @@
 #include "mpi.h"
 
-#include "common/types.h"
+#include "../../common/types.h"
 
 #include <mpi.h>
 

@@ -9,7 +9,7 @@ Import("config")
 root = Dir('#').abspath
 
 target  = config['build_name']
-sources = Glob("*cpp") + Glob("*/*cpp")
+sources = Glob("*cpp") + Glob("*/*cpp") + Glob("*/*/*cpp")
 
 
 env = Environment(

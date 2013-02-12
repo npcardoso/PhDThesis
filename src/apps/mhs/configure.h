@@ -19,8 +19,8 @@ public:
 
   static t_heuristic<T_ACTIVITY> default_heuristic() {
     t_heuristic<T_ACTIVITY> heuristic;
-    heuristic.push(new t_filter_ochiai<t_count>());
-    heuristic.push(new t_filter_sort<t_count>());
+    heuristic.push(new heuristics::t_ochiai<t_count>());
+    heuristic.push(new heuristics::t_sort<t_count>());
     return heuristic;
   }
 

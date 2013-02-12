@@ -36,9 +36,9 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
     mhs.set_heuristic(mpi_level + 1, heuristic);
 
     if(options.mpi_stride)
-      heuristic.push(new t_filter_divide<t_count>(rank, ntasks, options.mpi_stride));
+      heuristic.push(new heuristics::t_divide<t_count>(rank, ntasks, options.mpi_stride));
     else
-      heuristic.push(new t_filter_divide<t_count>(rank, ntasks));
+      heuristic.push(new heuristics::t_divide<t_count>(rank, ntasks));
 
     mhs.set_heuristic(mpi_level, heuristic);
   }

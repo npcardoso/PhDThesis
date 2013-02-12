@@ -131,12 +131,12 @@ void mpi_reduce_trie(t_trie & trie) {
   t_count i = 1;
   while(i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
     if(get_sender(rank, i) < ntasks)
-      receive_candidates(candidate_pool, 10, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+      receive_candidates(candidate_pool, 102400, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
     i++;
   }
 
   trie.clear();
   candidate_pool.trie(trie);
   if(rank)
-    send_candidates(trie, 10, get_receiver(rank, i), 0, MPI_COMM_WORLD);
+    send_candidates(trie, 102400, get_receiver(rank, i), 0, MPI_COMM_WORLD);
 }

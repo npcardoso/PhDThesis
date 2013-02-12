@@ -7,15 +7,15 @@ namespace heuristics {
 
 template <class T_ACTIVITY>
   class t_divide: public t_heuristic_filter<T_ACTIVITY> {
-    t_count division, division_count, stride;
+    t_count self, division_count, stride;
   public:
-    t_divide(t_count division, 
-                    t_count division_count, 
-                    t_count stride = 1) {
-      assert(division < division_count);
+    t_divide(t_count self, 
+             t_count division_count, 
+             t_count stride = 1) {
+      assert(self < division_count);
       assert(division_count > 0);
       assert(stride > 0);
-      this->division = division;
+      this->self = self;
       this->division_count = division_count;
       this->stride = stride;
     }
@@ -26,12 +26,46 @@ template <class T_ACTIVITY>
       t_count component_count = spectra.get_component_count(filter);
 
       for(t_id i = 0; i < component_count; i++)
-        if((i / stride) % division_count != division)
+        if((i / stride) % division_count != self)
           ret[i] = t_rank_element(ret[i].get_component(), -1);
     }
 
     virtual std::ostream & print(std::ostream & out) const {
-      return out << "t_divide(d:" << division << ", #d:"  << division_count << ", s:"  << stride << ")";
+      return out << "t_divide(s:" << self << ", #d:"  << division_count << ", s:"  << stride << ")";
+    }
+
+  };
+
+template <class T_ACTIVITY>
+  class t_random_divide: public t_heuristic_filter<T_ACTIVITY> {
+    t_count self, division_count;
+    std::default_random_engine & gen;
+  public:
+    t_random_divide(t_count self, 
+                    t_count division_count,
+                    std::default_random_engine & gen): gen(gen) {
+      assert(self < division_count);
+      assert(division_count > 0);
+      this->self = self;
+      this->division_count = division_count;
+    }
+
+    virtual void operator()(const t_spectra <T_ACTIVITY> & spectra, 
+                            t_rank_element * ret,
+                            const t_spectra_filter * filter = NULL) const {
+      std::uniform_int_distribution<t_component_id> distribution(0, division_count - 1);
+
+      t_count component_count = spectra.get_component_count(filter);
+
+      for(t_id i = 0; i < component_count; i++) {
+        t_component_id owner = distribution(gen);
+        if(owner != self)
+          ret[i] = t_rank_element(ret[i].get_component(), -1);
+      }
+    }
+
+    virtual std::ostream & print(std::ostream & out) const {
+      return out << "t_random_divide(s:" << self << ", #d:"  << division_count << ")";
     }
 
   };

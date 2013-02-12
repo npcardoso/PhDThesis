@@ -77,7 +77,7 @@ public:
 template <class T>
 void receive_candidates(t_candidate_pool<T> & candidate_pool,
                         t_count chunk_size,
-                        int destination,
+                        int source,
                         int tag,
                         MPI_Comm communicator) {
 
@@ -89,7 +89,8 @@ void receive_candidates(t_candidate_pool<T> & candidate_pool,
     MPI_Status status;
 
     MPI_Recv(buffer, chunk_size, MPI::UNSIGNED, 
-             destination, tag, MPI_COMM_WORLD, &status);
+             source, tag, MPI_COMM_WORLD, &status);
+    source = status.MPI_SOURCE;
     MPI_Get_count(&status, MPI::UNSIGNED, &buffer_size);
     for(t_id i = 0; i < (t_id)buffer_size; i++)
       if(buffer[i])
@@ -104,6 +105,19 @@ void receive_candidates(t_candidate_pool<T> & candidate_pool,
   delete[]buffer;
 }
 
+inline bool is_sender(int rank, int turn) {
+  return ((1ul << (turn - 1)) + rank) % (1ul << turn) == 0;
+}
+
+inline int get_sender(int rank, int turn) {
+  return rank + (1ul << (turn - 1));
+}
+
+inline int get_receiver(int rank, int turn) {
+  return rank - (1ul << (turn - 1));
+}
+
+
 void mpi_reduce_trie(t_trie & trie) {
   int ntasks, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
@@ -111,15 +125,18 @@ void mpi_reduce_trie(t_trie & trie) {
 
   typedef t_candidate_pool <t_candidate> t_candidates;
 
-  if(rank == 0) {
-    t_candidates candidate_pool;
-    
-    candidate_pool.add(trie);
-    trie.clear();
-    
-    for(t_count i = 1; i < (t_count) ntasks; i++)
-      receive_candidates(candidate_pool, 102400, i, 0, MPI_COMM_WORLD);
-    candidate_pool.trie(trie);
-  } else
-    send_candidates(trie, 102400, 0, 0, MPI_COMM_WORLD);
+  t_candidates candidate_pool;
+  candidate_pool.add(trie);
+  
+  t_count i = 1;
+  while(i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
+    if(get_sender(rank, i) < ntasks)
+      receive_candidates(candidate_pool, 10, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+    i++;
+  }
+
+  trie.clear();
+  candidate_pool.trie(trie);
+  if(rank)
+    send_candidates(trie, 10, get_receiver(rank, i), 0, MPI_COMM_WORLD);
 }

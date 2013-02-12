@@ -96,7 +96,7 @@ public:
     return *output_ptr;
   }
   
-  inline inline std::ostream & debug() const {
+  inline std::ostream & debug() const {
     return *verbose;
   }
 

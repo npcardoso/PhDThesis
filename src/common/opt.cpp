@@ -17,7 +17,7 @@ t_opt::t_opt(char short_opt,
 std::string t_options::short_opts() const {
   std::stringstream tmp;
 
-  typename t_opts::const_iterator it = opts.begin();
+  t_opts::const_iterator it = opts.begin();
   while(it != opts.end()) {
     if(it->short_opt){
       tmp << it->short_opt;
@@ -33,7 +33,7 @@ struct option * t_options::long_opts(int * long_ptr) const {
   struct option * tmp = new struct option[opts.size() + 1];
   
   t_id i = 0;
-  typename t_opts::const_iterator it = opts.begin();
+  t_opts::const_iterator it = opts.begin();
 
   while(it != opts.end()) {
     if(it->long_opt)
@@ -94,7 +94,7 @@ bool t_options::configure(int argc, char ** argv) {
 void t_options::show_help() const {
   std::cerr << "Usage: " << app_name << " [options]\n";
   
-  typename t_opts::const_iterator it = opts.begin();
+  t_opts::const_iterator it = opts.begin();
   while(it != opts.end()) {
     if(it->short_opt)
       std::cerr << "\t" << "-" << it->short_opt;

@@ -35,7 +35,7 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
     t_heuristic <T_ACTIVITY> heuristic = mhs.get_heuristic(mpi_level);
     mhs.set_heuristic(mpi_level + 1, heuristic);
 
-    std::default_random_engine gen(123);
+    boost::random::mt19937 gen(123);
     if(options.mpi_stride)
       heuristic.push(new heuristics::t_divide<t_count>(rank, ntasks, options.mpi_stride));
     else

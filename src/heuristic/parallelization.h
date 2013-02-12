@@ -3,6 +3,9 @@
 
 #include "heuristic.h"
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+
 namespace heuristics {
 
 template <class T_ACTIVITY>
@@ -39,11 +42,11 @@ template <class T_ACTIVITY>
 template <class T_ACTIVITY>
   class t_random_divide: public t_heuristic_filter<T_ACTIVITY> {
     t_count self, division_count;
-    std::default_random_engine & gen;
+    boost::random::mt19937 & gen;
   public:
     t_random_divide(t_count self, 
                     t_count division_count,
-                    std::default_random_engine & gen): gen(gen) {
+                    boost::random::mt19937 & gen): gen(gen) {
       assert(self < division_count);
       assert(division_count > 0);
       this->self = self;
@@ -53,7 +56,7 @@ template <class T_ACTIVITY>
     virtual void operator()(const t_spectra <T_ACTIVITY> & spectra, 
                             t_rank_element * ret,
                             const t_spectra_filter * filter = NULL) const {
-      std::uniform_int_distribution<t_component_id> distribution(0, division_count - 1);
+      boost::random::uniform_int_distribution<t_component_id> distribution(0, division_count - 1);
 
       t_count component_count = spectra.get_component_count(filter);
 

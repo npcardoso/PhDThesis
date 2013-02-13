@@ -40,7 +40,6 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
       heuristic.push(new heuristics::t_divide<t_count>(rank, ntasks, options.mpi_stride));
     else
       heuristic.push(new heuristics::t_random_divide<t_count>(rank, ntasks, gen));
-      //heuristic.push(new heuristics::t_divide<t_count>(rank, ntasks));
 
     mhs.set_heuristic(mpi_level, heuristic);
   }
@@ -53,7 +52,7 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
   options.debug() << "Process " << rank << " Calculation Time: " << (time_end_calculate - time_begin) << std::endl;
 
   if(ntasks > 1){
-    mpi_reduce_trie(D);
+    mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer);
 
     t_time_interval time_end_transfer = get_time_interval();
     options.debug() << "Process " << rank << " Transfer Time: " << (time_end_transfer - time_end_calculate) << std::endl;

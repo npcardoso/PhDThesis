@@ -45,10 +45,15 @@ void send_candidates(const t_trie & trie,
 
 template <class T>
 class t_candidate_pool {
+  size_t sze;
 public:
   typedef std::list <T> t_inner_storage;
   typedef std::vector<t_inner_storage> t_storage; 
   t_storage storage;
+  
+  inline size_t size() const {
+    return sze;
+  }
 
   void add(const t_trie & trie){
     t_trie::iterator it = trie.begin();
@@ -60,6 +65,7 @@ public:
     if(storage.size() < candidate.size())
       storage.resize(candidate.size());
     storage[candidate.size() - 1].push_back(candidate);
+    sze++;
   }
 
   void trie(t_trie & trie) {
@@ -71,7 +77,6 @@ public:
       it++;
     }
   }
-
 };
 
 template <class T>
@@ -118,7 +123,7 @@ inline int get_receiver(int rank, int turn) {
 }
 
 
-void mpi_reduce_trie(t_trie & trie) {
+void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size) {
   int ntasks, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -126,17 +131,33 @@ void mpi_reduce_trie(t_trie & trie) {
   typedef t_candidate_pool <t_candidate> t_candidates;
 
   t_candidates candidate_pool;
-  candidate_pool.add(trie);
   
-  t_count i = 1;
-  while(i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
-    if(get_sender(rank, i) < ntasks)
-      receive_candidates(candidate_pool, 102400, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
-    i++;
-  }
+  if(hierarchical){
+    t_count i = 1;
+    while(i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
+      if(get_sender(rank, i) < ntasks)
+        receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+      i++;
+    }
 
-  trie.clear();
-  candidate_pool.trie(trie);
-  if(rank)
-    send_candidates(trie, 102400, get_receiver(rank, i), 0, MPI_COMM_WORLD);
+    if (candidate_pool.size()) {
+      candidate_pool.add(trie);
+      trie.clear();
+      candidate_pool.trie(trie);
+    }
+
+    if(rank)
+      send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
+  }
+  else {
+    if(rank)
+      send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
+    else {
+      for(t_count i = 1; i < ntasks; i++)
+        receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+      candidate_pool.add(trie);
+      trie.clear();
+      candidate_pool.trie(trie);
+    }
+  }
 }

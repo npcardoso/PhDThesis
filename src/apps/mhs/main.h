@@ -12,7 +12,7 @@ template <class T_ACTIVITY>
 int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
   t_count_spectra spectra;
   t_trie D;
-  
+
   options.input() >> spectra;
 
 
@@ -26,7 +26,7 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
 
 
   t_mhs <T_ACTIVITY> mhs(options.mhs);
-  
+
   if(ntasks > 1){
     t_count mpi_level = 1;
     if(options.mpi_level)
@@ -45,14 +45,14 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
   }
 
   t_time_interval time_begin = get_time_interval();
-  
+
   mhs.calculate(spectra, D);
 
   t_time_interval time_end_calculate = get_time_interval();
   options.debug() << "Process " << rank << " Calculation Time: " << (time_end_calculate - time_begin) << std::endl;
 
   if(ntasks > 1){
-    mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer);
+    mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer, options.debug());
 
     t_time_interval time_end_transfer = get_time_interval();
     options.debug() << "Process " << rank << " Transfer Time: " << (time_end_transfer - time_end_calculate) << std::endl;
@@ -60,10 +60,10 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
 
   if(rank == 0)
     options.output() << D;
-  
+
   /* Shut down MPI */
   MPI_Finalize();
-  
+
   return 0;
 }
 

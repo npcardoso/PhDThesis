@@ -3,6 +3,8 @@
 
 #include "../../common/trie.h"
 
-void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size);
+#include <iostream>
+
+void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, std::ostream & debug=std::cerr);
 
 #endif

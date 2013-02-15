@@ -1,17 +1,18 @@
 #include "mpi.h"
 
 #include "../../common/types.h"
+#include "../../common/utils.h"
 
 #include <mpi.h>
 
 #include <list>
 #include <vector>
 
-void send_candidates(const t_trie & trie,
-                     t_count chunk_size,
-                     int destination,
-                     int tag,
-                     MPI_Comm communicator) {
+t_count send_candidates(const t_trie & trie,
+                        t_count chunk_size,
+                        int destination,
+                        int tag,
+                        MPI_Comm communicator) {
 
   t_trie::iterator it = trie.begin();
 
@@ -22,7 +23,7 @@ void send_candidates(const t_trie & trie,
     t_candidate::iterator candidate_it = it->begin();
     while(candidate_it != it->end()){
       if(buffer_size >= chunk_size) {
-        MPI_Send(buffer, buffer_size, MPI::UNSIGNED, 
+        MPI_Send(buffer, buffer_size, MPI::UNSIGNED,
                  destination, tag, communicator);
         buffer_size = 0;
       }
@@ -30,7 +31,7 @@ void send_candidates(const t_trie & trie,
     }
 
     if(buffer_size >= chunk_size) {
-      MPI_Send(buffer, buffer_size, MPI::UNSIGNED, 
+      MPI_Send(buffer, buffer_size, MPI::UNSIGNED,
                destination, tag, communicator);
       buffer_size = 0;
     }
@@ -38,9 +39,10 @@ void send_candidates(const t_trie & trie,
     it++;
   }
 
-  MPI_Send(buffer, buffer_size, MPI::UNSIGNED, 
+  MPI_Send(buffer, buffer_size, MPI::UNSIGNED,
            destination, tag, communicator);
   delete[]buffer;
+  return trie.size();
 }
 
 template <class T>
@@ -48,9 +50,9 @@ class t_candidate_pool {
   size_t sze;
 public:
   typedef std::list <T> t_inner_storage;
-  typedef std::vector<t_inner_storage> t_storage; 
+  typedef std::vector<t_inner_storage> t_storage;
   t_storage storage;
-  
+
   inline size_t size() const {
     return sze;
   }
@@ -80,20 +82,21 @@ public:
 };
 
 template <class T>
-void receive_candidates(t_candidate_pool<T> & candidate_pool,
-                        t_count chunk_size,
-                        int source,
-                        int tag,
-                        MPI_Comm communicator) {
+t_count receive_candidates(t_candidate_pool<T> & candidate_pool,
+                           t_count chunk_size,
+                           int source,
+                           int tag,
+                           MPI_Comm communicator) {
 
   t_component_id * buffer = new t_component_id[chunk_size];
 
+  t_count old_size = candidate_pool.size();
   T candidate;
   int buffer_size = 0;
   do {
     MPI_Status status;
 
-    MPI_Recv(buffer, chunk_size, MPI::UNSIGNED, 
+    MPI_Recv(buffer, chunk_size, MPI::UNSIGNED,
              source, tag, MPI_COMM_WORLD, &status);
     source = status.MPI_SOURCE;
     MPI_Get_count(&status, MPI::UNSIGNED, &buffer_size);
@@ -108,6 +111,7 @@ void receive_candidates(t_candidate_pool<T> & candidate_pool,
   } while((t_count) buffer_size == chunk_size);
 
   delete[]buffer;
+  return candidate_pool.size() - old_size;
 }
 
 inline bool is_sender(int rank, int turn) {
@@ -123,7 +127,7 @@ inline int get_receiver(int rank, int turn) {
 }
 
 
-void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size) {
+void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, std::ostream & debug) {
   int ntasks, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -131,14 +135,23 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size) {
   typedef t_candidate_pool <t_candidate> t_candidates;
 
   t_candidates candidate_pool;
-  
+  t_time_interval total_comm = 0;
+  t_time_interval total_merge = 0;
+  t_count items_recv = 0, items_sent = 0;
+
+
+  t_time_interval time_begin = get_time_interval();
   if(hierarchical){
     t_count i = 1;
     while(i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
       if(get_sender(rank, i) < ntasks)
-        receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+
+        items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
       i++;
     }
+
+    total_comm += get_time_interval() - time_begin;
+    time_begin = get_time_interval();
 
     if (candidate_pool.size()) {
       candidate_pool.add(trie);
@@ -146,18 +159,39 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size) {
       candidate_pool.trie(trie);
     }
 
+    total_merge += get_time_interval() - time_begin;
+    time_begin = get_time_interval();
+
     if(rank)
-      send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
+      items_sent += send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
+
+    total_comm += get_time_interval() - time_begin;
+    time_begin = get_time_interval();
   }
   else {
-    if(rank)
-      send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
+    if(rank) {
+      items_sent += send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
+
+      total_comm += get_time_interval() - time_begin;
+      time_begin = get_time_interval();
+    }
     else {
       for(t_count i = 1; i < ntasks; i++)
-        receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+        items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+
+      total_comm += get_time_interval() - time_begin;
+      time_begin = get_time_interval();
+
       candidate_pool.add(trie);
       trie.clear();
       candidate_pool.trie(trie);
+
+      total_merge += get_time_interval() - time_begin;
+      time_begin = get_time_interval();
     }
   }
+  debug << "Process " << rank << " Communication Time: " << total_comm << std::endl;
+  debug << "Process " << rank << " Merge Time: " << total_merge << std::endl;
+  debug << "Process " << rank << " Total Sent: " << items_sent << std::endl;
+  debug << "Process " << rank << " Total Recv: " << items_recv << std::endl;
 }

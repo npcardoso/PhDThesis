@@ -5,6 +5,8 @@
 
 #include <mpi.h>
 
+#include <cmath>
+
 #include <list>
 #include <vector>
 

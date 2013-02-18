@@ -12,20 +12,23 @@ template <class T_ACTIVITY>
 int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
   t_count_spectra spectra;
   t_trie D;
-
-  options.input() >> spectra;
-
-
+  t_mhs <T_ACTIVITY> mhs(options.mhs);
+  
   /* Initialize MPI */
   MPI_Init(NULL, NULL);
-
+  
   /* Find out my identity in the default communicator */
   int ntasks, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+  
+  if(rank == 0)
+    options.debug() << options << std::endl;
+  
+  options.input() >> spectra;
 
-  t_mhs <T_ACTIVITY> mhs(options.mhs);
+  t_time_interval time_begin = get_time_interval();
 
   if(ntasks > 1){
     t_count mpi_level = 1;
@@ -35,7 +38,7 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
     t_heuristic <T_ACTIVITY> heuristic = mhs.get_heuristic(mpi_level);
     mhs.set_heuristic(mpi_level + 1, heuristic);
 
-    int seed = time(NULL)+rank;
+    int seed = time(NULL);
     MPI_Bcast(&seed, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
     
     boost::random::mt19937 gen(seed);
@@ -47,22 +50,26 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
     mhs.set_heuristic(mpi_level, heuristic);
   }
 
-  t_time_interval time_begin = get_time_interval();
+  t_time_interval time = get_time_interval();
 
   mhs.calculate(spectra, D);
-
-  t_time_interval time_end_calculate = get_time_interval();
-  options.debug() << "Process " << rank << " Calculation Time: " << (time_end_calculate - time_begin) << std::endl;
+  options.debug() << "Process " << rank << " Total Generated: " << D.size() << std::endl;
+  options.debug() << "Process " << rank << " Calculation Time: " << (get_time_interval() - time) << std::endl;
+  time = get_time_interval();
 
   if(ntasks > 1){
     mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer, options.debug());
 
-    t_time_interval time_end_transfer = get_time_interval();
-    options.debug() << "Process " << rank << " Transfer Time: " << (time_end_transfer - time_end_calculate) << std::endl;
+    options.debug() << "Process " << rank << " Transfer Time: " << (get_time_interval() - time) << std::endl;
+    time = get_time_interval();
   }  
 
-  if(rank == 0)
+  if(rank == 0) {
+    t_time_interval time_end = get_time_interval();
+    options.debug() << "Candidates: " << D.size() << std::endl;
+    options.debug() << "Run Time: " << (time_end - time_begin) << std::endl;
     options.output() << D;
+  }
 
   /* Shut down MPI */
   MPI_Finalize();

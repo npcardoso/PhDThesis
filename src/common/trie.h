@@ -59,6 +59,7 @@ public:
   inline void clear() {
     children.clear();
     exists = false;
+    elements = 0;
   }
 
   friend class t_trie_iterator;

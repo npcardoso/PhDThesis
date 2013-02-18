@@ -29,7 +29,7 @@ template <class T_ACTIVITY>
       t_count component_count = spectra.get_component_count(filter);
 
       for(t_id i = 0; i < component_count; i++)
-        if((i / stride) % division_count != self)
+        if((i / stride) % division_count != (division_count - (self + 1)))
           ret[i] = t_rank_element(ret[i].get_component(), -1);
     }
 

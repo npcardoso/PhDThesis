@@ -2,6 +2,7 @@
 #define __MAIN_MHS_H__
 #include "configure.h"
 #include "mpi.h"
+#include "stats.h"
 
 #include "../../common/opt.h"
 #include "../../spectra/count_spectra.h"
@@ -22,6 +23,7 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
   MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+  t_stats stats;
   
   if(rank == 0)
     options.debug() << options << std::endl;
@@ -53,22 +55,34 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
   t_time_interval time = get_time_interval();
 
   mhs.calculate(spectra, D);
-  options.debug() << "Process " << rank << " Total Generated: " << D.size() << std::endl;
-  options.debug() << "Process " << rank << " Calculation Time: " << (get_time_interval() - time) << std::endl;
+  
+  stats.items_generated = D.size();
+  stats.total_calc = (get_time_interval() - time);
   time = get_time_interval();
 
   if(ntasks > 1){
-    mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer, options.debug());
-
-    options.debug() << "Process " << rank << " Transfer Time: " << (get_time_interval() - time) << std::endl;
+    mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer, stats);
+    
+    stats.total_transfer = (get_time_interval() - time);
     time = get_time_interval();
   }  
 
+  stats.runtime = (get_time_interval() - time_begin);
+  
   if(rank == 0) {
-    t_time_interval time_end = get_time_interval();
-    options.debug() << "Candidates: " << D.size() << std::endl;
-    options.debug() << "Run Time: " << (time_end - time_begin) << std::endl;
     options.output() << D;
+    
+    MPI_Status status;
+
+    for(t_count i = ntasks; --i;) {
+      t_stats tmp_stats;
+      MPI_Recv(&tmp_stats, sizeof(t_stats), MPI::BYTE, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &status);
+      tmp_stats.print(options.debug(), i, false);
+    }
+    stats.print(options.debug(), 0, true);
+    options.debug() << "Candidates: " << D.size() << std::endl;
+  } else {
+    MPI_Send(&stats, sizeof(t_stats), MPI::BYTE, 0, 1, MPI_COMM_WORLD);
   }
 
   /* Shut down MPI */

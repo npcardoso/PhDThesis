@@ -129,7 +129,7 @@ inline int get_receiver(int rank, int turn) {
 }
 
 
-void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, std::ostream & debug) {
+void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, t_stats & stats) {
   int ntasks, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -137,9 +137,6 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, std::
   typedef t_candidate_pool <t_candidate> t_candidates;
 
   t_candidates candidate_pool;
-  t_time_interval total_comm = 0;
-  t_time_interval total_merge = 0;
-  t_count items_recv = 0, items_sent = 0;
 
 
   t_time_interval time_begin = get_time_interval();
@@ -148,11 +145,11 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, std::
     while(i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
       if(get_sender(rank, i) < ntasks)
 
-        items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+        stats.items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
       i++;
     }
 
-    total_comm += get_time_interval() - time_begin;
+    stats.total_comm += get_time_interval() - time_begin;
     time_begin = get_time_interval();
 
     if (candidate_pool.size()) {
@@ -161,39 +158,35 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, std::
       candidate_pool.trie(trie);
     }
 
-    total_merge += get_time_interval() - time_begin;
+    stats.total_merge += get_time_interval() - time_begin;
     time_begin = get_time_interval();
 
     if(rank)
-      items_sent += send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
+      stats.items_sent += send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
 
-    total_comm += get_time_interval() - time_begin;
+    stats.total_comm += get_time_interval() - time_begin;
     time_begin = get_time_interval();
   }
   else {
     if(rank) {
-      items_sent += send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
+      stats.items_sent += send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
 
-      total_comm += get_time_interval() - time_begin;
+      stats.total_comm += get_time_interval() - time_begin;
       time_begin = get_time_interval();
     }
     else {
       for(t_count i = 1; i < ntasks; i++)
-        items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+        stats.items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
 
-      total_comm += get_time_interval() - time_begin;
+      stats.total_comm += get_time_interval() - time_begin;
       time_begin = get_time_interval();
 
       candidate_pool.add(trie);
       trie.clear();
       candidate_pool.trie(trie);
 
-      total_merge += get_time_interval() - time_begin;
+      stats.total_merge += get_time_interval() - time_begin;
       time_begin = get_time_interval();
     }
   }
-  debug << "Process " << rank << " Communication Time: " << total_comm << std::endl;
-  debug << "Process " << rank << " Merge Time: " << total_merge << std::endl;
-  debug << "Process " << rank << " Total Sent: " << items_sent << std::endl;
-  debug << "Process " << rank << " Total Recv: " << items_recv << std::endl;
 }

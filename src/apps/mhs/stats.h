@@ -23,7 +23,7 @@ class t_stats {
     std::ostream & print(std::ostream & out, int rank, bool print_runtime=false) const {
       out << "P" << rank << " Calculation Time: " << total_calc << std::endl;
       out << "P" << rank << " Communication Time: " << total_comm << std::endl;
-      out << "P" << rank << " Merge Time: " << total_calc << std::endl;
+      out << "P" << rank << " Merge Time: " << total_merge << std::endl;
       out << "P" << rank << " Transfer Time: " << total_transfer << std::endl;
 
       out << "P" << rank << " Total Generated: " << items_generated << std::endl;

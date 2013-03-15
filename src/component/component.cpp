@@ -1,6 +1,6 @@
 #include "component.h"
 
-#include "../common/exceptions.h"
+#include "../exceptions.h"
 
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random/discrete_distribution.hpp>

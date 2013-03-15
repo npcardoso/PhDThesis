@@ -3,8 +3,8 @@
 
 #include "heuristic.h"
 
-#include "../structs/spectra_iterator.h"
-#include "../common/utils.h"
+#include "../spectra/spectra_iterator.h"
+#include "../utils/utils.h"
 
 #include <cstring>
 #include <cmath>

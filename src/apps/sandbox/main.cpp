@@ -1,6 +1,6 @@
 #include "main.h"
 
-#include "../../structs/component.h"
+#include "../../component/component.h"
 
 #include <iostream>
 

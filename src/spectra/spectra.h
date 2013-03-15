@@ -4,9 +4,9 @@
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
 
-#include "../common/exceptions.h"
-#include "../structs/candidate.h"
-#include "../structs/types.h"
+#include "../candidate.h"
+#include "../exceptions.h"
+#include "../types.h"
 
 #include <cassert>
 #include <iostream>

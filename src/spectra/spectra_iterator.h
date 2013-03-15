@@ -3,7 +3,7 @@
 
 #include "spectra_filter.h"
 
-#include "../structs/types.h"
+#include "../types.h"
 
 #include <cstdlib>
 

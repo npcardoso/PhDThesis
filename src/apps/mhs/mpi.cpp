@@ -1,7 +1,7 @@
 #include "mpi.h"
 
-#include "../../structs/types.h"
-#include "../../common/utils.h"
+#include "../../types.h"
+#include "../../utils/utils.h"
 
 #include <mpi.h>
 

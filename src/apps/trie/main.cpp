@@ -1,6 +1,6 @@
 #include "main.h"
 #include "../../structs/trie.h"
-#include "../../structs/types.h"
+#include "../../types.h"
 
 
 int main_trie(const t_trie_options & options) {

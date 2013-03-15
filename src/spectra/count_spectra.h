@@ -2,7 +2,7 @@
 #define __COUNT_SPECTRA_H__
 
 #include "spectra.h"
-#include "../structs/types.h"
+#include "../types.h"
 
 #include <memory>
 

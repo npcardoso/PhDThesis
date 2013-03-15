@@ -5,7 +5,7 @@
 #include "stats.h"
 
 #include "../opt.h"
-#include "../../structs/count_spectra.h"
+#include "../../spectra/count_spectra.h"
 
 #include <mpi.h>
 

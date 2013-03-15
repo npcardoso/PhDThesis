@@ -6,7 +6,7 @@
 #include "../../heuristic/parallelization.h"
 #include "../../heuristic/similarity.h"
 #include "../../heuristic/sort.h"
-#include "../../structs/types.h"
+#include "../../types.h"
 
 #define MPI_BUFFER (1 << 16)
 

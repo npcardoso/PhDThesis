@@ -1,7 +1,7 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
-#include "types.h"
+#include "../types.h"
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/shared_ptr.hpp>

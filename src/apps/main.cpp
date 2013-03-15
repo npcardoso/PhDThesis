@@ -1,9 +1,9 @@
-#include "apps/trie/main.h"
-#include "apps/mhs/main.h"
-#include "apps/sandbox/main.h"
+#include "trie/main.h"
+#include "mhs/main.h"
+#include "sandbox/main.h"
 
-#include "common/utils.h"
-#include "structs/types.h"
+#include "../utils/utils.h"
+#include "../types.h"
 
 
 #include <cstring>

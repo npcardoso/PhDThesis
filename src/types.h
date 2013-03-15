@@ -58,6 +58,7 @@ typedef long double t_time_interval;
 
 /* Statistics */
 
+typedef double t_observation;
 typedef double t_weight;
 typedef double t_density;
 

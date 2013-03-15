@@ -8,6 +8,7 @@
 
 typedef unsigned int t_id;
 typedef t_id t_component_id;
+typedef t_id t_label_id;
 typedef t_id t_transaction_id;
 typedef t_id t_spectrum_id;
 
@@ -52,6 +53,12 @@ public:
 typedef std::unique_ptr<t_rank_element[]> t_order_buffer;
 
 /* Time */
+
 typedef long double t_time_interval;
+
+/* Statistics */
+
+typedef double t_weight;
+typedef double t_density;
 
 #endif

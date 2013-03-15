@@ -1,5 +1,6 @@
 #include "apps/trie/main.h"
 #include "apps/mhs/main.h"
+#include "apps/sandbox/main.h"
 
 #include "common/utils.h"
 #include "structs/types.h"
@@ -10,12 +11,15 @@
 
 #include <iostream>
 
+void print_help(char * self) {
+  std::cerr << "Usage: " << self << " <mhs | trie | sandbox> [options]\n";
+}
+
 int main(int argc, char ** argv){
   int ret = 0;
 
-
   if(argc == 1) {
-    std::cerr << "Usage: " << argv[0] << " <mhs | trie> [options]\n";
+    print_help(*argv);
     return 1;
   }
   else {
@@ -34,10 +38,15 @@ int main(int argc, char ** argv){
         return 1;
       
       ret = main_mhs(options);
-    } else {
-      std::cerr << "Usage: " << argv[0] << " <mhs | trie> [options]\n";
+    }
+    else if(strcmp("sandbox", argv[1]) == 0) { // sandbox mode
+      ret = main_sandbox();
+    }
+    else {
+      print_help(*argv);
       return 1;
     }
   }
+  return ret;
 
 }

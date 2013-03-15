@@ -1,6 +1,6 @@
 #include "opt.h"
 
-#include "types.h"
+#include "../structs/types.h"
 
 t_opt::t_opt(char short_opt, 
              const char * long_opt,

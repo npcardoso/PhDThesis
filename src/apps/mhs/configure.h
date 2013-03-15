@@ -2,11 +2,11 @@
 #define __CONFIGURE_MHS_H__
 
 #include "../../algorithms/mhs.h"
-#include "../../common/opt.h"
-#include "../../common/types.h"
+#include "../opt.h"
 #include "../../heuristic/parallelization.h"
 #include "../../heuristic/similarity.h"
 #include "../../heuristic/sort.h"
+#include "../../structs/types.h"
 
 #define MPI_BUFFER (1 << 16)
 

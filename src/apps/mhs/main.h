@@ -4,8 +4,8 @@
 #include "mpi.h"
 #include "stats.h"
 
-#include "../../common/opt.h"
-#include "../../spectra/count_spectra.h"
+#include "../opt.h"
+#include "../../structs/count_spectra.h"
 
 #include <mpi.h>
 

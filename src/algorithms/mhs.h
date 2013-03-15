@@ -2,10 +2,10 @@
 #define __MHS_H__
 
 #include "../heuristic/heuristic.h"
-#include "../spectra/spectra.h"
-#include "../spectra/spectra_filter.h"
-#include "../spectra/spectra_iterator.h"
-#include "../common/trie.h"
+#include "../structs/spectra.h"
+#include "../structs/spectra_filter.h"
+#include "../structs/spectra_iterator.h"
+#include "../structs/trie.h"
 #include "../common/utils.h"
 
 #include <map>

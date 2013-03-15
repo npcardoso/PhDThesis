@@ -1,8 +1,8 @@
 #ifndef __HEURISTIC_H__
 #define __HEURISTIC_H__
 
-#include "../spectra/spectra.h"
-#include "../spectra/spectra_filter.h"
+#include "../structs/spectra.h"
+#include "../structs/spectra_filter.h"
 
 #include <boost/shared_ptr.hpp>
 

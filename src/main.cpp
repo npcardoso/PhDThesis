@@ -1,8 +1,8 @@
 #include "apps/trie/main.h"
 #include "apps/mhs/main.h"
 
-#include "common/types.h"
 #include "common/utils.h"
+#include "structs/types.h"
 
 
 #include <cstring>

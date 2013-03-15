@@ -1,7 +1,7 @@
 #ifndef __CONFIGURE_TRIE_H__
 #define __CONFIGURE_TRIE_H__
 
-#include "../../common/opt.h"
+#include "../opt.h"
 
 class t_trie_options: public t_options {
 public:

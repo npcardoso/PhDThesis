@@ -1,7 +1,7 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include "types.h"
+#include "../structs/types.h"
 
 #include <iostream>
 #include <list>

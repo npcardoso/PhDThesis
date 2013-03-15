@@ -1,7 +1,7 @@
 #ifndef __STATS_MHS_H__
 #define __STATS_MHS_H__
 
-#include "../../common/types.h"
+#include "../../structs/types.h"
 #include <iostream>
 
 class t_stats {

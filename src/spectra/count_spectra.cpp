@@ -26,8 +26,8 @@ void t_count_spectra::set_element_count(t_count component_count,
       old_activity[transaction * get_component_count() + component];
     }
 
-  t_basic_spectra<t_count>::set_element_count(component_count, 
-                                              transaction_count);
+  t_basic_spectra::set_element_count(component_count, 
+                                     transaction_count);
 }
 
 t_count t_count_spectra::get_count(t_component_id component,

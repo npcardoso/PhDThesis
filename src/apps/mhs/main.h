@@ -9,11 +9,10 @@
 
 #include <mpi.h>
 
-template <class T_ACTIVITY>
-int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
+int main_mhs(const t_mhs_options & options) {
   t_count_spectra spectra;
   t_trie D;
-  t_mhs <T_ACTIVITY> mhs(options.mhs);
+  t_mhs  mhs(options.mhs);
   
   /* Initialize MPI */
   MPI_Init(NULL, NULL);
@@ -37,7 +36,7 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
     if(options.mpi_level)
       mpi_level = options.mpi_level;
 
-    t_heuristic <T_ACTIVITY> heuristic = mhs.get_heuristic(mpi_level);
+    t_heuristic  heuristic = mhs.get_heuristic(mpi_level);
     mhs.set_heuristic(mpi_level + 1, heuristic);
 
     int seed = time(NULL);
@@ -45,9 +44,9 @@ int main_mhs(const t_mhs_options<T_ACTIVITY> & options) {
     
     boost::random::mt19937 gen(seed);
     if(options.mpi_stride)
-      heuristic.push(new heuristics::t_divide<t_count>(rank, ntasks, options.mpi_stride));
+      heuristic.push(new heuristics::t_divide(rank, ntasks, options.mpi_stride));
     else
-      heuristic.push(new heuristics::t_random_divide<t_count>(rank, ntasks, gen));
+      heuristic.push(new heuristics::t_random_divide(rank, ntasks, gen));
 
     mhs.set_heuristic(mpi_level, heuristic);
   }

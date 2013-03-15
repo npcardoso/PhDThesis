@@ -32,7 +32,7 @@ int main(int argc, char ** argv){
       ret = main_trie(options);
     }
     else if(strcmp("mhs", argv[1]) == 0) { // MHS mode
-      t_mhs_options<t_count> options(std::string(argv[0]) + " mhs");
+      t_mhs_options options(std::string(argv[0]) + " mhs");
       
       if(options.configure(argc, argv))
         return 1;

@@ -10,7 +10,6 @@
 
 #define MPI_BUFFER (1 << 16)
 
-template <class T_ACTIVITY>
 class t_mhs_options: public t_options {
 public:
   t_count mpi_level;
@@ -19,12 +18,12 @@ public:
 
   bool mpi_hierarchical;
 
-  t_mhs<T_ACTIVITY> mhs;
+  t_mhs mhs;
 
-  static t_heuristic<T_ACTIVITY> default_heuristic() {
-    t_heuristic<T_ACTIVITY> heuristic;
-    heuristic.push(new heuristics::t_ochiai<t_count>());
-    heuristic.push(new heuristics::t_sort<t_count>());
+  static t_heuristic default_heuristic() {
+    t_heuristic heuristic;
+    heuristic.push(new heuristics::t_ochiai());
+    heuristic.push(new heuristics::t_sort());
     return heuristic;
   }
 

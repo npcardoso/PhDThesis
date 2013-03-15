@@ -2,6 +2,16 @@
 
 #include <cassert>
 
+t_spectra_iterator::t_spectra_iterator(t_count max_components, 
+                                       t_count max_transactions, 
+                                       const t_spectra_filter * filter) {
+  this->max_components = max_components;
+  this->max_transactions = max_transactions;
+  this->filter = filter;
+  component = 0;
+  transaction = 0;
+}
+
 t_component_id t_spectra_iterator::_next_component(t_component_id component) const {
   t_component_id next = 0;
   if(filter == NULL)

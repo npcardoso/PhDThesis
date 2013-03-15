@@ -1,6 +1,7 @@
 #ifndef __KERNEL_H__
 #define __KERNEL_H__
 
+#include "density.h"
 #include "../types.h"
 
 #include <boost/shared_ptr.hpp>

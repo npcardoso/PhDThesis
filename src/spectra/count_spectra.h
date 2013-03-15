@@ -6,7 +6,7 @@
 
 #include <memory>
 
-class t_count_spectra: public t_basic_spectra <t_count> {
+class t_count_spectra: public t_basic_spectra {
   typedef std::unique_ptr<t_count[]> t_activity_ptr;
   t_activity_ptr activity;
 

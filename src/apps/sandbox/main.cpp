@@ -1,6 +1,7 @@
 #include "main.h"
 
 #include "../../component/component.h"
+#include "../../component/kernel.h"
 
 #include <iostream>
 

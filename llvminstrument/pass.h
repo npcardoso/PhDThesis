@@ -1,6 +1,6 @@
 #pragma once
 
-#include <llvm/Analysis/DebugInfo.h>
+#include <llvm/DebugInfo.h>
 #include <llvm/Constants.h>
 #include <llvm/Instructions.h>
 #include <llvm/Function.h>

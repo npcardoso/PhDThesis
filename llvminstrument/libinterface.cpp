@@ -1,6 +1,6 @@
 #include "libinterface.h"
 #include <llvm/Constants.h>
-#include <llvm/Support/IRBuilder.h>
+#include <llvm/IRBuilder.h>
 #include <llvm/Type.h>
 
 using namespace llvm;

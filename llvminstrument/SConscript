@@ -10,7 +10,7 @@ sources = Glob("*cpp") + Glob("*/*cpp")
 
 env = Environment(
 	CCFLAGS = "-O0 -g -I%s `llvm-config --cxxflags`" % build_info['common_include_dir'],
-	LDFLAGS = "-g -lpthread")
+	LINKFLAGS = "-g -lpthread `llvm-config --ldflags`")
 
 
 env['ENV']['TERM'] = os.environ['TERM']

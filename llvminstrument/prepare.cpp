@@ -104,7 +104,10 @@ bool Instrument::PrepareInstrumentionPass::registerArtifact(Module & M,
                                                             size_t id,
                                                             Function * reg_fun, Function * reg_location_fun) {
 
-  std::string id_var_name = var_prefix + boost::lexical_cast<std::string>(id);
+  char buf[1024];
+  sprintf(buf, "%lu", id);
+
+  std::string id_var_name = var_prefix + buf;
   Type * operand_type = I.getArgOperand(0)->getType();
   GlobalVariable* id_holder =
     new GlobalVariable(M,

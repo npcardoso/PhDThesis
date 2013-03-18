@@ -4,8 +4,8 @@
 
 #include "libinterface.h"
 
-#include <boost/lexical_cast.hpp>
 #include <list>
+#include <cstdio>
 
 namespace Instrument {
 
@@ -51,8 +51,9 @@ class PrepareInstrumentionPass : public Pass {
   }
 
   inline bool registerProbeMetadata(Module & M, CallInst & I) {
-    std::string id_var_name = std::string("_instr_p_id_") + 
-      boost::lexical_cast<std::string>(num_probes - 1);
+    char buf[1024];
+    sprintf(buf, "%lu", num_probes - 1);
+    std::string id_var_name = std::string("_instr_p_id_") + buf;
     
     metadata.push_back(metadata_call(id_var_name, I));
     return false;
@@ -67,8 +68,9 @@ class PrepareInstrumentionPass : public Pass {
   }
 
   inline bool registerTransactionGateMetadata(Module & M, CallInst & I) {
-    std::string id_var_name = std::string("_instr_tg_id_") + 
-      boost::lexical_cast<std::string>(num_transaction_gates - 1);
+    char buf[1024];
+    sprintf(buf, "%lu", num_transaction_gates - 1);
+    std::string id_var_name = std::string("_instr_tg_id_") + buf;
     
     metadata.push_back(metadata_call(id_var_name, I));
     return false;
@@ -83,8 +85,9 @@ class PrepareInstrumentionPass : public Pass {
   }
 
   inline bool registerOracleMetadata(Module & M, CallInst & I) {
-    std::string id_var_name = std::string("_instr_o_id_") + 
-      boost::lexical_cast<std::string>(num_oracles - 1);
+    char buf[1024];
+    sprintf(buf, "%lu", num_oracles - 1);
+    std::string id_var_name = std::string("_instr_o_id_") + buf;
     
     errs() << "Found metadata for " << id_var_name << "\n";
     metadata.push_back(metadata_call(id_var_name, I));

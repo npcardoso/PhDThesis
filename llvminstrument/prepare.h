@@ -16,7 +16,7 @@ class PrepareInstrumentionPass : public Pass {
 
   LibInterface * interface;
 
-  typedef std::pair<std::string, CallInst &> metadata_call; 
+  typedef std::pair<std::string, CallInst *> metadata_call; 
 
   std::list <metadata_call> metadata;
 
@@ -55,7 +55,7 @@ class PrepareInstrumentionPass : public Pass {
     sprintf(buf, "%lu", num_probes - 1);
     std::string id_var_name = std::string("_instr_p_id_") + buf;
     
-    metadata.push_back(metadata_call(id_var_name, I));
+    metadata.push_back(metadata_call(id_var_name, &I));
     return false;
   }
   
@@ -72,7 +72,7 @@ class PrepareInstrumentionPass : public Pass {
     sprintf(buf, "%lu", num_transaction_gates - 1);
     std::string id_var_name = std::string("_instr_tg_id_") + buf;
     
-    metadata.push_back(metadata_call(id_var_name, I));
+    metadata.push_back(metadata_call(id_var_name, &I));
     return false;
   }
 
@@ -90,7 +90,7 @@ class PrepareInstrumentionPass : public Pass {
     std::string id_var_name = std::string("_instr_o_id_") + buf;
     
     errs() << "Found metadata for " << id_var_name << "\n";
-    metadata.push_back(metadata_call(id_var_name, I));
+    metadata.push_back(metadata_call(id_var_name, &I));
     return false;
   }
   

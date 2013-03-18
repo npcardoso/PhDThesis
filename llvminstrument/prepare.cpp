@@ -42,7 +42,7 @@ bool Instrument::PrepareInstrumentionPass::runOnModule(Module & M){
   changes = Pass::runOnModule(M);
 
   foreach(item, metadata)
-    metadataSetup(M, item->second, item->first);
+    metadataSetup(M, *item->second, item->first);
   
   metadata.clear();
 

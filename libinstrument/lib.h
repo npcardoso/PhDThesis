@@ -1,10 +1,8 @@
 #ifndef __INSTR_LIB_H__
 #define __INSTR_LIB_H__
 
-#include "datastore.h"
+#include "types.h"
 
 time_interval_t getTimeInterval();
 
-DataStore * getDataStore();
-void releaseDataStore();
 #endif

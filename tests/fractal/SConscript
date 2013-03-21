@@ -1,28 +1,21 @@
+from os.path import join
 import os
 
-Import("build_info")
-
-root = Dir('#').abspath
+Import('env')
+env = env.Clone()
 
 target  = "fractal"
 sources = Glob("*.cpp")
 
-llvm_instrument_lib = build_info['build_dir'] + "/llvminstrument/libllvminstrument.so"
-instrument_lib = build_info['build_dir'] + "/libinstrument/libinstrument.so"
-link_path = build_info['build_dir'] + "/libinstrument"
+env.Append(
+    LLVM_INSTRUMENT_LIB = join(env['lib_dir'], "lib%s.%s" % (env['llvminstrument'], env['libext'])),
+    INSTRUMENT_LIB = join(env['lib_dir'], "lib%s.%s" % (env['libinstrument'], env['libext'])),
+    LINK_PATH = "-L%s" % env['lib_dir'],
+    LINKFLAGS = "-lpthread -l%s" % env['libinstrument'],
+	CPP_PATH = "-I%s" % env['include_dir'])
+env.Tool('Instrument')
 
-env = Environment(
-	tools=['Instrument'],
-    LLVM_INSTRUMENT_LIB = llvm_instrument_lib,
-    INSTRUMENT_LIB = instrument_lib,
-    LINK_PATH = "-L"+link_path,
-    LINKFLAGS = "-lpthread -linstrument")
-env.Append(CPP_PATH = "-I"+build_info['common_include_dir'])
-
-env['ENV']['TERM'] = os.environ['TERM']
-env["CXX"] = "clang++"
-
-obj = env.Instrument(target, sources, "-instrument_function -instrument_prepare")
-bin_install = env.Install(build_info['build_dir'] + "/bin", obj)
+obj = env.Instrument(target, sources, env['llvm_passes'])
+bin_install = env.Install(env['bin_dir'], obj)
 
 env.Default(bin_install)

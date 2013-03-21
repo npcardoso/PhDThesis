@@ -1,10 +1,47 @@
-build_dir = 'obj'
+import os
+from os.path import join
 
-build_info = {}
-build_info['build_dir'] = str(Dir('#').abspath) + '/' + build_dir
-build_info['common_include_dir'] = build_info['build_dir'] + "/include"
-build_info['clang'] = 'clang'
+root = Dir('#').abspath
 
-Export('build_info')
 
-SConscript('SConscript', variant_dir=build_dir)
+vars = Variables('.scons.conf')
+
+vars.Add('prefix', '', '/usr/local')
+vars.Add('build_dir', '', join(root, 'obj'))
+vars.Add('libext', '', 'so')
+
+vars.Add('libinstrument', '', 'instrument')
+vars.Add('llvminstrument', '', 'llvminstrument')
+
+vars.Add('llvm_passes', '', '-instrument_function -instrument_prepare')
+
+vars.Add('debug', '', False)
+
+vars.Add('boost', '', None)
+vars.Add('clang', '', 'clang++')
+vars.Add('opt', '', 'opt')
+vars.Add('llc', '', 'llc')
+vars.Add('lli', '', 'lli')
+vars.Add('cxx', '', 'cxx')
+
+
+env = Environment()
+
+vars.Update(env)
+
+env['prefix']  = env.Dir(env['prefix']).abspath
+env['build_dir']  = env.Dir(env['build_dir']).abspath
+
+env['common_include_dir'] = join(root, "common", "include")
+
+env['include_dir'] = join(env['prefix'], "include")
+env['lib_dir'] = join(env['prefix'], "lib")
+env['bin_dir'] = join(env['prefix'], "bin")
+
+env['CXX'] = env['clang']
+env['ENV']['TERM'] = os.environ['TERM']
+
+#vars.Save('.scons.conf', env)
+
+Export('env')
+SConscript('SConscript', variant_dir=env['build_dir'])

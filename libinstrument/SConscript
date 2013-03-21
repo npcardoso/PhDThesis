@@ -1,35 +1,31 @@
 import os
 import SCons
+from os.path import join
 from SCons.Scanner.C import CScanner
 
-Import("build_info")
-root = Dir('#').abspath
-common_include_dir = root + "/include"
+Import('env')
+env = env.Clone()
 
 target  = "instrument"
+main_header = File("instrument.h")
 
 sources = Glob("*cpp")
 
-env = Environment(
-    tools = ['default', 'RecursiveScanner'],
-	CPPPATH = common_include_dir, 
+env.Tool('RecursiveScanner')
+env.Append(
+	CPPPATH = env['common_include_dir'], 
 	CCFLAGS = "-O0 -g",
 	LDFLAGS = "-lpthread")
 
-env['ENV']['TERM'] = os.environ['TERM']
-env["CXX"] = "clang++"
 
 obj = env.SharedLibrary(target = target, source = sources)
-lib_install = env.Install(build_info['build_dir'] + "/lib", obj)
+lib_install = env.Install(env['lib_dir'], obj)
 
-main_header = File("instrument.h")
 install_headers = env.RecursiveScanner(CScanner().scan, main_header) + [main_header]
+install_headers_dest = [join(env['include_dir'], env['libinstrument'], str(f)) for f in install_headers]
 
-install_headers_dest = [build_info['build_dir'] + "/include/libinstrument/" + str(f) for f in install_headers]
-
-install_headers.append(Glob("%s/*" % common_include_dir))
-install_headers_dest.append([build_info['build_dir'] + "/include/libinstrument/" + os.path.basename(str(f)) for f in Glob("%s/*" % common_include_dir)])
-print( install_headers_dest)
+install_headers.append(Glob("%s/*" % env['common_include_dir']))
+install_headers_dest.append([join(env['include_dir'], env['libinstrument'], os.path.basename(str(f))) for f in Glob("%s/*" % env['common_include_dir'])])
 
 header_install = env.InstallAs(install_headers_dest, install_headers)
 

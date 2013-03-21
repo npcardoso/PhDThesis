@@ -1,4 +1,5 @@
 import os
+from SCons import Environment
 def generate(env):
     """Add Builders and construction variables to the Environment."""
     env.AddMethod(RecursiveScanner, "RecursiveScanner");
@@ -14,10 +15,12 @@ def RecursiveScanner(env, scanner, file, *args,**kargs):
     while(len(header_pool)):
         tmp = header_pool.pop()
         header_depends.add(tmp)
+        if os.path.exists(tmp.abspath):
+            print("File not found %s" % tmp.abspath)
         for dep in scanner(tmp, *args, **kargs):
-            path = os.path.dirname(str(tmp))
+            path = os.path.dirname(tmp.abspath)
             if path:
-                header_pool.add(File( path + "/" + str(dep)))
+                header_pool.add(env.File(os.path.join(path, str(dep))))
             else:
                 header_pool.add(dep)
 

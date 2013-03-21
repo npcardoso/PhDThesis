@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ostream>
-#include "../datastore.h"
+#include "../datastore/datastore.h"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "datastore.h"
+#include "datastore/datastore.h"
 #include "utils/debug.h"
 
 #include <cassert>

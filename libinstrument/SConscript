@@ -5,27 +5,34 @@ from SCons.Scanner.C import CScanner
 
 Import('env')
 env = env.Clone()
+env.Tool('RecursiveScanner')
+env.Append(CPPPATH = env['common_include_dir'], LDFLAGS = "-lpthread")
+
+src_dir = Dir('./').srcnode().abspath
 
 target  = "instrument"
-main_header = File("instrument.h")
 
-sources = Glob("*cpp")
+wildcards = ""
+headers = []
+common_headers = []
+sources = []
 
-env.Tool('RecursiveScanner')
-env.Append(
-	CPPPATH = env['common_include_dir'], 
-	LDFLAGS = "-lpthread")
+for i in range(4):
+  wildcards = join(wildcards, "*")
+  headers += env.Glob(wildcards + "h")
+  sources += env.Glob(wildcards + "cpp")
+  sources += env.Glob(join("..", "common", "src", wildcards + "cpp"))
+
+common_headers += env.Glob(join(env['common_include_dir'], "*"))
+  
 
 
 obj = env.SharedLibrary(target = target, source = sources)
+
+header_install_dir = join(env['include_dir'], "lib%s" % env['libinstrument'])
+
 lib_install = env.Install(env['lib_dir'], obj)
+common_header_install = env.Install(header_install_dir, common_headers)
+header_install = env.Install(header_install_dir, headers)
 
-install_headers = env.RecursiveScanner(CScanner().scan, main_header) + [main_header]
-install_headers_dest = [join(env['include_dir'], env['libinstrument'], str(f)) for f in install_headers]
-
-install_headers.append(Glob("%s/*" % env['common_include_dir']))
-install_headers_dest.append([join(env['include_dir'], env['libinstrument'], os.path.basename(str(f))) for f in Glob("%s/*" % env['common_include_dir'])])
-
-header_install = env.InstallAs(install_headers_dest, install_headers)
-
-env.Default(lib_install, header_install)
+env.Default(lib_install, header_install, common_header_install)

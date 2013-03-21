@@ -1,4 +1,4 @@
-#include "threadinfo.h"
+#include "datastore/threadinfo.h"
 
 ThreadInfo::ThreadInfo(time_interval_t start, thread_id_t parent_id) {
   this->start = start;

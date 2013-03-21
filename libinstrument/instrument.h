@@ -5,8 +5,6 @@
 #include "probe.h"
 #include "transaction.h"
 
-#include "types.h"
-
 #include "utils/preprocessor.h"
 #include <assert.h>
 

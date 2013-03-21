@@ -1,8 +1,9 @@
-#include "graphviz.h"
+#include "io/graphviz.h"
 
-#include "../types.h"
-#include "../utils/preprocessor.h"
-#include "../utils/stl.h"
+#include "types.h"
+#include "utils/debug.h"
+#include "utils/preprocessor.h"
+#include "utils/stl.h"
 
 #include <iomanip>
 
@@ -15,7 +16,6 @@ static const char GvizTransactionPre[] = "Transaction";
 static const char GvizTransactionGatePre[] = "TransactionGate";
 static const char GvizObservationPre[] = "Observation";
 static const char GvizOracleResultPre[] = "OracleResult";
-#include "../utils/debug.h"
 
 ostream & GvizRGBA(ostream & out, float r, float g, float b, float a) {
   ios::fmtflags flags = out.flags();

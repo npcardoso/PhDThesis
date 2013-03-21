@@ -1,4 +1,4 @@
-#include "observation.h"
+#include "datastore/observation.h"
 
 Observation::Observation(time_interval_t time, probe_id_t p_id) {
   this->time = time;

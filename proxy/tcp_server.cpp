@@ -14,8 +14,10 @@ void tcp_server(boost::asio::io_service& io_service,
     tcp::iostream * stream = new tcp::iostream();
     acceptor.accept(*stream->rdbuf());
     debug("%s", "Got connection");
-    if (stream)
-      srv(stream);
+    if (*stream) {
+      t_iostream_ptr tmp(stream);
+      srv(tmp);
+    }
   }
 }
 

@@ -5,7 +5,8 @@
 #include <boost/shared_ptr.hpp> 
 
 #include <iostream>
-  typedef boost::shared_ptr<std::iostream> t_iostream_ptr;
+
+typedef boost::shared_ptr<std::iostream> t_iostream_ptr;
 
 class t_service {
 public:
@@ -32,8 +33,4 @@ public:
   virtual void operator ()(std::iostream & stream);
 };
 
-class t_json_parser_service: public t_service {
-public:
-  virtual void operator ()(std::iostream & stream);
-};
 #endif

@@ -1,40 +1,31 @@
 #ifndef __JSON_H__
 #define __JSON_H__
+
+#include "service.h"
+
 #include <cctype>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/shared_ptr.hpp> 
 
-typedef unsigned int t_count;
+typedef boost::shared_ptr<boost::property_tree::ptree> t_ptree_ptr;
 
-void json_copy_object(std::istream & in, std::ostream & out) {
-  bool in_str = false;
-  bool escape = false;
-  t_count stack_size = 0;
+class t_json_service {
+public:
+  typedef boost::shared_ptr<t_json_service> t_ptr;
 
-  char c;
-  while(in >> c) {
+  virtual void operator ()(std::iostream & stream, boost::property_tree::ptree & pt) = 0;
+};
 
-    if(escape) {
-      escape = false;
-    }
-    else if(c == '"') {
-      in_str = !in_str;
-    }
-    else if(in_str){
-      escape = c == '\\';
-    }
-    else if(c == '[' || c == '{'){
-      stack_size++;
-    }
-    else if(c == ']' || c == '}'){
-      stack_size--;
-      if(!stack_size) {
-        out << c;
-        break;
-      }
-    }
-    
-    if(stack_size && (in_str || isprint(c)))
-      out << c;
-  }
-}
+class t_json_parser_service: public t_service {
+  t_json_service::t_ptr srv;
+public:
+  t_json_parser_service(const t_json_service::t_ptr & srv);
+  virtual void operator ()(std::iostream & stream);
+};
+
+class t_json_debug : public t_json_service {
+public:
+  virtual void operator ()(std::iostream & stream, boost::property_tree::ptree & pt);
+};
 
 #endif

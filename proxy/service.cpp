@@ -1,11 +1,8 @@
 #include "service.h"
 
-#include "json.h"
 #include "utils/debug.h"
 
 #include <boost/thread/mutex.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 
 void t_service::operator ()(t_iostream_ptr & stream) {
@@ -43,21 +40,3 @@ void t_echo_service::operator()(std::iostream & stream) {
   debug("Ended Connection");
 }
 
-void t_json_parser_service::operator()(std::iostream & stream) {
-
-  while(stream) {
-
-    boost::property_tree::ptree pt;
-    debug("Parsing Start");
-    std::stringstream object;
-    json_copy_object(stream, object);
-    std::cerr << object.str();
-    boost::property_tree::read_json(object, pt);
-    debug("Parsing Complete");
-            
-    BOOST_FOREACH(boost::property_tree::ptree::value_type &v, pt.get_child("")) {
-      std::cout << v.second.data() << std::endl;
-    }
-  }
-  debug("Ended Connection");
-}

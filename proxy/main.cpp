@@ -1,4 +1,5 @@
 #include "tcp_server.h"
+#include "json.h"
 
 #include <iostream>
 #include <boost/asio.hpp>
@@ -11,8 +12,10 @@ int main()
   {
     boost::asio::io_service io_service;
     t_echo_service echo;
-    t_threaded_service threaded_echo(t_service::t_ptr(new t_json_parser_service()));
-    tcp_server(io_service, 1234, threaded_echo);
+    t_json_service::t_ptr json_service(new t_json_debug());
+    t_service::t_ptr service(new t_json_parser_service(json_service));
+    t_threaded_service threaded_json(service);
+    tcp_server(io_service, 1234, threaded_json);
     io_service.run();
   }
   catch (std::exception& e)

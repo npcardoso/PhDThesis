@@ -14,7 +14,6 @@ sources = Glob("*cpp")
 env.Tool('RecursiveScanner')
 env.Append(
 	CPPPATH = env['common_include_dir'], 
-	CCFLAGS = "-O0 -g",
 	LDFLAGS = "-lpthread")
 
 

@@ -1,6 +1,6 @@
 #include "bug.h"
 
-#include <libinstrument/instrument.h>
+#include <instrument/instrument.h>
 #include <stdlib.h>
 
 

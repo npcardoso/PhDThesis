@@ -4,9 +4,12 @@ env = env.Clone()
 target  = "llvminstrument"
 sources = Glob("*cpp") + Glob("*/*cpp")
 
+llvm_ccflags = "`%s --cxxflags`" % env['llvmconfig']
+llvm_ldflags = "`%s --ldflags --libs`" % env['llvmconfig']
+
 env.Append(
-		CCFLAGS = "-O0 -g -I%s `llvm-config --cxxflags`" % env['common_include_dir'],
-		LINKFLAGS = "-g -lpthread `llvm-config --ldflags`")
+	CCFLAGS = " -I%s %s" % (env['common_include_dir'], llvm_ccflags),
+	LINKFLAGS = llvm_ldflags)
 
 
 obj = env.SharedLibrary(target = target, source = sources)

@@ -19,10 +19,11 @@ vars.Add('debug', '', False)
 
 vars.Add('boost', '', None)
 vars.Add('clang', '', 'clang++')
+vars.Add('llvmconfig', '', 'llvm-config')
 vars.Add('opt', '', 'opt')
 vars.Add('llc', '', 'llc')
 vars.Add('lli', '', 'lli')
-vars.Add('cxx', '', 'cxx')
+vars.Add('cxx', '', 'g++')
 
 
 env = Environment()
@@ -37,6 +38,11 @@ env['common_include_dir'] = join(root, "common", "include")
 env['include_dir'] = join(env['prefix'], "include")
 env['lib_dir'] = join(env['prefix'], "lib")
 env['bin_dir'] = join(env['prefix'], "bin")
+
+if(env['debug']):
+  env['CCFLAGS'] = "-g -O0"
+else:
+  env['CCFLAGS'] = "-O3"
 
 env['CXX'] = env['clang']
 env['ENV']['TERM'] = os.environ['TERM']

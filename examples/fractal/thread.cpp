@@ -1,6 +1,6 @@
 #include "thread.h"
 
-#include <libinstrument/instrument.h>
+#include <instrument/instrument.h>
 
 #include <pthread.h>
 #include <stdlib.h>

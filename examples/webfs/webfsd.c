@@ -22,7 +22,7 @@
 #include <netdb.h>
 #include "httpd.h"
 
-#include <libinstrument/instrument.h>
+#include <instrument/instrument.h>
 #include "bug.h"
 
 /* ---------------------------------------------------------------------- */

@@ -42,7 +42,7 @@ env['bin_dir'] = join(env['prefix'], "bin")
 if(env['debug']):
   env['CCFLAGS'] = "-g -O0"
 else:
-  env['CCFLAGS'] = "-O3"
+  env['CCFLAGS'] = "-O3 -DNDEBUG"
 
 env['CXX'] = env['clang']
 env['ENV']['TERM'] = os.environ['TERM']

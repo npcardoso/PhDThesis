@@ -1,8 +1,9 @@
+.scons.conf
+.sconsign.dblite
 obj
 
 gmon.out
 core
-.sconsign.dblite
 .deps
 a.out
 *~

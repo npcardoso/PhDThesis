@@ -6,8 +6,7 @@
 
 using boost::asio::ip::tcp;
 
-int main()
-{
+int main() {
   try {
     boost::asio::io_service io_service;
     t_echo_service echo;

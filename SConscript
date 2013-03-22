@@ -5,7 +5,8 @@ env = env.Clone()
 
 env.SConscript('llvminstrument/SConscript')
 env.SConscript('libinstrument/SConscript')
-env.SConscript('proxy/SConscript')
+env.SConscript('server/SConscript')
+env.SConscript('sandbox/SConscript')
 
 env.Append(
     LLVM_INSTRUMENT_LIB = join(env['lib_dir'], "lib%s.%s" % (env['llvminstrument'], env['libext'])),

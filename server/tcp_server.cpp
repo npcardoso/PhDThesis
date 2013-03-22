@@ -10,13 +10,13 @@ void tcp_server(boost::asio::io_service& io_service,
                 unsigned short port, 
                 t_service & srv) {
   tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
-  for (;;) {
+  while (true) {
     tcp::iostream * stream = new tcp::iostream();
     acceptor.accept(*stream->rdbuf());
     debug("%s", "Got connection");
     if (*stream) {
       t_iostream_ptr tmp(stream);
-      srv(tmp);
+      srv(tmp, tmp);
     }
   }
 }

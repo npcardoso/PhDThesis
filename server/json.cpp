@@ -8,8 +8,10 @@ typedef unsigned int t_count;
 
 using boost::property_tree::ptree;
 
-void t_json_debug::operator ()(std::iostream & stream, ptree & pt) {
-  boost::property_tree::write_json(stream, pt);
+void t_json_debug::operator ()(std::istream & in,
+                               std::ostream & out,
+                               const boost::property_tree::ptree & pt) {
+  boost::property_tree::write_json(out, pt);
 }
 
 void json_copy_object(std::istream & in, std::ostream & out) {
@@ -48,17 +50,16 @@ void json_copy_object(std::istream & in, std::ostream & out) {
 t_json_parser_service::t_json_parser_service(const t_json_service::t_ptr & srv):srv(srv) {
 }
 
-void t_json_parser_service::operator()(std::iostream & stream) {
+void t_json_parser_service::operator ()(std::istream & in,
+                                        std::ostream & out) {
 
-  while(stream) {
+  while(in) {
     boost::property_tree::ptree pt;
-    debug("Parsing Start");
     std::stringstream object;
-    json_copy_object(stream, object);
-    std::cerr << object.str();
+    json_copy_object(in, object);
     boost::property_tree::read_json(object, pt);
     debug("Parsing Complete");
-    (*srv)(stream, pt);
+    (*srv)(in, out, pt);
   }
   debug("Ended Connection");
 }

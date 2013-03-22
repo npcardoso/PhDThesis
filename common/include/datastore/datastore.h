@@ -1,9 +1,11 @@
 #ifndef __INSTR_DATASTORE_H__
 #define __INSTR_DATASTORE_H__
 
-#include "datastore/observation.h"
-#include "datastore/threadinfo.h"
+#include "datastore/probe.h"
 #include "datastore/transaction.h"
+#include "datastore/oracle.h"
+
+#include "datastore/threadinfo.h"
 
 #include "types.h"
 
@@ -14,21 +16,21 @@
 
 using namespace std;
 
-class DataStore{
+class t_datastore {
 public:
   /* Initial Time */
   
-  time_interval_t i_time;
+  t_time_interval i_time;
 
   /* Threads */
   
-  typedef map<pthread_t, thread_id_t> thread_mappings_t;
-  typedef map<thread_id_t, ThreadInfo::ptr> thread_info_map_t;
+  typedef map<pthread_t, t_thread_id> t_thread_mappings;
+  typedef map<t_thread_id, t_thread_info::t_ptr> t_thread_info_map;
   
-  thread_id_t thread_count;
+  t_thread_id thread_count;
 
-  thread_mappings_t thread_mappings;
-  thread_info_map_t thread_info;
+  t_thread_mappings thread_mappings;
+  t_thread_info_map thread_info;
 
   /* Storage */
   
@@ -36,95 +38,93 @@ public:
 
   /* Observations */
   
-  typedef map<thread_id_t, Observation::ptr> observation_buffer_t;
+  typedef map<t_thread_id, t_probe_observation::t_ptr> t_probe_buffer;
   
-  observation_buffer_t observation_buffer;
+  t_probe_buffer probe_buffer;
   
   /* Instrumentation Artifacts Metadata */
-
-  typedef map<string, string> instr_artifact_t;
-  typedef vector<instr_artifact_t> artifact_metadata_storage_t;
+  /* TODO: Refactor: move this logic elsewhere */
+  typedef map<string, string> t_instr_artifact;
+  typedef vector<t_instr_artifact> t_artifact_metadata_storage;
   
-  artifact_metadata_storage_t transaction_gate_metadata;
-  artifact_metadata_storage_t probe_metadata;
-  artifact_metadata_storage_t oracle_metadata;
+  t_artifact_metadata_storage transaction_metadata;
+  t_artifact_metadata_storage probe_metadata;
+  t_artifact_metadata_storage oracle_metadata;
 
 
-
-
-  DataStore(time_interval_t time,
-            pthread_t pthread_id,
-            size_t max_storage_size);
+  t_datastore(t_time_interval time,
+              pthread_t pthread_id,
+              size_t max_storage_size);
 
   //Thread Related
-  void registerMainThread(time_interval_t time,
-                          pthread_t t_id);
+  void register_main_thread(t_time_interval time,
+                            pthread_t thread_id);
 
-  void registerThread(time_interval_t time,
-                      pthread_t t_id,
-                      pthread_t launcher_id);
+  void register_thread(t_time_interval time,
+                       pthread_t thread_id,
+                       pthread_t launcher_id);
 
-  void registerThreadEnd(time_interval_t time,
-                         pthread_t t_id);
+  void register_thread_end(t_time_interval time,
+                           pthread_t thread_id);
 
   //Transaction Related
-  transaction_gate_id_t registerTransactionGate();
+  t_transaction_gate_id register_transaction_construct();
   
-  void registerTransactionGateMetadata(transaction_gate_id_t tg_id, 
-                                       string key, 
-                                       string value);
+  void register_transaction_metadata(t_transaction_gate_id tg_id, 
+                                          string key, 
+                                          string value);
   
-  void registerTransaction(time_interval_t time,
+  void register_transaction(t_time_interval time,
                            pthread_t pthread_id,
-                           transaction_gate_id_t tr_id,
+                           t_transaction_gate_id tg_id,
                            bool explicit_end);
 
-  void registerTransactionEnd(time_interval_t time,
+  void register_transaction_end(t_time_interval time,
                               pthread_t pthread_id,
-                              transaction_gate_id_t tr_id);
+                              t_transaction_gate_id tg_id);
 
   //Oracle Related
-  oracle_id_t registerOracle();
+  t_oracle_id register_oracle_construct();
   
-  void registerOracleMetadata(oracle_id_t o_id, 
-                              string key, 
-                              string value);
+  void register_oracle_metadata(t_oracle_id o_id, 
+                                string key, 
+                                string value);
   
-  void registerHealth(time_interval_t time,
-                      pthread_t pthread_id,
-                      oracle_id_t o_id,
-                      float health,
-                      float confidence);
+  void register_health(t_time_interval time,
+                       pthread_t pthread_id,
+                       t_oracle_id o_id,
+                       float health,
+                       float confidence);
 
 
   //Observation Related
-  probe_id_t registerProbe();
+  t_probe_id register_probe_construct();
   
-  void registerProbeMetadata(probe_id_t p_id, 
-                             string key, 
-                             string value);
+  void register_probe_metadata(t_probe_id p_id, 
+                               string key, 
+                               string value);
 
-  void registerObservation(time_interval_t time,
-                           pthread_t t_id,
-                           probe_id_t p_id);
+  void start_probe(t_time_interval time,
+                   pthread_t t_id,
+                   t_probe_id p_id);
 
-  void commitObservation(pthread_t t_id);
+  void commit_observation(pthread_t t_id);
 
-  void discardObservation(pthread_t t_id);
+  void discard_observation(pthread_t t_id);
 
-  void readVariable(pthread_t t_id,
-                    const void * ptr,
-                    size_t size);
+  void read_variable(pthread_t t_id,
+                     const void * ptr,
+                     size_t size);
 
 
 private:
-  inline thread_id_t getThreadMapping(pthread_t pthread_id) const {
+  inline t_thread_id thread_mapping(pthread_t pthread_id) const {
     //Maybe we shouldn't be that strict. Ignore unkown threads with a debug output.
     assert(thread_mappings.count(pthread_id) == 1);
     return thread_mappings.find(pthread_id)->second;
   }
 
-  inline size_t canStore(size_t bytes) const {
+  inline size_t can_store(size_t bytes) const {
     return max_storage_size - current_storage_size >= bytes;
   }
 };

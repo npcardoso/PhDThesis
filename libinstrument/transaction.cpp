@@ -4,29 +4,29 @@
 #include "utils/debug.h"
 
 extern "C"{
-transaction_gate_id_t _instr_transaction_gate_register(){
-  transaction_gate_id_t id = getDataStore()->registerTransactionGate();
+t_transaction_gate_id _instr_transaction_gate_register(){
+  t_transaction_gate_id id = getDataStore()->register_transaction_construct();
   releaseDataStore();
   return id;
 }
 }
 
-void _instr_transaction_gate_register_metadata(probe_id_t id,
+void _instr_transaction_gate_register_metadata(t_probe_id id,
                                                const char * key, 
                                                const char * val) {
-  getDataStore()->registerTransactionGateMetadata(id, key, val);
+  getDataStore()->register_transaction_metadata(id, key, val);
   releaseDataStore();
 }
 
-void _instr_transaction_start(transaction_gate_id_t tr_id,
+void _instr_transaction_start(t_transaction_gate_id tr_id,
                               char explicit_end) {
   pthread_t id = pthread_self();
-  getDataStore()->registerTransaction(getTimeInterval(), id, tr_id, explicit_end);
+  getDataStore()->register_transaction(getTimeInterval(), id, tr_id, explicit_end);
   releaseDataStore();
 }
 
-void _instr_transaction_end(transaction_gate_id_t tr_id) {
+void _instr_transaction_end(t_transaction_gate_id tr_id) {
   pthread_t id = pthread_self();
-  getDataStore()->registerTransactionEnd(getTimeInterval(), id, tr_id);
+  getDataStore()->register_transaction_end(getTimeInterval(), id, tr_id);
   releaseDataStore();
 }

@@ -2,20 +2,20 @@
 
 #include "../types.h"
 
-struct State {
+struct t_state {
 public:
   unsigned char * data;
   size_t * offset_end;
   size_t n_vars;
 
 public:
-  State();
-  ~State();
+  t_state();
+  ~t_state();
 
-  void readVariable(const void * var,
-                    size_t bytes);
+  void read_variable(const void * var,
+                     size_t bytes);
 
-  inline size_t dataSize() const {
+  inline size_t data_size() const {
     if(n_vars)
       return offset_end[n_vars - 1];
     else
@@ -23,6 +23,6 @@ public:
   }
 
   inline size_t size() const {
-    return sizeof(size_t) * n_vars + dataSize();
+    return sizeof(size_t) * n_vars + data_size();
   }
 };

@@ -20,7 +20,7 @@ inline ostream & StateSpectraVariable(ostream & out,
 }
 
 inline ostream & StateSpectraState(ostream & out,
-                                   const State & st){
+                                   const t_state & st){
 
   size_t i = 0;
   for(size_t j = 0; j < st.n_vars; j++) {
@@ -35,7 +35,7 @@ inline ostream & StateSpectraState(ostream & out,
 
 inline ostream & StateSpectraObservation(ostream & out,
                                          size_t t_id,
-                                         const Observation & obs){
+                                         const t_probe_observation & obs){
 
   out << "obs,";
   out << obs.p_id << ",";
@@ -51,7 +51,7 @@ inline ostream & StateSpectraObservation(ostream & out,
 
 inline ostream & StateSpectraOracleResult(ostream & out,
                                           size_t t_id,
-                                          const OracleResult & o_res){
+                                          const t_oracle_observation & o_res){
 
   out << "or,";
   out << o_res.o_id << ",";
@@ -65,33 +65,33 @@ inline ostream & StateSpectraOracleResult(ostream & out,
 
 inline ostream & StateSpectraTransaction(ostream & out,
                                          size_t t_id,
-                                         const ThreadInfo & thr,
-                                         const Transaction & tr) {
+                                         const t_thread_info & thr,
+                                         const t_transaction_observation & tr) {
 
   streamsize precision = out.precision(1024);
 
   /* Observations */
   {
-    ThreadInfo::observation_storage_t::const_iterator begin, end;
-    begin = thr.getObservationsAfter(tr.start, true);
+    t_thread_info::t_probe_storage::const_iterator begin, end;
+    begin = thr.probes_after(tr.start, true);
 
     if(tr.ended())
-      end = thr.getObservationsAfter(tr.end);
+      end = thr.probes_after(tr.end);
     else
-      end = thr.observations.end();
+      end = thr.probes.end();
 
     while(begin < end)
       StateSpectraObservation(out, t_id, **(begin++)) << "\n";
   }
   /* Oracle Results */
   {
-    ThreadInfo::oracle_result_storage_t::const_iterator begin, end;
-    begin = thr.getOracleResultsAfter(tr.start, true);
+    t_thread_info::t_oracle_storage::const_iterator begin, end;
+    begin = thr.oracles_after(tr.start, true);
 
     if(tr.ended())
-      end = thr.getOracleResultsAfter(tr.end);
+      end = thr.oracles_after(tr.end);
     else
-      end = thr.oracle_results.end();
+      end = thr.oracles.end();
 
     while(begin < end)
       StateSpectraOracleResult(out, t_id, **(begin++)) << "\n";
@@ -102,8 +102,8 @@ inline ostream & StateSpectraTransaction(ostream & out,
 
 inline ostream & StateSpectraArtifacts(ostream & out,
                                        const char * pre,
-                                       const DataStore::artifact_metadata_storage_t & artifacts) {
-  artifact_id_t id = 0;
+                                       const t_datastore::t_artifact_metadata_storage & artifacts) {
+  t_artifact_id id = 0;
   foreach(artifact, artifacts){
     foreach(metadata, *artifact)
       out << pre << "," << id <<",\"" << metadata->first << "\"" << "," << "\"" << metadata->second << "\"" << "\n";
@@ -112,10 +112,10 @@ inline ostream & StateSpectraArtifacts(ostream & out,
   return out;
 }
 
-ostream & StateSpectra(ostream & out, const DataStore & ds) {
+ostream & StateSpectra(ostream & out, const t_datastore & ds) {
   out << "type, id, first, second\n";
   StateSpectraArtifacts(out, "metapr", ds.probe_metadata);
-  StateSpectraArtifacts(out, "metatg", ds.transaction_gate_metadata);
+  StateSpectraArtifacts(out, "metatg", ds.transaction_metadata);
   StateSpectraArtifacts(out, "metaor", ds.oracle_metadata);
 
   size_t t_id = 0;

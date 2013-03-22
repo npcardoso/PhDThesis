@@ -1,34 +1,34 @@
 #include "datastore/threadinfo.h"
 
-ThreadInfo::ThreadInfo(time_interval_t start, thread_id_t parent_id) {
+t_thread_info::t_thread_info(t_time_interval start, t_thread_id parent_id) {
   this->start = start;
   this->end = -start;
   this->parent_id = parent_id;
 }
 
-bool ThreadInfo::addObservation(Observation::const_ptr obs){
-  assert(observations.empty() || obs->time > observations.back()->time);
+bool t_thread_info::observation(t_probe_observation::t_const_ptr obs){
+  assert(probes.empty() || obs->time > probes.back()->time);
   if(transaction_stack.empty())  //Drop observations that are not related to any transaction
     return false;
 
-  observations.push_back(obs);
+  probes.push_back(obs);
   return true;
 }
 
-bool ThreadInfo::addOracleResult(OracleResult::const_ptr o_res){
-  assert(oracle_results.empty() || o_res->time > oracle_results.back()->time);
-  if(transaction_stack.empty())  //Drop oracle results that are not related to any transaction
+bool t_thread_info::observation(t_oracle_observation::t_const_ptr obs){
+  assert(oracles.empty() || obs->time > oracles.back()->time);
+  if(transaction_stack.empty())  //Drop observations that are not related to any transaction
     return false;
 
-  oracle_results.push_back(o_res);
+  oracles.push_back(obs);
   return true;
 }
 
-void ThreadInfo::pushTransaction(){
-  transaction_stack.push(Transaction::ptr());
+void t_thread_info::push_transaction(){
+  transaction_stack.push(t_transaction_observation::t_ptr());
 }
 
-void ThreadInfo::pushTransaction(Transaction::ptr tr){
+void t_thread_info::push_transaction(t_transaction_observation::t_ptr tr){
   assert(tr != NULL);
   assert(transactions.empty() || tr->start > transactions.back()->start);
   assert(transaction_stack.empty() || tr->start > transaction_stack.top()->start);
@@ -38,12 +38,12 @@ void ThreadInfo::pushTransaction(Transaction::ptr tr){
   transactions.push_back(tr);
 }
 
-void ThreadInfo::popTransaction(time_interval_t time,
-                                transaction_gate_id_t gate){
+void t_thread_info::pop_transaction(t_time_interval time,
+                                t_transaction_gate_id gate){
 
   assert(!transaction_stack.empty());
 
-  Transaction::ptr tr = transaction_stack.top();
+  t_transaction_observation::t_ptr tr = transaction_stack.top();
   transaction_stack.pop();
   if(tr != NULL) {
     tr->end = time;
@@ -54,25 +54,25 @@ void ThreadInfo::popTransaction(time_interval_t time,
 template <class T>
 class TimeCompare {
 public:
-  bool operator() (time_interval_t time, typename T::const_ptr obj){
+  bool operator() (t_time_interval time, typename T::t_const_ptr obj){
     return (*obj) > time;
   }
-  bool operator() (typename T::const_ptr obj, time_interval_t time){
+  bool operator() (typename T::t_const_ptr obj, t_time_interval time){
     return (*obj) < time;
   }
 };
 
-ThreadInfo::observation_storage_t::const_iterator ThreadInfo::getObservationsAfter(time_interval_t time, bool include) const {
+t_thread_info::t_probe_storage::const_iterator t_thread_info::probes_after(t_time_interval time, bool include) const {
   if(include)
-    return lower_bound(observations.begin(), observations.end(), time, TimeCompare<Observation>());
+    return lower_bound(probes.begin(), probes.end(), time, TimeCompare<t_probe_observation>());
   else
-    return upper_bound(observations.begin(), observations.end(), time, TimeCompare<Observation>());
+    return upper_bound(probes.begin(), probes.end(), time, TimeCompare<t_probe_observation>());
 }
 
-ThreadInfo::oracle_result_storage_t::const_iterator ThreadInfo::getOracleResultsAfter(time_interval_t time, bool include) const {
+t_thread_info::t_oracle_storage::const_iterator t_thread_info::oracles_after(t_time_interval time, bool include) const {
   if(include)
-    return lower_bound(oracle_results.begin(), oracle_results.end(), time, TimeCompare<OracleResult>());
+    return lower_bound(oracles.begin(), oracles.end(), time, TimeCompare<t_oracle_observation>());
   else
-    return upper_bound(oracle_results.begin(), oracle_results.end(), time, TimeCompare<OracleResult>());
+    return upper_bound(oracles.begin(), oracles.end(), time, TimeCompare<t_oracle_observation>());
 }
 

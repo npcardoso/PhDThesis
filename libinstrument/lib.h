@@ -3,8 +3,8 @@
 
 #include "datastore/datastore.h"
 
-time_interval_t getTimeInterval();
+t_time_interval getTimeInterval();
 
-DataStore * getDataStore();
+t_datastore * getDataStore();
 void releaseDataStore();
 #endif

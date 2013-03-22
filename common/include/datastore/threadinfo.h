@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../types.h"
-#include "observation.h"
+#include "probe.h"
 #include "transaction.h"
-#include "oracleresult.h"
+#include "oracle.h"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -11,38 +11,37 @@
 
 using namespace std;
 
-class ThreadInfo {
+class t_thread_info {
 public:
-  typedef boost::shared_ptr<ThreadInfo> ptr;
-  typedef vector<Observation::const_ptr> observation_storage_t;
-  typedef vector<Transaction::const_ptr> transaction_storage_t;
-  typedef vector<OracleResult::const_ptr> oracle_result_storage_t;
+  typedef boost::shared_ptr<t_thread_info> t_ptr;
+  typedef vector<t_probe_observation::t_const_ptr> t_probe_storage;
+  typedef vector<t_transaction_observation::t_const_ptr> t_transaction_storage;
+  typedef vector<t_oracle_observation::t_const_ptr> t_oracle_storage;
 
-  time_interval_t start, end;
+  t_time_interval start, end;
 
-  thread_id_t parent_id;
+  t_thread_id parent_id;
 
-  observation_storage_t observations;
-  transaction_storage_t transactions;
-  oracle_result_storage_t oracle_results;
+  t_probe_storage probes;
+  t_transaction_storage transactions;
+  t_oracle_storage oracles;
 
-  stack<Transaction::ptr> transaction_stack;
+  stack<t_transaction_observation::t_ptr> transaction_stack;
 
-  ThreadInfo(time_interval_t launch_time,
-             thread_id_t parent_id);
+  t_thread_info(t_time_interval launch_time,
+                t_thread_id parent_id);
 
-  bool addObservation(Observation::const_ptr obs);
-  
-  bool addOracleResult(OracleResult::const_ptr o_res);
+  bool observation(t_probe_observation::t_const_ptr obs);
+  bool observation(t_oracle_observation::t_const_ptr obs);
 
-  void pushTransaction();
-  void pushTransaction(Transaction::ptr tr);
-  void popTransaction(time_interval_t time,
-                      transaction_gate_id_t gate);
+  void push_transaction();
+  void push_transaction(t_transaction_observation::t_ptr tr);
+  void pop_transaction(t_time_interval time,
+                       t_transaction_gate_id gate);
 
-  observation_storage_t::const_iterator getObservationsAfter(time_interval_t time, bool include=false) const;
-  
-  oracle_result_storage_t::const_iterator getOracleResultsAfter(time_interval_t time, bool include=false) const;
+  t_probe_storage::const_iterator probes_after(t_time_interval time, bool include=false) const;
+
+  t_oracle_storage::const_iterator oracles_after(t_time_interval time, bool include=false) const;
 
   inline bool ended() const {
     return start < end;

@@ -3,9 +3,9 @@
 
 #include <cassert>
 
-// DataStore Stuff //
+// t_datastore Stuff //
 
-DataStore::DataStore(time_interval_t time,
+t_datastore::t_datastore(t_time_interval time,
                      pthread_t pthread_id,
                      size_t max_storage_size) {
   this->max_storage_size = max_storage_size;
@@ -17,30 +17,30 @@ DataStore::DataStore(time_interval_t time,
   thread_mappings[pthread_id] = 0;
 }
 
-void DataStore::registerMainThread(time_interval_t time, pthread_t pthread_id) {
-  thread_id_t id = id = thread_count++;
+void t_datastore::register_main_thread(t_time_interval time, pthread_t pthread_id) {
+  t_thread_id id = id = thread_count++;
   thread_mappings[pthread_id] = id;
 
-  thread_info[id] = ThreadInfo::ptr(new ThreadInfo (time - i_time, id));
+  thread_info[id] = t_thread_info::t_ptr(new t_thread_info (time - i_time, id));
   debug("Thread %ld(%ld): Registering Main", id, pthread_id);
 }
 
-void DataStore::registerThread(time_interval_t time, pthread_t  pthread_id, pthread_t pthread_launcher_id){
+void t_datastore::register_thread(t_time_interval time, pthread_t  pthread_id, pthread_t pthread_launcher_id){
   assert(pthread_launcher_id != pthread_id);
   assert(thread_mappings.count(pthread_launcher_id) == 1);
 
   //Add thread mapping
-  thread_id_t id = id = thread_count++;
+  t_thread_id id = id = thread_count++;
   thread_mappings[pthread_id] = id;
 
-  thread_id_t launcher_id = getThreadMapping(pthread_launcher_id);
+  t_thread_id launcher_id = thread_mapping(pthread_launcher_id);
 
-  thread_info[id] = ThreadInfo::ptr(new ThreadInfo (time - i_time, launcher_id));
+  thread_info[id] = t_thread_info::t_ptr(new t_thread_info (time - i_time, launcher_id));
   debug("Thread %ld(%ld): Launched by %ld(%ld)", id, pthread_id, launcher_id, pthread_launcher_id);
 }
 
-void DataStore::registerThreadEnd(time_interval_t time, pthread_t pthread_id){
-  thread_id_t id = getThreadMapping(pthread_id);
+void t_datastore::register_thread_end(t_time_interval time, pthread_t pthread_id){
+  t_thread_id id = thread_mapping(pthread_id);
 
   debug("Thread %ld: End", id);
 
@@ -48,33 +48,33 @@ void DataStore::registerThreadEnd(time_interval_t time, pthread_t pthread_id){
 }
 
 //Transaction Related
-transaction_gate_id_t DataStore::registerTransactionGate() {
-  debug("Registering Transaction Gate with tg_id %ld", transaction_gate_metadata.size());
-  transaction_gate_metadata.push_back(instr_artifact_t());
-  return transaction_gate_metadata.size() - 1;
+t_transaction_gate_id t_datastore::register_transaction_construct() {
+  debug("Registering Transaction Gate with tg_id %ld", transaction_metadata.size());
+  transaction_metadata.push_back(t_instr_artifact());
+  return transaction_metadata.size() - 1;
 }
 
-void DataStore::registerTransactionGateMetadata(transaction_gate_id_t tg_id, string key, string value) {
+void t_datastore::register_transaction_metadata(t_transaction_gate_id tg_id, string key, string value) {
   debug("Registering %s of Transaction Gate %ld: '%s'", key.c_str(), tg_id, value.c_str());
-  assert(tg_id < transaction_gate_metadata.size());
+  assert(tg_id < transaction_metadata.size());
   
-  transaction_gate_metadata[tg_id][key] = value;
+  transaction_metadata[tg_id][key] = value;
 }
 
 
-void DataStore::registerTransaction(time_interval_t time,
+void t_datastore::register_transaction(t_time_interval time,
                                     pthread_t pthread_id,
-                                    transaction_gate_id_t tg_id,
+                                    t_transaction_gate_id tg_id,
                                     bool explicit_end) {
 
-  thread_id_t id = getThreadMapping(pthread_id);
+  t_thread_id id = thread_mapping(pthread_id);
 
 
-  size_t obj_size = sizeof(Transaction);
-  if(canStore(obj_size)) {
-    Transaction::ptr tr(new Transaction(time - i_time, tg_id, explicit_end));
+  size_t obj_size = sizeof(t_transaction_observation);
+  if(can_store(obj_size)) {
+    t_transaction_observation::t_ptr tr(new t_transaction_observation(time - i_time, tg_id, explicit_end));
 
-    thread_info[id]->pushTransaction(tr);
+    thread_info[id]->push_transaction(tr);
     
     current_storage_size += obj_size;
 
@@ -84,7 +84,7 @@ void DataStore::registerTransaction(time_interval_t time,
           100.0 * current_storage_size / max_storage_size);
   }
   else {
-    thread_info[id]->pushTransaction();
+    thread_info[id]->push_transaction();
     
     debug("Thread %ld, Transaction Gate %ld: Dropped Transaction, Storage: Full(%f%%)",
           id,
@@ -93,13 +93,13 @@ void DataStore::registerTransaction(time_interval_t time,
   }
 }
 
-void DataStore::registerTransactionEnd(time_interval_t time,
+void t_datastore::register_transaction_end(t_time_interval time,
                                        pthread_t pthread_id,
-                                       transaction_gate_id_t gate) {
+                                       t_transaction_gate_id gate) {
 
-  thread_id_t id = getThreadMapping(pthread_id);
+  t_thread_id id = thread_mapping(pthread_id);
 
-  thread_info[id]->popTransaction(time - i_time, gate);
+  thread_info[id]->pop_transaction(time - i_time, gate);
 
   debug("Thread %ld, Transaction %ld: Registering Transaction End",
         id, -1l);
@@ -107,15 +107,15 @@ void DataStore::registerTransactionEnd(time_interval_t time,
 
 
 //Oracle Related
-oracle_id_t DataStore::registerOracle() {
+t_oracle_id t_datastore::register_oracle_construct() {
   debug("Registering Oracle with o_id %ld", oracle_metadata.size());
   
-  oracle_metadata.push_back(instr_artifact_t());
+  oracle_metadata.push_back(t_instr_artifact());
   
   return oracle_metadata.size() - 1;
 }
 
-void DataStore::registerOracleMetadata(oracle_id_t id, string key, string value) {
+void t_datastore::register_oracle_metadata(t_oracle_id id, string key, string value) {
   debug("Registering %s of Oracle %ld: '%s'", key.c_str(), id, value.c_str());
   assert(id < oracle_metadata.size());
   
@@ -123,19 +123,19 @@ void DataStore::registerOracleMetadata(oracle_id_t id, string key, string value)
 }
 
 
-void DataStore::registerHealth(time_interval_t time,
+void t_datastore::register_health(t_time_interval time,
                                pthread_t pthread_id,
-                               oracle_id_t o_id,
+                               t_oracle_id o_id,
                                float health,
                                float confidence) {
 
-  thread_id_t id = getThreadMapping(pthread_id);
+  t_thread_id id = thread_mapping(pthread_id);
 
-  size_t obj_size = sizeof(Transaction);
-  if(canStore(obj_size)) {
-    OracleResult::ptr o_res(new OracleResult(time - i_time, o_id, health, confidence));
+  size_t obj_size = sizeof(t_oracle_observation);
+  if(can_store(obj_size)) {
+    t_oracle_observation::t_ptr obs(new t_oracle_observation(time - i_time, o_id, health, confidence));
     
-    if(thread_info[id]->addOracleResult(o_res)) {
+    if(thread_info[id]->observation(obs)) {
       current_storage_size += obj_size;
 
       debug("Thread %ld, Oracle %ld: Registered Oracle Result (Health: %f, Confidence: %f), Storage: %f%%",
@@ -156,40 +156,40 @@ void DataStore::registerHealth(time_interval_t time,
 }
 
 //Observation Related
-probe_id_t DataStore::registerProbe() {
+t_probe_id t_datastore::register_probe_construct() {
   debug("Registering Probe with p_id %ld", probe_metadata.size());
-  probe_metadata.push_back(instr_artifact_t());
+  probe_metadata.push_back(t_instr_artifact());
   return probe_metadata.size() - 1;
 }
 
-void DataStore::registerProbeMetadata(probe_id_t id, string key, string value) {
+void t_datastore::register_probe_metadata(t_probe_id id, string key, string value) {
   debug("Registering %s of Probe %ld: '%s'", key.c_str(), id, value.c_str());
   assert(id < probe_metadata.size());
   
   probe_metadata[id][key] = value;
 }
 
-void DataStore::registerObservation(time_interval_t time, pthread_t pthread_id, probe_id_t p_id) {
-  thread_id_t id = getThreadMapping(pthread_id);
+void t_datastore::start_probe(t_time_interval time, pthread_t pthread_id, t_probe_id p_id) {
+  t_thread_id id = thread_mapping(pthread_id);
 
   debug("Thread %ld, Probe %ld: Registering observation", id, p_id);
 
   assert(thread_info.count(id) == 1);
-  assert(observation_buffer.count(id) == 0);
+  assert(probe_buffer.count(id) == 0);
 
-  observation_buffer[id] = Observation::ptr(new Observation(time - i_time, p_id));
+  probe_buffer[id] = t_probe_observation::t_ptr(new t_probe_observation(time - i_time, p_id));
 }
 
-void DataStore::commitObservation(pthread_t pthread_id) {
-  thread_id_t id = getThreadMapping(pthread_id);
+void t_datastore::commit_observation(pthread_t pthread_id) {
+  t_thread_id id = thread_mapping(pthread_id);
 
-  assert(observation_buffer.count(id) == 1);
+  assert(probe_buffer.count(id) == 1);
 
-  Observation::ptr obs = observation_buffer[id];
+  t_probe_observation::t_ptr obs = probe_buffer[id];
 
-  size_t obj_size = sizeof(Observation) + obs->size();
-  if(canStore(obj_size)) {
-    if(thread_info[id]->addObservation(obs)){
+  size_t obj_size = sizeof(t_probe_observation) + obs->size();
+  if(can_store(obj_size)) {
+    if(thread_info[id]->observation(obs)){
       current_storage_size += obj_size;
 
       debug("Thread %ld, Probe %ld: Commited Observation with size %ld, Storage: %f%%",
@@ -205,22 +205,22 @@ void DataStore::commitObservation(pthread_t pthread_id) {
           id, obs->p_id, obs->size(),
           100.0 * current_storage_size / max_storage_size);
   }
-  observation_buffer.erase(id);
+  probe_buffer.erase(id);
 }
 
-void DataStore::discardObservation(pthread_t pthread_id) {
-  thread_id_t id = getThreadMapping(pthread_id);
+void t_datastore::discard_observation(pthread_t pthread_id) {
+  t_thread_id id = thread_mapping(pthread_id);
 
-  assert(observation_buffer.count(id) == 1);
+  assert(probe_buffer.count(id) == 1);
 
-  observation_buffer.erase(id);
+  probe_buffer.erase(id);
 }
 
-void DataStore::readVariable(pthread_t pthread_id, const void * ptr, size_t size){
-  thread_id_t id = getThreadMapping(pthread_id);
-  observation_buffer_t::iterator it = observation_buffer.find(id);
+void t_datastore::read_variable(pthread_t pthread_id, const void * ptr, size_t size){
+  t_thread_id id = thread_mapping(pthread_id);
+  t_probe_buffer::iterator it = probe_buffer.find(id);
 
-  assert(it != observation_buffer.end());
+  assert(it != probe_buffer.end());
 
   debug("Thread %ld, Probe %ld: Reading Variable with size %ld",
         id,
@@ -228,6 +228,6 @@ void DataStore::readVariable(pthread_t pthread_id, const void * ptr, size_t size
         size);
 
 
-  it->second->readVariable(ptr, size);
+  it->second->read_variable(ptr, size);
 }
 

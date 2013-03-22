@@ -4,13 +4,13 @@
 #include <cstdlib>
 #include <cstring>
 
-State::State() {
+t_state::t_state() {
   n_vars = 0;
   data = NULL;
   offset_end = NULL;
 }
 
-void State::readVariable(const void * var, size_t bytes) {
+void t_state::read_variable(const void * var, size_t bytes) {
   assert(bytes > 0);
 
   size_t start;
@@ -34,7 +34,7 @@ void State::readVariable(const void * var, size_t bytes) {
   n_vars++;
 }
 
-State::~State(){
+t_state::~t_state(){
   if(data)
     free(data);
   if(offset_end)

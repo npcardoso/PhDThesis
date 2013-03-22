@@ -6,24 +6,24 @@
 
 /* Time */
 
-typedef long double time_interval_t;
+typedef long double t_time_interval;
 
 /* Instrumentation Artifacts */
 
-typedef unsigned long artifact_id_t;
-typedef artifact_id_t probe_id_t;
-typedef artifact_id_t variable_id_t;
-typedef artifact_id_t transaction_gate_id_t;
-typedef artifact_id_t oracle_id_t;
+typedef unsigned long t_artifact_id;
+typedef t_artifact_id t_probe_id;
+typedef t_artifact_id t_variable_id;
+typedef t_artifact_id t_transaction_gate_id;
+typedef t_artifact_id t_oracle_id;
 
 /* Execution Artifacts */
 
-typedef pthread_t thread_id_t;
-typedef artifact_id_t observation_id_t;
-typedef artifact_id_t transaction_id_t;
+typedef pthread_t t_thread_id;
+typedef t_artifact_id t_observation_id;
+typedef t_artifact_id t_transaction_id;
 
 /* Memory */
 
-typedef unsigned long alloc_id_t;
+typedef unsigned long t_alloc_id;
 
 #endif

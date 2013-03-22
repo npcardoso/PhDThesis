@@ -17,14 +17,14 @@
 extern "C" {
 #endif
 
-  void _instr_transaction_gate_register_metadata(probe_id_t id,
+  void _instr_transaction_gate_register_metadata(t_probe_id id,
                                                  const char * key, 
                                                  const char * val);
 
-  void _instr_transaction_start(transaction_gate_id_t tg_id,
+  void _instr_transaction_start(t_transaction_gate_id tg_id,
                                 char explicit_end);
 
-  void _instr_transaction_end(transaction_gate_id_t tg_id); 
+  void _instr_transaction_end(t_transaction_gate_id tg_id); 
 
 #ifdef __cplusplus
 }

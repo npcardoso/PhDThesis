@@ -23,9 +23,9 @@ void * networkInterface(void * ptr);
 \*****************************************************/
 
 pthread_mutex_t datastore_lock;
-DataStore * datastore = NULL;
+t_datastore * datastore = NULL;
 
-time_interval_t getTimeInterval(){
+t_time_interval getTimeInterval(){
   timeval time;
   gettimeofday(&time, NULL);
   return time.tv_sec * 10e6 + time.tv_usec;
@@ -39,7 +39,7 @@ void init() {
   debug("Instrumentation Init");
 
   pthread_mutex_init(&datastore_lock, NULL);
-  datastore = new DataStore(getTimeInterval(), pthread_self(), 102400);
+  datastore = new t_datastore(getTimeInterval(), pthread_self(), 102400);
   _instr_pthread_register_main(pthread_self());
 
   pthread_create(&t, NULL, networkInterface, NULL);
@@ -54,7 +54,7 @@ void finish() {
   debug("Instrumentation Finalize");
 }
 
-DataStore * getDataStore(){
+t_datastore * getDataStore(){
   pthread_mutex_lock(&datastore_lock); //Lock: datastore_lock
   return datastore;
 }

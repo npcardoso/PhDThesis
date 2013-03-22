@@ -11,7 +11,7 @@ using boost::property_tree::ptree;
 namespace io {
 namespace json {
   void observation(ptree & pt,
-                   const OracleResult & obs,
+                   const t_oracle_observation & obs,
                    std::string prefix){
     pt.put(prefix + "cid", obs.o_id);
     //if(pid)
@@ -22,7 +22,7 @@ namespace json {
   }
 
   void observation(ptree & pt,
-                   const Observation & obs,
+                   const t_probe_observation & obs,
                    std::string prefix){
     pt.put(prefix + "cid", obs.p_id);
     //if(pid)

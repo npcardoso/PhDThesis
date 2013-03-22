@@ -18,11 +18,11 @@
 extern "C" {
 #endif
 
-  void _instr_probe_register_metadata(probe_id_t id, 
+  void _instr_probe_register_metadata(t_probe_id id, 
                                       const char * key, 
                                       const char * val);
   
-  void _instr_probe_observation_register(probe_id_t p_id);
+  void _instr_probe_observation_register(t_probe_id p_id);
 
   void _instr_probe_read(void * ptr,
                          size_t width);

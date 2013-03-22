@@ -33,7 +33,7 @@ ostream & GvizRGBA(ostream & out, float r, float g, float b, float a) {
 
 }
 
-ostream & GvizStateLabel(ostream & out, const State & st) {
+ostream & GvizStateLabel(ostream & out, const t_state & st) {
   ios::fmtflags flags = out.flags();
   char fill = out.fill('0');
 
@@ -52,13 +52,13 @@ ostream & GvizStateLabel(ostream & out, const State & st) {
   return out;
 }
 
-ostream & GvizObservations(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
+ostream & GvizObservations(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   size_t observation_id = 0;
-  foreach(obs, thr.observations) {
+  foreach(obs, thr.probes) {
     out << GvizObj(GvizObservationPre, t_id, observation_id) << " [";
     out << "label=\"" << GvizObj(GvizObservationPre, t_id, observation_id) << "\\n";
     if((*obs)->state) {
-      out << "State Observation: " << (*obs)->state->dataSize() << " bytes\\n";
+      out << "State Observation: " << (*obs)->state->data_size() << " bytes\\n";
       GvizStateLabel(out, *(*obs)->state) << "\\n";
     }
     else
@@ -76,9 +76,9 @@ ostream & GvizObservations(ostream & out, thread_id_t t_id, const ThreadInfo & t
   return out;
 }
 
-ostream & GvizObservationLinks(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
+ostream & GvizObservationLinks(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   size_t observation_id = 0;
-  foreach(obs, thr.observations) {
+  foreach(obs, thr.probes) {
     out  << GvizObj(GvizThreadPre, t_id) << " ->";
     out  << GvizObj(GvizObservationPre, t_id, observation_id) << ";\n";
     observation_id++;
@@ -87,9 +87,9 @@ ostream & GvizObservationLinks(ostream & out, thread_id_t t_id, const ThreadInfo
 }
 
 
-ostream & GvizOracleResults(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
+ostream & GvizOracleResults(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   size_t oracle_result_id = 0;
-  foreach(o_res, thr.oracle_results) {
+  foreach(o_res, thr.oracles) {
     out << GvizObj(GvizOracleResultPre, t_id, oracle_result_id) << " [";
     out << "label=\"" << GvizObj(GvizOracleResultPre, t_id, oracle_result_id) << "\\n";
     out << "Health: " << (*o_res)->health << " Confidence: " << (*o_res)->confidence << "\\n";
@@ -105,9 +105,9 @@ ostream & GvizOracleResults(ostream & out, thread_id_t t_id, const ThreadInfo & 
   return out;
 }
 
-ostream & GvizOracleResultLinks(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
+ostream & GvizOracleResultLinks(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   size_t oracle_result_id = 0;
-  foreach(obs, thr.oracle_results) {
+  foreach(obs, thr.oracles) {
     out  << GvizObj(GvizThreadPre, t_id) << " ->";
     out  << GvizObj(GvizOracleResultPre, t_id, oracle_result_id) << ";\n";
     oracle_result_id++;
@@ -115,7 +115,7 @@ ostream & GvizOracleResultLinks(ostream & out, thread_id_t t_id, const ThreadInf
   return out;
 }
 
-ostream & GvizTransactions(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
+ostream & GvizTransactions(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   size_t transaction_id = 0;
   //Finished Transactions
   foreach(tr, thr.transactions) {
@@ -139,37 +139,37 @@ ostream & GvizTransactions(ostream & out, thread_id_t t_id, const ThreadInfo & t
   return out;
 }
 
-ostream & GvizTransactionLinks(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
+ostream & GvizTransactionLinks(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   size_t transaction_id = 0;
   foreach(tr, thr.transactions) {
     /* Observation Links */
     {
-    ThreadInfo::observation_storage_t::const_iterator begin, end;
-    begin = thr.getObservationsAfter((*tr)->start, true);
+    t_thread_info::t_probe_storage::const_iterator begin, end;
+    begin = thr.probes_after((*tr)->start, true);
     if((*tr)->ended())
-      end = thr.getObservationsAfter((*tr)->end);
+      end = thr.probes_after((*tr)->end);
     else
-      end = thr.observations.end();
+      end = thr.probes.end();
 
     while(begin < end){
       out  << GvizObj(GvizTransactionPre, t_id, transaction_id) << " ->";
-      out  << GvizObj(GvizObservationPre, t_id, begin - thr.observations.begin()) << ";\n";
+      out  << GvizObj(GvizObservationPre, t_id, begin - thr.probes.begin()) << ";\n";
       begin ++;
     }
     }
     
     /* OracleResult Links */
     {
-    ThreadInfo::oracle_result_storage_t::const_iterator begin, end;
-    begin = thr.getOracleResultsAfter((*tr)->start, true);
+    t_thread_info::t_oracle_storage::const_iterator begin, end;
+    begin = thr.oracles_after((*tr)->start, true);
     if((*tr)->ended())
-      end = thr.getOracleResultsAfter((*tr)->end);
+      end = thr.oracles_after((*tr)->end);
     else
-      end = thr.oracle_results.end();
+      end = thr.oracles.end();
 
     while(begin < end){
       out  << GvizObj(GvizTransactionPre, t_id, transaction_id) << " ->";
-      out  << GvizObj(GvizOracleResultPre, t_id, begin - thr.oracle_results.begin()) << ";\n";
+      out  << GvizObj(GvizOracleResultPre, t_id, begin - thr.oracles.begin()) << ";\n";
       begin ++;
     }
     }
@@ -180,7 +180,7 @@ ostream & GvizTransactionLinks(ostream & out, thread_id_t t_id, const ThreadInfo
   return out;
 }
 
-ostream & GvizThreads(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
+ostream & GvizThreads(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   out  << GvizObj(GvizThreadPre, t_id) << " [";
   out  << "label=\"" << GvizObj(GvizThreadPre, t_id) << "\\n@";
   out << thr.start;
@@ -199,7 +199,7 @@ ostream & GvizThreads(ostream & out, thread_id_t t_id, const ThreadInfo & thr) {
   return out;
 }
 
-ostream & GvizThreadLinks(ostream & out, const DataStore & ds) {
+ostream & GvizThreadLinks(ostream & out, const t_datastore & ds) {
   foreach(it, ds.thread_info){
     if(it->second->parent_id != it->first){
       out << GvizObj(GvizThreadPre, it->second->parent_id);
@@ -209,7 +209,7 @@ ostream & GvizThreadLinks(ostream & out, const DataStore & ds) {
   return out;
 }
 
-ostream & Graphviz(ostream & out, const DataStore & ds) {
+ostream & Graphviz(ostream & out, const t_datastore & ds) {
   out << "digraph g {\n";
   out << "mindist=0;\n";
   out << "clusterrank=\"local\";\n";

@@ -4,43 +4,43 @@
 #include "utils/debug.h"
 
 extern "C"{
-probe_id_t _instr_probe_register(){
-  probe_id_t id =  getDataStore()->registerProbe();
+t_probe_id _instr_probe_register(){
+  t_probe_id id =  getDataStore()->register_probe_construct();
   releaseDataStore();
   return id;
 }
 }
 
-void _instr_probe_register_metadata(probe_id_t id, 
+void _instr_probe_register_metadata(t_probe_id id, 
                                     const char * key, 
                                     const char * val) {
-  getDataStore()->registerProbeMetadata(id, key, val);
+  getDataStore()->register_probe_metadata(id, key, val);
   releaseDataStore();
 }
 
-void _instr_probe_observation_register_atomic(probe_id_t p_id){
-  DataStore * ds = getDataStore();
+void _instr_probe_observation_register_atomic(t_probe_id p_id){
+  t_datastore * ds = getDataStore();
   pthread_t id = pthread_self();
-  ds->registerObservation(getTimeInterval(), id, p_id);
+  ds->start_probe(getTimeInterval(), id, p_id);
 }
 
-void _instr_probe_observation_register(probe_id_t p_id){
-  DataStore * ds = getDataStore();
+void _instr_probe_observation_register(t_probe_id p_id){
+  t_datastore * ds = getDataStore();
   pthread_t id = pthread_self();
-  ds->registerObservation(getTimeInterval(), id, p_id);
+  ds->start_probe(getTimeInterval(), id, p_id);
   releaseDataStore();
 }
 
 void _instr_probe_read(void * ptr, size_t width){
-  DataStore * ds = getDataStore();
+  t_datastore * ds = getDataStore();
   pthread_t id = pthread_self();
-  ds->readVariable(id, ptr, width);
+  ds->read_variable(id, ptr, width);
   releaseDataStore();
 }
 
 void _instr_probe_observation_commit(){
-  DataStore * ds = getDataStore();
+  t_datastore * ds = getDataStore();
   pthread_t id = pthread_self();
-  ds->commitObservation(id);
+  ds->commit_observation(id);
   releaseDataStore();
 }

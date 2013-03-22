@@ -17,11 +17,11 @@
 extern "C" {
 #endif
 
-  void _instr_oracle_register_metadata(oracle_id_t id,
+  void _instr_oracle_register_metadata(t_oracle_id id,
                                        const char * key,
                                        const char * val);
 
-  void _instr_oracle_health(oracle_id_t o_id,
+  void _instr_oracle_health(t_oracle_id o_id,
                             float health,
                             float confidence);
 

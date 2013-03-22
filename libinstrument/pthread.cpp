@@ -31,13 +31,13 @@ extern "C" {
   void * pthread_wrapper(void * ptr){
     pthreadArguments * args = (pthreadArguments * ) ptr;
 
-    getDataStore()->registerThread(getTimeInterval(), pthread_self(), args->parent);
+    getDataStore()->register_thread(getTimeInterval(), pthread_self(), args->parent);
     releaseDataStore();
 
     void * ret = args->start_routine(args->arg);
 
     delete args;
-    getDataStore()->registerThreadEnd(getTimeInterval(), pthread_self());
+    getDataStore()->register_thread_end(getTimeInterval(), pthread_self());
     releaseDataStore();
 
     return ret;
@@ -45,7 +45,7 @@ extern "C" {
 
 
   void _instr_pthread_register_main(pthread_t thread) {
-    getDataStore()->registerMainThread(getTimeInterval(), pthread_self());
+    getDataStore()->register_main_thread(getTimeInterval(), pthread_self());
     releaseDataStore();
   }
 

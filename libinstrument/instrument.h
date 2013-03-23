@@ -17,30 +17,39 @@
 
 #define _instr_metadata_location(register_fun) register_fun ("Location",( __FILE__  ":"  _instr_str(__LINE__)))
 
-#define instr_void (;) 
+#define instr_void 0 
+
+#ifdef NINSTR
+
+#define instr_metadata(key, value)
+
+#else
+
+void _instr_metadata_placeholder(t_construct_id c_id,
+                                 const char * key,
+                                 const char * val);
+
+#define instr_metadata(key, value) _instr_metadata_placeholder(0, (key), (value))
+
+#endif
 
   /* Oracle */
 
 #ifdef NINSTR
 
-#define instr_ometadata(key, value)
 
-#define instr_oracle(condition, confidence, items...)
+#define instr_oracle(condition, confidence)
 
-#define instr_assert_oracle(condition, confidence, items...) assert((condition))
+#define instr_assert_oracle(condition, confidence) assert((condition))
 
 #else
 
-#define instr_ometadata(key, value) (_instr_oracle_register_metadata(0, (key), (value));)
 
-#define instr_oracle(condition, confidence, items...) { \
-  _instr_oracle_health(0, (condition), (confidence)); \
-  FOREACH(_instr_expand, (_instr_metadata_location(instr_ometadata), items))\
-}
+#define instr_oracle(condition, confidence) _instr_oracle_observation(0, (condition), (confidence))
 
-#define instr_assert_oracle(condition, confidence, items...) {\
-  instr_oracle((condition), (confidence), items)\
-  assert((condition));\
+#define instr_assert_oracle(condition, confidence){\
+  instr_oracle((condition), (confidence));\
+  assert((condition))\
 }
 
 #endif
@@ -49,21 +58,15 @@
 
 #ifdef NINSTR
 
-#define instr_pmetadata(key, value)
 #define instr_pvar(item) 
 
 #define instr_probe(items...)
 
 #else
 
-#define instr_pmetadata(key, value) (_instr_probe_register_metadata(0, (key), (value));)
-#define instr_pvar(item) (_instr_probe_read((void *)&(item), sizeof(item));)
+#define instr_pvar(item) sizeof(item), ((void *)&(item))
 
-#define instr_probe(items...) { \
-  _instr_probe_observation_register(0);\
-  FOREACH(_instr_expand, (_instr_metadata_location(instr_pmetadata), items))\
-  _instr_probe_observation_commit();\
-}
+#define instr_probe(items...) _instr_probe_observation(0, items, 0, 0)
 
 #endif
   
@@ -71,24 +74,15 @@
 
 #ifdef NINSTR
 
-#define instr_tmetadata(key, value)
-
 #define transaction_start()
+
 #define transaction_end()
 
 #else
 
-#define instr_tmetadata(key, value) (_instr_transaction_gate_register_metadata(0, (key), (value));)
+#define instr_transaction_start() _instr_transaction_start(0)
 
-#define instr_transaction_start(items...) { \
-  _instr_transaction_start(0, 0);\
-  FOREACH(_instr_expand, (_instr_metadata_location(instr_tmetadata), items))\
-}
-
-#define instr_transaction_end(items...) { \
-  _instr_transaction_end(0);\
-  FOREACH(_instr_expand, (_instr_metadata_location(instr_tmetadata),items))\
-}
+#define instr_transaction_end() _instr_transaction_end(0)
 
 #endif
 #endif

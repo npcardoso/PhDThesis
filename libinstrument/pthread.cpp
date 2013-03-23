@@ -1,6 +1,7 @@
 #include "pthread.h"
 
 #include "lib.h"
+#include "utils/debug.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -31,23 +32,22 @@ extern "C" {
   void * pthread_wrapper(void * ptr){
     pthreadArguments * args = (pthreadArguments * ) ptr;
 
-    getDataStore()->register_thread(getTimeInterval(), pthread_self(), args->parent);
-    releaseDataStore();
-
-    void * ret = args->start_routine(args->arg);
-
+//    getDataStore()->thread_start(getTimeInterval());
+//    releaseDataStore();
+    void * ret = NULL;
+    try {
+      ret = args->start_routine(args->arg);
+    }
+    catch (...) {
+      debug("Caught exception in pthread wrapper");
+    }
     delete args;
-    getDataStore()->register_thread_end(getTimeInterval(), pthread_self());
-    releaseDataStore();
+ //   getDataStore()->thread_end(getTimeInterval());
+ //   releaseDataStore();
 
     return ret;
   }
 
-
-  void _instr_pthread_register_main(pthread_t thread) {
-    getDataStore()->register_main_thread(getTimeInterval(), pthread_self());
-    releaseDataStore();
-  }
 
   int _instr_pthread_create (pthread_t * thread,
                              const pthread_attr_t *  attr,

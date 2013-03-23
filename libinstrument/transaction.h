@@ -6,10 +6,10 @@
 
 #ifdef NINSTR
 
-#define _instr_transaction_gate_register_metadata(id, key, val)
+#define _instr_transaction_metadata(id, key, val)
 
-#define _instr_transaction_start(tg_id, explicit_end)
-#define _instr_transaction_end(tg_id)
+#define _instr_transaction_start(c_id)
+#define _instr_transaction_end(c_id)
 
 #else
 
@@ -17,14 +17,13 @@
 extern "C" {
 #endif
 
-  void _instr_transaction_gate_register_metadata(t_probe_id id,
-                                                 const char * key, 
-                                                 const char * val);
+  void _instr_transaction_metadata(t_construct_id c_id,
+                                            const char * key, 
+                                            const char * val);
 
-  void _instr_transaction_start(t_transaction_gate_id tg_id,
-                                char explicit_end);
+  void _instr_transaction_start(t_construct_id c_id);
 
-  void _instr_transaction_end(t_transaction_gate_id tg_id); 
+  void _instr_transaction_end(t_construct_id c_id); 
 
 #ifdef __cplusplus
 }

@@ -7,6 +7,7 @@
 
 #include <iomanip>
 
+/*
 #define _GvizObj(item) << "_" << (item)
 #define GvizObj(prefix, ...) (prefix) FOREACH(_GvizObj, (__VA_ARGS__))
 
@@ -142,7 +143,7 @@ ostream & GvizTransactions(ostream & out, t_thread_id t_id, const t_thread_info 
 ostream & GvizTransactionLinks(ostream & out, t_thread_id t_id, const t_thread_info & thr) {
   size_t transaction_id = 0;
   foreach(tr, thr.transactions) {
-    /* Observation Links */
+    // Observation Links 
     {
     t_thread_info::t_probe_storage::const_iterator begin, end;
     begin = thr.probes_after((*tr)->start, true);
@@ -158,7 +159,7 @@ ostream & GvizTransactionLinks(ostream & out, t_thread_id t_id, const t_thread_i
     }
     }
     
-    /* OracleResult Links */
+    // OracleResult Links
     {
     t_thread_info::t_oracle_storage::const_iterator begin, end;
     begin = thr.oracles_after((*tr)->start, true);
@@ -208,7 +209,7 @@ ostream & GvizThreadLinks(ostream & out, const t_datastore & ds) {
   }
   return out;
 }
-
+*/
 ostream & Graphviz(ostream & out, const t_datastore & ds) {
   out << "digraph g {\n";
   out << "mindist=0;\n";
@@ -218,7 +219,7 @@ ostream & Graphviz(ostream & out, const t_datastore & ds) {
   out << "penwidth=3;\n";
   out << "node[ style = \"filled\"];\n";
   out << "rank=\"same\";\n";
-
+/*
   foreach(it, ds.thread_info){
     out << "subgraph cluster_" << it->first << "{\n";
     out << "style=filled;\n";
@@ -236,6 +237,7 @@ ostream & Graphviz(ostream & out, const t_datastore & ds) {
     out << "}\n";
   }
   GvizThreadLinks(out, ds);
+*/
   out << "}\n";
   return out;
 }

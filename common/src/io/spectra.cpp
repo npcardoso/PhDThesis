@@ -4,7 +4,7 @@
 #include "utils/stl.h"
 
 #include <iomanip>
-
+/*
 inline ostream & StateSpectraVariable(ostream & out,
                                       const void * buf,
                                       size_t left,
@@ -70,7 +70,7 @@ inline ostream & StateSpectraTransaction(ostream & out,
 
   streamsize precision = out.precision(1024);
 
-  /* Observations */
+  // Observations /
   {
     t_thread_info::t_probe_storage::const_iterator begin, end;
     begin = thr.probes_after(tr.start, true);
@@ -83,7 +83,7 @@ inline ostream & StateSpectraTransaction(ostream & out,
     while(begin < end)
       StateSpectraObservation(out, t_id, **(begin++)) << "\n";
   }
-  /* Oracle Results */
+  // Oracle Results 
   {
     t_thread_info::t_oracle_storage::const_iterator begin, end;
     begin = thr.oracles_after(tr.start, true);
@@ -111,10 +111,10 @@ inline ostream & StateSpectraArtifacts(ostream & out,
   }
   return out;
 }
-
+*/
 ostream & StateSpectra(ostream & out, const t_datastore & ds) {
   out << "type, id, first, second\n";
-  StateSpectraArtifacts(out, "metapr", ds.probe_metadata);
+ /* StateSpectraArtifacts(out, "metapr", ds.probe_metadata);
   StateSpectraArtifacts(out, "metatg", ds.transaction_metadata);
   StateSpectraArtifacts(out, "metaor", ds.oracle_metadata);
 
@@ -123,6 +123,6 @@ ostream & StateSpectra(ostream & out, const t_datastore & ds) {
     foreach(tr, thr->second->transactions) {
       StateSpectraTransaction(out, t_id++, *(thr->second), **tr);
     }
-
+*/
   return out;
 }

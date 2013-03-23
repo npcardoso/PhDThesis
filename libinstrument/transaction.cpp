@@ -4,29 +4,27 @@
 #include "utils/debug.h"
 
 extern "C"{
-t_transaction_gate_id _instr_transaction_gate_register(){
-  t_transaction_gate_id id = getDataStore()->register_transaction_construct();
-  releaseDataStore();
+t_construct_id _instr_transaction_register(){
+  t_construct_id id = 0;
   return id;
 }
 }
 
-void _instr_transaction_gate_register_metadata(t_probe_id id,
-                                               const char * key, 
-                                               const char * val) {
-  getDataStore()->register_transaction_metadata(id, key, val);
+void _instr_transaction_register_metadata(t_construct_id id,
+                                          const char * key, 
+                                          const char * val) {
+//  getDataStore()->register_transaction_metadata(id, key, val);
+//  releaseDataStore();
+}
+
+void _instr_transaction_start(t_construct_id c_id) {
+  t_transaction_observation::t_ptr obs(new t_transaction_observation(getTimeInterval(), c_id));
+  getDataStore()->observation(obs);
   releaseDataStore();
 }
 
-void _instr_transaction_start(t_transaction_gate_id tr_id,
-                              char explicit_end) {
+void _instr_transaction_end(t_construct_id c_id) {
   pthread_t id = pthread_self();
-  getDataStore()->register_transaction(getTimeInterval(), id, tr_id, explicit_end);
-  releaseDataStore();
-}
-
-void _instr_transaction_end(t_transaction_gate_id tr_id) {
-  pthread_t id = pthread_self();
-  getDataStore()->register_transaction_end(getTimeInterval(), id, tr_id);
+  getDataStore()->transaction_end(getTimeInterval(), c_id);
   releaseDataStore();
 }

@@ -1,26 +1,18 @@
 #pragma once
 
-#include "../types.h"
+#include "types.h"
 
-#include <boost/shared_ptr.hpp>
+#include "datastore/construct.h"
 
-struct t_oracle_observation {
+struct t_oracle_observation: public t_observation_single {
 public:
-  t_time_interval time;
-  t_oracle_id o_id; 
   float health, confidence;
 
 public:
   typedef boost::shared_ptr<t_oracle_observation> t_ptr;
   typedef boost::shared_ptr<const t_oracle_observation> t_const_ptr;
   
-  inline t_oracle_observation(t_time_interval time, t_oracle_id o_id, float health, float confidence) : time(time), o_id(o_id), health(health), confidence(confidence) {}
+  inline t_oracle_observation(t_time_interval time, t_construct_id c_id, float health, float confidence) : t_observation_single(time, c_id), health(health), confidence(confidence) {}
   
-  inline bool operator > (const t_time_interval & time) const {
-    return this->time > time;
-  }
-  
-  inline bool operator < (const t_time_interval & time) const {
-    return this->time < time;
-  }
+  size_t size() const;
 };

@@ -9,11 +9,6 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-typedef unsigned int t_id;
-typedef t_id t_construct_id;
-
-typedef double t_health;
-typedef double t_confidence;
 
 
 class t_instrument_proto {

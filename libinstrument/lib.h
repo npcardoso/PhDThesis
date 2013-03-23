@@ -5,6 +5,6 @@
 
 t_time_interval getTimeInterval();
 
-t_datastore * getDataStore();
+t_transaction_factory * getDataStore();
 void releaseDataStore();
 #endif

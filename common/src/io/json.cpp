@@ -13,7 +13,7 @@ namespace json {
   void observation(ptree & pt,
                    const t_oracle_observation & obs,
                    std::string prefix){
-    pt.put(prefix + "cid", obs.o_id);
+    pt.put(prefix + "cid", obs.c_id);
     //if(pid)
     //  pt.put(prefix + "pid", pid);
     pt.put(prefix + "t", obs.time);
@@ -24,7 +24,7 @@ namespace json {
   void observation(ptree & pt,
                    const t_probe_observation & obs,
                    std::string prefix){
-    pt.put(prefix + "cid", obs.p_id);
+    pt.put(prefix + "cid", obs.c_id);
     //if(pid)
     //  pt.put(prefix + "pid", pid);
   }

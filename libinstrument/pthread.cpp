@@ -32,7 +32,7 @@ extern "C" {
   void * pthread_wrapper(void * ptr){
     pthreadArguments * args = (pthreadArguments * ) ptr;
 
-    tracker->start();
+    tracker()->start();
     void * ret = NULL;
     try {
       ret = args->start_routine(args->arg);
@@ -41,7 +41,7 @@ extern "C" {
       debug("Caught exception in pthread wrapper");
     }
     delete args;
-    tracker->end();
+    tracker()->end();
 
     return ret;
   }

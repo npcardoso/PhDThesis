@@ -8,16 +8,26 @@
 #include <sstream>
 using namespace std;
 
-t_thread_tracker::t_ptr tracker;
+boost::mutex tracker_mutex;
+t_thread_tracker::t_ptr _tracker(new t_thread_tracker());
+
+t_thread_tracker::t_ptr tracker() {
+  tracker_mutex.lock();
+  t_thread_tracker::t_ptr tmp = _tracker;
+  tracker_mutex.unlock();
+  return tmp;
+}
 
 void init() __attribute__((constructor));
 void init() {
-  pthread_t t;
-
+  tracker_mutex.lock();
   debug("Instrumentation Init");
 
-  tracker = t_thread_tracker::t_ptr(new t_thread_tracker());
-  tracker->start();
+
+  _tracker = t_thread_tracker::t_ptr(new t_thread_tracker());
+  tracker_mutex.unlock();
+  tracker()->start();
+  debug("Instrumentation Init end");
 }
 
 void finish() __attribute__((destructor));

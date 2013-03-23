@@ -3,6 +3,6 @@
 
 #include "threads.h"
 
-extern t_thread_tracker::t_ptr tracker;
+t_thread_tracker::t_ptr tracker();
 
 #endif

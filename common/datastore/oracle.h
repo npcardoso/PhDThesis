@@ -1,10 +1,14 @@
-#pragma once
+#ifndef __COMMON_DATASTORE_ORACLE_H__
+#define __COMMON_DATASTORE_ORACLE_H__
 
 #include "types.h"
 
 #include "datastore/construct.h"
+#include "datastore/observation.h"
 
-struct t_oracle_observation: public t_observation_single {
+class t_oracle_construct: public t_construct {};
+
+class t_oracle_observation: public t_observation_single {
 public:
   float health, confidence;
 
@@ -16,3 +20,5 @@ public:
   
   virtual size_t size() const;
 };
+
+#endif

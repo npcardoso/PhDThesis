@@ -3,6 +3,10 @@
 
 #include <cassert>
 
+t_construct_id t_datastore::register_construct(const t_construct::t_ptr &) {
+  debug("Registering construct");
+  return 0;
+}
 
 void t_thread_tracker::thread_start(t_time_interval time, pthread_t thread_id) {
 }

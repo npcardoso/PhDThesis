@@ -5,7 +5,9 @@
 
 extern "C"{
 t_construct_id _instr_transaction_register(){
-  t_construct_id id = 0;
+  t_construct::t_ptr construct(new t_transaction_construct());
+  t_construct_id id = getDataStore()->register_construct(construct);
+  releaseDataStore();
   return id;
 }
 }

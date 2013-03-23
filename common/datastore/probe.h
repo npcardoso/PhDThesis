@@ -1,10 +1,12 @@
-
-#pragma once
+#ifndef __COMMON_DATASTORE_PROBE_H__
+#define __COMMON_DATASTORE_PROBE_H__
 
 #include "types.h"
 
 #include "datastore/construct.h"
+#include "datastore/observation.h"
 
+class t_probe_construct: public t_construct {};
 
 struct t_state {
 public:
@@ -48,3 +50,5 @@ public:
 
   virtual size_t size() const;
 };
+
+#endif

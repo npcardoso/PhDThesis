@@ -1,9 +1,12 @@
-#pragma once
+#ifndef __COMMON_DATASTORE_TRANSACTION_H__
+#define __COMMON_DATASTORE_TRANSACTION_H__
 
 #include "types.h"
-#include "datastore/construct.h"
 
-#include <boost/shared_ptr.hpp>
+#include "datastore/construct.h"
+#include "datastore/observation.h"
+
+class t_transaction_construct: public t_construct {};
 
 struct t_transaction_observation: public t_observation_window{
 
@@ -16,3 +19,5 @@ public:
   
   virtual size_t size() const;
 };
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef __INSTR_DATASTORE_H__
-#define __INSTR_DATASTORE_H__
+#ifndef __COMMON_DATASTORE_DATASTORE_H__
+#define __COMMON_DATASTORE_DATASTORE_H__
 
 #include "datastore/probe.h"
 #include "datastore/transaction.h"
@@ -7,7 +7,6 @@
 
 #include "types.h"
 
-#include <boost/shared_ptr.hpp>
 #include <map>
 #include <stack>
 #include <string>

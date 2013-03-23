@@ -6,7 +6,8 @@ from SCons.Scanner.C import CScanner
 Import('env')
 env = env.Clone()
 env.Tool('RecursiveScanner')
-env.Append(CPPPATH = Dir(env['common_dir']), LDFLAGS = "-lpthread")
+env.Append(CPPPATH = Dir(env['common_dir']), 
+           LINKFLAGS = "-lpthread -lboost_system -lboost_thread")
 
 
 target  = "instrument"

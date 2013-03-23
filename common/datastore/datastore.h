@@ -21,11 +21,13 @@ public:
 };
 
 class t_transaction_factory: public t_datastore {
-  /* Initial Time */
+
 
   typedef std::stack<t_transaction_observation::t_ptr> t_stack;
   t_stack active_transactions;
 public:
+  typedef boost::shared_ptr<t_transaction_factory> t_ptr;
+  typedef boost::shared_ptr<const t_transaction_factory> t_const_ptr;
 
   void transaction_end(t_time_interval time,
                        t_construct_id c_id);
@@ -35,22 +37,6 @@ public:
   virtual void observation(const t_oracle_observation::t_ptr & obs);
 
   virtual void observation(const t_probe_observation::t_ptr & obs);
-};
-
-
-class t_thread_tracker {
-//  typedef std::map<t_thread_id, t_thread_transactions> t_threads;
-
-//  t_threads threads;
-public:
-
-  void thread_start(t_time_interval time,
-                    pthread_t thread_id = pthread_self());
-
-  void thread_end(t_time_interval time,
-                  pthread_t thread_id = pthread_self());
-
-
 };
 
 #endif

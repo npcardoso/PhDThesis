@@ -1,15 +1,15 @@
 #include "pthread.h"
 
-#include "lib.h"
+#include "main.h"
 #include "utils/debug.h"
+#include "utils/time.h"
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-
   using namespace std;
-
+  
   class pthreadArguments {
   public:
     void *(*start_routine) (void *);
@@ -32,8 +32,7 @@ extern "C" {
   void * pthread_wrapper(void * ptr){
     pthreadArguments * args = (pthreadArguments * ) ptr;
 
-//    getDataStore()->thread_start(getTimeInterval());
-//    releaseDataStore();
+    tracker->start();
     void * ret = NULL;
     try {
       ret = args->start_routine(args->arg);
@@ -42,8 +41,7 @@ extern "C" {
       debug("Caught exception in pthread wrapper");
     }
     delete args;
- //   getDataStore()->thread_end(getTimeInterval());
- //   releaseDataStore();
+    tracker->end();
 
     return ret;
   }
@@ -55,6 +53,7 @@ extern "C" {
                              void * arg) {
 
 
+    debug("New Transaction");
     pthreadArguments * args = new pthreadArguments(start_routine, arg, pthread_self());
     int ret = pthread_create(thread, attr, pthread_wrapper, args);
     if(ret)

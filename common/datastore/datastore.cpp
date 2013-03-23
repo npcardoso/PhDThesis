@@ -8,12 +8,6 @@ t_construct_id t_datastore::register_construct(const t_construct::t_ptr &) {
   return 0;
 }
 
-void t_thread_tracker::thread_start(t_time_interval time, pthread_t thread_id) {
-}
-
-void t_thread_tracker::thread_end(t_time_interval time, pthread_t pthread_id){
-}
-
 void t_transaction_factory::transaction_end(t_time_interval time,
                                             t_construct_id c_id) {
   debug("New Transaction Observation End");

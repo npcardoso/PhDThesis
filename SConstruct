@@ -1,7 +1,8 @@
 import os
 from os.path import join
 
-root = Dir('#').abspath
+
+root = '#'
 
 
 vars = Variables('.scons.conf')
@@ -30,10 +31,12 @@ env = Environment()
 
 vars.Update(env)
 
+env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=0
+
 env['prefix']  = env.Dir(env['prefix']).abspath
 env['build_dir']  = env.Dir(env['build_dir']).abspath
 
-env['common_include_dir'] = join(root, "common", "include")
+env['common_dir'] = join(root, "common")
 
 env['include_dir'] = join(env['prefix'], "include")
 env['lib_dir'] = join(env['prefix'], "lib")

@@ -1,36 +1,28 @@
 import os
-import SCons
 from os.path import join
-from SCons.Scanner.C import CScanner
 
 Import('env')
-env = env.Clone()
-env.Tool('RecursiveScanner')
+oldenv = env
+env = oldenv.Clone()
 env.Append(CPPPATH = Dir(env['common_dir']), LDFLAGS = "-lpthread")
 
-
-target  = "instrument"
 header_install_dir = join(env['include_dir'], "lib%s" % env['libinstrument'])
 
 wildcards = ""
 headers = []
 sources = []
-common_sources = []
 
 for i in range(4):
   wildcards = join(wildcards, "*")
   headers += env.Glob(wildcards + "h")
   sources += env.Glob(wildcards + "cpp")
 
-sources += env['common_objects']
-obj = env.SharedLibrary(target = target, source = sources)
+common_objects = env.SharedObject(sources)
+oldenv['common_objects'] = common_objects
 
-lib_install = env.Install(env['lib_dir'], obj)
-env.Default(lib_install)
-
+env.Default(common_objects)
 
 for h in headers:
   install = join(header_install_dir, os.path.dirname(str(h)))
   install = env.Install(install, h)
   env.Default(install)
-

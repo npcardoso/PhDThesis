@@ -7,7 +7,8 @@ Import('env')
 env = env.Clone()
 env.Tool('RecursiveScanner')
 env.Append(
-	CPPPATH = [env['common_include_dir'], " -Wno-c++11-extensions"], 
+	CCFLAGS= " -Wno-c++11-extensions",
+	CPPPATH = Dir(env['common_dir']),
 	LINKFLAGS = "-lpthread -lboost_system -lboost_thread")
 
 target  = "sandbox"

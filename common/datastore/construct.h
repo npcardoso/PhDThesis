@@ -12,13 +12,18 @@ class t_construct {
   typedef std::map<std::string, std::string> t_metadata_storage;
   t_metadata_storage _metadata;
   // TODO: construct_type
+  
 public:
+  typedef char t_type;
   typedef boost::shared_ptr<t_construct> t_ptr;
   typedef boost::shared_ptr<const t_construct> t_const_ptr;
 
   void metadata(t_construct_id o_id, 
                 std::string key, 
                 std::string value);
+
+  t_type type() const;
+  
 };
 
 class t_observation {

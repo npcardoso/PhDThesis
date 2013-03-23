@@ -3,6 +3,7 @@ from os.path import join
 Import('env')
 env = env.Clone()
 
+env.SConscript('common/SConscript')
 env.SConscript('llvminstrument/SConscript')
 env.SConscript('libinstrument/SConscript')
 env.SConscript('server/SConscript')

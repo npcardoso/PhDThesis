@@ -61,7 +61,7 @@ bool Instrument::PrepareInstrumentionPass::handleFunctionCall(Module & M, CallIn
     if(f->getName() == "_instr_metadata")
       return registerMetadata(M, call);
 
-    if(f->getName() == "_instr_probe_observation")
+    if(f->getName() == "_instr_probe_observation" || f->getName() == "_instr_hit_probe_observation" )
       return registerProbe(M, call);
 
     if(f->getName() == "_instr_transaction_start")

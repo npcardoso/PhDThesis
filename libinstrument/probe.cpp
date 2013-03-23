@@ -10,42 +10,27 @@ t_construct_id _instr_probe_register(){
 }
 }
 
-void _instr_probe_observation(t_construct_id p_id, ...){
-  debug("Probe OBS");
+void _instr_probe_observation(t_construct_id c_id, ...){
   va_list ap;
-  va_start(ap, p_id);
+  va_start(ap, c_id);
+  t_transaction_factory * datastore = getDataStore(); 
+  t_probe_observation::t_ptr obs(new t_probe_observation(getTimeInterval(), c_id));
 
   while (true) {
-    size_t size = va_arg (ap, size_t);
-    debug("Variable with size %ld", size);
-    if(!size)
+    size_t bytes = va_arg (ap, size_t);
+    if(!bytes)
       break;
     void * ptr = va_arg(ap, void *);
+    obs->read_variable(ptr, bytes);
   }
-  debug("EndVariables");
   va_end(ap);
-}
-
-/*void _instr_probe_observation_register(t_probe_id p_id){
-  t_datastore * ds = getDataStore();
-  pthread_t id = pthread_self();
-  ds->start_probe(getTimeInterval(), id, p_id);
+  datastore->observation(obs);
   releaseDataStore();
 }
 
-void _instr_probe_read(void * ptr, size_t width){
-  t_datastore * ds = getDataStore();
-  pthread_t id = pthread_self();
-  ds->read_variable(id, ptr, width);
-  releaseDataStore();
-}
-
-void _instr_probe_observation_commit(){
-  t_datastore * ds = getDataStore();
-  pthread_t id = pthread_self();
-  ds->commit_observation(id);
-  releaseDataStore();
-}*/
 void _instr_hit_probe_observation(t_construct_id c_id) {
-
+  debug("Hitprobe: %ld", c_id);
+  t_probe_observation::t_ptr obs(new t_probe_observation(getTimeInterval(), c_id));
+  getDataStore()->observation(obs);
+  releaseDataStore();
 }

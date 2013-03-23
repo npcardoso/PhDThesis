@@ -13,10 +13,6 @@ typedef unsigned long t_id;
 /* Instrumentation constructs */
 
 typedef t_id t_construct_id;
-typedef t_construct_id t_probe_id;
-typedef t_construct_id t_variable_id;
-typedef t_construct_id t_transaction_id;
-typedef t_construct_id t_oracle_id;
 
 /* Execution constructs */
 

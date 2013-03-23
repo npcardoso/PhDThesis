@@ -17,6 +17,7 @@ inline t_thread_id thread_self() {
 
 
 /*TODO: boost locks*/
+#include "utils/debug.h"
 
 class t_thread_tracker {
   typedef std::map<t_thread_id, t_transaction_factory::t_ptr> t_threads;
@@ -25,6 +26,9 @@ class t_thread_tracker {
 public:
   typedef boost::shared_ptr<t_thread_tracker> t_ptr;
   typedef boost::shared_ptr<const t_thread_tracker> t_const_ptr;
+  t_thread_tracker (){
+  debug("threathasads");
+  }
   
   void start(t_thread_id thread_id = thread_self());
 

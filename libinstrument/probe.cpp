@@ -7,12 +7,16 @@
 extern "C"{
 t_construct_id _instr_probe_register(){
   t_construct::t_ptr construct(new t_probe_construct());
-  t_construct_id id = tracker()->get()->register_construct(construct);
+  t_construct_id id = tracker->get()->register_construct(construct);
   return id;
 }
 }
 
 void _instr_probe_observation(t_construct_id c_id, ...){
+  t_transaction_factory::t_ptr tmp = tracker->get();
+  if(!tmp->num_active())
+    return;
+  
   va_list ap;
   va_start(ap, c_id);
   t_probe_observation::t_ptr obs(new t_probe_observation(time_interval(), c_id));
@@ -25,11 +29,9 @@ void _instr_probe_observation(t_construct_id c_id, ...){
     obs->read_variable(ptr, bytes);
   }
   va_end(ap);
-  tracker()->get()->observation(obs);
+  tmp->observation(obs);
 }
 
 void _instr_hit_probe_observation(t_construct_id c_id) {
-  debug("Hitprobe: %ld", c_id);
-  t_probe_observation::t_ptr obs(new t_probe_observation(time_interval(), c_id));
-  tracker()->get()->observation(obs);
+  _instr_probe_observation(c_id, 0, 0);
 }

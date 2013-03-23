@@ -87,14 +87,14 @@ void LibInterface::initRegisterProbeName() {
 
 void LibInterface::initRegisterTransactionGate() {
   register_transaction_gate =
-    cast<Function>(M.getOrInsertFunction("_instr_transaction_gate_register",
+    cast<Function>(M.getOrInsertFunction("_instr_transaction_register",
                                          Type::getInt64Ty(M.getContext()),
                                          NULL));
 }
 
 void LibInterface::initRegisterTransactionGateLocation() {
   register_transaction_gate_location =
-    cast<Function>(M.getOrInsertFunction("_instr_transaction_gate_register_location",
+    cast<Function>(M.getOrInsertFunction("_instr_transaction_register_location",
                                          Type::getVoidTy(M.getContext()),
                                          Type::getInt64Ty(M.getContext()),
                                          Type::getInt8PtrTy(M.getContext()),
@@ -103,7 +103,7 @@ void LibInterface::initRegisterTransactionGateLocation() {
 
 void LibInterface::initRegisterTransactionGateName() {
   register_transaction_gate_name =
-    cast<Function>(M.getOrInsertFunction("_instr_transaction_gate_register_name",
+    cast<Function>(M.getOrInsertFunction("_instr_transaction_register_name",
                                          Type::getVoidTy(M.getContext()),
                                          Type::getInt64Ty(M.getContext()),
                                          Type::getInt8PtrTy(M.getContext()),

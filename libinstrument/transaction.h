@@ -6,8 +6,6 @@
 
 #ifdef NINSTR
 
-#define _instr_transaction_metadata(id, key, val)
-
 #define _instr_transaction_start(c_id)
 #define _instr_transaction_end(c_id)
 
@@ -16,10 +14,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-  void _instr_transaction_metadata(t_construct_id c_id,
-                                            const char * key, 
-                                            const char * val);
 
   void _instr_transaction_start(t_construct_id c_id);
 

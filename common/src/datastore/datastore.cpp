@@ -18,6 +18,10 @@ void t_transaction_factory::transaction_end(t_time_interval time,
   active_transactions.pop();   
 }
 
+void t_transaction_factory::observation(const t_transaction_observation::t_ptr & obs) {
+  debug("New Transaction Observation");
+}
+
 void t_transaction_factory::observation(const t_oracle_observation::t_ptr & obs) {
   debug("New Oracle Observation");
 }

@@ -28,6 +28,5 @@ void _leak(leak_t * l){
   l->leakage_count++;
 
   instr_oracle(l->leakage_total < l->total,
-               1,
-               instr_void);
+               1);
 }

@@ -14,5 +14,5 @@ public:
   inline t_transaction_observation(t_time_interval time,
                                    t_construct_id c_id): t_observation_window(time, c_id) {}
   
-  size_t size() const;
+  virtual size_t size() const;
 };

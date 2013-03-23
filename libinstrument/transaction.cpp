@@ -10,13 +10,6 @@ t_construct_id _instr_transaction_register(){
 }
 }
 
-void _instr_transaction_register_metadata(t_construct_id id,
-                                          const char * key, 
-                                          const char * val) {
-//  getDataStore()->register_transaction_metadata(id, key, val);
-//  releaseDataStore();
-}
-
 void _instr_transaction_start(t_construct_id c_id) {
   t_transaction_observation::t_ptr obs(new t_transaction_observation(getTimeInterval(), c_id));
   getDataStore()->observation(obs);

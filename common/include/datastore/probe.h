@@ -45,5 +45,5 @@ public:
   void read_variable(const void * var,
                      size_t bytes);
 
-  size_t size() const;
+  virtual size_t size() const;
 };

@@ -7,7 +7,7 @@ char Instrument::PrepareInstrumentionPass::ID = 1;
 Instrument::PrepareInstrumentionPass::PrepareInstrumentionPass() : Pass(ID) {
   num_oracles = 0;
   num_probes = 0;
-  num_transaction_gates = 0;
+  num_transactions = 0;
   function_overrides["pthread_create"] = NULL;
 }
 
@@ -58,16 +58,10 @@ bool Instrument::PrepareInstrumentionPass::handleFunctionCall(Module & M, CallIn
       return true;
     }
 
-    if(f->getName() == "_instr_probe_register_metadata")
-      return registerProbeMetadata(M, call);
+    if(f->getName() == "_instr_metadata")
+      return registerMetadata(M, call);
 
-    if(f->getName() == "_instr_transaction_gate_register_metadata")
-      return registerTransactionGateMetadata(M, call);
-
-    if(f->getName() == "_instr_oracle_register_metadata")
-      return registerOracleMetadata(M, call);
-
-    if(f->getName() == "_instr_probe_observation_register")
+    if(f->getName() == "_instr_probe_observation")
       return registerProbe(M, call);
 
     if(f->getName() == "_instr_transaction_start")
@@ -76,7 +70,7 @@ bool Instrument::PrepareInstrumentionPass::handleFunctionCall(Module & M, CallIn
     if(f->getName() == "_instr_transaction_end")
       return registerTransactionGate(M, call);
 
-    if(f->getName() == "_instr_oracle_health")
+    if(f->getName() == "_instr_oracle_observation")
       return registerOracle(M, call);
   }
   return false;
@@ -98,7 +92,7 @@ bool Instrument::PrepareInstrumentionPass::metadataSetup(Module & M,
 }
 
 
-bool Instrument::PrepareInstrumentionPass::registerArtifact(Module & M,
+bool Instrument::PrepareInstrumentionPass::registerConstruct(Module & M,
                                                             CallInst & I,
                                                             std::string var_prefix,
                                                             size_t id,
@@ -108,6 +102,9 @@ bool Instrument::PrepareInstrumentionPass::registerArtifact(Module & M,
   sprintf(buf, "%lu", id);
 
   std::string id_var_name = var_prefix + buf;
+  
+  errs() << "Registering construct " << id_var_name << "\n";
+
   Type * operand_type = I.getArgOperand(0)->getType();
   GlobalVariable* id_holder =
     new GlobalVariable(M,

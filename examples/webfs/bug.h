@@ -36,8 +36,9 @@ extern pthread_mutex_t leak_init_lock;
 \
   time_t t = time(NULL) - l->start_time;\
   instr_probe(instr_pvar(l->leakage_count), \
-              instr_pvar(t), \
-              instr_pmetadata("Name", "Bug"));\
+              instr_pvar(t)); \
+  instr_metadata("Name", "Launcher loop");\
+  instr_metadata("Name", "Bug");\
   _leak(l);\
   pthread_mutex_unlock(&(l->lock));\
 }

@@ -7,6 +7,9 @@
 
 #include "utils/preprocessor.h"
 #include <assert.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
   /* Common */
 #define _instr_str_aux(x) #x
@@ -25,11 +28,12 @@
 
 #else
 
-void _instr_metadata_placeholder(t_construct_id c_id,
-                                 const char * key,
-                                 const char * val);
+void _instr_metadata (t_construct_id c_id,
+                      const char * key,
+                      const char * val);
 
-#define instr_metadata(key, value) _instr_metadata_placeholder(0, (key), (value))
+
+#define instr_metadata(key, value) _instr_metadata (0, (key), (value))
 
 #endif
 
@@ -84,5 +88,8 @@ void _instr_metadata_placeholder(t_construct_id c_id,
 
 #define instr_transaction_end() _instr_transaction_end(0)
 
+#endif
+#ifdef __cplusplus
+}
 #endif
 #endif

@@ -488,7 +488,7 @@ mainloop(void *thread_arg)
 
 	/* check active connections */
 	for (req = conns, prev = NULL; req != NULL;) {
-		  instr_transaction_start(instr_void);
+		  instr_transaction_start();
       leak(0, 10, 100);
 	    /* handle I/O */
 	    switch (req->state) {
@@ -672,7 +672,7 @@ header_parsing:
 		prev = req;
 		req = req->next;
 	    }
-      instr_transaction_end(instr_void);
+      instr_transaction_end();
 	}
     }
     return NULL;

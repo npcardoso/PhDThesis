@@ -18,7 +18,7 @@ class t_datastore {
 public:
   t_construct_id register_construct(const t_construct::t_ptr &);
 
-  void observation(const t_transaction_observation::t_ptr & obs);
+  virtual void observation(const t_transaction_observation::t_ptr & obs) = 0;
 };
 
 class t_transaction_factory: public t_datastore {
@@ -27,17 +27,15 @@ class t_transaction_factory: public t_datastore {
   typedef std::stack<t_transaction_observation::t_ptr> t_stack;
   t_stack active_transactions;
 public:
-  t_transaction_factory();
-
 
   void transaction_end(t_time_interval time,
                        t_construct_id c_id);
   
-  void observation(const t_transaction_observation::t_ptr & obs);
+  virtual void observation(const t_transaction_observation::t_ptr & obs);
   
-  void observation(const t_oracle_observation::t_ptr & obs);
+  virtual void observation(const t_oracle_observation::t_ptr & obs);
 
-  void observation(const t_probe_observation::t_ptr & obs);
+  virtual void observation(const t_probe_observation::t_ptr & obs);
 };
 
 

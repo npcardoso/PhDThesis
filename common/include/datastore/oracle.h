@@ -14,5 +14,5 @@ public:
   
   inline t_oracle_observation(t_time_interval time, t_construct_id c_id, float health, float confidence) : t_observation_single(time, c_id), health(health), confidence(confidence) {}
   
-  size_t size() const;
+  virtual size_t size() const;
 };

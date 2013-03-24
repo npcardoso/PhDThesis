@@ -2,7 +2,7 @@
 
 #include "utils/debug.h"
 
-t_thread_tracker::t_thread_tracker (t_factory_fun factory_fun) : factory_fun(factory_fun) {
+t_thread_tracker::t_thread_tracker (t_observation_sink_fun observation_sink_fun) : observation_sink_fun(observation_sink_fun) {
 
 }
 
@@ -12,8 +12,7 @@ void t_thread_tracker::start(t_thread_id thread_id) {
   t_threads::iterator it = threads.find(thread_id);
   assert(it == threads.end());
   
-  t_transaction_factory::t_ptr tmp(factory_fun());
-  threads[thread_id] = tmp;
+  threads[thread_id] = observation_sink_fun();
   
   mutex.unlock();
 }
@@ -29,13 +28,13 @@ void t_thread_tracker::end(t_thread_id thread_id){
   mutex.unlock();
 }
 
-t_transaction_factory::t_ptr t_thread_tracker::get(t_thread_id thread_id){
+t_observation_sink::t_ptr t_thread_tracker::get(t_thread_id thread_id){
   mutex.lock();
   
   t_threads::iterator it = threads.find(thread_id);
   assert(it != threads.end());
 
-  t_transaction_factory::t_ptr tmp = it->second;
+  t_observation_sink::t_ptr tmp = it->second;
   
   mutex.unlock();
   return tmp;

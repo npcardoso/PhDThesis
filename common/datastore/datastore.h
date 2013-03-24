@@ -1,9 +1,7 @@
 #ifndef __COMMON_DATASTORE_DATASTORE_H__
 #define __COMMON_DATASTORE_DATASTORE_H__
 
-#include "datastore/probe.h"
-#include "datastore/transaction.h"
-#include "datastore/oracle.h"
+#include "datastore/observation_sink.h"
 
 #include "types.h"
 
@@ -12,7 +10,7 @@
 #include <string>
 
 
-class t_transaction_factory {
+class t_transaction_factory: public t_observation_sink {
   typedef std::stack<t_transaction_observation::t_ptr> t_stack;
   t_stack transactions;
   t_observation_sink::t_ptr sink;
@@ -23,16 +21,13 @@ public:
 
   t_transaction_factory(t_observation_sink::t_ptr sink = t_observation_sink::t_ptr());
 
-  t_transaction_observation::t_ptr transaction_end(t_time_interval time,
-                                                   t_construct_id c_id);
-
   size_t num_active() const;
 
-  virtual void observation(const t_transaction_observation::t_ptr & obs);
+  virtual bool operator()(const t_transaction_observation::t_ptr & obs);
   
-  virtual void observation(const t_oracle_observation::t_ptr & obs);
+  virtual bool operator()(const t_oracle_observation::t_ptr & obs);
 
-  virtual void observation(const t_probe_observation::t_ptr & obs);
+  virtual bool operator()(const t_probe_observation::t_ptr & obs);
 };
 
 #endif

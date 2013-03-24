@@ -6,7 +6,11 @@
 #include "datastore/construct.h"
 #include "datastore/observation.h"
 
-class t_oracle_construct: public t_construct {};
+class t_oracle_construct: public t_construct {
+public:
+  typedef boost::shared_ptr<t_oracle_construct> t_ptr;
+  typedef boost::shared_ptr<const t_oracle_construct> t_const_ptr;
+};
 
 class t_oracle_observation: public t_observation_single {
 public:

@@ -5,14 +5,19 @@
 
 #include "datastore/construct.h"
 #include "datastore/observation.h"
+
 #include "datastore/probe.h"
 #include "datastore/oracle.h"
 
 #include <list>
 
-class t_transaction_construct: public t_construct {};
+class t_transaction_construct: public t_construct {
+public:
+  typedef boost::shared_ptr<t_transaction_construct> t_ptr;
+  typedef boost::shared_ptr<const t_transaction_construct> t_const_ptr;
+};
 
-struct t_transaction_observation: public t_observation_window{
+struct t_transaction_observation: public t_observation_window {
 
 public:
   typedef boost::shared_ptr<t_transaction_observation> t_ptr;
@@ -28,6 +33,11 @@ public:
 
   inline t_transaction_observation(t_time_interval time,
                                    t_construct_id c_id): t_observation_window(time, c_id) {}
+  
+  inline t_transaction_observation(t_time_interval time_start,
+                                   t_construct_id c_id_start,
+                                   t_time_interval time_end,
+                                   t_construct_id c_id_end): t_observation_window(time_start, c_id_start, time_end, c_id_end) {}
   
   virtual void observation(const t_transaction_observation::t_ptr & obs);
   virtual void observation(const t_oracle_observation::t_ptr & obs);

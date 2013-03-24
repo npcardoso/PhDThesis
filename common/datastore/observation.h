@@ -35,6 +35,11 @@ public:
 
   t_observation_window(t_time_interval time, 
                        t_construct_id c_id);
+  
+  t_observation_window(t_time_interval time_start, 
+                       t_construct_id c_id_start,
+                       t_time_interval time_end, 
+                       t_construct_id c_id_end);
 
   virtual bool ended() const;
 
@@ -42,14 +47,6 @@ public:
   virtual bool operator < (const t_time_interval & time) const;
 };
 
-
-class t_observation_sink {
-public:
-  typedef boost::shared_ptr<t_observation_sink> t_ptr;
-  typedef boost::shared_ptr<const t_observation_sink> t_const_ptr;
-
-  virtual void operator()(const t_observation::t_ptr & obs) = 0;
-};
 
 #endif
 

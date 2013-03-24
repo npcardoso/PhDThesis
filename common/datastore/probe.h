@@ -6,7 +6,11 @@
 #include "datastore/construct.h"
 #include "datastore/observation.h"
 
-class t_probe_construct: public t_construct {};
+class t_probe_construct: public t_construct {
+public:
+  typedef boost::shared_ptr<t_probe_construct> t_ptr;
+  typedef boost::shared_ptr<const t_probe_construct> t_const_ptr;
+};
 
 struct t_state {
 public:

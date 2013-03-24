@@ -19,6 +19,16 @@ t_observation_window::t_observation_window(t_time_interval time,
   this->c_id_end = 0;
 }
 
+t_observation_window::t_observation_window(t_time_interval time_start, 
+                                           t_construct_id c_id_start,
+                                           t_time_interval time_end, 
+                                           t_construct_id c_id_end) {
+  this->time_start = time_start;
+  this->time_end = time_end;
+  this->c_id_start = c_id_start;
+  this->c_id_end = time_end;
+}
+
 bool t_observation_window::ended() const {
   return time_start < time_end || c_id_end;
 }

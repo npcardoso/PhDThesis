@@ -9,26 +9,19 @@
 #include <string>
 
 class t_construct {
+public:
   typedef std::map<std::string, std::string> t_metadata_storage;
   t_metadata_storage _metadata;
-  
-public:
+
+  t_construct_id c_id;
+
   typedef boost::shared_ptr<t_construct> t_ptr;
   typedef boost::shared_ptr<const t_construct> t_const_ptr;
 
-  void metadata(t_construct_id o_id, 
-                std::string key, 
-                std::string value);
+  virtual void metadata(t_construct_id o_id, 
+                        std::string key, 
+                        std::string value);
 
 };
-
-class t_construct_sink {
-public:
-  typedef boost::shared_ptr<t_construct_sink> t_ptr;
-  typedef boost::shared_ptr<const t_construct_sink> t_const_ptr;
-
-  virtual t_construct_id operator()(const t_construct::t_ptr & constr) = 0;
-};
-
 
 #endif

@@ -16,19 +16,19 @@ inline t_thread_id thread_self() {
 /* Environment dependent stuff */
 
 
-/*TODO: boost locks*/
 #include "utils/debug.h"
 
 class t_thread_tracker {
+  typedef t_transaction_factory * (*t_factory_fun)(void);
   typedef std::map<t_thread_id, t_transaction_factory::t_ptr> t_threads;
   boost::mutex mutex;
   t_threads threads;
+  t_factory_fun factory_fun;
 public:
   typedef boost::shared_ptr<t_thread_tracker> t_ptr;
   typedef boost::shared_ptr<const t_thread_tracker> t_const_ptr;
-  t_thread_tracker (){
-  debug("threathasads");
-  }
+
+  t_thread_tracker (t_factory_fun factory_fun);
   
   void start(t_thread_id thread_id = thread_self());
 

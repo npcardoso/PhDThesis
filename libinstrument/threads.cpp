@@ -2,13 +2,17 @@
 
 #include "utils/debug.h"
 
+t_thread_tracker::t_thread_tracker (t_factory_fun factory_fun) : factory_fun(factory_fun) {
+
+}
+
 void t_thread_tracker::start(t_thread_id thread_id) {
   mutex.lock();
   
   t_threads::iterator it = threads.find(thread_id);
   assert(it == threads.end());
   
-  t_transaction_factory::t_ptr tmp(new t_transaction_factory());
+  t_transaction_factory::t_ptr tmp(factory_fun());
   threads[thread_id] = tmp;
   
   mutex.unlock();

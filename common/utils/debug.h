@@ -9,5 +9,19 @@
 fflush(stderr);}
 #endif
 
+#include "datastore/observation.h"
+#include "datastore/construct.h"
+
+#include <boost/thread/mutex.hpp>
+
+class t_observation_sink_debug: public t_observation_sink{
+  std::ostream & out;
+  boost::mutex io_mutex;
+public:
+  t_observation_sink_debug(std::ostream & out);
+
+  virtual void operator()(const t_observation::t_ptr & obs);
+};
+
 #endif
 

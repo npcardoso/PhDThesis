@@ -53,7 +53,6 @@ extern "C" {
                              void * arg) {
 
 
-    debug("New Transaction");
     pthreadArguments * args = new pthreadArguments(start_routine, arg, pthread_self());
     int ret = pthread_create(thread, attr, pthread_wrapper, args);
     if(ret)

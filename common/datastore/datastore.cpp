@@ -3,9 +3,7 @@
 
 #include <cassert>
 
-t_construct_id t_datastore::register_construct(const t_construct::t_ptr &) {
-  debug("Registering construct");
-  return 0;
+t_transaction_factory::t_transaction_factory(t_observation_sink::t_ptr sink):sink(sink){
 }
   
 t_transaction_observation::t_ptr t_transaction_factory::transaction_end(t_time_interval time,
@@ -13,8 +11,13 @@ t_transaction_observation::t_ptr t_transaction_factory::transaction_end(t_time_i
   assert(num_active());
   t_transaction_observation::t_ptr tmp = transactions.top();
   transactions.pop();   
+  
   tmp->time_end = time;
   tmp->c_id_end = c_id;
+  
+  if(sink)
+    (*sink)(tmp);
+  
   return tmp;
 }
 
@@ -29,12 +32,16 @@ void t_transaction_factory::observation(const t_transaction_observation::t_ptr &
 }
 
 void t_transaction_factory::observation(const t_oracle_observation::t_ptr & obs) {
-  assert(num_active());
-  transactions.top()->observation(obs);
+  if(num_active())
+    transactions.top()->observation(obs);
+  else if(sink)
+    (*sink)(obs);
 }
 
 void t_transaction_factory::observation(const t_probe_observation::t_ptr & obs) {
-  assert(num_active());
-  transactions.top()->observation(obs);
+  if(num_active())
+    transactions.top()->observation(obs);
+  else if(sink)
+    (*sink)(obs);
 }
 

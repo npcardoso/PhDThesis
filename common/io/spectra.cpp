@@ -111,11 +111,10 @@ inline ostream & StateSpectraArtifacts(ostream & out,
   }
   return out;
 }
-*/
 std::ostream & StateSpectra(std::ostream & out,
                             const t_datastore & ds) {
   out << "type, id, first, second\n";
- /* StateSpectraArtifacts(out, "metapr", ds.probe_metadata);
+  StateSpectraArtifacts(out, "metapr", ds.probe_metadata);
   StateSpectraArtifacts(out, "metatg", ds.transaction_metadata);
   StateSpectraArtifacts(out, "metaor", ds.oracle_metadata);
 
@@ -124,6 +123,6 @@ std::ostream & StateSpectra(std::ostream & out,
     foreach(tr, thr->second->transactions) {
       StateSpectraTransaction(out, t_id++, *(thr->second), **tr);
     }
-*/
   return out;
 }
+*/

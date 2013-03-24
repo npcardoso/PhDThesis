@@ -41,5 +41,15 @@ public:
   virtual bool operator > (const t_time_interval & time) const;
   virtual bool operator < (const t_time_interval & time) const;
 };
+
+
+class t_observation_sink {
+public:
+  typedef boost::shared_ptr<t_observation_sink> t_ptr;
+  typedef boost::shared_ptr<const t_observation_sink> t_const_ptr;
+
+  virtual void operator()(const t_observation::t_ptr & obs) = 0;
+};
+
 #endif
 

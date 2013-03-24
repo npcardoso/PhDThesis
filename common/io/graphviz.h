@@ -6,8 +6,8 @@
 
 namespace io {
 namespace graphviz {
-  std::ostream & graphviz(std::ostream & out, 
-                          const t_datastore & ds);
+//  std::ostream & graphviz(std::ostream & out, 
+//                          const t_datastore & ds);
 }
 }
 

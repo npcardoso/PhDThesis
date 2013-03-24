@@ -7,8 +7,8 @@
 namespace io {
 namespace spectra {
 
-  std::ostream & StateSpectra(std::ostream & out,
-                              const t_datastore & ds);
+//  std::ostream & StateSpectra(std::ostream & out,
+//                              const t_datastore & ds);
 
 }
 }

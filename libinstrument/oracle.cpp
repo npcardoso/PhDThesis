@@ -17,7 +17,6 @@ void _instr_oracle_observation(t_construct_id c_id,
                                t_confidence confidence) {
   t_oracle_observation::t_ptr obs(new t_oracle_observation(time_interval(), c_id, health, confidence));
   t_transaction_factory::t_ptr tmp = tracker->get();
-  if(tmp->num_active())
-    tmp->observation(obs);
+  tmp->observation(obs);
 }
 

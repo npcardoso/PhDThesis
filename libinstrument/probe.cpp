@@ -14,8 +14,6 @@ t_construct_id _instr_probe_register(){
 
 void _instr_probe_observation(t_construct_id c_id, ...){
   t_transaction_factory::t_ptr tmp = tracker->get();
-  if(!tmp->num_active())
-    return;
   
   va_list ap;
   va_start(ap, c_id);

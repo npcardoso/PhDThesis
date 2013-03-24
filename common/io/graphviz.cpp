@@ -209,7 +209,6 @@ ostream & GvizThreadLinks(ostream & out, const t_datastore & ds) {
   }
   return out;
 }
-*/
 std::ostream & Graphviz(std::ostream & out,
                         const t_datastore & ds) {
   out << "digraph g {\n";
@@ -220,7 +219,6 @@ std::ostream & Graphviz(std::ostream & out,
   out << "penwidth=3;\n";
   out << "node[ style = \"filled\"];\n";
   out << "rank=\"same\";\n";
-/*
   foreach(it, ds.thread_info){
     out << "subgraph cluster_" << it->first << "{\n";
     out << "style=filled;\n";
@@ -238,7 +236,7 @@ std::ostream & Graphviz(std::ostream & out,
     out << "}\n";
   }
   GvizThreadLinks(out, ds);
-*/
   out << "}\n";
   return out;
 }
+*/

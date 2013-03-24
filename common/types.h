@@ -9,15 +9,10 @@
 typedef long double t_time_interval;
 
 typedef unsigned long t_id;
-
-/* Instrumentation constructs */
-
 typedef t_id t_construct_id;
-
-/* Execution constructs */
+typedef t_id t_observation_id;
 
 typedef pthread_t t_thread_id;
-typedef t_id t_observation_id;
 
 typedef double t_health;
 typedef double t_confidence;

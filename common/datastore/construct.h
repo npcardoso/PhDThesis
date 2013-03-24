@@ -22,4 +22,13 @@ public:
 
 };
 
+class t_construct_sink {
+public:
+  typedef boost::shared_ptr<t_construct_sink> t_ptr;
+  typedef boost::shared_ptr<const t_construct_sink> t_const_ptr;
+
+  virtual t_construct_id operator()(const t_construct::t_ptr & constr) = 0;
+};
+
+
 #endif

@@ -1,6 +1,7 @@
 #include "main.h"
 
-#include "io/graphviz.h"
+#include "datastore/datastore.h"
+#include "io/json.h"
 #include "utils/debug.h"
 
 #include <algorithm>
@@ -36,7 +37,7 @@ void init() __attribute__((constructor));
 void init() {
   debug("Instrumentation Init");
   
-  sink = new t_observation_sink::t_ptr(new t_observation_sink_debug(std::cerr));
+  sink = new t_observation_sink::t_ptr(new t_json_observation_sink(std::cerr));
   
   tracker = new t_thread_tracker(new_factory);
   tracker->start();

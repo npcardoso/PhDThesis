@@ -12,6 +12,14 @@ using boost::property_tree::ptree;
 
 namespace io {
 namespace json {
+  std::ostream & timestamp(std::ostream & out,
+                        t_time_interval t) {
+    streamsize precision = out.precision(1024);
+    out << t;
+    out.precision(precision);
+    return out;
+  }
+  
   std::ostream & string(std::ostream & out,
                         std::string s) {
     out << '"' << s << '"';
@@ -45,14 +53,17 @@ namespace json {
   std::ostream & observation (std::ostream & out,
                              const t_observation_single & obs) {
     key(out, "cid") << obs.c_id << ',';
-    key(out, "t") << obs.time;
+    key(out, "t");
+    timestamp(out, obs.time);
     return out;
   }
   
   std::ostream & observation (std::ostream & out,
                              const t_observation_window & obs) {
     key(out, "cid") << '[' << obs.c_id_start << ',' << obs.c_id_end << "],";
-    key(out, "t") << '[' << obs.time_start << ',' << obs.time_end << ']';
+    key(out, "t") << '[';
+    timestamp(out, obs.time_start) << ',';
+    timestamp(out, obs.time_end) << ']';
     return out;
   }
   
@@ -74,6 +85,10 @@ namespace json {
       out << ',';
       key(out, "s");
       string(out, base64_encode(obs.state->data, obs.state->data_size()));
+      out << ",[" << obs.state->offset_end[0];
+      for(t_id i = 1; i < obs.state->n_vars; i++)
+        out << ',' << obs.state->offset_end[i];
+      out << ']';
     }
     //if(pid)
     //  pt.put(prefix + "pid", pid);

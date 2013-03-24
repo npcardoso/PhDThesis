@@ -7,7 +7,7 @@
 extern "C"{
 t_construct_id _instr_probe_register(){
   t_construct::t_ptr construct(new t_probe_construct());
-  t_construct_id id = tracker->get()->register_construct(construct);
+  t_construct_id id = 0;//tracker->get()->register_construct(construct);
   return id;
 }
 }

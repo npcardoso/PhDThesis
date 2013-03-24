@@ -7,11 +7,15 @@ t_construct_id t_datastore::register_construct(const t_construct::t_ptr &) {
   debug("Registering construct");
   return 0;
 }
-
-void t_transaction_factory::transaction_end(t_time_interval time,
-                                            t_construct_id c_id) {
+  
+t_transaction_observation::t_ptr t_transaction_factory::transaction_end(t_time_interval time,
+                                                                        t_construct_id c_id) {
   assert(num_active());
+  t_transaction_observation::t_ptr tmp = transactions.top();
   transactions.pop();   
+  tmp->time_end = time;
+  tmp->c_id_end = c_id;
+  return tmp;
 }
 
 size_t t_transaction_factory::num_active() const {

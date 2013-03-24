@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __COMMON_IO_JSON_H__
+#define __COMMON_IO_JSON_H__
 
 #include <ostream>
 #include "types.h"
@@ -9,31 +10,22 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-
-
-class t_instrument_proto {
-public:
-  typedef char t_action;
-};
-
 using namespace std;
 namespace io {
 namespace json {
-  void observation(boost::property_tree::ptree & pt,
-                   const t_oracle_observation & obs,
-                   std::string prefix = std::string());
-  
-  void observation(boost::property_tree::ptree & pt,
-                   const t_probe_observation & obs,
-                   std::string prefix = std::string());
-  
-  void observation(boost::property_tree::ptree & pt,
-                   const t_transaction_observation & obs,
-                   std::string prefix = std::string());
+  std::ostream & observation(std::ostream & out,
+                             const t_oracle_observation & obs);
 
-  void request_header(boost::property_tree::ptree & pt, 
-                      t_id id, 
-                      t_instrument_proto::t_action action,
-                      std::string prefix = std::string());
+  std::ostream & observation(std::ostream & out,
+                             const t_probe_observation & obs);
+
+  std::ostream & observation(std::ostream & out,
+                             const t_transaction_observation & obs);
+
+  std::ostream & request_header(std::ostream & out,
+                                t_id id,
+                                char action);
 }
 }
+
+#endif

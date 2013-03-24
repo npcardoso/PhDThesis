@@ -112,7 +112,8 @@ inline ostream & StateSpectraArtifacts(ostream & out,
   return out;
 }
 */
-ostream & StateSpectra(ostream & out, const t_datastore & ds) {
+std::ostream & StateSpectra(std::ostream & out,
+                            const t_datastore & ds) {
   out << "type, id, first, second\n";
  /* StateSpectraArtifacts(out, "metapr", ds.probe_metadata);
   StateSpectraArtifacts(out, "metatg", ds.transaction_metadata);

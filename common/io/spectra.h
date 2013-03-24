@@ -1,8 +1,16 @@
-#pragma once
+#ifndef __COMMON_IO_SPECTRA_H__
+#define __COMMON_IO_SPECTRA_H__
 
 #include <ostream>
 #include "datastore/datastore.h"
 
-using namespace std;
+namespace io {
+namespace spectra {
 
-ostream & StateSpectra(ostream & out, const t_datastore & ds);
+  std::ostream & StateSpectra(std::ostream & out,
+                              const t_datastore & ds);
+
+}
+}
+
+#endif

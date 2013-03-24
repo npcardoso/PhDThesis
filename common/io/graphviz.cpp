@@ -210,7 +210,8 @@ ostream & GvizThreadLinks(ostream & out, const t_datastore & ds) {
   return out;
 }
 */
-ostream & Graphviz(ostream & out, const t_datastore & ds) {
+std::ostream & Graphviz(std::ostream & out,
+                        const t_datastore & ds) {
   out << "digraph g {\n";
   out << "mindist=0;\n";
   out << "clusterrank=\"local\";\n";

@@ -16,19 +16,19 @@
 class t_datastore {
 public:
   t_construct_id register_construct(const t_construct::t_ptr &);
-
+  
   virtual void observation(const t_transaction_observation::t_ptr & obs) = 0;
 };
 
-class t_transaction_factory: public t_datastore {
+class t_transaction_factory {
   typedef std::stack<t_transaction_observation::t_ptr> t_stack;
   t_stack transactions;
 public:
   typedef boost::shared_ptr<t_transaction_factory> t_ptr;
   typedef boost::shared_ptr<const t_transaction_factory> t_const_ptr;
 
-  void transaction_end(t_time_interval time,
-                       t_construct_id c_id);
+  t_transaction_observation::t_ptr transaction_end(t_time_interval time,
+                                                   t_construct_id c_id);
 
   size_t num_active() const;
 

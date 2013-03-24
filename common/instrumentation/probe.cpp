@@ -1,4 +1,4 @@
-#include "datastore/probe.h"
+#include "instrumentation/probe.h"
 
 #include <cassert>
 #include <cstdlib>

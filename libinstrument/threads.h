@@ -1,7 +1,7 @@
 #ifndef __LIBINSTRUMENT_THREADS_H__
 #define __LIBINSTRUMENT_THREADS_H__
 
-#include <datastore/observation_sink.h>
+#include <instrumentation/sinks/observation.h>
 
 #include <boost/thread/mutex.hpp>
 #include <pthread.h>

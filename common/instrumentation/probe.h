@@ -1,10 +1,10 @@
-#ifndef __COMMON_DATASTORE_PROBE_H__
-#define __COMMON_DATASTORE_PROBE_H__
+#ifndef __COMMON_INSTRUMENTATION_PROBE_H__
+#define __COMMON_INSTRUMENTATION_PROBE_H__
 
 #include "types.h"
 
-#include "datastore/construct.h"
-#include "datastore/observation.h"
+#include "instrumentation/construct.h"
+#include "instrumentation/observation.h"
 
 class t_probe_construct: public t_construct {
 public:

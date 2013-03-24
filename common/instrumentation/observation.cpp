@@ -1,4 +1,4 @@
-#include "datastore/observation.h"
+#include "instrumentation/observation.h"
 
 t_observation_single::t_observation_single(t_time_interval time, 
                                            t_construct_id c_id) : time(time), c_id(c_id) {}

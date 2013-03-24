@@ -1,4 +1,4 @@
-#include "datastore/construct_sink.h"
+#include "instrumentation/sinks/construct.h"
 
 bool t_construct_sink::operator()(const t_transaction_construct::t_ptr & obs) {
   return false;

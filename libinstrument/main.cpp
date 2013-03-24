@@ -1,7 +1,7 @@
 #include "main.h"
 
-#include "datastore/datastore.h"
-#include "io/json.h"
+#include "instrumentation/sinks/json.h"
+#include "instrumentation/sinks/transaction_factory.h"
 #include "utils/debug.h"
 
 #include <algorithm>
@@ -18,7 +18,7 @@ boost::mutex construct_id_lock;
 // observation sinks
 
 t_observation_sink::t_ptr new_debug_json() {
-  static t_observation_sink_debug::t_ptr sink(new t_observation_sink_debug (std::cout));
+  static t_json_observation_sink::t_ptr sink(new t_json_observation_sink(std::cout));
   return sink;
 }
 

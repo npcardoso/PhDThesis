@@ -119,29 +119,3 @@ std::ostream & t_json::request_header(std::ostream & out,
   //   pt.put(prefix + "a", action);
   return out;
 }
-  
-t_json_observation_sink::t_json_observation_sink(ostream & out): out(out) {
-
-}
-
-bool t_json_observation_sink::operator()(const t_transaction_observation::t_ptr & obs) {
-  out << '{';
-  t_json::observation(out, *obs);  
-  out << '}';
-  return true;
-}
-
-bool t_json_observation_sink::operator()(const t_oracle_observation::t_ptr & obs) {
-  out << '{';
-  t_json::observation(out, *obs);  
-  out << '}';
-  return true;
-}
-
-bool t_json_observation_sink::operator()(const t_probe_observation::t_ptr & obs) {
-  out << '{';
-  t_json::observation(out, *obs);  
-  out << '}';
-  return true;
-}
-

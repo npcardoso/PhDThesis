@@ -1,10 +1,10 @@
-#ifndef __COMMON_DATASTORE_ORACLE_H__
-#define __COMMON_DATASTORE_ORACLE_H__
+#ifndef __COMMON_INSTRUMENTATION_ORACLE_H__
+#define __COMMON_INSTRUMENTATION_ORACLE_H__
 
 #include "types.h"
 
-#include "datastore/construct.h"
-#include "datastore/observation.h"
+#include "instrumentation/construct.h"
+#include "instrumentation/observation.h"
 
 class t_oracle_construct: public t_construct {
 public:

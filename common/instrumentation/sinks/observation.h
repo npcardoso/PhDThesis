@@ -1,9 +1,9 @@
-#ifndef __COMMON_DATASTORE_OBSERVATION_SINK_H__
-#define __COMMON_DATASTORE_OBSERVATION_SINK_H__
+#ifndef __COMMON_INSTRUMENTATION_SINKS_OBSERVATION_H__
+#define __COMMON_INSTRUMENTATION_SINKS_OBSERVATION_H__
 
-#include "datastore/transaction.h"
-#include "datastore/oracle.h"
-#include "datastore/probe.h"
+#include "instrumentation/transaction.h"
+#include "instrumentation/oracle.h"
+#include "instrumentation/probe.h"
 
 class t_observation_sink {
 protected:

@@ -1,7 +1,4 @@
-#include "datastore/datastore.h"
-#include "utils/debug.h"
-
-#include <cassert>
+#include "instrumentation/sinks/transaction_factory.h"
 
 t_transaction_factory::t_transaction_factory(t_observation_sink::t_ptr sink):sink(sink){
 }

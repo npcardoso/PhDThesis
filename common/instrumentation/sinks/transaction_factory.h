@@ -1,7 +1,7 @@
-#ifndef __COMMON_DATASTORE_DATASTORE_H__
-#define __COMMON_DATASTORE_DATASTORE_H__
+#ifndef __COMMON_INSTRUMENTATION_SINKS_TRANSACTION_FACTORY_H__
+#define __COMMON_INSTRUMENTATION_SINKS_TRANSACTION_FACTORY_H__
 
-#include "datastore/observation_sink.h"
+#include "instrumentation/sinks/observation.h"
 
 #include "types.h"
 

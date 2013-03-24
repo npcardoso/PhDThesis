@@ -2,7 +2,6 @@
 #define __COMMON_IO_SPECTRA_H__
 
 #include <ostream>
-#include "datastore/datastore.h"
 
 namespace io {
 namespace spectra {

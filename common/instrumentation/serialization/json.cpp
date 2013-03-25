@@ -91,19 +91,25 @@ std::ostream & t_json_serializer::observation(std::ostream & out,
                                               const t_transaction_observation & obs) {
   json::observation(out, (t_observation_window &)obs);
   if(obs.oracles.size()) {
-    out << ",";
+    out << ',';
     json::key(out, "o");
+    out << '[';
     t_serializer::array<t_oracle_observation::t_ptr>(out, obs.oracles, instance());
+    out << ']';
   }
   if(obs.probes.size()) {
-    out << ",";
+    out << ',';
     json::key(out, "p");
+    out << '[';
     t_serializer::array<t_probe_observation::t_ptr>(out, obs.probes, instance());
+    out << ']';
   }
   if(obs.transactions.size()) {
-    out << ",";
+    out << ',';
     json::key(out, "tr");
+    out << '[';
     t_serializer::array<t_transaction_observation::t_ptr>(out, obs.transactions, instance());
+    out << ']';
   }
   return out;
 }

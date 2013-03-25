@@ -1,4 +1,4 @@
-#include "io/graphviz.h"
+#include "instrumentation/serialization/graphviz.h"
 
 #include "types.h"
 #include "utils/debug.h"

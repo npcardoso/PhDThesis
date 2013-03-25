@@ -1,9 +1,7 @@
 #include "transaction.h"
 
 #include "main.h"
-#include "utils/debug.h"
 #include "utils/time.h"
-#include "io/json.h"
 
 extern "C"{
 t_construct_id _instr_transaction_register(){

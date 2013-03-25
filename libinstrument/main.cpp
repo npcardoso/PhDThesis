@@ -1,6 +1,7 @@
 #include "main.h"
 
-#include "instrumentation/sinks/json.h"
+#include "instrumentation/serialization/json.h"
+#include "instrumentation/sinks/serializer.h"
 #include "instrumentation/sinks/thread_safe.h"
 #include "instrumentation/sinks/transaction_factory.h"
 #include "utils/debug.h"
@@ -11,17 +12,18 @@
 using namespace std;
 
 t_thread_tracker * tracker;
-t_observation_sink::t_ptr * sink;
 
 t_construct_id construct_id = 0;
-boost::mutex construct_id_lock;
+boost::mutex mutex;
 
 // observation sinks
 
 t_observation_sink::t_ptr json_sink() {
-  static t_json_observation_sink::t_ptr sink(new t_json_observation_sink(std::cout));
-  static t_json_observation_sink::t_ptr sink_thread_safe(new t_thread_safe_observation_sink(sink));
-  return sink_thread_safe;
+  static t_observation_sink::t_ptr serializer_sink(new t_serializer_observation_sink(std::cerr, t_json_serializer::instance()));
+  static t_observation_sink::t_ptr thread_safe_sink(new t_thread_safe_observation_sink(serializer_sink));
+  static t_observation_sink::t_ptr sink(thread_safe_sink);
+  
+  return sink;
 }
 
 t_observation_sink::t_ptr transaction_factory_sink() {
@@ -29,17 +31,15 @@ t_observation_sink::t_ptr transaction_factory_sink() {
 }
 
 void register_construct(t_construct::t_ptr construct) {
-  construct_id_lock.lock();
+  mutex.lock();
   construct->c_id = ++construct_id;
-  construct_id_lock.unlock();
+  mutex.unlock();
 }
 
 
 void init() __attribute__((constructor));
 void init() {
   debug("Instrumentation Init");
-  
-  sink = new t_observation_sink::t_ptr(new t_json_observation_sink(std::cerr));
   
   tracker = new t_thread_tracker(json_sink);
   tracker->start();

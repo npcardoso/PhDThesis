@@ -1,4 +1,4 @@
-#include "io/spectra.h"
+#include "instrumentation/serialization/spectra.h"
 
 #include "types.h"
 #include "utils/stl.h"

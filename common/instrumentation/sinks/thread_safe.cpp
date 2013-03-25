@@ -1,7 +1,5 @@
 #include "instrumentation/sinks/thread_safe.h"
 
-#include "io/json.h"
-
 t_thread_safe_observation_sink::t_thread_safe_observation_sink(t_observation_sink::t_ptr sink): sink(sink) {
 
 }

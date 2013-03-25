@@ -5,7 +5,7 @@
 
 extern "C"{
 t_construct_id _instr_transaction_register(){
-  t_construct::t_ptr construct(new t_transaction_construct());
+  t_transaction_construct::t_ptr construct(new t_transaction_construct());
   register_construct(construct);
   return construct->c_id;
 }

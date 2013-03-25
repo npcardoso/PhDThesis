@@ -45,17 +45,10 @@ std::ostream & observation (std::ostream & out,
 }
 }
 
-
-
-
-#include "utils/debug.h"
-
 t_json_serializer::t_ptr t_json_serializer::instance() {
   static t_ptr self(new t_json_serializer());
-  debug("mutex value: (%lld)", self.get());
   return self;
 }
-
 
 std::ostream & t_json_serializer::observation(std::ostream & out,
                                               const t_oracle_observation & obs) {
@@ -94,21 +87,21 @@ std::ostream & t_json_serializer::observation(std::ostream & out,
     out << ',';
     json::key(out, "o");
     out << '[';
-    t_serializer::array<t_oracle_observation::t_ptr>(out, obs.oracles, instance());
+    t_serializer::observation_array<t_oracle_observation::t_ptr>(out, obs.oracles, instance());
     out << ']';
   }
   if(obs.probes.size()) {
     out << ',';
     json::key(out, "p");
     out << '[';
-    t_serializer::array<t_probe_observation::t_ptr>(out, obs.probes, instance());
+    t_serializer::observation_array<t_probe_observation::t_ptr>(out, obs.probes, instance());
     out << ']';
   }
   if(obs.transactions.size()) {
     out << ',';
     json::key(out, "tr");
     out << '[';
-    t_serializer::array<t_transaction_observation::t_ptr>(out, obs.transactions, instance());
+    t_serializer::observation_array<t_transaction_observation::t_ptr>(out, obs.transactions, instance());
     out << ']';
   }
   return out;
@@ -138,5 +131,56 @@ std::ostream & t_json_serializer::observation_request_header(std::ostream & out)
 
 std::ostream & t_json_serializer::observation_request_footer(std::ostream & out) {
   out << ']';
+  return out;
+}
+
+
+std::ostream & t_json_serializer::construct(std::ostream & out,
+                                            const t_oracle_construct & ctr) {
+  out << "\"type\":\"oracle contruct\"";
+  return out;
+}
+
+std::ostream & t_json_serializer::construct(std::ostream & out,
+                                            const t_probe_construct & ctr){
+  out << "\"type\":\"probe construct\"";
+  return out;
+}
+
+std::ostream & t_json_serializer::construct(std::ostream & out,
+                                            const t_transaction_construct & ctr) {
+  out << "\"type\":\"transaction construct\"";
+  return out;
+}
+
+std::ostream & t_json_serializer::construct_header(std::ostream & out) {
+  out << '{';
+  return out;
+}
+
+std::ostream & t_json_serializer::construct_separator(std::ostream & out) {
+  out << 'X';
+  return out;
+
+}
+
+std::ostream & t_json_serializer::construct_footer(std::ostream & out) {
+  out << '}';
+  return out;
+
+}
+
+std::ostream & t_json_serializer::construct_request_header(std::ostream & out) {
+  out << '+';
+  return out;
+}
+
+std::ostream & t_json_serializer::construct_request_footer(std::ostream & out) {
+  out << '-';
+  return out;
+}
+
+std::ostream & t_json_serializer::request_separator(std::ostream & out) {
+  out << ',';
   return out;
 }

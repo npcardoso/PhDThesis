@@ -6,7 +6,7 @@
 
 extern "C"{
 t_construct_id _instr_probe_register(){
-  t_construct::t_ptr construct(new t_probe_construct());
+  t_probe_construct::t_ptr construct(new t_probe_construct());
   register_construct(construct);
   return construct->c_id;
 }

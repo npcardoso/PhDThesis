@@ -31,10 +31,28 @@ public:
   virtual std::ostream & observation_request_header(std::ostream & out) = 0;
   virtual std::ostream & observation_request_footer(std::ostream & out) = 0;
 
+  virtual std::ostream & construct(std::ostream & out,
+                                   const t_oracle_construct & ctr) = 0;
+
+  virtual std::ostream & construct(std::ostream & out,
+                                   const t_probe_construct & ctr) = 0;
+
+  virtual std::ostream & construct(std::ostream & out,
+                                   const t_transaction_construct & ctr) = 0;
+
+  virtual std::ostream & construct_header(std::ostream & out) = 0;
+  virtual std::ostream & construct_separator(std::ostream & out) = 0;
+  virtual std::ostream & construct_footer(std::ostream & out) = 0;
+
+  virtual std::ostream & construct_request_header(std::ostream & out) = 0;
+  virtual std::ostream & construct_request_footer(std::ostream & out) = 0;
+
+  virtual std::ostream & request_separator(std::ostream & out) = 0;
+
   template <class I, class C>
-    static std::ostream & array(std::ostream & out,
-                                const C & container,
-                                t_ptr serializer) {
+    static std::ostream & observation_array(std::ostream & out,
+                                            const C & container,
+                                            t_ptr serializer) {
       bool first = true;
       BOOST_FOREACH(I it, container) {
         if(!first)

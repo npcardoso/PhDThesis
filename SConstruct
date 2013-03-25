@@ -18,7 +18,9 @@ vars.Add('llvm_passes', '', '-instrument_function -instrument_prepare')
 
 vars.Add('debug', '', False)
 
-vars.Add('boost', '', None)
+vars.Add('boost_lib', '', None)
+vars.Add('boost_include', '', None)
+
 vars.Add('clang', '', 'clang++')
 vars.Add('llvmconfig', '', 'llvm-config')
 vars.Add('OPT', '', 'opt')
@@ -41,6 +43,12 @@ env['common_dir'] = join(root, "common")
 env['include_dir'] = join(env['prefix'], "include")
 env['lib_dir'] = join(env['prefix'], "lib")
 env['bin_dir'] = join(env['prefix'], "bin")
+
+if env['boost_include'] is not None:
+	env.Append(CPPPATH = [env['boost_include']])
+
+if env['boost_lib'] is not None:
+	env.Append(LIBPATH = [env['boost_lib']])
 
 if(env['debug']):
   env['CCFLAGS'] = "-g -O0"

@@ -78,7 +78,7 @@ std::ostream & t_json_serializer::observation(std::ostream & out,
     out << ',';
     json::key(out, "v");
     out << '[' << obs.state->offset_end[0];
-    for(t_id i = 1; i < obs.state->n_vars; i++)
+    for(t_id i = 1; i < obs.state->n_vars - 1; i++)
       out << ',' << obs.state->offset_end[i];
     out << ']';
   }

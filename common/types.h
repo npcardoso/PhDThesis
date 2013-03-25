@@ -16,5 +16,5 @@ typedef pthread_t t_thread_id;
 
 typedef double t_health;
 typedef double t_confidence;
-
+typedef unsigned short t_port_no;
 #endif

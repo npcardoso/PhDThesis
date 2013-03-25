@@ -2,6 +2,7 @@
 
 #include "instrumentation/serialization/json.h"
 #include "instrumentation/sinks/serializer.h"
+#include "instrumentation/sinks/client.h"
 #include "instrumentation/sinks/thread_safe.h"
 #include "instrumentation/sinks/transaction_factory.h"
 #include "utils/debug.h"
@@ -20,7 +21,8 @@ boost::mutex mutex;
 
 t_observation_sink::t_ptr json_sink() {
   static t_observation_sink::t_ptr serializer_sink(new t_serializer_observation_sink(std::cerr, t_json_serializer::instance()));
-  static t_observation_sink::t_ptr thread_safe_sink(new t_thread_safe_observation_sink(serializer_sink));
+  static t_observation_sink::t_ptr tcp_sink(new t_tcp_observation_sink("localhost", "1234", t_json_serializer::instance()));
+  static t_observation_sink::t_ptr thread_safe_sink(new t_thread_safe_observation_sink(tcp_sink));
   static t_observation_sink::t_ptr sink(thread_safe_sink);
   
   return sink;

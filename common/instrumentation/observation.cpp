@@ -26,7 +26,7 @@ t_observation_window::t_observation_window(t_time_interval time_start,
   this->time_start = time_start;
   this->time_end = time_end;
   this->c_id_start = c_id_start;
-  this->c_id_end = time_end;
+  this->c_id_end = c_id_end;
 }
 
 bool t_observation_window::ended() const {

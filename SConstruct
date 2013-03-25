@@ -44,10 +44,10 @@ env['include_dir'] = join(env['prefix'], "include")
 env['lib_dir'] = join(env['prefix'], "lib")
 env['bin_dir'] = join(env['prefix'], "bin")
 
-if env['boost_include'] is not None:
+if 'boost_include' in env:
 	env.Append(CPPPATH = [env['boost_include']])
 
-if env['boost_lib'] is not None:
+if 'boost_lib' in env:
 	env.Append(LIBPATH = [env['boost_lib']])
 
 if(env['debug']):

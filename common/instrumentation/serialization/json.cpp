@@ -126,10 +126,11 @@ std::ostream & t_json_serializer::observation_footer(std::ostream & out) {
 }
 
 std::ostream & t_json_serializer::observation_request_header(std::ostream & out) {
+  out << '[';
   return out;
-
 }
 
 std::ostream & t_json_serializer::observation_request_footer(std::ostream & out) {
+  out << ']';
   return out;
 }

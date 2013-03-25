@@ -43,7 +43,7 @@ void init() __attribute__((constructor));
 void init() {
   debug("Instrumentation Init");
   
-  tracker = new t_thread_tracker(json_sink);
+  tracker = new t_thread_tracker(transaction_factory_sink);
   tracker->start();
 
 

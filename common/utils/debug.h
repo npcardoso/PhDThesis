@@ -1,5 +1,5 @@
-#ifndef __INSTR_DEBUG_H__
-#define __INSTR_DEBUG_H__
+#ifndef __COMMON_UTILS_DEBUG_H__
+#define __COMMON_UTILS_DEBUG_H__
 
 #ifdef NDEBUG
 #define debug(...)

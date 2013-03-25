@@ -1,5 +1,5 @@
-#ifndef __BASE64_H__
-#define __BASE64_H__
+#ifndef __COMMON_UTILS_BASE64_H__
+#define __COMMON_UTILS_BASE64_H__
 
 #include <string>
 

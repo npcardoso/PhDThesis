@@ -136,7 +136,10 @@ def generate(env):
     exists(env)
 
     for var_name, app_name in _instrument_apps:
-        env[var_name] = _detect_app(env, var_name, app_name)
+        if(var_name in env):
+            env[var_name] = _detect_app(env, var_name, env[var_name])
+        else:
+            env[var_name] = _detect_app(env, var_name, app_name)
 
     env.SetDefault(
         # Suffixes/prefixes

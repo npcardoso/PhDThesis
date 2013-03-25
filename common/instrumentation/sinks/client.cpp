@@ -16,10 +16,11 @@ void t_tcp_observation_sink::connect(){
 
 bool t_tcp_observation_sink::operator()(const t_transaction_observation::t_ptr & obs) {
   do {
-    connect();
-  serializer->observation_header(stream);  
-  serializer->observation(stream, *obs);  
-  serializer->observation_footer(stream);  
+    if(!stream.good())
+      connect();
+    serializer->observation_header(stream);  
+    serializer->observation(stream, *obs);  
+    serializer->observation_footer(stream);  
   } while(!stream.good());
   return true;
 }

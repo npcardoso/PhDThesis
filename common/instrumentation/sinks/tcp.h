@@ -1,5 +1,5 @@
-#ifndef __COMMON_INSTRUMENTATION_SINKS_CLIENT_H__
-#define __COMMON_INSTRUMENTATION_SINKS_CLIENT_H__
+#ifndef __COMMON_INSTRUMENTATION_SINKS_TCP_H__
+#define __COMMON_INSTRUMENTATION_SINKS_TCP_H__
 
 #include "instrumentation/serialization/serializer.h"
 #include "instrumentation/sinks/construct.h"

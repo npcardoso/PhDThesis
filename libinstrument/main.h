@@ -3,7 +3,7 @@
 
 #include "threads.h"
 
-#include "instrumentation/sinks/client.h"
+#include "instrumentation/sinks/tcp.h"
 
 extern t_thread_tracker * tracker;
 extern t_construct_id construct_id;

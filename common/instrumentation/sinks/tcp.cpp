@@ -1,6 +1,8 @@
-#include "instrumentation/sinks/client.h"
+#include "instrumentation/sinks/tcp.h"
+
 #include "utils/debug.h"
 #include "utils/time.h"
+
 t_tcp_sink::t_tcp_sink(std::string host, std::string port, t_serializer::t_ptr serializer) {
   this->host = host;
   this->port = port;

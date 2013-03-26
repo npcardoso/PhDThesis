@@ -13,10 +13,10 @@ t_construct_id _instr_transaction_register(){
 
 void _instr_transaction_start(t_construct_id c_id) {
   t_transaction_observation::t_ptr obs(new t_transaction_observation(time_interval(), c_id));
-  (*tracker->get())(obs);
+  (*tracker->get()) << obs;
 }
 
 void _instr_transaction_end(t_construct_id c_id) {
   t_transaction_observation::t_ptr obs(new t_transaction_observation(0, 0, time_interval(), c_id));
-  (*tracker->get())(obs);
+  (*tracker->get()) << obs;
 }

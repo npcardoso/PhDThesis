@@ -7,7 +7,7 @@ size_t t_transaction_factory::num_active() const {
   return transactions.size();
 }
 
-bool t_transaction_factory::operator()(const t_transaction_observation::t_ptr & obs) {
+bool t_transaction_factory::operator << (const t_transaction_observation::t_ptr & obs) {
   if(obs->c_id_start) { // Push action
     if(num_active())
       transactions.top()->observation(obs);
@@ -26,28 +26,28 @@ bool t_transaction_factory::operator()(const t_transaction_observation::t_ptr & 
   }
   
   if(sink) // Forward
-    return (*sink)(tmp);
+    return (*sink) << tmp;
   return false;
 }
 
-bool t_transaction_factory::operator()(const t_oracle_observation::t_ptr & obs) {
+bool t_transaction_factory::operator << (const t_oracle_observation::t_ptr & obs) {
   if(num_active()) {
     transactions.top()->observation(obs);
     return true;
   }
 
   if(sink) // Forward
-    return (*sink)(obs);
+    return (*sink) << obs;
   return false;
 }
 
-bool t_transaction_factory::operator()(const t_probe_observation::t_ptr & obs) {
+bool t_transaction_factory::operator << (const t_probe_observation::t_ptr & obs) {
   if(num_active()) {
     transactions.top()->observation(obs);
     return true;
   }
 
   if(sink) // Forward
-    return(*sink)(obs);
+    return(*sink) << obs;
   return false;
 }

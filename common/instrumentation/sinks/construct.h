@@ -15,9 +15,9 @@ public:
   typedef boost::shared_ptr<t_construct_sink> t_ptr;
   typedef boost::shared_ptr<const t_construct_sink> t_const_ptr;
 
-  virtual bool operator()(const t_transaction_construct::t_ptr & obs);
-  virtual bool operator()(const t_oracle_construct::t_ptr & obs);
-  virtual bool operator()(const t_probe_construct::t_ptr & obs);
+  virtual bool operator << (const t_transaction_construct::t_ptr & obs);
+  virtual bool operator << (const t_oracle_construct::t_ptr & obs);
+  virtual bool operator << (const t_probe_construct::t_ptr & obs);
 
 };
 

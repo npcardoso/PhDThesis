@@ -2,8 +2,40 @@
 
 #include "utils/base64.h"
 
-
+#include <boost/foreach.hpp>
 #include <string>
+
+std::ostream & t_json_map::put(std::ostream & out) {
+  if(first)
+    out << '{';
+  else
+    out << ',';
+  first = false;
+  return out;
+}
+
+void t_json_map::close(std::ostream & out) {
+  if(first)
+    out << '{';
+  out << '}';
+  first = true;
+}
+
+std::ostream & t_json_array::put(std::ostream & out) {
+  if(first)
+    out << '[';
+  else
+    out << ',';
+  first = false;
+  return out;
+}
+
+void t_json_array::close(std::ostream & out) {
+  if(first)
+    out << '[';
+  out << ']';
+  first = true;
+}
 
 namespace json {
 std::ostream & timestamp(std::ostream & out,
@@ -27,16 +59,16 @@ std::ostream & key(std::ostream & out,
 }
 
 
-std::ostream & observation (std::ostream & out,
-                            const t_observation_single & obs) {
+std::ostream & observation_single (std::ostream & out,
+                                   const t_observation_single & obs) {
   key(out, "cid") << obs.c_id << ',';
   key(out, "t");
   timestamp(out, obs.time);
   return out;
 }
 
-std::ostream & observation (std::ostream & out,
-                            const t_observation_window & obs) {
+std::ostream & observation_window (std::ostream & out,
+                                   const t_observation_window & obs) {
   key(out, "cid") << '[' << obs.c_id_start << ',' << obs.c_id_end << "],";
   key(out, "t") << '[';
   timestamp(out, obs.time_start) << ',';
@@ -45,142 +77,91 @@ std::ostream & observation (std::ostream & out,
 }
 }
 
-t_json_serializer::t_ptr t_json_serializer::instance() {
-  static t_ptr self(new t_json_serializer());
-  return self;
+t_json_observation_serializer::t_json_observation_serializer(std::ostream & out): out(out) {
+  static t_element_group::t_ptr def_group = t_element_group::t_ptr(new t_element_group());
+  group = def_group;
 }
 
-std::ostream & t_json_serializer::observation(std::ostream & out,
-                                              const t_oracle_observation & obs) {
-  json::observation(out, (t_observation_single &)obs) << ',';
-  json::key(out, "h") << obs.health << ',';
-  json::key(out, "c") << obs.confidence;
-  //if(pid)
-  //  pt.put(prefix + "pid", pid);
-  return out;
+t_json_observation_serializer::t_json_observation_serializer(std::ostream & out, t_element_group::t_ptr group): out(out), group(group){
 }
 
-std::ostream & t_json_serializer::observation(std::ostream & out,
-                                              const t_probe_observation & obs){
+bool t_json_observation_serializer::operator << (const t_oracle_observation::t_ptr & obs) {
+  t_json_map tmp;
+  group->put(out);
 
-  json::observation(out, (t_observation_single &)obs);
-  if(obs.state) {
-    out << ',';
-    json::key(out, "s");
-    json::string(out, base64_encode(obs.state->data, obs.state->data_size()));
-    out << ',';
-    json::key(out, "v");
-    out << '[' << obs.state->offset_end[0];
-    for(t_id i = 1; i < obs.state->n_vars - 1; i++)
-      out << ',' << obs.state->offset_end[i];
-    out << ']';
+  json::observation_single(tmp.put(out), *obs);
+  json::key(tmp.put(out), "h") << obs->health;
+  json::key(tmp.put(out), "c") << obs->confidence;
+  tmp.close(out);
+  return true;
+}
+
+bool t_json_observation_serializer::operator << (const t_probe_observation::t_ptr & obs) {
+  t_json_map tmp;
+  group->put(out);
+  
+  json::observation_single(tmp.put(out), *obs);
+  if(obs->state) {
+    json::key(tmp.put(out), "s");
+    json::string(out, base64_encode(obs->state->data, obs->state->data_size()));
+    json::key(tmp.put(out), "v");
+
+    t_json_array tmp2;
+    for(t_id i = 0; i < obs->state->n_vars - 1; i++)
+      tmp2.put(out) << obs->state->offset_end[i];
+    tmp2.close(out);
   }
-  //if(pid)
-  //  pt.put(prefix + "pid", pid);
-  return out;
+  tmp.close(out);
+  return true;
 }
 
-std::ostream & t_json_serializer::observation(std::ostream & out,
-                                              const t_transaction_observation & obs) {
-  json::observation(out, (t_observation_window &)obs);
-  if(obs.oracles.size()) {
-    out << ',';
-    json::key(out, "o");
-    out << '[';
-    t_serializer::observation_array<t_oracle_observation::t_ptr>(out, obs.oracles, instance());
-    out << ']';
+bool t_json_observation_serializer::operator << (const t_transaction_observation::t_ptr & obs) {
+  t_json_map tmp;
+  group->put(out);
+
+  json::observation_window(tmp.put(out), *obs);
+  
+  t_element_group::t_ptr arr_group(new t_json_array());
+
+  if(obs->oracles.size()) {
+    json::key(tmp.put(out), "o");
+    
+    t_json_observation_serializer tmp(out, arr_group);
+    BOOST_FOREACH(t_oracle_observation::t_ptr o, obs->oracles)
+      tmp << o;
+    tmp.close();
   }
-  if(obs.probes.size()) {
-    out << ',';
-    json::key(out, "p");
-    out << '[';
-    t_serializer::observation_array<t_probe_observation::t_ptr>(out, obs.probes, instance());
-    out << ']';
+  if(obs->probes.size()) {
+    json::key(tmp.put(out), "p");
+    
+    t_json_observation_serializer tmp(out, arr_group);
+    BOOST_FOREACH(t_probe_observation::t_ptr p, obs->probes) 
+      tmp << p;
+    tmp.close();
   }
-  if(obs.transactions.size()) {
-    out << ',';
-    json::key(out, "tr");
-    out << '[';
-    t_serializer::observation_array<t_transaction_observation::t_ptr>(out, obs.transactions, instance());
-    out << ']';
+  if(obs->transactions.size()) {
+    json::key(tmp.put(out), "tr");
+
+    t_json_observation_serializer tmp(out, arr_group);
+    BOOST_FOREACH(t_transaction_observation::t_ptr tr, obs->transactions) 
+      tmp << tr;
+    tmp.close();
   }
-  return out;
+  tmp.close(out);
+  return true;
+}
+  
+t_observation_serializer::t_ptr t_json_observation_serializer::array() {
+  t_element_group::t_ptr tmp_group(new t_json_array());
+  t_ptr tmp = t_ptr(new t_json_observation_serializer(group->put(out), tmp_group));
+  return tmp;
 }
 
-std::ostream & t_json_serializer::observation_header(std::ostream & out) {
-  out << '{';
-  return out;
+t_json_observation_serializer::~t_json_observation_serializer() {
+  close();
 }
 
-std::ostream & t_json_serializer::observation_separator(std::ostream & out) {
-  out << ',';
-  return out;
-
-}
-
-std::ostream & t_json_serializer::observation_footer(std::ostream & out) {
-  out << '}';
-  return out;
-
-}
-
-std::ostream & t_json_serializer::observation_request_header(std::ostream & out) {
-  out << '[';
-  return out;
-}
-
-std::ostream & t_json_serializer::observation_request_footer(std::ostream & out) {
-  out << ']';
-  return out;
-}
-
-
-std::ostream & t_json_serializer::construct(std::ostream & out,
-                                            const t_oracle_construct & ctr) {
-  out << "\"type\":\"oracle contruct\"";
-  return out;
-}
-
-std::ostream & t_json_serializer::construct(std::ostream & out,
-                                            const t_probe_construct & ctr){
-  out << "\"type\":\"probe construct\"";
-  return out;
-}
-
-std::ostream & t_json_serializer::construct(std::ostream & out,
-                                            const t_transaction_construct & ctr) {
-  out << "\"type\":\"transaction construct\"";
-  return out;
-}
-
-std::ostream & t_json_serializer::construct_header(std::ostream & out) {
-  out << '{';
-  return out;
-}
-
-std::ostream & t_json_serializer::construct_separator(std::ostream & out) {
-  out << 'X';
-  return out;
-
-}
-
-std::ostream & t_json_serializer::construct_footer(std::ostream & out) {
-  out << '}';
-  return out;
-
-}
-
-std::ostream & t_json_serializer::construct_request_header(std::ostream & out) {
-  out << '+';
-  return out;
-}
-
-std::ostream & t_json_serializer::construct_request_footer(std::ostream & out) {
-  out << '-';
-  return out;
-}
-
-std::ostream & t_json_serializer::request_separator(std::ostream & out) {
-  out << ',';
-  return out;
+void t_json_observation_serializer::close() {
+  if(!group->empty())
+    group->close(out);
 }

@@ -25,7 +25,7 @@ void _instr_probe_observation(t_construct_id c_id, ...){
     obs->read_variable(ptr, bytes);
   }
   va_end(ap);
-  (*tracker->get())(obs);
+  (*tracker->get()) << obs;
 }
 
 void _instr_hit_probe_observation(t_construct_id c_id) {

@@ -4,66 +4,37 @@
 #include <ostream>
 #include "types.h"
 
-#include "instrumentation/transaction.h"
-#include "instrumentation/oracle.h"
-#include "instrumentation/probe.h"
+#include "instrumentation/sinks/observation.h"
+#include "instrumentation/sinks/construct.h"
 
-#include <boost/foreach.hpp>
-
-class t_serializer {
+class t_observation_serializer: public t_observation_sink {
 public:
-  typedef boost::shared_ptr<t_serializer> t_ptr;
-  typedef boost::shared_ptr<const t_serializer> t_const_ptr;
+  typedef boost::shared_ptr<t_observation_serializer> t_ptr;
+  typedef boost::shared_ptr<const t_observation_serializer> t_const_ptr;
 
-  virtual std::ostream & observation(std::ostream & out,
-                                     const t_oracle_observation & obs) = 0;
+  virtual bool operator << (const t_oracle_observation::t_ptr & obs) = 0;
+  virtual bool operator << (const t_probe_observation::t_ptr & obs) = 0;
+  virtual bool operator << (const t_transaction_observation::t_ptr & obs) = 0;
+  
+  virtual t_ptr array() = 0;
+  virtual inline ~t_observation_serializer(){};
+  
+  virtual void close() = 0;
+};
 
-  virtual std::ostream & observation(std::ostream & out,
-                                     const t_probe_observation & obs) = 0;
+class t_construct_serializer: public t_construct_sink {
+public:
+  typedef boost::shared_ptr<t_construct_serializer> t_ptr;
+  typedef boost::shared_ptr<const t_construct_serializer> t_const_ptr;
 
-  virtual std::ostream & observation(std::ostream & out,
-                                     const t_transaction_observation & obs) = 0;
-
-  virtual std::ostream & observation_header(std::ostream & out) = 0;
-  virtual std::ostream & observation_separator(std::ostream & out) = 0;
-  virtual std::ostream & observation_footer(std::ostream & out) = 0;
-
-  virtual std::ostream & observation_request_header(std::ostream & out) = 0;
-  virtual std::ostream & observation_request_footer(std::ostream & out) = 0;
-
-  virtual std::ostream & construct(std::ostream & out,
-                                   const t_oracle_construct & ctr) = 0;
-
-  virtual std::ostream & construct(std::ostream & out,
-                                   const t_probe_construct & ctr) = 0;
-
-  virtual std::ostream & construct(std::ostream & out,
-                                   const t_transaction_construct & ctr) = 0;
-
-  virtual std::ostream & construct_header(std::ostream & out) = 0;
-  virtual std::ostream & construct_separator(std::ostream & out) = 0;
-  virtual std::ostream & construct_footer(std::ostream & out) = 0;
-
-  virtual std::ostream & construct_request_header(std::ostream & out) = 0;
-  virtual std::ostream & construct_request_footer(std::ostream & out) = 0;
-
-  virtual std::ostream & request_separator(std::ostream & out) = 0;
-
-  template <class I, class C>
-    static std::ostream & observation_array(std::ostream & out,
-                                            const C & container,
-                                            t_ptr serializer) {
-      bool first = true;
-      BOOST_FOREACH(I it, container) {
-        if(!first)
-          serializer->observation_separator(out);
-        serializer->observation_header(out);
-        serializer->observation(out, *it);
-        serializer->observation_footer(out);
-        first = false;
-      }
-      return out;
-    }
+  virtual bool operator << (const t_oracle_construct::t_ptr & ctr) = 0;
+  virtual bool operator << (const t_probe_construct::t_ptr & ctr) = 0;
+  virtual bool operator << (const t_transaction_construct::t_ptr & ctr) = 0;
+  
+  virtual t_ptr array() = 0;
+  virtual ~t_construct_serializer() = 0;
+  
+  virtual void close() = 0;
 };
 
 #endif

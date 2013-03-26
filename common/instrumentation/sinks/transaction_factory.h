@@ -23,11 +23,11 @@ public:
 
   size_t num_active() const;
 
-  virtual bool operator()(const t_transaction_observation::t_ptr & obs);
+  virtual bool operator << (const t_transaction_observation::t_ptr & obs);
   
-  virtual bool operator()(const t_oracle_observation::t_ptr & obs);
+  virtual bool operator << (const t_oracle_observation::t_ptr & obs);
 
-  virtual bool operator()(const t_probe_observation::t_ptr & obs);
+  virtual bool operator << (const t_probe_observation::t_ptr & obs);
 };
 
 #endif

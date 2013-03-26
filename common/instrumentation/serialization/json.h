@@ -2,46 +2,77 @@
 #define __COMMON_INSTRUMENTATION_SERIALIZATION_JSON_H__
 
 #include "instrumentation/serialization/serializer.h"
-
-class t_json_serializer: public t_serializer{
-  inline t_json_serializer() {}
+class t_element_group {
+protected:
+  bool first;
 public:
-  static t_ptr instance();
-
-  virtual std::ostream & observation(std::ostream & out,
-                                     const t_oracle_observation & obs);
-
-  virtual std::ostream & observation(std::ostream & out,
-                                     const t_probe_observation & obs);
-
-  virtual std::ostream & observation(std::ostream & out,
-                                     const t_transaction_observation & obs);
-
-  virtual std::ostream & observation_header(std::ostream & out);
-  virtual std::ostream & observation_separator(std::ostream & out);
-  virtual std::ostream & observation_footer(std::ostream & out);
+  typedef boost::shared_ptr<t_element_group> t_ptr;
+  typedef boost::shared_ptr<const t_element_group> t_const_ptr;
   
-  virtual std::ostream & observation_request_header(std::ostream & out);
-  virtual std::ostream & observation_request_footer(std::ostream & out);
+  inline t_element_group() {
+    first = true;
+  }
   
+  virtual inline bool empty() const {
+    return first;
+  }
   
-  virtual std::ostream & construct(std::ostream & out,
-                                   const t_oracle_construct & ctr);
-
-  virtual std::ostream & construct(std::ostream & out,
-                                   const t_probe_construct & ctr);
-
-  virtual std::ostream & construct(std::ostream & out,
-                                   const t_transaction_construct & ctr);
-
-  virtual std::ostream & construct_header(std::ostream & out);
-  virtual std::ostream & construct_separator(std::ostream & out);
-  virtual std::ostream & construct_footer(std::ostream & out);
-
-  virtual std::ostream & construct_request_header(std::ostream & out);
-  virtual std::ostream & construct_request_footer(std::ostream & out);
+  virtual inline std::ostream & put(std::ostream & out) {
+    first = false;
+    return out;
+  }
   
-  virtual std::ostream & request_separator(std::ostream & out);
+  virtual inline void close(std::ostream & out) {
+    first = true;
+  }
+};
+
+class t_json_array: public t_element_group {
+public:
+  typedef boost::shared_ptr<t_element_group> t_ptr;
+  typedef boost::shared_ptr<const t_element_group> t_const_ptr;
+  
+  virtual std::ostream & put(std::ostream & out);
+  virtual void close(std::ostream & out);
+};
+
+class t_json_map: public t_element_group {
+public:
+  typedef boost::shared_ptr<t_element_group> t_ptr;
+  typedef boost::shared_ptr<const t_element_group> t_const_ptr;
+  
+  virtual std::ostream & put(std::ostream & out);
+  virtual void close(std::ostream & out);
+};
+
+class t_json_observation_serializer: public t_observation_serializer {
+  std::ostream & out;
+  
+  t_element_group::t_ptr group;
+public:
+  t_json_observation_serializer(std::ostream & out);
+  t_json_observation_serializer(std::ostream & out, t_element_group::t_ptr group);
+  
+  virtual bool operator << (const t_transaction_observation::t_ptr & obs);
+  virtual bool operator << (const t_oracle_observation::t_ptr & obs);
+  virtual bool operator << (const t_probe_observation::t_ptr & obs);
+  
+  virtual t_ptr array();
+  virtual ~t_json_observation_serializer();
+  
+  virtual void close();
+};
+
+class t_json_construct_serializer: public t_construct_serializer {
+  
+  virtual bool operator << (const t_transaction_construct::t_ptr & obs);
+  virtual bool operator << (const t_oracle_construct::t_ptr & obs);
+  virtual bool operator << (const t_probe_construct::t_ptr & obs);
+  
+  virtual t_ptr array() ;
+  virtual ~t_json_construct_serializer();
+  
+  virtual void close();
 };
 
 #endif

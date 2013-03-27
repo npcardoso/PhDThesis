@@ -46,9 +46,6 @@ public:
 };
 
 class t_json_observation_serializer: public t_observation_serializer {
-  std::ostream & out;
-  
-  t_element_group::t_ptr group;
 public:
   t_json_observation_serializer(std::ostream & out);
   t_json_observation_serializer(std::ostream & out, t_element_group::t_ptr group);
@@ -61,6 +58,16 @@ public:
   virtual ~t_json_observation_serializer();
   
   virtual void close();
+
+private:
+  std::ostream & out;
+  
+  t_element_group::t_ptr group;
+  std::ostream & observation_single(const t_observation_single & obs);
+  std::ostream & observation_window(const t_observation_window & obs);
+  std::ostream & timestamp(t_time_interval t);
+  std::ostream & string(std::string s);
+  std::ostream & key(std::string k);
 };
 
 class t_json_construct_serializer: public t_construct_serializer {

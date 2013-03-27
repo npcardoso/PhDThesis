@@ -37,44 +37,37 @@ void t_json_array::close(std::ostream & out) {
   first = true;
 }
 
-namespace json {
-std::ostream & timestamp(std::ostream & out,
-                         t_time_interval t) {
+std::ostream & t_json_observation_serializer::timestamp(t_time_interval t) {
   std::streamsize precision = out.precision(1024);
   out << t;
   out.precision(precision);
   return out;
 }
 
-std::ostream & string(std::ostream & out,
-                      std::string s) {
+std::ostream & t_json_observation_serializer::string(std::string s) {
   out << '"' << s << '"';
   return out;
 }
 
-std::ostream & key(std::ostream & out,
-                   std::string k) {
-  string(out, k) << ':';
+std::ostream & t_json_observation_serializer::key(std::string k) {
+  string(k) << ':';
   return out;
 }
 
 
-std::ostream & observation_single (std::ostream & out,
-                                   const t_observation_single & obs) {
-  key(out, "cid") << obs.c_id << ',';
-  key(out, "t");
-  timestamp(out, obs.time);
+std::ostream & t_json_observation_serializer::observation_single(const t_observation_single & obs) {
+  key("cid") << obs.c_id << ',';
+  key("t");
+  timestamp(obs.time);
   return out;
 }
 
-std::ostream & observation_window (std::ostream & out,
-                                   const t_observation_window & obs) {
-  key(out, "cid") << '[' << obs.c_id_start << ',' << obs.c_id_end << "],";
-  key(out, "t") << '[';
-  timestamp(out, obs.time_start) << ',';
-  timestamp(out, obs.time_end) << ']';
+std::ostream & t_json_observation_serializer::observation_window(const t_observation_window & obs) {
+  key("cid") << '[' << obs.c_id_start << ',' << obs.c_id_end << "],";
+  key("t") << '[';
+  timestamp(obs.time_start) << ',';
+  timestamp(obs.time_end) << ']';
   return out;
-}
 }
 
 t_json_observation_serializer::t_json_observation_serializer(std::ostream & out): out(out) {
@@ -88,23 +81,30 @@ t_json_observation_serializer::t_json_observation_serializer(std::ostream & out,
 bool t_json_observation_serializer::operator << (const t_oracle_observation::t_ptr & obs) {
   t_json_map tmp;
   group->put(out);
-
-  json::observation_single(tmp.put(out), *obs);
-  json::key(tmp.put(out), "h") << obs->health;
-  json::key(tmp.put(out), "c") << obs->confidence;
+  
+  tmp.put(out);
+  observation_single(*obs);
+  tmp.put(out);
+  key("h") << obs->health;
+  tmp.put(out); 
+  key("c") << obs->confidence;
   tmp.close(out);
+  
   return true;
 }
 
 bool t_json_observation_serializer::operator << (const t_probe_observation::t_ptr & obs) {
   t_json_map tmp;
   group->put(out);
-  
-  json::observation_single(tmp.put(out), *obs);
+
+  tmp.put(out); 
+  observation_single(*obs);
   if(obs->state) {
-    json::key(tmp.put(out), "s");
-    json::string(out, base64_encode(obs->state->data, obs->state->data_size()));
-    json::key(tmp.put(out), "v");
+    tmp.put(out); 
+    key("s");
+    string(base64_encode(obs->state->data, obs->state->data_size()));
+    tmp.put(out); 
+    key("v");
 
     t_json_array tmp2;
     for(t_id i = 0; i < obs->state->n_vars - 1; i++)
@@ -118,13 +118,15 @@ bool t_json_observation_serializer::operator << (const t_probe_observation::t_pt
 bool t_json_observation_serializer::operator << (const t_transaction_observation::t_ptr & obs) {
   t_json_map tmp;
   group->put(out);
-
-  json::observation_window(tmp.put(out), *obs);
+  
+  tmp.put(out); 
+  observation_window(*obs);
   
   t_element_group::t_ptr arr_group(new t_json_array());
 
   if(obs->oracles.size()) {
-    json::key(tmp.put(out), "o");
+    tmp.put(out);
+    key("o");
     
     t_json_observation_serializer tmp(out, arr_group);
     BOOST_FOREACH(t_oracle_observation::t_ptr o, obs->oracles)
@@ -132,7 +134,8 @@ bool t_json_observation_serializer::operator << (const t_transaction_observation
     tmp.close();
   }
   if(obs->probes.size()) {
-    json::key(tmp.put(out), "p");
+    tmp.put(out); 
+    key("p");
     
     t_json_observation_serializer tmp(out, arr_group);
     BOOST_FOREACH(t_probe_observation::t_ptr p, obs->probes) 
@@ -140,7 +143,8 @@ bool t_json_observation_serializer::operator << (const t_transaction_observation
     tmp.close();
   }
   if(obs->transactions.size()) {
-    json::key(tmp.put(out), "tr");
+    tmp.put(out);
+    key("tr");
 
     t_json_observation_serializer tmp(out, arr_group);
     BOOST_FOREACH(t_transaction_observation::t_ptr tr, obs->transactions) 

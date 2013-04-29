@@ -15,8 +15,7 @@ public:
 
   t_construct_id c_id;
 
-  typedef boost::shared_ptr<t_construct> t_ptr;
-  typedef boost::shared_ptr<const t_construct> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_construct);
 
   virtual void metadata(t_construct_id o_id, 
                         std::string key, 

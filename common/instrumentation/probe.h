@@ -8,8 +8,7 @@
 
 class t_probe_construct: public t_construct {
 public:
-  typedef boost::shared_ptr<t_probe_construct> t_ptr;
-  typedef boost::shared_ptr<const t_probe_construct> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_probe_construct);
 };
 
 struct t_state {
@@ -40,8 +39,7 @@ public:
 struct t_probe_observation: public t_observation_single {
 
 public:
-  typedef boost::shared_ptr<t_probe_observation> t_ptr;
-  typedef boost::shared_ptr<const t_probe_observation> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_probe_observation);
 
   t_state * state;
 

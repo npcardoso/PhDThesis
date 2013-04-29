@@ -10,10 +10,10 @@
 
 class t_tcp_sink: public t_observation_sink, public t_construct_sink {
 public:
+  DEFINE_BOOST_SHARED_PTRS(t_tcp_sink);
+  
   typedef t_observation_sink::t_ptr (* t_observation_sink_fun) (std::ostream &);
   typedef t_construct_sink::t_ptr (* t_construct_sink_fun) (std::ostream &);
-  typedef boost::shared_ptr<t_tcp_sink> t_ptr;
-  typedef boost::shared_ptr<const t_tcp_sink> t_const_ptr;
   
   t_tcp_sink(std::string host,
              std::string port,

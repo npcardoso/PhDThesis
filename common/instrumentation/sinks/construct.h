@@ -12,8 +12,7 @@ protected:
   t_oracle_construct::t_ptr obs2;
   t_probe_construct::t_ptr obs3;
 public:
-  typedef boost::shared_ptr<t_construct_sink> t_ptr;
-  typedef boost::shared_ptr<const t_construct_sink> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_construct_sink);
 
   virtual bool operator << (const t_transaction_construct::t_ptr & obs);
   virtual bool operator << (const t_oracle_construct::t_ptr & obs);

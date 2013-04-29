@@ -19,4 +19,8 @@ typedef double t_confidence;
 typedef unsigned short t_port_no;
 
 typedef size_t t_count;
+
+#define DEFINE_BOOST_SHARED_PTRS(X) \
+  typedef boost::shared_ptr<X> t_ptr; \
+  typedef boost::shared_ptr<const X> t_const_ptr;
 #endif

@@ -5,8 +5,7 @@
 
 class t_json_array: public t_element_group_writer {
 public:
-  typedef boost::shared_ptr<t_json_array> t_ptr;
-  typedef boost::shared_ptr<const t_json_array> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_json_array);
   
   virtual std::ostream & put(std::ostream & out);
   virtual void close(std::ostream & out);
@@ -14,15 +13,16 @@ public:
 
 class t_json_map: public t_element_group_writer {
 public:
-  typedef boost::shared_ptr<t_json_map> t_ptr;
-  typedef boost::shared_ptr<const t_json_map> t_const_ptr;
-  
+  DEFINE_BOOST_SHARED_PTRS(t_json_map);
+
   virtual std::ostream & put(std::ostream & out);
   virtual void close(std::ostream & out);
 };
 
 class t_json_observation_serializer: public t_observation_serializer {
 public:
+  DEFINE_BOOST_SHARED_PTRS(t_json_observation_serializer);
+
   t_json_observation_serializer(std::ostream & out);
   t_json_observation_serializer(std::ostream & out, t_element_group_writer::t_ptr group);
   
@@ -30,7 +30,7 @@ public:
   virtual bool operator << (const t_oracle_observation::t_ptr & obs);
   virtual bool operator << (const t_probe_observation::t_ptr & obs);
   
-  virtual t_ptr array();
+  virtual t_observation_serializer::t_ptr array();
   virtual ~t_json_observation_serializer();
   
   virtual void close();

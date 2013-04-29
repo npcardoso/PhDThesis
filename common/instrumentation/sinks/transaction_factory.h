@@ -16,8 +16,7 @@ class t_transaction_factory: public t_observation_sink {
   t_observation_sink::t_ptr sink;
 
 public:
-  typedef boost::shared_ptr<t_transaction_factory> t_ptr;
-  typedef boost::shared_ptr<const t_transaction_factory> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_transaction_factory);
 
   t_transaction_factory(t_observation_sink::t_ptr sink = t_observation_sink::t_ptr());
 

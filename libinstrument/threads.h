@@ -25,8 +25,7 @@ class t_thread_tracker {
   t_threads threads;
   t_observation_sink_fun observation_sink_fun;
 public:
-  typedef boost::shared_ptr<t_thread_tracker> t_ptr;
-  typedef boost::shared_ptr<const t_thread_tracker> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_thread_tracker);
 
   t_thread_tracker (t_observation_sink_fun observation_sink_fun);
   

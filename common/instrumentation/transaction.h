@@ -13,15 +13,13 @@
 
 class t_transaction_construct: public t_construct {
 public:
-  typedef boost::shared_ptr<t_transaction_construct> t_ptr;
-  typedef boost::shared_ptr<const t_transaction_construct> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_transaction_construct);
 };
 
 struct t_transaction_observation: public t_observation_window {
 
 public:
-  typedef boost::shared_ptr<t_transaction_observation> t_ptr;
-  typedef boost::shared_ptr<const t_transaction_observation> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_transaction_observation);
   
   typedef std::list<t_ptr> t_transactions;
   typedef std::list<t_oracle_observation::t_ptr> t_oracles;

@@ -11,8 +11,7 @@ class t_element_group_writer {
 protected:
   bool first;
 public:
-  typedef boost::shared_ptr<t_element_group_writer> t_ptr;
-  typedef boost::shared_ptr<const t_element_group_writer> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_element_group_writer);
   
   inline t_element_group_writer() {
     first = true;
@@ -34,8 +33,7 @@ public:
 
 class t_observation_serializer: public t_observation_sink {
 public:
-  typedef boost::shared_ptr<t_observation_serializer> t_ptr;
-  typedef boost::shared_ptr<const t_observation_serializer> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_observation_serializer);
 
   virtual bool operator << (const t_oracle_observation::t_ptr & obs) = 0;
   virtual bool operator << (const t_probe_observation::t_ptr & obs) = 0;
@@ -49,8 +47,7 @@ public:
 
 class t_construct_serializer: public t_construct_sink {
 public:
-  typedef boost::shared_ptr<t_construct_serializer> t_ptr;
-  typedef boost::shared_ptr<const t_construct_serializer> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_construct_serializer);
 
   virtual bool operator << (const t_oracle_construct::t_ptr & ctr) = 0;
   virtual bool operator << (const t_probe_construct::t_ptr & ctr) = 0;

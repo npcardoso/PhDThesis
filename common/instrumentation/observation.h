@@ -7,8 +7,7 @@
 
 class t_observation {
 public:
-  typedef boost::shared_ptr<t_observation> t_ptr;
-  typedef boost::shared_ptr<const t_observation> t_const_ptr;
+  DEFINE_BOOST_SHARED_PTRS(t_observation);
 
   virtual size_t size() const = 0;
 

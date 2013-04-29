@@ -9,7 +9,7 @@ env.Tool('RecursiveScanner')
 env.Append(
 	CCFLAGS= " -Wno-c++11-extensions",
 	CPPPATH = Dir(env['common_dir']),
-	LINKFLAGS = "-lpthread -lboost_system -lboost_thread")
+	LINKFLAGS = "-lpthread -lboost_system -lboost_thread -ljsoncpp")
 
 target  = "sandbox"
 
@@ -23,6 +23,7 @@ for i in range(4):
   headers += env.Glob(wildcards + "h")
   sources += env.Glob(wildcards + "cpp")
   sources += env.Glob(join("..", "common", "src", wildcards + "cpp"))
+sources += env['common_objects']
 
 obj = env.Program(target = target, source = sources)
 env.Default(env.Install(env['bin_dir'], obj))

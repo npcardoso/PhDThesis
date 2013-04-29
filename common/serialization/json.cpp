@@ -1,4 +1,4 @@
-#include "instrumentation/serialization/json.h"
+#include "serialization/json.h"
 
 #include "utils/base64.h"
 

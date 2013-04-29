@@ -1,7 +1,7 @@
 #ifndef __COMMON_INSTRUMENTATION_SERIALIZATION_JSON_H__
 #define __COMMON_INSTRUMENTATION_SERIALIZATION_JSON_H__
 
-#include "instrumentation/serialization/serializer.h"
+#include "serialization/serializer.h"
 class t_element_group {
 protected:
   bool first;

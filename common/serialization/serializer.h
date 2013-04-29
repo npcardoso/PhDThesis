@@ -7,6 +7,31 @@
 #include "instrumentation/sinks/observation.h"
 #include "instrumentation/sinks/construct.h"
 
+class t_element_group_writer {
+protected:
+  bool first;
+public:
+  typedef boost::shared_ptr<t_element_group_writer> t_ptr;
+  typedef boost::shared_ptr<const t_element_group_writer> t_const_ptr;
+  
+  inline t_element_group_writer() {
+    first = true;
+  }
+  
+  virtual inline bool empty() const {
+    return first;
+  }
+  
+  virtual inline std::ostream & put(std::ostream & out) {
+    first = false;
+    return out;
+  }
+  
+  virtual inline void close(std::ostream & out) {
+    first = true;
+  }
+};
+
 class t_observation_serializer: public t_observation_sink {
 public:
   typedef boost::shared_ptr<t_observation_serializer> t_ptr;

@@ -2,44 +2,20 @@
 #define __COMMON_INSTRUMENTATION_SERIALIZATION_JSON_H__
 
 #include "serialization/serializer.h"
-class t_element_group {
-protected:
-  bool first;
-public:
-  typedef boost::shared_ptr<t_element_group> t_ptr;
-  typedef boost::shared_ptr<const t_element_group> t_const_ptr;
-  
-  inline t_element_group() {
-    first = true;
-  }
-  
-  virtual inline bool empty() const {
-    return first;
-  }
-  
-  virtual inline std::ostream & put(std::ostream & out) {
-    first = false;
-    return out;
-  }
-  
-  virtual inline void close(std::ostream & out) {
-    first = true;
-  }
-};
 
-class t_json_array: public t_element_group {
+class t_json_array: public t_element_group_writer {
 public:
-  typedef boost::shared_ptr<t_element_group> t_ptr;
-  typedef boost::shared_ptr<const t_element_group> t_const_ptr;
+  typedef boost::shared_ptr<t_json_array> t_ptr;
+  typedef boost::shared_ptr<const t_json_array> t_const_ptr;
   
   virtual std::ostream & put(std::ostream & out);
   virtual void close(std::ostream & out);
 };
 
-class t_json_map: public t_element_group {
+class t_json_map: public t_element_group_writer {
 public:
-  typedef boost::shared_ptr<t_element_group> t_ptr;
-  typedef boost::shared_ptr<const t_element_group> t_const_ptr;
+  typedef boost::shared_ptr<t_json_map> t_ptr;
+  typedef boost::shared_ptr<const t_json_map> t_const_ptr;
   
   virtual std::ostream & put(std::ostream & out);
   virtual void close(std::ostream & out);
@@ -48,7 +24,7 @@ public:
 class t_json_observation_serializer: public t_observation_serializer {
 public:
   t_json_observation_serializer(std::ostream & out);
-  t_json_observation_serializer(std::ostream & out, t_element_group::t_ptr group);
+  t_json_observation_serializer(std::ostream & out, t_element_group_writer::t_ptr group);
   
   virtual bool operator << (const t_transaction_observation::t_ptr & obs);
   virtual bool operator << (const t_oracle_observation::t_ptr & obs);
@@ -62,7 +38,7 @@ public:
 private:
   std::ostream & out;
   
-  t_element_group::t_ptr group;
+  t_element_group_writer::t_ptr group;
   std::ostream & observation_single(const t_observation_single & obs);
   std::ostream & observation_window(const t_observation_window & obs);
   std::ostream & timestamp(t_time_interval t);

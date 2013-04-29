@@ -22,7 +22,7 @@ boost::mutex mutex;
 //}
 
 t_observation_sink::t_ptr cerr_sink() {
-  static t_observation_sink::t_ptr cerr_sink(new t_json_observation_serializer(std::cerr, t_element_group::t_ptr(new t_json_array())));
+  static t_observation_sink::t_ptr cerr_sink(new t_json_observation_serializer(std::cerr, t_element_group_writer::t_ptr(new t_json_array())));
   return cerr_sink;
 }
 

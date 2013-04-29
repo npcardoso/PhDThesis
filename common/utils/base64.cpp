@@ -38,12 +38,21 @@ static inline bool is_base64(unsigned char c) {
   return (isalnum(c) || (c == '+') || (c == '/'));
 }
 
-std::string base64_encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
+std::string base64_encode(unsigned char const* bytes_to_encode, unsigned int in_len, bool ignore_leading_zeros) {
   std::string ret;
   int i = 0;
   int j = 0;
   unsigned char char_array_3[3];
   unsigned char char_array_4[4];
+  if (ignore_leading_zeros) {
+    while (in_len) {
+      if(*bytes_to_encode)
+        break;
+      bytes_to_encode++;
+      in_len--;
+    }
+    
+  }
 
   while (in_len--) {
     char_array_3[i++] = *(bytes_to_encode++);

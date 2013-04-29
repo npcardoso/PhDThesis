@@ -1,6 +1,7 @@
 #include "serialization/json.h"
 
 #include "utils/base64.h"
+#include "types.h"
 
 #include <boost/foreach.hpp>
 #include <string>
@@ -71,11 +72,11 @@ std::ostream & t_json_observation_serializer::observation_window(const t_observa
 }
 
 t_json_observation_serializer::t_json_observation_serializer(std::ostream & out): out(out) {
-  static t_element_group::t_ptr def_group = t_element_group::t_ptr(new t_element_group());
+  static t_element_group_writer::t_ptr def_group = t_element_group_writer::t_ptr(new t_element_group_writer());
   group = def_group;
 }
 
-t_json_observation_serializer::t_json_observation_serializer(std::ostream & out, t_element_group::t_ptr group): out(out), group(group){
+t_json_observation_serializer::t_json_observation_serializer(std::ostream & out, t_element_group_writer::t_ptr group): out(out), group(group){
 }
 
 bool t_json_observation_serializer::operator << (const t_oracle_observation::t_ptr & obs) {
@@ -102,14 +103,19 @@ bool t_json_observation_serializer::operator << (const t_probe_observation::t_pt
   if(obs->state) {
     tmp.put(out); 
     key("s");
-    string(base64_encode(obs->state->data, obs->state->data_size()));
-    tmp.put(out); 
-    key("v");
-
     t_json_array tmp2;
-    for(t_id i = 0; i < obs->state->n_vars - 1; i++)
-      tmp2.put(out) << obs->state->offset_end[i];
+    
+    t_count start = 0;
+    t_count len = obs->state->offset_end[0];
+    tmp2.put(out);
+    string(base64_encode(obs->state->data, len, true));
+    for(t_id i = 0; i < obs->state->n_vars - 1; i++) {
+      tmp2.put(out);
+      len = obs->state->offset_end[i] - start;
+      start = obs->state->offset_end[i];
+      string(base64_encode(obs->state->data + start, len, true));
     tmp2.close(out);
+    }
   }
   tmp.close(out);
   return true;
@@ -122,7 +128,7 @@ bool t_json_observation_serializer::operator << (const t_transaction_observation
   tmp.put(out); 
   observation_window(*obs);
   
-  t_element_group::t_ptr arr_group(new t_json_array());
+  t_element_group_writer::t_ptr arr_group(new t_json_array());
 
   if(obs->oracles.size()) {
     tmp.put(out);
@@ -156,7 +162,7 @@ bool t_json_observation_serializer::operator << (const t_transaction_observation
 }
   
 t_observation_serializer::t_ptr t_json_observation_serializer::array() {
-  t_element_group::t_ptr tmp_group(new t_json_array());
+  t_element_group_writer::t_ptr tmp_group(new t_json_array());
   t_ptr tmp = t_ptr(new t_json_observation_serializer(group->put(out), tmp_group));
   return tmp;
 }

@@ -54,12 +54,17 @@ _instrument_linker_builder = SCons.Builder.Builder(
 
 def RecursiveScanner(scanner, file):
     #Scan header include tree
+    print file.abspath, os.path.exists(file.srcnode().abspath)
+    if not os.path.exists(file.srcnode().abspath):
+        return []
     tmp = scanner(file)
     header_depends = set()
     header_pool = set(tmp)
     while(len(header_pool)):
         tmp = header_pool.pop()
         header_depends.add(tmp)
+        if not os.path.exists(tmp.srcnode().abspath):
+            continue
         for dep in scanner(tmp):
             path = os.path.dirname(str(tmp))
             if path:
@@ -68,7 +73,7 @@ def RecursiveScanner(scanner, file):
                 header_pool.add(dep)
 
         header_pool -= header_depends
-        
+
     return list(header_depends)
 
 def Instrument(env, target, source=None, passes="-instrument_prepare", *args, **kw):
@@ -90,11 +95,13 @@ def Instrument(env, target, source=None, passes="-instrument_prepare", *args, **
         stem = src = str(s)
         if(not isinstance(s, SCons.Node.FS.File)):
             s = File(s)
+        if not os.path.exists(s.srcnode().abspath):
+            continue
+
         if src.endswith(source_suffix):
             stem = src[:-len(source_suffix)]
         else:
             stem = src
-
         llvm_obj = _instrument_llvm_builder.__call__(env,
                                                      stem + llvm_suffix,
                                                      src,

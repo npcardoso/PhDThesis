@@ -1,4 +1,4 @@
-#include "serialization/json.h"
+#include "serialization/serializers/json.h"
 
 #include "utils/base64.h"
 #include "types.h"

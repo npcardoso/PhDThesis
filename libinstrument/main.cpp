@@ -1,6 +1,6 @@
 #include "main.h"
 
-#include "serialization/json.h"
+#include "serialization/serializers/json.h"
 #include "instrumentation/sinks/thread_safe.h"
 #include "instrumentation/sinks/transaction_factory.h"
 #include "utils/debug.h"

@@ -1,5 +1,5 @@
-#ifndef __COMMON_INSTRUMENTATION_SERIALIZATION_SERIALIZER_H__
-#define __COMMON_INSTRUMENTATION_SERIALIZATION_SERIALIZER_H__
+#ifndef __COMMON_SERIALIZATION_SERIALIZER_H__
+#define __COMMON_SERIALIZATION_SERIALIZER_H__
 
 #include <ostream>
 #include "types.h"
@@ -32,6 +32,9 @@ public:
 };
 
 class t_observation_serializer: public t_observation_sink {
+protected:
+  inline t_observation_serializer(){}
+
 public:
   DEFINE_BOOST_SHARED_PTRS(t_observation_serializer);
 
@@ -40,12 +43,15 @@ public:
   virtual bool operator << (const t_transaction_observation::t_ptr & obs) = 0;
   
   virtual t_ptr array() = 0;
-  virtual inline ~t_observation_serializer(){};
+  inline virtual ~t_observation_serializer(){}
   
   virtual void close() = 0;
 };
 
 class t_construct_serializer: public t_construct_sink {
+protected:
+  inline t_construct_serializer(){}
+
 public:
   DEFINE_BOOST_SHARED_PTRS(t_construct_serializer);
 

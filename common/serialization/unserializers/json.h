@@ -19,9 +19,12 @@ public:
 
 private:
   
-  void read_probe(const boost::property_tree::ptree & tree);
-  void read_oracle(const boost::property_tree::ptree & tree);
-  void read_transaction(const boost::property_tree::ptree & tree);
+  void read_probe(const boost::property_tree::ptree & tree,
+                  t_observation_sink::t_ptr sink);
+  void read_oracle(const boost::property_tree::ptree & tree,
+                   t_observation_sink::t_ptr sink);
+  void read_transaction(const boost::property_tree::ptree & tree,
+                        t_observation_sink::t_ptr sink);
   
   t_observation_sink::t_ptr sink;
 };

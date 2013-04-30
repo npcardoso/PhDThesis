@@ -26,8 +26,10 @@ bool t_transaction_factory::operator << (const t_transaction_observation::t_ptr 
 
       tmp->time_end = obs->time_end;
       tmp->c_id_end = obs->c_id_end;
+
       if(sink && !num_active()) // Forward
         return (*sink) << tmp;
+      return false;
   }
   
   return true;

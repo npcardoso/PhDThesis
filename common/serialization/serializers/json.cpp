@@ -108,14 +108,14 @@ bool t_json_observation_serializer::operator << (const t_probe_observation::t_pt
     t_count start = 0;
     t_count len = obs->state->offset_end[0];
     tmp2.put(out);
-    string(base64_encode(obs->state->data, len, true));
-    for(t_id i = 0; i < obs->state->n_vars - 1; i++) {
+    string(base64_encode(obs->state->data, len, false));
+    for(t_id i = 1; i < obs->state->n_vars; i++) {
       tmp2.put(out);
+      start = obs->state->offset_end[i - 1];
       len = obs->state->offset_end[i] - start;
-      start = obs->state->offset_end[i];
-      string(base64_encode(obs->state->data + start, len, true));
-    tmp2.close(out);
+      string(base64_encode(obs->state->data + start, len, false));
     }
+    tmp2.close(out);
   }
   tmp.close(out);
   return true;

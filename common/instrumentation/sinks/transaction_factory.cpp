@@ -8,26 +8,29 @@ size_t t_transaction_factory::num_active() const {
 }
 
 bool t_transaction_factory::operator << (const t_transaction_observation::t_ptr & obs) {
+  if((!obs->c_id_start) && (!obs->c_id_end))
+    return false;
+
   if(obs->c_id_start) { // Push action
     if(num_active())
       transactions.top()->observation(obs);
     transactions.push(obs);
-    return true;
-  }
-
-  t_transaction_observation::t_ptr tmp = obs;
-
-  if(num_active()) { // Pop action
-    tmp = transactions.top();
-    transactions.pop();   
-
-    tmp->time_end = obs->time_end;
-    tmp->c_id_end = obs->c_id_end;
   }
   
-  if(sink && !num_active()) // Forward
-    return (*sink) << tmp;
-  return false;
+  if(!num_active()) 
+    return false;
+
+  if(obs->c_id_end) { // Pop action
+      t_transaction_observation::t_ptr tmp = transactions.top();
+      transactions.pop();   
+
+      tmp->time_end = obs->time_end;
+      tmp->c_id_end = obs->c_id_end;
+      if(sink && !num_active()) // Forward
+        return (*sink) << tmp;
+  }
+  
+  return true;
 }
 
 bool t_transaction_factory::operator << (const t_oracle_observation::t_ptr & obs) {

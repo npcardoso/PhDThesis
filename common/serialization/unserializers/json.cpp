@@ -13,15 +13,9 @@ t_json_observation_unserializer::t_json_observation_unserializer(t_observation_s
   
 void t_json_observation_unserializer::operator()(const boost::property_tree::ptree & tree,
                                                  bool skip_errors){
-
   t_observation_sink::t_ptr transaction_factory(new t_transaction_factory(sink));
-    boost::optional<t_construct_id> c_id;
-    BOOST_FOREACH(const ptree::value_type &v, tree){
-      if (v.first.size()) {
-        //TODO: Raise exception
-      }
-      read_transaction(v.second, transaction_factory);
-    }
+  BOOST_FOREACH(const ptree::value_type &v, tree)
+    read_transaction(v.second, transaction_factory);
 }
 
 
@@ -56,7 +50,6 @@ void t_json_observation_unserializer::read_transaction(const boost::property_tre
                                                        t_observation_sink::t_ptr sink) {
   const ptree & tmp_tree = tree.get_child("cid");
   if(tmp_tree.size() != 2){
-    //#TODO Raise
     return;
   }
   t_construct_id start = tmp_tree.begin()->second.get_value<t_construct_id>(), 
@@ -75,25 +68,16 @@ void t_json_observation_unserializer::read_transaction(const boost::property_tre
   
   if(boost::optional<const ptree &> sub_transactions = tree.get_child_optional("tr")) {
     BOOST_FOREACH(const ptree::value_type &v, *sub_transactions){
-      if (v.first.size()) {
-        //TODO: Raise exception
-      }
       read_transaction(v.second, sink);
     }
   }
   if(boost::optional<const ptree &> oracles = tree.get_child_optional("o")) {
     BOOST_FOREACH(const ptree::value_type &v, *oracles){
-      if (v.first.size()) {
-        //TODO: Raise exception
-      }
       read_oracle(v.second, sink);
     }
   }
   if(boost::optional<const ptree &> probes = tree.get_child_optional("p")) {
     BOOST_FOREACH(const ptree::value_type &v, *probes){
-      if (v.first.size()) {
-        //TODO: Raise exception
-      }
       read_probe(v.second, sink);
     }
   }

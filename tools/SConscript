@@ -11,18 +11,11 @@ env.Append(
 	CPPPATH = Dir(env['common_dir']),
 	LINKFLAGS = "-lpthread -lboost_system -lboost_thread")
 
-target  = "proxy"
 
 wildcards = ""
 headers = []
 common_headers = []
-sources = []
+sources = env['common_objects'] + [ File("proxy.cpp")]
 
-for i in range(4):
-  wildcards = join(wildcards, "*")
-  headers += env.Glob(wildcards + "h")
-  sources += env.Glob(wildcards + "cpp")
-sources += env['common_objects']
-
-obj = env.Program(target = target, source = sources)
-env.Default(env.Install(env['bin_dir'], obj))
+proxy = env.Program(target = "proxy", source = sources)
+env.Default(env.Install(env['bin_dir'], proxy))

@@ -3,7 +3,6 @@
 
 #include "threads.h"
 
-#include "instrumentation/sinks/tcp.h"
 
 extern t_thread_tracker * tracker;
 extern t_construct_id construct_id;
@@ -13,7 +12,6 @@ template <class CTR>
 void register_construct(CTR ctr) {
   mutex.lock();
   ctr->c_id = ++construct_id;
-//  (*tcp_sink()) << ctr;
   mutex.unlock();
 }
 

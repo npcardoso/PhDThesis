@@ -22,6 +22,7 @@ for i in range(4):
   wildcards = join(wildcards, "*")
   headers += env.Glob(wildcards + "h")
   sources += env.Glob(wildcards + "cpp")
+sources += env['common_objects']
 
 obj = env.Program(target = target, source = sources)
 env.Default(env.Install(env['bin_dir'], obj))

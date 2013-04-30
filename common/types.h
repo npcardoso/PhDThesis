@@ -1,5 +1,5 @@
-#ifndef __INSTR_TYPES_H__
-#define __INSTR_TYPES_H__
+#ifndef __TYPES_H__
+#define __TYPES_H__
 
 #include <pthread.h>
 #include <sys/types.h>

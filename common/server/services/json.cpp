@@ -1,18 +1,11 @@
-#include "json.h"
+#include "server/services/json.h"
 
 #include "utils/debug.h"
 
 #include <boost/property_tree/json_parser.hpp>
 
-typedef unsigned int t_count;
 
 using boost::property_tree::ptree;
-
-void t_json_debug::operator ()(std::istream & in,
-                               std::ostream & out,
-                               const boost::property_tree::ptree & pt) {
-  boost::property_tree::write_json(out, pt);
-}
 
 void json_copy_object(std::istream & in, std::ostream & out) {
   bool in_str = false;
@@ -47,10 +40,10 @@ void json_copy_object(std::istream & in, std::ostream & out) {
   }
 }
 
-t_json_parser_service::t_json_parser_service(const t_json_service::t_ptr & srv):srv(srv) {
+t_json_adapter_service::t_json_adapter_service(const t_json_service::t_ptr & srv):srv(srv) {
 }
 
-void t_json_parser_service::operator ()(std::istream & in,
+void t_json_adapter_service::operator ()(std::istream & in,
                                         std::ostream & out) {
 
   while(in) {

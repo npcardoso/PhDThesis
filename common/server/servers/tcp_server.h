@@ -1,7 +1,7 @@
-#ifndef __TCP_SERVER_H__
-#define __TCP_SERVER_H__
+#ifndef __SERVER_SERVERS_TCP_SERVER_H__
+#define __SERVER_SERVERS_TCP_SERVER_H__
 
-#include "service.h"
+#include "server/service.h"
 
 #include <boost/asio.hpp>
 

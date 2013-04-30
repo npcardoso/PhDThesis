@@ -19,6 +19,7 @@ public:
 
 public:
   t_state();
+  t_state(const t_state & s);
   ~t_state();
 
   void read_variable(const void * var,
@@ -43,14 +44,21 @@ public:
 
   t_state * state;
 
+  t_probe_observation();
   t_probe_observation(t_time_interval time,
                       t_construct_id c_id);
+  t_probe_observation(const t_probe_observation & p);
+
   ~t_probe_observation();
 
   void read_variable(const void * var,
                      size_t bytes);
 
   virtual size_t size() const;
+
+  void clear_state();
+
+  t_probe_observation & operator = (const t_probe_observation & p);
 };
 
 #endif

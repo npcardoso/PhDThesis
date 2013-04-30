@@ -20,6 +20,7 @@ public:
   t_time_interval time;
   t_construct_id c_id; 
 
+  t_observation_single();
   t_observation_single(t_time_interval time, 
                        t_construct_id c_id);
 
@@ -32,9 +33,9 @@ public:
   t_time_interval time_start, time_end;
   t_construct_id c_id_start, c_id_end; 
 
+  t_observation_window();
   t_observation_window(t_time_interval time, 
                        t_construct_id c_id);
-  
   t_observation_window(t_time_interval time_start, 
                        t_construct_id c_id_start,
                        t_time_interval time_end, 

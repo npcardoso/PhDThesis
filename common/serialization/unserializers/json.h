@@ -1,35 +1,29 @@
 #ifndef __COMMON_SERIALIZATION_UNSERIALIZERS_JSON_H__
 #define __COMMON_SERIALIZATION_UNSERIALIZERS_JSON_H__
 
-#include "serialization/unserializer.h"
+#include "instrumentation/sinks/observation.h"
 
 #include <boost/property_tree/ptree.hpp>
 
-class t_json_observation_unserializer: public t_observation_unserializer {
+
+class t_json_observation_unserializer {
 public:
   DEFINE_BOOST_SHARED_PTRS(t_json_observation_unserializer);
   
-  t_json_observation_unserializer(const boost::property_tree::ptree & tree);
-
-  virtual bool operator >> (t_transaction_observation::t_ptr & obs);
-  virtual bool operator >> (t_oracle_observation::t_ptr & obs);
-  virtual bool operator >> (t_probe_observation::t_ptr & obs);
-
-  virtual bool ended() const;
-  inline virtual bool error() const {
-    return error_;
-  }
+  t_json_observation_unserializer(t_observation_sink::t_ptr sink);
   
-//  virtual ~t_json_observation_unserializer();
+  void operator()(const boost::property_tree::ptree & tree,
+                  bool skip_errors = true);
+
+  
 
 private:
-  bool next();
-  bool next_probe(const boost::property_tree::ptree & tree,
-                  t_probe_observation & probe);
-  bool is_array;
-  bool error_;
-  const boost::property_tree::ptree & tree;
-  boost::property_tree::ptree::const_iterator iter;
+  
+  void read_probe(const boost::property_tree::ptree & tree);
+  void read_oracle(const boost::property_tree::ptree & tree);
+  void read_transaction(const boost::property_tree::ptree & tree);
+  
+  t_observation_sink::t_ptr sink;
 };
 
 #endif

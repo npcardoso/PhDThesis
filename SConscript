@@ -4,8 +4,8 @@ Import('env')
 env = env.Clone()
 
 env.SConscript('common/SConscript')
-env.SConscript('llvminstrument/SConscript')
-env.SConscript('libinstrument/SConscript')
+env.SConscript('instrumentation/llvm/SConscript')
+env.SConscript('instrumentation/lib/SConscript')
 env.SConscript('tools/SConscript')
 env.SConscript('sandbox/SConscript')
 

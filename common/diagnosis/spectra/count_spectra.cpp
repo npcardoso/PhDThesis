@@ -8,7 +8,7 @@
 
 void t_count_spectra::set_element_count(t_count component_count, 
                                         t_count transaction_count) {
-  t_activity_ptr old_activity(activity.release());
+  t_activity_ptr old_activity(activity);
 
   t_component_id max_component = std::min(component_count, get_component_count());
   t_component_id max_transaction = std::min(transaction_count, get_transaction_count());

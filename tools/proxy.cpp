@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
   try {
     boost::asio::io_service io_service;
     
-    t_json_service::t_ptr json_service(new t_json_sink_adapter_service());
+    t_json_service::t_ptr json_service(new t_json_process());
     t_service::t_ptr service(new t_json_adapter_service(json_service));
     t_service::t_ptr proxy(new t_proxy_service(host, dst_port, service));
 

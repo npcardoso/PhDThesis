@@ -2,12 +2,10 @@
 #define __COUNT_SPECTRA_H__
 
 #include "spectra.h"
-#include "../types.h"
-
-#include <memory>
+#include "types.h"
 
 class t_count_spectra: public t_basic_spectra {
-  typedef std::unique_ptr<t_count[]> t_activity_ptr;
+  typedef boost::shared_ptr<t_count[]> t_activity_ptr;
   t_activity_ptr activity;
 
 public:

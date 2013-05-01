@@ -1,7 +1,6 @@
 #include "similarity.h"
 
 #include "../spectra/spectra_iterator.h"
-#include "../utils/utils.h"
 
 #include <cstring>
 #include <cmath>

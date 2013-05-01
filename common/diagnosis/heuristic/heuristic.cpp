@@ -26,7 +26,7 @@ void t_heuristic::operator()(const t_spectra & spectra,
     return;
 
   if(filters.size()) {
-    typename t_filters::const_iterator it = filters.begin();
+    t_filters::const_iterator it = filters.begin();
     ret[0] = t_rank_element(0, 0);
 
     while(it != filters.end())
@@ -43,7 +43,7 @@ void t_heuristic::operator()(const t_spectra & spectra,
 }
 
 std::ostream & t_heuristic::print(std::ostream & out) const {
-  typename t_filters::const_iterator it = filters.begin();
+  t_filters::const_iterator it = filters.begin();
   out << "t_heuristic(";
   if(it != filters.end())
     out << **(it++);

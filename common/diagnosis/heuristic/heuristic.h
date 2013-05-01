@@ -4,9 +4,8 @@
 #include "../spectra/spectra.h"
 #include "../spectra/spectra_filter.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <vector>
+
 
 class t_heuristic_filter {
 public:

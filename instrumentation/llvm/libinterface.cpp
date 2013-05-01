@@ -2,6 +2,7 @@
 #include <llvm/Constants.h>
 #include <llvm/IRBuilder.h>
 #include <llvm/Type.h>
+#include "types.h"
 
 using namespace llvm;
 
@@ -63,7 +64,7 @@ void LibInterface::initRegisterAll() {
 void LibInterface::initRegisterProbe() {
   register_probe =
     cast<Function>(M.getOrInsertFunction("_instr_probe_register",
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          NULL));
 }
 
@@ -71,7 +72,7 @@ void LibInterface::initRegisterProbeLocation() {
   register_probe_location =
     cast<Function>(M.getOrInsertFunction("_instr_probe_register_location",
                                          Type::getVoidTy(M.getContext()),
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          Type::getInt8PtrTy(M.getContext()),
                                          NULL));
 }
@@ -80,7 +81,7 @@ void LibInterface::initRegisterProbeName() {
   register_probe_name =
     cast<Function>(M.getOrInsertFunction("_instr_probe_register_name",
                                          Type::getVoidTy(M.getContext()),
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          Type::getInt8PtrTy(M.getContext()),
                                          NULL));
 }
@@ -88,7 +89,7 @@ void LibInterface::initRegisterProbeName() {
 void LibInterface::initRegisterTransactionGate() {
   register_transaction_gate =
     cast<Function>(M.getOrInsertFunction("_instr_transaction_register",
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          NULL));
 }
 
@@ -96,7 +97,7 @@ void LibInterface::initRegisterTransactionGateLocation() {
   register_transaction_gate_location =
     cast<Function>(M.getOrInsertFunction("_instr_transaction_register_location",
                                          Type::getVoidTy(M.getContext()),
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          Type::getInt8PtrTy(M.getContext()),
                                          NULL));
 }
@@ -105,7 +106,7 @@ void LibInterface::initRegisterTransactionGateName() {
   register_transaction_gate_name =
     cast<Function>(M.getOrInsertFunction("_instr_transaction_register_name",
                                          Type::getVoidTy(M.getContext()),
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          Type::getInt8PtrTy(M.getContext()),
                                          NULL));
 }
@@ -113,7 +114,7 @@ void LibInterface::initRegisterTransactionGateName() {
 void LibInterface::initRegisterOracle() {
   register_oracle =
     cast<Function>(M.getOrInsertFunction("_instr_oracle_register",
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          NULL));
 }
 
@@ -121,7 +122,7 @@ void LibInterface::initRegisterOracleLocation() {
   register_oracle_location =
     cast<Function>(M.getOrInsertFunction("_instr_oracle_register_location",
                                          Type::getVoidTy(M.getContext()),
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          Type::getInt8PtrTy(M.getContext()),
                                          NULL));
 }
@@ -130,7 +131,7 @@ void LibInterface::initRegisterOracleName() {
   register_oracle_name =
     cast<Function>(M.getOrInsertFunction("_instr_oracle_register_name",
                                          Type::getVoidTy(M.getContext()),
-                                         Type::getInt64Ty(M.getContext()),
+                                         Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3),
                                          Type::getInt8PtrTy(M.getContext()),
                                          NULL));
 }

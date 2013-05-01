@@ -1,10 +1,10 @@
 #ifndef __DENSITY_H__
 #define __DENSITY_H__
 
-#include "../types.h"
+#include "types.h"
+typedef t_state
 
-#include <boost/shared_ptr.hpp>
-
+namespace diagnosis {
 class t_density_model {
 public:
   virtual t_density operator ()(const t_observation & obs) const = 0;
@@ -32,5 +32,6 @@ public:
 
   virtual t_density operator ()(const t_observation & obs) const;
 };
+}
 
 #endif

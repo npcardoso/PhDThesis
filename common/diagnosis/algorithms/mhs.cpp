@@ -1,5 +1,7 @@
 #include "mhs.h"
 
+#include <list>
+
 t_mhs::t_mhs(const t_heuristic & heuristic) {
   max_candidate_size = 0;
   max_candidates = 0;
@@ -12,7 +14,7 @@ void t_mhs::set_heuristic(t_count start_level, const t_heuristic & heuristic) {
 }
 
 const t_heuristic & t_mhs::get_heuristic(t_count level) const {
-  typename t_heuristics::const_iterator it = heuristics.upper_bound(level);
+  t_heuristics::const_iterator it = heuristics.upper_bound(level);
   it--;
   return it->second;
 }
@@ -90,7 +92,7 @@ void t_mhs::calculate(const t_spectra & spectra,
       return;
 
     /* Time cutoff */
-    if(max_time > 0 && get_time_interval() - start_time > max_time)
+    if(max_time > 0 && time_interval() - start_time > max_time)
       return;
 
     /* Heuristic cutoff */

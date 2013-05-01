@@ -96,14 +96,14 @@ bool Instrument::PrepareInstrumentionPass::registerConstruct(Module & M,
                                                             CallInst & I,
                                                             std::string var_prefix,
                                                             size_t id,
-                                                            Function * reg_fun, Function * reg_location_fun) {
+                                                            Function * reg_fun,
+                                                            Function * reg_location_fun) {
 
   char buf[1024];
   sprintf(buf, "%lu", id);
 
   std::string id_var_name = var_prefix + buf;
   
-  errs() << "Registering construct " << id_var_name << "\n";
 
   Type * operand_type = I.getArgOperand(0)->getType();
   GlobalVariable* id_holder =
@@ -113,6 +113,9 @@ bool Instrument::PrepareInstrumentionPass::registerConstruct(Module & M,
                        GlobalValue::PrivateLinkage, //Linkage
                        ConstantInt::getSigned(operand_type, 0), //Default Value
                        id_var_name);
+
+  errs() << "Registering construct ";
+  id_holder->dump();
 
   BasicBlock::iterator & it = interface->getRegisterAllIterator();
 

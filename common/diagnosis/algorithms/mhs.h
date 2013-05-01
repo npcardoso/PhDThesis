@@ -6,7 +6,7 @@
 #include "../spectra/spectra_filter.h"
 #include "../spectra/spectra_iterator.h"
 #include "../structs/trie.h"
-#include "../utils/utils.h"
+#include "utils/time.h"
 
 #include <map>
 
@@ -32,7 +32,7 @@ public:
                  t_trie & D,
                  const t_spectra_filter * filter,
                  t_candidate & candidate,
-                 t_time_interval start_time=get_time_interval()) const;
+                 t_time_interval start_time=time_interval()) const;
 
   void update(const t_spectra & spectra,
               t_trie & D,

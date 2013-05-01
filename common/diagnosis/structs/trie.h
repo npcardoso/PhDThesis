@@ -2,7 +2,7 @@
 #define __TRIE_H__
 
 #include "../candidate.h"
-#include "../types.h"
+#include "types.h"
 
 #include <map>
 #include <boost/lexical_cast.hpp>

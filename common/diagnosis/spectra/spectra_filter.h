@@ -1,7 +1,7 @@
 #ifndef __SPECTRA_FILTER_H__
 #define __SPECTRA_FILTER_H__
 
-#include "../types.h"
+#include "types.h"
 
 #include <cassert>
 #include <iostream>

@@ -1,22 +1,13 @@
-#include "utils/debug.h"
-
 #include "serialization/unserializers/json.h"
 #include "serialization/serializers/json.h"
-#include <boost/property_tree/json_parser.hpp>
 
 #include "client/tcp.h"
 #include "server/servers/tcp_server.h"
 #include "server/services/threaded.h"
 #include "server/services/json.h"
 
-#include <boost/asio.hpp>
-
-using boost::asio::ip::tcp;
-class t_json_sink_adapter_service: public t_json_service {
+class t_json_process: public t_json_service {
 public:
-//  t_json_sink_adapter_service(const t_observation_sink::t_ptr sink):sink(sink) {
-//  }
-
   virtual void operator ()(std::istream & in,
                            std::ostream & out,
                            const boost::property_tree::ptree & pt){
@@ -24,9 +15,6 @@ public:
     t_json_observation_unserializer unserializer(sink);
     unserializer(pt);
   }
-
-private:
-  t_observation_sink::t_ptr sink;
 };
 
 class t_proxy_service: public t_service {
@@ -34,7 +22,6 @@ public:
   t_proxy_service(std::string host,
                   std::string port,
                   t_service::t_ptr srv): client(host, port), srv(srv) {
-  
   }
   virtual void operator ()(std::istream & in,
                            std::ostream & out) {
@@ -60,7 +47,6 @@ int main(int argc, char **argv) {
     t_service::t_ptr service(new t_json_adapter_service(json_service));
     t_service::t_ptr proxy(new t_proxy_service(host, dst_port, service));
 
-//    t_threaded_service threaded_service(service);
     tcp_server(io_service, src_port, *proxy);
     io_service.run();
   }

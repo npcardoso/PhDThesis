@@ -1,0 +1,28 @@
+import os
+
+def SymLink(target, source, env):
+  os.symlink(os.path.abspath(str(source[0])), os.path.abspath(str(target[0])))
+
+
+Import("config")
+
+root = Dir('#').abspath
+
+target  = config['build_name']
+sources = Glob("*cpp") + Glob("*/*cpp") + Glob("*/*/*cpp")
+
+
+env = Environment(
+	CCFLAGS = "%s %s -std=c++0x" % (config['mpi_cflags'], config['cflags']),
+	LINKFLAGS = "%s %s -std=c++0x" % (config['mpi_lflags'], config['lflags']))
+
+env['ENV']['PATH'] = os.environ['PATH']
+env['ENV']['TERM'] = os.environ['TERM']
+env["CXX"] = config['c++']
+
+obj = env.Program(target = target, source = sources)
+obj = env.Command(root + "/bin/" + config['target'], obj, SymLink)
+obj = env.Alias(config['target'], obj) 
+
+if config['default']:
+  env.Default(obj)

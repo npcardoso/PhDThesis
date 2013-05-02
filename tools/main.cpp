@@ -32,14 +32,6 @@ int main(int argc, char ** argv){
       
       ret = main_trie(options);
     }
-    else if(strcmp("iscandidate", argv[1]) == 0) { // Trie mode
-      t_iscandidate_options options(std::string(argv[0]) + " iscandidate");
-      
-      if(options.configure(argc, argv))
-        return 1;
-      
-      ret = main_iscandidate(options);
-    }
     else if(strcmp("mhs", argv[1]) == 0) { // MHS mode
       t_mhs_options options(std::string(argv[0]) + " mhs");
       

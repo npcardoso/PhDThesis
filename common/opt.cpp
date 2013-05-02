@@ -1,6 +1,7 @@
 #include "opt.h"
 
-#include "../types.h"
+#include "types.h"
+#include <cstring>
 
 t_opt::t_opt(char short_opt, 
              const char * long_opt,
@@ -36,12 +37,17 @@ struct option * t_options::long_opts(int * long_ptr) const {
   t_opts::const_iterator it = opts.begin();
 
   while(it != opts.end()) {
-    if(it->long_opt)
-      tmp[i++] = {it->long_opt, it->arg, 0, it->short_opt};
+    if(it->long_opt) {
+      tmp[i].name = it->long_opt;
+      tmp[i].has_arg = it->arg;
+      tmp[i].flag =  0;
+      tmp[i].val = it->short_opt;
+      i++;
+    }
     it++;
   }
   
-  tmp[i] = {0,0,0,0};
+  memset(tmp + i, 0, sizeof(struct option));
   return tmp;
 }
 

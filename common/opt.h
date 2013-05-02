@@ -1,6 +1,7 @@
 #ifndef __COMMON_OPT_H__
 #define __COMMON_OPT_H__
 
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <sstream>

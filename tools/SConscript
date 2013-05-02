@@ -1,21 +1,5 @@
-import os
-import SCons
-from os.path import join
-from SCons.Scanner.C import CScanner
-
 Import('env')
 env = env.Clone()
-env.Tool('RecursiveScanner')
-env.Append(
-	CCFLAGS = " -Wno-c++11-extensions",
-	CPPPATH = Dir(env['common_dir']),
-	LINKFLAGS = "-lpthread -lboost_system -lboost_thread")
 
-
-wildcards = ""
-headers = []
-common_headers = []
-sources = env['common_objects'] + [ File("proxy.cpp")]
-
-proxy = env.Program(target = "proxy", source = sources)
-env.Default(env.Install(env['bin_dir'], proxy))
+env.SConscript('iscandidate/SConscript')
+env.SConscript('proxy/SConscript')

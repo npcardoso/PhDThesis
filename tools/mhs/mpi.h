@@ -1,7 +1,7 @@
 #ifndef __MPI_H__
 #define __MPI_H__
 
-#include "../../structs/trie.h"
+#include "diagnosis/structs/trie.h"
 #include "stats.h"
 
 #include <iostream>

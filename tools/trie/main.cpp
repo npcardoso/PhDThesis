@@ -1,11 +1,15 @@
-#include "main.h"
-#include "../../structs/trie.h"
-#include "../../types.h"
+#include "configure.h"
+#include "diagnosis/structs/trie.h"
+#include "types.h"
 
 
-int main_trie(const t_trie_options & options) {
+int main(int argc, char ** argv){
   t_trie trie;
-    
+  t_trie_options options(argv[0]);
+      
+  if(options.configure(argc, argv))
+    return 1;
+      
   options.trie_input() >> trie;
   
   while(true){

@@ -1,12 +1,12 @@
 #ifndef __CONFIGURE_MHS_H__
 #define __CONFIGURE_MHS_H__
 
-#include "../../algorithms/mhs.h"
-#include "../opt.h"
-#include "../../heuristic/parallelization.h"
-#include "../../heuristic/similarity.h"
-#include "../../heuristic/sort.h"
-#include "../../types.h"
+#include "diagnosis/algorithms/mhs.h"
+#include "opt.h"
+#include "diagnosis/heuristic/parallelization.h"
+#include "diagnosis/heuristic/similarity.h"
+#include "diagnosis/heuristic/sort.h"
+#include "types.h"
 
 #define MPI_BUFFER (1 << 16)
 

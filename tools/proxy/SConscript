@@ -8,5 +8,5 @@ env.Append(
 
 sources = env['common_objects'] + [ Glob("*cpp")]
 
-obj = env.Program(target = "iscandidate", source = sources)
+obj = env.Program(target = "proxy", source = sources)
 env.Default(env.Install(env['bin_dir'], obj))

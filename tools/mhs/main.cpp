@@ -1,15 +1,19 @@
-#ifndef __MAIN_MHS_H__
-#define __MAIN_MHS_H__
 #include "configure.h"
+#include "diagnosis/spectra/count_spectra.h"
 #include "mpi.h"
+#include "opt.h"
 #include "stats.h"
+#include "utils/time.h"
 
-#include "../opt.h"
-#include "../../spectra/count_spectra.h"
 
 #include <mpi.h>
 
-int main_mhs(const t_mhs_options & options) {
+int main(int argc, char ** argv){
+  t_mhs_options options(argv[0]);
+      
+  if(options.configure(argc, argv))
+    return 1;
+      
   t_count_spectra spectra;
   t_trie D;
   t_mhs  mhs(options.mhs);
@@ -29,7 +33,7 @@ int main_mhs(const t_mhs_options & options) {
   
   options.input() >> spectra;
 
-  t_time_interval time_begin = get_time_interval();
+  t_time_interval time_begin = time_interval();
 
   if(ntasks > 1){
     t_count mpi_level = 1;
@@ -51,22 +55,22 @@ int main_mhs(const t_mhs_options & options) {
     mhs.set_heuristic(mpi_level, heuristic);
   }
 
-  t_time_interval time = get_time_interval();
+  t_time_interval time = time_interval();
 
   mhs.calculate(spectra, D);
   
   stats.items_generated = D.size();
-  stats.total_calc = (get_time_interval() - time);
-  time = get_time_interval();
+  stats.total_calc = (time_interval() - time);
+  time = time_interval();
 
   if(ntasks > 1){
     mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer, stats);
     
-    stats.total_transfer = (get_time_interval() - time);
-    time = get_time_interval();
+    stats.total_transfer = (time_interval() - time);
+    time = time_interval();
   }  
 
-  stats.runtime = (get_time_interval() - time_begin);
+  stats.runtime = (time_interval() - time_begin);
   
   if(rank == 0) {
     options.output() << D;
@@ -89,5 +93,3 @@ int main_mhs(const t_mhs_options & options) {
 
   return 0;
 }
-
-#endif

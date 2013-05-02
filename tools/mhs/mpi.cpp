@@ -1,7 +1,7 @@
 #include "mpi.h"
 
-#include "../../types.h"
-#include "../../utils/utils.h"
+#include "types.h"
+#include "utils/time.h"
 
 #include <mpi.h>
 
@@ -9,6 +9,7 @@
 
 #include <list>
 #include <vector>
+
 
 t_count send_candidates(const t_trie & trie,
                         t_count chunk_size,
@@ -139,7 +140,7 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, t_sta
   t_candidates candidate_pool;
 
 
-  t_time_interval time_begin = get_time_interval();
+  t_time_interval time_begin = time_interval();
   if(hierarchical){
     t_count i = 1;
     while(i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
@@ -149,8 +150,8 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, t_sta
       i++;
     }
 
-    stats.total_comm += get_time_interval() - time_begin;
-    time_begin = get_time_interval();
+    stats.total_comm += time_interval() - time_begin;
+    time_begin = time_interval();
 
     if (candidate_pool.size()) {
       candidate_pool.add(trie);
@@ -158,35 +159,35 @@ void mpi_reduce_trie(t_trie & trie, bool hierarchical, size_t buffer_size, t_sta
       candidate_pool.trie(trie);
     }
 
-    stats.total_merge += get_time_interval() - time_begin;
-    time_begin = get_time_interval();
+    stats.total_merge += time_interval() - time_begin;
+    time_begin = time_interval();
 
     if(rank)
       stats.items_sent += send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
 
-    stats.total_comm += get_time_interval() - time_begin;
-    time_begin = get_time_interval();
+    stats.total_comm += time_interval() - time_begin;
+    time_begin = time_interval();
   }
   else {
     if(rank) {
       stats.items_sent += send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
 
-      stats.total_comm += get_time_interval() - time_begin;
-      time_begin = get_time_interval();
+      stats.total_comm += time_interval() - time_begin;
+      time_begin = time_interval();
     }
     else {
       for(t_count i = 1; i < ntasks; i++)
         stats.items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
 
-      stats.total_comm += get_time_interval() - time_begin;
-      time_begin = get_time_interval();
+      stats.total_comm += time_interval() - time_begin;
+      time_begin = time_interval();
 
       candidate_pool.add(trie);
       trie.clear();
       candidate_pool.trie(trie);
 
-      stats.total_merge += get_time_interval() - time_begin;
-      time_begin = get_time_interval();
+      stats.total_merge += time_interval() - time_begin;
+      time_begin = time_interval();
     }
   }
 }

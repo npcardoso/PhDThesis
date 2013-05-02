@@ -5,8 +5,7 @@ env.Append(
 	CPPPATH = Dir(env['common_dir']),
 	LINKFLAGS = "-lpthread -lboost_system -lboost_thread")
 
-
 sources = env['common_objects'] + [ Glob("*cpp")]
 
-obj = env.Program(target = "iscandidate", source = sources)
+obj = env.Program(target = "trie", source = sources)
 env.Default(env.Install(env['bin_dir'], obj))

@@ -6,6 +6,8 @@
 #include "server/services/threaded.h"
 #include "server/services/json.h"
 
+using namespace instrumentation;
+
 class t_json_process: public t_json_service {
 public:
   virtual void operator ()(std::istream & in,

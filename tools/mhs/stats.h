@@ -2,6 +2,7 @@
 #define __STATS_MHS_H__
 
 #include "types.h"
+#include "utils/time.h"
 #include <iostream>
 
 class t_stats {

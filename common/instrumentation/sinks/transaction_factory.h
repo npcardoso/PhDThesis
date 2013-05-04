@@ -1,7 +1,7 @@
 #ifndef __COMMON_INSTRUMENTATION_SINKS_TRANSACTION_FACTORY_H__
 #define __COMMON_INSTRUMENTATION_SINKS_TRANSACTION_FACTORY_H__
 
-#include "instrumentation/sinks/observation.h"
+#include "instrumentation/sink.h"
 
 #include "types.h"
 
@@ -9,6 +9,8 @@
 #include <stack>
 #include <string>
 
+namespace instrumentation {
+namespace sinks {
 
 class t_transaction_factory: public t_observation_sink {
   typedef std::stack<t_transaction_observation::t_ptr> t_stack;
@@ -28,5 +30,7 @@ public:
 
   virtual bool operator << (const t_probe_observation::t_ptr & obs);
 };
+}
+}
 
 #endif

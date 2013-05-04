@@ -1,5 +1,6 @@
 #include "instrumentation/oracle.h"
 
+namespace instrumentation {
 t_oracle_observation::t_oracle_observation() : t_observation_single(), health(1), confidence(1) {
 }
   
@@ -11,4 +12,5 @@ t_oracle_observation::t_oracle_observation(t_time_interval time,
   
 size_t t_oracle_observation::size() const {
   return sizeof(t_oracle_observation);
+}
 }

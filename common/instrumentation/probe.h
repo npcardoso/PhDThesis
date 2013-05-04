@@ -6,6 +6,7 @@
 #include "instrumentation/construct.h"
 #include "instrumentation/observation.h"
 
+namespace instrumentation {
 class t_probe_construct: public t_construct {
 public:
   DEFINE_BOOST_SHARED_PTRS(t_probe_construct);
@@ -60,5 +61,6 @@ public:
 
   t_probe_observation & operator = (const t_probe_observation & p);
 };
+}
 
 #endif

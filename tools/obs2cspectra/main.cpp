@@ -1,9 +1,6 @@
 #include "utils/debug.h"
 #include <iostream>
 #include <string>
-#include "diagnosis/algorithms/mhs.h"
-#include "diagnosis/heuristic/similarity.h"
-#include "diagnosis/heuristic/sort.h"
 #include "instrumentation/sinks/collector.h"
 #include "converters/observation_spectra.h"
 #include "serialization/unserializers/json.h"
@@ -22,7 +19,6 @@ int main() {
 
     boost::property_tree::ptree tree;
     std::stringstream stream(tmp);
-    std::cout << tmp << std::endl;
     try{
       read_json(stream, tree);
     }
@@ -43,17 +39,7 @@ int main() {
       tr->flatten();
       converter(*tr, res);
     }
-    std::cout << res<<std::endl;
-
-    t_trie D;
-    t_heuristic heuristic;
-    heuristic.push(new heuristics::t_ochiai());
-    heuristic.push(new heuristics::t_sort());
-    t_mhs mhs(heuristic);
-    
-    mhs.calculate(res, D);
-    std::cout << D <<std::endl;
-
+    std::cout << res;
   }
   catch (std::exception& e) {
     std::cerr << e.what() << std::endl;

@@ -1,7 +1,7 @@
 #ifndef __LIBINSTRUMENT_THREADS_H__
 #define __LIBINSTRUMENT_THREADS_H__
 
-#include <instrumentation/sinks/observation.h>
+#include <instrumentation/sink.h>
 
 #include <boost/thread/mutex.hpp>
 #include <pthread.h>
@@ -17,6 +17,8 @@ inline t_thread_id thread_self() {
 
 
 #include "utils/debug.h"
+
+using namespace instrumentation;
 
 class t_thread_tracker {
   typedef t_observation_sink::t_ptr (*t_observation_sink_fun)(void);

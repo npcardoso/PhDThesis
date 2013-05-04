@@ -7,6 +7,8 @@
 
   
 using boost::property_tree::ptree;
+using namespace instrumentation;
+using namespace instrumentation::sinks;
 
 t_json_observation_unserializer::t_json_observation_unserializer(t_observation_sink::t_ptr sink):sink(sink) {
 }

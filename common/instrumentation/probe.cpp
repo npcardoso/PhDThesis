@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 
+namespace instrumentation {
 t_state::t_state() {
   n_vars = 0;
   data = NULL;
@@ -99,4 +100,5 @@ t_probe_observation & t_probe_observation::operator = (const t_probe_observation
   if(state)
     state = new t_state(*state);
   return *this;
+}
 }

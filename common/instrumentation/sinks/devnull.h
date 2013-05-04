@@ -1,9 +1,10 @@
 #ifndef __COMMON_INSTRUMENTATION_SINKS_DEVNULL_H__
 #define __COMMON_INSTRUMENTATION_SINKS_DEVNULL_H__
 
-#include "instrumentation/sinks/construct.h"
-#include "instrumentation/sinks/observation.h"
+#include "instrumentation/sink.h"
 
+namespace instrumentation {
+namespace sinks {
 
 class t_dev_null_sink: public t_observation_sink, public t_construct_sink {
 public:
@@ -34,5 +35,7 @@ public:
     return true;
   }
 };
+}
+}
 
 #endif

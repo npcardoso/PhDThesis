@@ -1,5 +1,8 @@
 #include "instrumentation/sinks/transaction_factory.h"
 
+namespace instrumentation {
+namespace sinks {
+
 t_transaction_factory::t_transaction_factory(t_observation_sink::t_ptr sink):sink(sink){
 }
   
@@ -27,7 +30,7 @@ bool t_transaction_factory::operator << (const t_transaction_observation::t_ptr 
       tmp->time_end = obs->time_end;
       tmp->c_id_end = obs->c_id_end;
 
-      if(sink && !num_active()) // Forward
+      if(sink && !num_active())  // Forward
         return (*sink) << tmp;
       return false;
   }
@@ -55,4 +58,6 @@ bool t_transaction_factory::operator << (const t_probe_observation::t_ptr & obs)
   if(sink) // Forward
     return(*sink) << obs;
   return false;
+}
+}
 }

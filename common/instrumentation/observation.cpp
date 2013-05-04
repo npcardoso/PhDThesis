@@ -1,5 +1,6 @@
 #include "instrumentation/observation.h"
 
+namespace instrumentation {
 t_observation_single::t_observation_single():time(-1), c_id(0){
 }
 
@@ -50,4 +51,5 @@ bool t_observation_window::operator > (const t_time_interval & time) const {
 
 bool t_observation_window::operator < (const t_time_interval & time) const {
   return this->time_end < time;
+}
 }

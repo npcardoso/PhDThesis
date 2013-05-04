@@ -32,9 +32,6 @@ typedef t_count t_ns_count;
 
 typedef float t_heuristic_value;
 
-/* Time */
-
-typedef long double t_time_interval;
 
 /* Statistics */
 

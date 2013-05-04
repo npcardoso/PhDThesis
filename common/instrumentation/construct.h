@@ -7,7 +7,7 @@
 
 #include <map>
 #include <string>
-
+namespace instrumentation {
 class t_construct {
 public:
   typedef std::map<std::string, std::string> t_metadata_storage;
@@ -22,5 +22,5 @@ public:
                         std::string value);
 
 };
-
+}
 #endif

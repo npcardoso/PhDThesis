@@ -6,6 +6,8 @@
 #include <boost/foreach.hpp>
 #include <string>
 
+using namespace instrumentation;
+
 std::ostream & t_json_map::put(std::ostream & out) {
   if(first)
     out << '{';

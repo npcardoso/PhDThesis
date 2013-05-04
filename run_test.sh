@@ -24,5 +24,5 @@ cd $BIN_DIR
 export INSTR_TCP_PORT=12345
 export LD_LIBRARY_PATH=../lib
 
-echo "Starting $EXAMPLE_RUNNER" >&2
+#echo "Starting $EXAMPLE_RUNNER" >&2
 $EXAMPLE_RUNNER $*

@@ -1,4 +1,6 @@
 #include "instrumentation/sinks/thread_safe.h"
+namespace instrumentation {
+namespace sinks {
 
 t_thread_safe_construct_sink::t_thread_safe_construct_sink(t_construct_sink::t_ptr sink): sink(sink) {
 
@@ -30,4 +32,6 @@ bool t_thread_safe_observation_sink::operator << (const t_oracle_observation::t_
 
 bool t_thread_safe_observation_sink::operator << (const t_probe_observation::t_ptr & obs) {
   return protect(obs);
+}
+}
 }

@@ -28,9 +28,12 @@ public:
   virtual void set_element_count(t_count component_count, 
                                  t_count transaction_count);
 
+  t_transaction_id new_transaction();
+
   void hit(t_component_id component,
            t_transaction_id transaction,
-           t_count count = 1) const;
+           bool ignore_unknown_components,
+           t_count count = 1);
   
   virtual std::ostream & print(std::ostream & out, 
                                const t_spectra_filter * filter = NULL) const;

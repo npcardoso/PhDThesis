@@ -6,6 +6,7 @@
 #include "instrumentation/construct.h"
 #include "instrumentation/observation.h"
 
+namespace instrumentation {
 class t_oracle_construct: public t_construct {
 public:
   DEFINE_BOOST_SHARED_PTRS(t_oracle_construct);
@@ -26,5 +27,6 @@ public:
   
   virtual size_t size() const;
 };
+}
 
 #endif

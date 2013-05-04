@@ -3,5 +3,6 @@ env = env.Clone()
 
 env.SConscript('iscandidate/SConscript')
 env.SConscript('mhs/SConscript')
+env.SConscript('obs2cspectra/SConscript')
 env.SConscript('proxy/SConscript')
 env.SConscript('trie/SConscript')

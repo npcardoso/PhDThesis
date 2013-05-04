@@ -8,7 +8,10 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+
 using namespace std;
+using namespace instrumentation;
+using namespace instrumentation::sinks;
 
 t_thread_tracker * tracker;
 

@@ -1,9 +1,10 @@
 #ifndef __COMMON_INSTRUMENTATION_SINKS_THREAD_SAFE_H__
 #define __COMMON_INSTRUMENTATION_SINKS_THREAD_SAFE_H__
 
-#include "instrumentation/sinks/construct.h"
-#include "instrumentation/sinks/observation.h"
+#include "instrumentation/sink.h"
 #include <boost/thread/mutex.hpp>
+namespace instrumentation {
+namespace sinks {
 
 class t_thread_safe_construct_sink: public t_construct_sink {
   boost::mutex mutex;
@@ -43,5 +44,7 @@ public:
   virtual bool operator << (const t_oracle_observation::t_ptr & obs);
   virtual bool operator << (const t_probe_observation::t_ptr & obs);
 };
+}
+}
 
 #endif

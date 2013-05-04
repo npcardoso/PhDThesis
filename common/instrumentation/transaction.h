@@ -11,12 +11,14 @@
 
 #include <list>
 
+namespace instrumentation {
+
 class t_transaction_construct: public t_construct {
 public:
   DEFINE_BOOST_SHARED_PTRS(t_transaction_construct);
 };
 
-struct t_transaction_observation: public t_observation_window {
+class t_transaction_observation: public t_observation_window {
 
 public:
   DEFINE_BOOST_SHARED_PTRS(t_transaction_observation);
@@ -42,6 +44,12 @@ public:
   virtual void observation(const t_probe_observation::t_ptr & obs);
   
   virtual size_t size() const;
+
+  void flatten();
+private:
+  void flatten(t_probes probes,
+               t_oracles & oracles);
 };
+}
 
 #endif

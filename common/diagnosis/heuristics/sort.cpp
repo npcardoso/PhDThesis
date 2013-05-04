@@ -1,4 +1,6 @@
 #include "sort.h"
+
+namespace diagnosis {
 namespace heuristics {
 
 void t_sort::operator()(const t_spectra & spectra, 
@@ -13,4 +15,5 @@ std::ostream & t_sort::print(std::ostream & out) const {
   return out << "t_sort";
 }
 
+}
 }

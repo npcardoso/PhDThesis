@@ -1,11 +1,13 @@
-#ifndef __SPECTRA_FILTER_H__
-#define __SPECTRA_FILTER_H__
+#ifndef __DIAGNOSIS_SPECTRA_FILTER_H__
+#define __DIAGNOSIS_SPECTRA_FILTER_H__
 
 #include "types.h"
 
 #include <cassert>
 #include <iostream>
 #include <vector>
+
+namespace diagnosis {
 
 class t_spectra_filter {
   std::vector<t_component_id> f_component;
@@ -35,4 +37,5 @@ public:
   
 };
 
+}
 #endif

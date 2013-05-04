@@ -1,5 +1,7 @@
 #include "heuristic.h"
 
+namespace diagnosis {
+
 std::ostream & t_heuristic_filter::print(std::ostream & out) const {
   return out << "Not Implemented";
 }
@@ -57,3 +59,4 @@ std::ostream & operator << (std::ostream & out, const t_heuristic & heuristic){
   return heuristic.print(out);
 }
 
+}

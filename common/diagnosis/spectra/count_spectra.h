@@ -1,8 +1,10 @@
 #ifndef __COUNT_SPECTRA_H__
 #define __COUNT_SPECTRA_H__
 
-#include "spectra.h"
+#include "diagnosis/spectra.h"
 #include "types.h"
+
+namespace diagnosis {
 
 class t_count_spectra: public t_basic_spectra {
   typedef boost::shared_ptr<t_count[]> t_activity_ptr;
@@ -39,5 +41,7 @@ public:
                                const t_spectra_filter * filter = NULL) const;
   virtual std::istream & read(std::istream & in);
 };
+
+}
 
 #endif

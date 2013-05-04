@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+namespace diagnosis {
+
 t_spectra_iterator::t_spectra_iterator(t_count max_components, 
                                        t_count max_transactions, 
                                        const t_spectra_filter * filter) {
@@ -85,4 +87,6 @@ void t_spectra_iterator::set_component(t_component_id component) {
   assert(component <= max_components);
   assert(!filter || !filter->is_component(component));
   this->component = component;
+}
+
 }

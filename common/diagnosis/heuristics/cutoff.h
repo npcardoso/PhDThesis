@@ -1,10 +1,11 @@
-#ifndef __HEURISTIC_CUTOFF_H__
-#define __HEURISTIC_CUTOFF_H__
+#ifndef __DIAGNOSIS_HEURISTICS_CUTOFF_H__
+#define __DIAGNOSIS_HEURISTICS_CUTOFF_H__
 
-#include "heuristic.h"
+#include "diagnosis/heuristic.h"
 
 #include <algorithm>
 
+namespace diagnosis {
 namespace heuristics {
 
 class t_cutoff: public t_heuristic_filter {
@@ -21,6 +22,7 @@ public:
   virtual std::ostream & print(std::ostream & out) const;
 };
 
+}
 }
 #endif
 

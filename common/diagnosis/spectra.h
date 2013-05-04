@@ -1,11 +1,12 @@
-#ifndef __SPECTRA_H__
-#define __SPECTRA_H__
+#ifndef __DIAGNOSIS_SPECTRA_H__
+#define __DIAGNOSIS_SPECTRA_H__
 
 #include "spectra_filter.h"
 #include "spectra_iterator.h"
 
-#include "../candidate.h"
+#include "candidate.h"
 #include "exceptions.h"
+#include "rank_element.h"
 #include "types.h"
 
 #include <cassert>
@@ -13,41 +14,12 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
-//TODO: Move elsewhere
-
-class t_rank_element {
-  t_component_id component;
-  t_heuristic_value value;
-public:
-  inline t_rank_element(): 
-    component(0),
-    value(0){
-    }
-  
-  inline t_rank_element(t_component_id component,
-                        t_heuristic_value value):
-    component(component),
-    value(value){
-    }
-  
-  inline t_component_id get_component() const {
-    return component;
-  }
-  
-  inline t_heuristic_value get_value() const {
-    return value;
-  }
-
-  inline bool operator < (const t_rank_element & elem) const {
-    return value > elem.value;
-  }
-
-};
-
-typedef boost::shared_ptr<t_rank_element[]> t_order_buffer;
+namespace diagnosis {
 
 class t_spectra {
 public:
+  typedef boost::shared_ptr<t_rank_element[]> t_order_buffer;
+  
   virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const = 0;
   virtual t_count get_transaction_count(const t_spectra_filter * filter = NULL) const = 0;
   virtual t_count get_component_count(const t_spectra_filter * filter = NULL) const = 0;
@@ -104,4 +76,5 @@ public:
                             bool set=true);
 };
 
+}
 #endif

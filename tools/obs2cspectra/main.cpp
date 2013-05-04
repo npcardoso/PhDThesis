@@ -8,6 +8,7 @@
 #include <boost/foreach.hpp>
 
 #define BUF_SIZE 102400
+using namespace diagnosis;
 using namespace instrumentation;
 using namespace instrumentation::sinks;
 

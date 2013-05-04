@@ -1,8 +1,9 @@
-#ifndef __HEURISTIC_SIMILARITY_H__
-#define __HEURISTIC_SIMILARITY_H__
+#ifndef __DIAGNOSIS_HEURISTICS_SIMILARITY_H__
+#define __DIAGNOSIS_HEURISTICS_SIMILARITY_H__
 
-#include "heuristic.h"
+#include "diagnosis/heuristic.h"
 
+namespace diagnosis {
 namespace heuristics {
 
 class t_similarity: public t_heuristic_filter {
@@ -23,5 +24,6 @@ protected:
   virtual std::ostream & print(std::ostream & out) const;
 };
 
+}
 }
 #endif

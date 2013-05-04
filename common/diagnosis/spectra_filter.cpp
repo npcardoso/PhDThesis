@@ -1,5 +1,7 @@
 #include "spectra_filter.h"
 
+namespace diagnosis {
+
 t_spectra_filter::t_spectra_filter(){
   filtered_component_count = 0;
   filtered_transaction_count = 0;
@@ -90,4 +92,6 @@ void t_spectra_filter::filter_transaction(t_transaction_id transaction) {
   while(i--)
     if(f_transaction[i] == transaction)
       f_transaction[i] = next;
+}
+
 }

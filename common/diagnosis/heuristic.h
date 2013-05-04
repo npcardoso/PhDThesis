@@ -1,11 +1,12 @@
 #ifndef __HEURISTIC_H__
 #define __HEURISTIC_H__
 
-#include "../spectra/spectra.h"
-#include "../spectra/spectra_filter.h"
+#include "diagnosis/spectra.h"
+#include "diagnosis/spectra_filter.h"
 
 #include <vector>
 
+namespace diagnosis {
 
 class t_heuristic_filter {
 public:
@@ -35,6 +36,8 @@ public:
   virtual std::ostream & print(std::ostream & out) const;
 };
 
-std::ostream & operator << (std::ostream & out, const t_heuristic & heuristic);
+}
+
+std::ostream & operator << (std::ostream & out, const diagnosis::t_heuristic & heuristic);
 
 #endif

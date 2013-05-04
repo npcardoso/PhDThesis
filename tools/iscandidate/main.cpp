@@ -4,7 +4,7 @@
 
 
 int main(int argc, char ** argv){
-  t_count_spectra spectra;
+  diagnosis::t_count_spectra spectra;
   t_iscandidate_options options(argv[0]);
       
   if(options.configure(argc, argv))
@@ -13,7 +13,7 @@ int main(int argc, char ** argv){
   
   options.spectra_input() >> spectra;
   while(true){
-    t_candidate c;
+    diagnosis::t_candidate c;
     options.input() >> c;
     if(!c.size())
       break;

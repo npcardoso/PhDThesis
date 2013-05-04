@@ -1,10 +1,11 @@
 #include "count_spectra.h"
 
-#include "spectra_iterator.h"
+#include "diagnosis/spectra_iterator.h"
 
 #include <cstring>
 #include <iomanip>
 
+namespace diagnosis {
 
 void t_count_spectra::set_element_count(t_count component_count, 
                                         t_count transaction_count) {
@@ -120,4 +121,6 @@ std::istream & t_count_spectra::read(std::istream & in) {
   }
 
   return in;
+}
+
 }

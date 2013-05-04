@@ -2,6 +2,7 @@
 
 #include <boost/random/uniform_int_distribution.hpp>
 
+namespace diagnosis {
 namespace heuristics {
 
 t_divide::t_divide(t_count self, 
@@ -57,4 +58,5 @@ std::ostream & t_random_divide::print(std::ostream & out) const {
   return out << "t_random_divide(s:" << self << ", #d:"  << division_count << ")";
 }
 
+}
 }

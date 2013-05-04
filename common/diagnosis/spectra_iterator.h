@@ -1,12 +1,13 @@
-#ifndef __SPECTRA_ITERATOR_H__
-#define __SPECTRA_ITERATOR_H__
+#ifndef __DIAGNOSIS_SPECTRA_ITERATOR_H__
+#define __DIAGNOSIS_SPECTRA_ITERATOR_H__
 
-#include "spectra_filter.h"
+#include "diagnosis/spectra_filter.h"
 
 #include "types.h"
 
 #include <cstdlib>
 
+namespace diagnosis {
 class t_spectra_iterator {
 private:
   t_count max_components;
@@ -43,4 +44,6 @@ public:
   
   void set_component(t_component_id component);
 };
+
+}
 #endif

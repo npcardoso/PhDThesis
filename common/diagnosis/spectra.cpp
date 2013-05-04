@@ -1,5 +1,7 @@
 #include "spectra.h"
 
+namespace diagnosis {
+
 bool t_spectra::is_candidate(const t_candidate & candidate,
                              const t_spectra_filter * filter) const {
 
@@ -24,7 +26,7 @@ bool t_spectra::is_candidate(const t_candidate & candidate,
   return true;
 }
 
-t_order_buffer t_spectra::get_ordering_buffer(const t_spectra_filter * filter) const {
+t_spectra::t_order_buffer t_spectra::get_ordering_buffer(const t_spectra_filter * filter) const {
   return t_order_buffer(new t_rank_element[get_component_count(filter)]);
 }
 
@@ -114,4 +116,6 @@ void t_basic_spectra::error(t_transaction_id transaction,
   assert(transaction <= transaction_count);
 
   errors[transaction - 1] = set;
+}
+
 }

@@ -16,6 +16,6 @@ public:
   }
 
   void operator ()(const instrumentation::t_transaction_observation & tr,
-                   t_count_spectra & spectra);
+                   diagnosis::t_count_spectra & spectra);
 };
 #endif

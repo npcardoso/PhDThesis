@@ -1,10 +1,11 @@
-#ifndef __HEURISTIC_SORT_H__
-#define __HEURISTIC_SORT_H__
+#ifndef __DIAGNOSIS_HEURISTICS_SORT_H__
+#define __DIAGNOSIS_HEURISTICS_SORT_H__
 
-#include "heuristic.h"
+#include "diagnosis/heuristic.h"
 
 #include <algorithm>
 
+namespace diagnosis {
 namespace heuristics {
 
 class t_sort: public t_heuristic_filter {
@@ -16,5 +17,6 @@ public:
   virtual std::ostream & print(std::ostream & out) const;
 };
 
+}
 }
 #endif

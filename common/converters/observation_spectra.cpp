@@ -3,6 +3,7 @@
 #include <boost/foreach.hpp>
 
 using namespace instrumentation;
+using namespace diagnosis;
 
 void t_observations_to_count_spectra::operator ()(const t_transaction_observation & tr,
                                   t_count_spectra & spectra) {

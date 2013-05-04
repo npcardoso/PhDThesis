@@ -1,11 +1,12 @@
-#ifndef __HEURISTIC_PARALLELIZATION_H__
-#define __HEURISTIC_PARALLELIZATION_H__
+#ifndef __DIAGNOSIS_HEURISTICS_PARALLELIZATION_H__
+#define __DIAGNOSIS_HEURISTICS_PARALLELIZATION_H__
 
-#include "heuristic.h"
+#include "diagnosis/heuristic.h"
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
+namespace diagnosis {
 namespace heuristics {
 
 class t_divide: public t_heuristic_filter{
@@ -37,5 +38,6 @@ public:
   virtual std::ostream & print(std::ostream & out) const;
 };
 
+}
 }
 #endif

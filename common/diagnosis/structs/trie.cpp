@@ -2,6 +2,9 @@
 
 #include <cassert>
 
+namespace diagnosis {
+namespace structs {
+
 std::ostream & operator << (std::ostream & out, const t_trie & trie) {
   return trie.print(out);
 }
@@ -180,4 +183,7 @@ const t_candidate * t_trie_iterator::operator->() const {
 const t_candidate & t_trie_iterator::operator*() const {
   assert(level);
   return current;
+}
+
+}
 }

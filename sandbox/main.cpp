@@ -2,8 +2,8 @@
 #include <iostream>
 #include <string>
 #include "diagnosis/algorithms/mhs.h"
-#include "diagnosis/heuristic/similarity.h"
-#include "diagnosis/heuristic/sort.h"
+#include "diagnosis/heuristics/similarity.h"
+#include "diagnosis/heuristics/sort.h"
 #include "instrumentation/sinks/collector.h"
 #include "converters/observation_spectra.h"
 #include "serialization/unserializers/json.h"
@@ -11,6 +11,9 @@
 #include <boost/foreach.hpp>
 
 #define BUF_SIZE 102400
+using namespace diagnosis;
+using namespace diagnosis::algorithms;
+using namespace diagnosis::structs;
 using namespace instrumentation;
 using namespace instrumentation::sinks;
 

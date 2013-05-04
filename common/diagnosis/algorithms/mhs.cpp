@@ -2,6 +2,10 @@
 
 #include <list>
 
+namespace diagnosis {
+namespace algorithms {
+using namespace diagnosis::structs;
+
 t_mhs::t_mhs(const t_heuristic & heuristic) {
   max_candidate_size = 0;
   max_candidates = 0;
@@ -76,7 +80,7 @@ void t_mhs::calculate(const t_spectra & spectra,
 
   /* Ranking */
 
-  t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
+  t_spectra::t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
 
   get_heuristic(candidate.size())(spectra, order_buffer.get(), &tmp_filter);
 
@@ -252,4 +256,6 @@ void t_mhs::strip(t_component_id component,
       filter.filter_transaction(transaction);
   }
   filter.filter_component(component);
+}
+}
 }

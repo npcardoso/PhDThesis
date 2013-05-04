@@ -6,6 +6,8 @@
 #include <iostream>
 #include <set>
 
+namespace diagnosis {
+
 class t_candidate: public std::set<t_component_id> {
 public:
   virtual std::istream & read(std::istream & in);
@@ -19,6 +21,6 @@ inline std::istream & operator >> (std::istream & in, t_candidate & candidate) {
 inline std::ostream & operator << (std::ostream & out, const t_candidate & candidate) {
   return candidate.print(out);
 }
-
+}
 
 #endif

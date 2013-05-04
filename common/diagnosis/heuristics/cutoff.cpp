@@ -1,6 +1,8 @@
 #include "cutoff.h"
 
+namespace diagnosis {
 namespace heuristics {
+
 t_cutoff::t_cutoff(t_heuristic_value value_cutoff, float lambda) {
   this->value_cutoff = value_cutoff;
   this->lambda = lambda;
@@ -28,5 +30,6 @@ void t_cutoff::operator()(const t_spectra & spectra,
 
 std::ostream & t_cutoff::print(std::ostream & out) const {
   return out << "t_cutoff(l:" << lambda << ", v:"  << value_cutoff << ")";
+}
 }
 }

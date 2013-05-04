@@ -1,5 +1,5 @@
 #include "candidate.h"
-
+namespace diagnosis {
 std::istream & t_candidate::read(std::istream & in) {
   t_component_id component;
   while (true) {
@@ -16,4 +16,5 @@ std::ostream & t_candidate::print(std::ostream & out) const {
     while(component != end())
       out << *(component++) << " ";
     return out << "0";
+}
 }

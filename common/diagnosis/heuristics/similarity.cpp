@@ -1,13 +1,13 @@
 #include "similarity.h"
 
-#include "../spectra/spectra_iterator.h"
+#include "diagnosis/spectra_iterator.h"
 
 #include <cstring>
 #include <cmath>
 
 #include <algorithm>
 
-
+namespace diagnosis {
 namespace heuristics {
 
 void t_similarity::operator()(const t_spectra & spectra, 
@@ -45,4 +45,4 @@ std::ostream & t_ochiai::print(std::ostream & out) const {
 }
 
 }
-
+}

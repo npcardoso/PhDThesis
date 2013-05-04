@@ -7,6 +7,10 @@
 #include <map>
 #include <boost/lexical_cast.hpp>
 
+namespace diagnosis {
+namespace structs {
+
+
 class t_trie_iterator;
 
 class t_trie {
@@ -83,5 +87,6 @@ public:
   const t_candidate * operator->() const;
   const t_candidate & operator*() const;
 };
-
+}
+}
 #endif

@@ -10,6 +10,8 @@
 #include <list>
 #include <vector>
 
+using namespace diagnosis;
+using namespace diagnosis::structs;
 
 t_count send_candidates(const t_trie & trie,
                         t_count chunk_size,

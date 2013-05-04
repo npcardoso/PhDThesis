@@ -3,12 +3,14 @@
 
 #include "diagnosis/algorithms/mhs.h"
 #include "opt.h"
-#include "diagnosis/heuristic/parallelization.h"
-#include "diagnosis/heuristic/similarity.h"
-#include "diagnosis/heuristic/sort.h"
+#include "diagnosis/heuristics/parallelization.h"
+#include "diagnosis/heuristics/similarity.h"
+#include "diagnosis/heuristics/sort.h"
 #include "types.h"
 
 #define MPI_BUFFER (1 << 16)
+
+using namespace diagnosis;
 
 class t_mhs_options: public t_options {
 public:
@@ -18,7 +20,7 @@ public:
 
   bool mpi_hierarchical;
 
-  t_mhs mhs;
+  algorithms::t_mhs mhs;
 
   static t_heuristic default_heuristic() {
     t_heuristic heuristic;

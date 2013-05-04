@@ -8,6 +8,8 @@
 
 #include <mpi.h>
 
+using namespace diagnosis;
+
 int main(int argc, char ** argv){
   t_mhs_options options(argv[0]);
       
@@ -15,8 +17,8 @@ int main(int argc, char ** argv){
     return 1;
       
   t_count_spectra spectra;
-  t_trie D;
-  t_mhs  mhs(options.mhs);
+  structs::t_trie D;
+  algorithms::t_mhs  mhs(options.mhs);
   
   /* Initialize MPI */
   MPI_Init(NULL, NULL);

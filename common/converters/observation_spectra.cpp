@@ -5,8 +5,10 @@
 using namespace instrumentation;
 using namespace diagnosis;
 
+namespace converters {
+
 void t_observations_to_count_spectra::operator ()(const t_transaction_observation & tr,
-                                  t_count_spectra & spectra) {
+                                                  t_count_spectra & spectra) {
 
 
   t_transaction_id tid = spectra.new_transaction();
@@ -29,3 +31,4 @@ void t_observations_to_count_spectra::operator ()(const t_transaction_observatio
   }
 }
 
+}

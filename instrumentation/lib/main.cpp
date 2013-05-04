@@ -24,7 +24,7 @@ t_observation_sink::t_ptr cerr_sink() {
 }
 
 t_observation_sink::t_ptr thread_safe_sink() {
-  static t_observation_sink::t_ptr thread_safe_sink(new t_thread_safe_observation_sink(cerr_sink()));
+  static t_observation_sink::t_ptr thread_safe_sink(new t_thread_safe_observation(cerr_sink()));
   return thread_safe_sink;
 }
 

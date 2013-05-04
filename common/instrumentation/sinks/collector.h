@@ -6,9 +6,9 @@
 namespace instrumentation {
 namespace sinks {
 
-class t_observation_collector_sink: public t_observation_sink {
+class t_observation_collector: public t_observation_sink {
 public:
-  DEFINE_BOOST_SHARED_PTRS(t_observation_collector_sink);
+  DEFINE_BOOST_SHARED_PTRS(t_observation_collector);
   
   bool operator << (const t_transaction_observation::t_ptr & obs);
   bool operator << (const t_oracle_observation::t_ptr & obs);

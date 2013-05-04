@@ -2,8 +2,6 @@
 #define __TYPES_H__
 
 //#include <boost/shared_ptr.hpp>
-#include <pthread.h>
-#include <sys/types.h>
 
 typedef double t_health;
 typedef double t_confidence;
@@ -27,11 +25,6 @@ typedef t_id t_observation_id;
 
 typedef unsigned int t_count;
 typedef t_count t_ns_count;
-
-/* Ranking */
-
-typedef float t_heuristic_value;
-
 
 /* Statistics */
 

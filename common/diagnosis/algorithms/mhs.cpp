@@ -80,7 +80,8 @@ void t_mhs::calculate(const t_spectra & spectra,
 
   /* Ranking */
 
-  t_spectra::t_order_buffer order_buffer = spectra.get_ordering_buffer(&tmp_filter);
+  t_heuristic::t_order_buffer order_buffer = t_heuristic::get_ordering_buffer(spectra,
+                                                                              &tmp_filter);
 
   get_heuristic(candidate.size())(spectra, order_buffer.get(), &tmp_filter);
 

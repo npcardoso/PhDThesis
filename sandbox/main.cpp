@@ -34,7 +34,7 @@ int main() {
       std::cerr << e.what() << std::endl;
     }
     
-    t_observation_collector_sink::t_ptr collector(new t_observation_collector_sink());
+    t_observation_collector::t_ptr collector(new t_observation_collector());
     t_json_observation_unserializer unserializer(collector);
     unserializer(tree);
 

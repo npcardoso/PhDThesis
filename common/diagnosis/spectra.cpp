@@ -26,9 +26,6 @@ bool t_spectra::is_candidate(const t_candidate & candidate,
   return true;
 }
 
-t_spectra::t_order_buffer t_spectra::get_ordering_buffer(const t_spectra_filter * filter) const {
-  return t_order_buffer(new t_rank_element[get_component_count(filter)]);
-}
 
 std::ostream & t_spectra::print(std::ostream & out, 
                                 const t_spectra_filter * filter) const {

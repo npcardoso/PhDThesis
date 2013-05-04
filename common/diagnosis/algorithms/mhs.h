@@ -1,5 +1,5 @@
-#ifndef __MHS_H__
-#define __MHS_H__
+#ifndef __DIAGNOSIS_ALGORITHMS_MHS_H__
+#define __DIAGNOSIS_ALGORITHMS_MHS_H__
 
 #include "diagnosis/heuristic.h"
 #include "diagnosis/spectra.h"

@@ -3,10 +3,11 @@
 
 #include "instrumentation/sink.h"
 #include <boost/thread/mutex.hpp>
+
 namespace instrumentation {
 namespace sinks {
 
-class t_thread_safe_construct_sink: public t_construct_sink {
+class t_thread_safe_construct: public t_construct_sink {
   boost::mutex mutex;
   t_construct_sink::t_ptr sink;
   
@@ -18,7 +19,7 @@ class t_thread_safe_construct_sink: public t_construct_sink {
       return ret;
     }
 public:
-  t_thread_safe_construct_sink(t_construct_sink::t_ptr sink);
+  t_thread_safe_construct(t_construct_sink::t_ptr sink);
   
   virtual bool operator << (const t_transaction_construct::t_ptr & ctr);
   virtual bool operator << (const t_oracle_construct::t_ptr & ctr);
@@ -26,7 +27,7 @@ public:
 
 };
 
-class t_thread_safe_observation_sink: public t_observation_sink {
+class t_thread_safe_observation: public t_observation_sink {
   boost::mutex mutex;
   t_observation_sink::t_ptr sink;
   
@@ -38,7 +39,7 @@ class t_thread_safe_observation_sink: public t_observation_sink {
       return ret;
     }
 public:
-  t_thread_safe_observation_sink(t_observation_sink::t_ptr sink);
+  t_thread_safe_observation(t_observation_sink::t_ptr sink);
 
   virtual bool operator << (const t_transaction_observation::t_ptr & obs);
   virtual bool operator << (const t_oracle_observation::t_ptr & obs);

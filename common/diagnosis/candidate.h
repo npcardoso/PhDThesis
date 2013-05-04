@@ -1,5 +1,5 @@
-#ifndef __CANDIDATE_H__
-#define __CANDIDATE_H__
+#ifndef __DIAGNOSIS_CANDIDATE_H__
+#define __DIAGNOSIS_CANDIDATE_H__
 
 #include "types.h"
 

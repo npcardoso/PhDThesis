@@ -2,7 +2,6 @@
 #define __DIAGNOSIS_SPECTRA_ITERATOR_H__
 
 #include "diagnosis/spectra_filter.h"
-
 #include "types.h"
 
 #include <cstdlib>

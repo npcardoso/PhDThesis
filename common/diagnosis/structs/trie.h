@@ -1,5 +1,5 @@
-#ifndef __TRIE_H__
-#define __TRIE_H__
+#ifndef __DIAGNOSIS_STRUCTS_TRIE_H__
+#define __DIAGNOSIS_STRUCTS_TRIE_H__
 
 #include "../candidate.h"
 #include "types.h"

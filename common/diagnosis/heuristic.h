@@ -1,6 +1,7 @@
-#ifndef __HEURISTIC_H__
-#define __HEURISTIC_H__
+#ifndef __DIAGNOSIS_HEURISTIC_H__
+#define __DIAGNOSIS_HEURISTIC_H__
 
+#include "diagnosis/rank_element.h"
 #include "diagnosis/spectra.h"
 #include "diagnosis/spectra_filter.h"
 
@@ -19,11 +20,11 @@ public:
 std::ostream & operator << (std::ostream & out, const t_heuristic_filter & filter);
 
 class t_heuristic {
+public:
   typedef boost::shared_ptr<const t_heuristic_filter > t_filter_ptr;
   typedef std::vector<t_filter_ptr> t_filters;
-  t_filters filters;
+  typedef boost::shared_ptr<t_rank_element[]> t_order_buffer;
 
-public:
 
   void push(const t_filter_ptr & filter);
 
@@ -34,6 +35,11 @@ public:
                   const t_spectra_filter * filter = NULL) const;
 
   virtual std::ostream & print(std::ostream & out) const;
+
+  static t_order_buffer get_ordering_buffer(const t_spectra & spectra,
+                                            const t_spectra_filter * filter = NULL);
+private:
+  t_filters filters;
 };
 
 }

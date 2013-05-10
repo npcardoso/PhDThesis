@@ -1,0 +1,47 @@
+#!/bin/bash
+
+SOURCE=""
+TARGET=""
+CLANG_OPTS=""
+
+
+
+while [[ -n $@ ]]; do
+  opt=$1
+  if [[ $opt  == "-o" ]]; then
+	shift
+	TARGET=$1
+  else
+	CLANG_OPTS="$CLANG_OPTS $opt"
+  fi
+  shift
+done
+
+if [[ -z $TARGET ]]; then
+  echo "Error: No target specified (-o option)" >&2
+  exit 1
+fi
+
+[[ -z $CLANG ]] && CLANG=clang
+[[ -z $OPT ]] && OPT=opt
+[[ -z $LLC ]] && LLC=llc
+
+
+[[ -z $LLVM_INSTRUMENT_LIB ]] && LLVM_INSTRUMENT_LIB=/usr/lib/libllvminstrument.so
+[[ -z $LLVM_PASSES ]] && LLVM_PASSES="-instr_block -instr_prepare"
+
+
+[[ -z $TMPDIR ]] && TMPDIR=`mktemp -d`
+TMP_CREATOR="mktemp -p $TMPDIR --suffix"
+[[ -z $LLVM_OUT ]] && LLVM_OUT=`$TMP_CREATOR .llvm`
+[[ -z $OPT_OUT ]] && OPT_OUT=`$TMP_CREATOR .llvmi`
+
+
+
+$CLANG -S -emit-llvm -g $CLANG_OPTS -c -o $LLVM_OUT
+
+$OPT -S -f --load $LLVM_INSTRUMENT_LIB $LLVM_INSTRUMENT_PASSES $LLVM_OUT -o $OPT_OUT
+
+$LLC -o $TARGET < $OPT_OUT
+
+rm $TMPDIR -r

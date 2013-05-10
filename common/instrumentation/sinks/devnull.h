@@ -6,7 +6,7 @@
 namespace instrumentation {
 namespace sinks {
 
-class t_dev_null: public t_observation {
+class t_dev_null: public t_observation_sink {
 public:
   DEFINE_BOOST_SHARED_PTRS(t_dev_null);
   

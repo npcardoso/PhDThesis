@@ -1,0 +1,3 @@
+Import('env')
+env.SConscript('llvm/SConscript')
+env.SConscript('lib/SConscript')

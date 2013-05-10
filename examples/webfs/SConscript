@@ -6,7 +6,10 @@ env = env.Clone()
 target = "webfsd"
 sources = Glob("*.c")
 
-defines = "-DMIMEFILE=\\\"/etc/mime.types\\\"\
+
+defines = "\
+		-Wno-pointer-sign\
+		-DMIMEFILE=\\\"/etc/mime.types\\\"\
         -DWEBFS_VERSION=\\\"libinstrument_example\\\"\
         -D_GNU_SOURCE \
         -D_LARGEFILE_SOURCE \

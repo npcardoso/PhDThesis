@@ -2,9 +2,9 @@
 #define __COMMON_INSTRUMENTATION_OBSERVATION_H__
 
 #include "types.h"
+#include "utils/boost.h"
 #include "utils/time.h"
 
-#include <boost/shared_ptr.hpp>
 namespace instrumentation {
 class t_observation {
 public:

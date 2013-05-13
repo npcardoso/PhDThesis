@@ -3,10 +3,12 @@
 
 #include "types.h"
 
+#include "client.h"
+
 #include <boost/asio.hpp>
 #include <sstream>
 
-class t_tcp_client {
+class t_tcp_client: public t_client {
 public:
   DEFINE_BOOST_SHARED_PTRS(t_tcp_client);
 
@@ -15,7 +17,7 @@ public:
 
   ~t_tcp_client();
 
-  void write(const std::string & s);
+  virtual t_client & operator << (const std::string & s);
 private:
   void setup();
   std::string host, port;

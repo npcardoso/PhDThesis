@@ -13,13 +13,14 @@ t_tcp_client::t_tcp_client(std::string host,
 t_tcp_client::~t_tcp_client() {
   stream.close();
 }
-void t_tcp_client::write(const std::string & s) {
+
+t_client & t_tcp_client::operator << (const std::string & s) {
   do {
     setup();
     stream << s;
   } while(!stream.good());
+  return *this;
 }
-
 
 void t_tcp_client::setup(){
   while(!stream.good()) {

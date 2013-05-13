@@ -1,5 +1,5 @@
 #include "prepare.h"
-
+#include "types.h"
 static RegisterPass<Instrument::PrepareInstrumentionPass> prepare_instrumentation("instrument_prepare", "Prepares instrumentation instructions");
 
 char Instrument::PrepareInstrumentionPass::ID = 1;
@@ -105,7 +105,8 @@ bool Instrument::PrepareInstrumentionPass::registerConstruct(Module & M,
   std::string id_var_name = var_prefix + buf;
   
 
-  Type * operand_type = I.getArgOperand(0)->getType();
+  Type * operand_type = Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3);
+//    I.getArgOperand(0)->getType();
   GlobalVariable* id_holder =
     new GlobalVariable(M,
                        operand_type, //Type

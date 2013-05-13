@@ -2,8 +2,8 @@
 #define __COMMON_INSTRUMENTATION_CONSTRUCT_H__
 
 #include "types.h"
+#include "utils/boost.h"
 
-#include <boost/shared_ptr.hpp>
 
 #include <map>
 #include <string>

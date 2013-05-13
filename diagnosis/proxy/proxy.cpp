@@ -5,16 +5,19 @@
 #include "server/servers/tcp_server.h"
 #include "server/services/threaded.h"
 #include "server/services/json.h"
+#include "instrumentation/sinks/ostream_adaptor.h"
 
 using namespace instrumentation;
+using namespace instrumentation::sinks;
 
 class t_json_process: public t_json_service {
 public:
   virtual void operator ()(std::istream & in,
                            std::ostream & out,
                            const boost::property_tree::ptree & pt){
-    t_observation_sink::t_ptr sink(new t_json_observation_serializer(out, t_element_group_writer::t_ptr(new t_json_array())));
-    t_json_observation_unserializer unserializer(sink);
+    t_observation_serializer::t_ptr json_serializer(new t_json_observation_serializer());
+    t_observation_sink::t_ptr ostream_adaptor(new t_ostream_adaptor(out, json_serializer));
+    t_json_observation_unserializer unserializer(ostream_adaptor);
     unserializer(pt);
   }
 };
@@ -29,7 +32,7 @@ public:
                            std::ostream & out) {
     std::stringstream buf;
     (*srv)(in, buf);
-    client.write(buf.str());
+    client << buf.str();
   }
 private:
   t_tcp_client client;

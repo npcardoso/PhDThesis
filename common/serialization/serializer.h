@@ -30,38 +30,44 @@ public:
   }
 };
 
-class t_observation_serializer: public instrumentation::t_observation_sink {
+class t_observation_serializer {
 protected:
   inline t_observation_serializer(){}
 
 public:
   DEFINE_BOOST_SHARED_PTRS(t_observation_serializer);
 
-  virtual bool operator << (const instrumentation::t_oracle_observation::t_ptr & obs) = 0;
-  virtual bool operator << (const instrumentation::t_probe_observation::t_ptr & obs) = 0;
-  virtual bool operator << (const instrumentation::t_transaction_observation::t_ptr & obs) = 0;
+  virtual bool operator () (std::ostream & out,
+                            const instrumentation::t_oracle_observation::t_ptr & obs) = 0;
+  virtual bool operator () (std::ostream & out,
+                            const instrumentation::t_probe_observation::t_ptr & obs) = 0;
+  virtual bool operator () (std::ostream & out,
+                            const instrumentation::t_transaction_observation::t_ptr & obs) = 0;
   
   virtual t_ptr array() = 0;
   inline virtual ~t_observation_serializer(){}
   
-  virtual void close() = 0;
+  virtual void close(std::ostream & out) = 0;
 };
 
-class t_construct_serializer: public instrumentation::t_construct_sink {
+class t_construct_serializer {
 protected:
   inline t_construct_serializer(){}
 
 public:
   DEFINE_BOOST_SHARED_PTRS(t_construct_serializer);
 
-  virtual bool operator << (const instrumentation::t_oracle_construct::t_ptr & ctr) = 0;
-  virtual bool operator << (const instrumentation::t_probe_construct::t_ptr & ctr) = 0;
-  virtual bool operator << (const instrumentation::t_transaction_construct::t_ptr & ctr) = 0;
+  virtual bool operator () (std::ostream & out,
+                            const instrumentation::t_oracle_construct::t_ptr & ctr) = 0;
+  virtual bool operator () (std::ostream & out,
+                            const instrumentation::t_probe_construct::t_ptr & ctr) = 0;
+  virtual bool operator () (std::ostream & out,
+                            const instrumentation::t_transaction_construct::t_ptr & ctr) = 0;
   
   virtual t_ptr array() = 0;
   virtual ~t_construct_serializer() = 0;
   
-  virtual void close() = 0;
+  virtual void close(std::ostream & out) = 0;
 };
 
 #endif

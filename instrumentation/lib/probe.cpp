@@ -4,6 +4,9 @@
 #include "utils/debug.h"
 #include "utils/time.h"
 
+#include <stdarg.h>
+
+
 extern "C"{
 t_construct_id _instr_probe_register(){
   t_probe_construct::t_ptr construct(new t_probe_construct());

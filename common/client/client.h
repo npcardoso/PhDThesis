@@ -3,6 +3,8 @@
 
 #include "utils/boost.h"
 
+#include <iostream>
+
 #include <string>
 #include <sstream>
 

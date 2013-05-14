@@ -4,7 +4,7 @@
 #include "threads.h"
 
 
-extern t_thread_tracker * tracker;
+extern t_thread_tracker::t_ptr tracker;
 extern t_construct_id construct_id;
 extern boost::mutex mutex;
 

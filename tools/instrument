@@ -32,7 +32,7 @@ while [[ -n $@ ]]; do
 done
 
 [[ -z $LLVM_INSTRUMENT_LIB ]] && LLVM_INSTRUMENT_LIB=/usr/lib/libllvminstrument.so
-[[ -z $LLVM_PASSES ]] && LLVM_PASSES="-instrument_block -instrument_prepare"
+[[ -z $LLVM_PASSES ]] && LLVM_PASSES="-instrument_function -instrument_prepare"
 
 
 if [[ $COMPILE ]]; then

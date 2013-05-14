@@ -35,7 +35,7 @@ public:
 
   void end(t_thread_id thread_id = thread_self());
   
-  t_observation_sink::t_ptr get(t_thread_id thread_id = thread_self());
+  t_observation_sink * get(t_thread_id thread_id = thread_self());
 };
 
 #endif

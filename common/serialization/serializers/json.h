@@ -40,9 +40,13 @@ public:
 private:
   t_element_group_writer::t_ptr group;
   std::ostream & observation_single(std::ostream & out,
-                                    const instrumentation::t_observation_single & obs);
+                                    const instrumentation::t_observation_single & obs,
+                                    t_element_group_writer & grp,
+                                    const t_observation_serializer_options & opt);
   std::ostream & observation_window(std::ostream & out,
-                                    const instrumentation::t_observation_window & obs);
+                                    const instrumentation::t_observation_window & obs,
+                                    t_element_group_writer & grp,
+                                    const t_observation_serializer_options & opt);
   std::ostream & timestamp(std::ostream & out,
                            t_time_interval t);
   std::ostream & string(std::ostream & out,

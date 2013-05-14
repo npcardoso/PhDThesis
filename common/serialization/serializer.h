@@ -6,6 +6,16 @@
 
 #include "instrumentation/sink.h"
 
+class t_observation_serializer_options {
+public:
+  inline t_observation_serializer_options() {
+    timestamp = true;
+    cid = true;
+  }
+  bool timestamp;
+  bool cid;
+};
+
 class t_element_group_writer {
 protected:
   bool first;
@@ -48,6 +58,8 @@ public:
   inline virtual ~t_observation_serializer(){}
   
   virtual void close(std::ostream & out) = 0;
+
+  t_observation_serializer_options transaction_options, oracle_options, probe_options;
 };
 
 class t_construct_serializer {

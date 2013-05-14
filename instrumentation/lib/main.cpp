@@ -22,6 +22,13 @@ using namespace instrumentation::sinks;
 t_observation_sink::t_ptr configure_sink() {
   t_observation_serializer::t_ptr json_serializer(new t_json_observation_serializer());
   t_observation_sink::t_ptr sink(new t_dev_null());
+
+  json_serializer->transaction_options.timestamp = false;
+  json_serializer->transaction_options.cid = false;
+  json_serializer->oracle_options.timestamp = false;
+  json_serializer->oracle_options.cid = false;
+  json_serializer->probe_options.timestamp = false;
+  json_serializer->probe_options.cid = true;
   
   if(char * server = std::getenv("INSTRUMENTATION_SERVER")) {
     char * port = "12345";
@@ -37,7 +44,6 @@ t_observation_sink::t_ptr configure_sink() {
     static std::fstream f(file);
     sink = t_observation_sink::t_ptr(new t_ostream_adaptor(f, json_serializer));
   }
-  return sink;
   t_observation_sink::t_ptr thread_safe_sink(new t_thread_safe_observation(sink));
   return thread_safe_sink;
 }

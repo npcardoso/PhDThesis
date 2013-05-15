@@ -24,9 +24,9 @@ t_observation_sink::t_ptr configure_sink() {
   t_observation_sink::t_ptr sink(new t_dev_null());
 
   json_serializer->transaction_options.timestamp = false;
-  json_serializer->transaction_options.cid = false;
+  json_serializer->transaction_options.cid = true;
   json_serializer->oracle_options.timestamp = false;
-  json_serializer->oracle_options.cid = false;
+  json_serializer->oracle_options.cid = true;
   json_serializer->probe_options.timestamp = false;
   json_serializer->probe_options.cid = true;
   

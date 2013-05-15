@@ -12,6 +12,7 @@ t_client_adaptor::t_client_adaptor(t_client::t_ptr client,
 bool t_client_adaptor::operator << (const t_transaction_observation::t_ptr & obs) {
   std::stringstream buf;
   (*serializer)(buf, obs);
+  (*serializer).close(buf);
   (*client) << buf.str();
   return true;
 }
@@ -19,6 +20,7 @@ bool t_client_adaptor::operator << (const t_transaction_observation::t_ptr & obs
 bool t_client_adaptor::operator << (const t_oracle_observation::t_ptr & obs) {
   std::stringstream buf;
   (*serializer)(buf, obs);
+  (*serializer).close(buf);
   (*client) << buf.str();
   return true;
 }
@@ -26,6 +28,7 @@ bool t_client_adaptor::operator << (const t_oracle_observation::t_ptr & obs) {
 bool t_client_adaptor::operator << (const t_probe_observation::t_ptr & obs) {
   std::stringstream buf;
   (*serializer)(buf, obs);
+  (*serializer).close(buf);
   (*client) << buf.str();
   return true;
 }

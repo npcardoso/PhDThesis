@@ -35,8 +35,9 @@ public:
     return out;
   }
   
-  virtual inline void close(std::ostream & out) {
+  virtual inline std::ostream & close(std::ostream & out) {
     first = true;
+    return out;
   }
 };
 

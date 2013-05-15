@@ -8,7 +8,7 @@ public:
   DEFINE_BOOST_SHARED_PTRS(t_json_array);
   
   virtual std::ostream & put(std::ostream & out);
-  virtual void close(std::ostream & out);
+  virtual std::ostream & close(std::ostream & out);
 };
 
 class t_json_map: public t_element_group_writer {
@@ -16,7 +16,7 @@ public:
   DEFINE_BOOST_SHARED_PTRS(t_json_map);
 
   virtual std::ostream & put(std::ostream & out);
-  virtual void close(std::ostream & out);
+  virtual std::ostream & close(std::ostream & out);
 };
 
 class t_json_observation_serializer: public t_observation_serializer {

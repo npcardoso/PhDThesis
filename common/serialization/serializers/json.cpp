@@ -17,11 +17,12 @@ std::ostream & t_json_map::put(std::ostream & out) {
   return out;
 }
 
-void t_json_map::close(std::ostream & out) {
+std::ostream & t_json_map::close(std::ostream & out) {
   if(first)
     out << '{';
   out << '}';
   first = true;
+  return out;
 }
 
 std::ostream & t_json_array::put(std::ostream & out) {
@@ -33,11 +34,12 @@ std::ostream & t_json_array::put(std::ostream & out) {
   return out;
 }
 
-void t_json_array::close(std::ostream & out) {
+std::ostream & t_json_array::close(std::ostream & out) {
   if(first)
     out << '[';
   out << ']';
   first = true;
+  return out;
 }
 
 std::ostream & t_json_observation_serializer::timestamp(std::ostream & out,
@@ -95,7 +97,7 @@ std::ostream & t_json_observation_serializer::observation_window(std::ostream & 
 }
 
 t_json_observation_serializer::t_json_observation_serializer() {
-  static t_element_group_writer::t_ptr def_group = t_element_group_writer::t_ptr(new t_element_group_writer());
+  static t_element_group_writer::t_ptr def_group = t_element_group_writer::t_ptr(new t_json_array());
   group = def_group;
 }
 

@@ -24,7 +24,7 @@ t_probe_observation::t_probe_observation(const t_probe_observation & p):t_observ
 void t_probe_observation::read_variable(const void * var, size_t bytes) {
   if(!state)
     state = new t_state();
-  state->read_variable(var, bytes);
+  state->read(var, bytes);
 }
   
 void t_probe_observation::clear_state(){
@@ -32,12 +32,6 @@ void t_probe_observation::clear_state(){
     delete state;
     state = NULL;
   }
-}
-
-size_t t_probe_observation::size() const {
-  if(state)
-    return sizeof(t_state) + state->size();
-  return 0;
 }
 
 t_probe_observation::~t_probe_observation() {

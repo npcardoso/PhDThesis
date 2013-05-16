@@ -2,6 +2,7 @@
 
 #include "types.h"
 #include "utils/preprocessor.h"
+#include "utils/base64.h"
 
 #include <boost/foreach.hpp>
 #include <iomanip>
@@ -45,18 +46,14 @@ namespace converters {
     out << "label=\"" << GvizObj(GvizProbePre, probe_id) << "\\n";
     if(p.state) {
       t_state & st = *p.state;
-      out << "State Observation: " << p.state->data_size() << " bytes\\n";
+      out << "State Observation: " << p.state->size() << " variables\\n";
       std::ios::fmtflags flags = out.flags();
       char fill = out.fill('0');
       size_t i = 0;
 
       out << "Data: ";
-      out << std::hex;
-      for(size_t j = 0; j < st.n_vars; j++) {
-        out << " | ";
-        for(size_t k = st.offset_end[j]; k-- > i;)
-          out << std::setw(2) << (unsigned)st.data[k];
-        i=st.offset_end[j];
+      for(size_t j = 0; j < st.size(); j++) {
+        out << " | " << base64_encode((unsigned char *) st.ptr(j), st.width(j));
       }
       out << " | ";
       out.fill(fill);

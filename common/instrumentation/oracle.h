@@ -24,8 +24,6 @@ public:
                        t_construct_id c_id,
                        float health,
                        float confidence);
-  
-  virtual size_t size() const;
 };
 }
 

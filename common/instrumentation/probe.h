@@ -31,8 +31,6 @@ public:
   void read_variable(const void * var,
                      size_t bytes);
 
-  virtual size_t size() const;
-
   void clear_state();
 
   t_probe_observation & operator = (const t_probe_observation & p);

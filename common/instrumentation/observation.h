@@ -10,8 +10,6 @@ class t_observation {
 public:
   DEFINE_BOOST_SHARED_PTRS(t_observation);
 
-  virtual size_t size() const = 0;
-
   virtual bool operator > (const t_time_interval & time) const = 0;
   virtual bool operator < (const t_time_interval & time) const = 0;
 };

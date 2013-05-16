@@ -25,7 +25,7 @@ t_state::t_state(const t_state & s) {
   }
 }
 
-void t_state::read_variable(const void * var, t_count bytes) {
+void t_state::read(const void * var, t_count bytes) {
   assert(bytes > 0);
 
   t_count start;
@@ -47,6 +47,24 @@ void t_state::read_variable(const void * var, t_count bytes) {
   memcpy(data + start, var, bytes);
 
   n_vars++;
+}
+
+const t_count & t_state::size() const {
+  return n_vars;
+}
+  
+const void * t_state::ptr(t_id pos) const {
+  if(pos)
+    return data + offset_end[pos - 1]; 
+  else
+    return data;
+}
+
+t_count t_state::width(t_id pos) const {
+  if(pos)
+    return offset_end[pos] - offset_end[pos - 1]; 
+  else
+    return offset_end[0];
 }
 
 t_state::~t_state(){

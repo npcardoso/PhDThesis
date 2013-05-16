@@ -130,15 +130,9 @@ bool t_json_observation_serializer::operator () (std::ostream & out,
     key(out, "s");
     t_json_array tmp2;
 
-    t_count start = 0;
-    t_count len = obs->state->offset_end[0];
-    tmp2.put(out);
-    string(out, base64_encode(obs->state->data, len, false));
-    for(t_id i = 1; i < obs->state->n_vars; i++) {
+    for(t_id i = 0; i < obs->state->size(); i++) {
       tmp2.put(out);
-      start = obs->state->offset_end[i - 1];
-      len = obs->state->offset_end[i] - start;
-      string(out, base64_encode(obs->state->data + start, len, false));
+      string(out, base64_encode((unsigned char *)obs->state->ptr(i), obs->state->width(i), false));
     }
     tmp2.close(out);
   }

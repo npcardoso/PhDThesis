@@ -5,30 +5,32 @@
 
 namespace instrumentation {
 
-struct t_state {
-public:
-  unsigned char * data;
-  t_count * offset_end;
-  t_count n_vars;
-
+class t_state {
 public:
   t_state();
   t_state(const t_state & s);
   ~t_state();
 
-  void read_variable(const void * var,
-                     t_count bytes);
+  void read(const void * var,
+            t_count bytes);
+  template <class T>
+    void read(const T & var) {
+      read(&var, sizeof(var)); 
+    }
+  
+  const t_count & size() const;
 
-  inline t_count data_size() const {
-    if(n_vars)
-      return offset_end[n_vars - 1];
-    else
-      return 0;
-  }
+  const void * ptr(t_id pos) const;
+  t_count width(t_id pos) const;
 
-  inline t_count size() const {
-    return sizeof(t_count) * n_vars + data_size();
-  }
+  template <class T>
+    const T & get (t_id pos) {
+      return *((const T *) ptr(pos));
+    } 
+private:  
+  unsigned char * data;
+  t_count * offset_end;
+  t_count n_vars;
 };
 }
 

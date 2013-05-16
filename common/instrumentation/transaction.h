@@ -43,8 +43,6 @@ public:
   virtual void observation(const t_oracle_observation::t_ptr & obs);
   virtual void observation(const t_probe_observation::t_ptr & obs);
   
-  virtual size_t size() const;
-
   void flatten();
 private:
   void flatten(t_probes probes,

@@ -10,7 +10,4 @@ t_oracle_observation::t_oracle_observation(t_time_interval time,
                                            float confidence) : t_observation_single(time, c_id), health(health), confidence(confidence) {
 }
   
-size_t t_oracle_observation::size() const {
-  return sizeof(t_oracle_observation);
-}
 }

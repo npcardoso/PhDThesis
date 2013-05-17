@@ -2,6 +2,7 @@ Import('env')
 env = env.Clone()
 
 env.SConscript('iscandidate/SConscript')
+env.SConscript('knn/SConscript')
 env.SConscript('mhs/SConscript')
 env.SConscript('obs2cspectra/SConscript')
 env.SConscript('obs2gviz/SConscript')

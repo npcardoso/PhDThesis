@@ -4,7 +4,8 @@
 
 namespace diagnosis {
 namespace algorithms {
-using namespace diagnosis::structs;
+
+  using namespace diagnosis::structs;
 
 t_mhs::t_mhs(const t_heuristic & heuristic) {
   max_candidate_size = 0;

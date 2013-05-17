@@ -1,6 +1,7 @@
 #include "component.h"
 
-  
+namespace diagnosis {
+namespace component {
 
 t_component::t_component(t_goodness_model * g_model):g_model(g_model) {
 
@@ -24,4 +25,5 @@ const char * t_component::metadata(std::string key) const {
     return NULL;
   return pos->second.c_str();
 }
-
+}
+}

@@ -1,11 +1,14 @@
-#ifndef __COMPONENT_H__
-#define __COMPONENT_H__
+#ifndef __COMMON_DIAGNOSIS_COMPONENT_COMPONENT_H__
+#define __COMMON_DIAGNOSIS_COMPONENT_COMPONENT_H__
 
 #include "goodness.h"
-#include "../types.h"
+#include "types.h"
 
 #include <boost/shared_ptr.hpp>
 #include <map>
+
+namespace diagnosis {
+namespace component {
 
 class t_component {
 private:
@@ -23,4 +26,7 @@ public:
   const char * metadata(std::string key) const;
   void metadata(std::string key, std::string value);
 };
+
+}
+}
 #endif

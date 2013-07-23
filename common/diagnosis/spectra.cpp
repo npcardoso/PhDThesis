@@ -27,7 +27,7 @@ bool t_spectra::is_candidate(const t_candidate & candidate,
 }
 
 
-std::ostream & t_spectra::print(std::ostream & out, 
+std::ostream & t_spectra::print(std::ostream & out,
                                 const t_spectra_filter * filter) const {
   return out << "Filtered Spectra output";
 }
@@ -50,7 +50,7 @@ t_basic_spectra::t_basic_spectra() {
   set_component_count(0);
 }
 
-t_basic_spectra::t_basic_spectra(t_count component_count, 
+t_basic_spectra::t_basic_spectra(t_count component_count,
                                         t_count transaction_count) {
   set_transaction_count(transaction_count);
   this->transaction_count = transaction_count;
@@ -100,15 +100,22 @@ void t_basic_spectra::set_transaction_count(t_count transaction_count) {
 }
 
 
-bool t_basic_spectra::is_error(t_transaction_id transaction) const {
+t_error t_basic_spectra::get_error(t_transaction_id transaction) const {
   assert(transaction > 0);
   assert(transaction <= transaction_count);
 
   return errors[transaction - 1];
 }
 
-void t_basic_spectra::error(t_transaction_id transaction, 
-                                           bool set) {
+bool t_basic_spectra::is_error(t_transaction_id transaction) const {
+  assert(transaction > 0);
+  assert(transaction <= transaction_count);
+
+  return get_error(transaction) > 0.5; //TODO: arbitrary threshold
+}
+
+void t_basic_spectra::error(t_transaction_id transaction,
+                            t_error set) {
   assert(transaction > 0);
   assert(transaction <= transaction_count);
 

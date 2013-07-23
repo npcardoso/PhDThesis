@@ -17,7 +17,7 @@ namespace diagnosis {
 
 class t_spectra {
 public:
-  
+
   virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const = 0;
   virtual t_count get_transaction_count(const t_spectra_filter * filter = NULL) const = 0;
   virtual t_count get_component_count(const t_spectra_filter * filter = NULL) const = 0;
@@ -29,11 +29,12 @@ public:
 //                                          t_transaction_id transaction) const = 0;
 
   virtual bool is_error(t_transaction_id transaction) const = 0;
+  virtual t_error get_error(t_transaction_id transaction) const = 0;
 
   virtual bool is_candidate(const t_candidate & candidate,
                             const t_spectra_filter * filter = NULL) const;
 
-  virtual std::ostream & print(std::ostream & out, 
+  virtual std::ostream & print(std::ostream & out,
                                       const t_spectra_filter * filter = NULL) const;
 
   virtual std::istream & read (std::istream & in);
@@ -44,17 +45,17 @@ std::ostream & operator << (std::ostream & out, const t_spectra & spectra);
 
 class t_basic_spectra: public t_spectra {
 
-  typedef std::vector <bool> t_errors;
+  typedef std::vector <t_error> t_errors;
   t_errors errors;
   t_count component_count;
   t_count transaction_count;
 
 
 public:
-  
+
   t_basic_spectra();
-  
-  t_basic_spectra(t_count component_count, 
+
+  t_basic_spectra(t_count component_count,
                          t_count transaction_count);
 
   virtual t_count get_error_count(const t_spectra_filter * filter = NULL) const;
@@ -67,9 +68,10 @@ public:
   virtual void set_transaction_count(t_count transaction_count);
 
 
+  virtual t_error get_error(t_transaction_id transaction) const;
   virtual bool is_error(t_transaction_id transaction) const;
-  virtual void error(t_transaction_id transaction, 
-                            bool set=true);
+  virtual void error(t_transaction_id transaction,
+                     t_error set=1);
 };
 
 }

@@ -1,11 +1,14 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+typedef double t_error;
 typedef double t_health;
 typedef double t_confidence;
 typedef unsigned short t_port_no;
 
 /* IDs */
+
+typedef int t_sid;
 
 typedef unsigned int t_id;
 typedef t_id t_component_id;

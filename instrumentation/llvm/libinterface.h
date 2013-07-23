@@ -1,6 +1,6 @@
 #pragma once
-#include <llvm/Function.h>
-#include <llvm/Module.h>
+#include <llvm/IR/Function.h>
+#include <llvm/IR/Module.h>
 
 #define declare_getRegister(fun_name, var_name) \
   private:\

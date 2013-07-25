@@ -45,6 +45,10 @@ namespace algorithms {
                   t_id component,
                   t_goodness_mp & ret) const;
 
+    virtual void prior(const t_candidate & candidate,
+                       t_goodness_mp & ret) const;
+    
+    t_goodness_mp g_j;
     double epsilon;
     double lambda;
     t_count iterations;

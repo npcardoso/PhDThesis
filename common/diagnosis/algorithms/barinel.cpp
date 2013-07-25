@@ -19,13 +19,18 @@ namespace algorithms {
   }
 
   t_barinel::t_barinel() {
-    precision = 128;
-    lambda = 0.0001;
-    iterations = 100000;
+    g_j = 0.001;
     epsilon = 0.0001;
+    lambda = 0.0001;
+    precision = 128;
+    iterations = 100000;
   }
 
   t_barinel::t_barinel(size_t precision) {
+    g_j = 0.001;
+    epsilon = 0.0001;
+    lambda = 0.0001;
+    iterations = 100000;
     this->precision = precision;
   }
 
@@ -64,7 +69,11 @@ namespace algorithms {
         break;
       old_pr = pr;
     }
-    ret = pr;
+    
+    t_probability_mp prior_pr;
+    prior(candidate, prior_pr);
+
+    ret = prior_pr * pr;
   }
 
 
@@ -131,5 +140,10 @@ namespace algorithms {
       ret += -model.fail[symbol] * (tmp_f / goodnesses[component]) / (1 - tmp_f);
     }
   }
+
+    void t_barinel::prior(const t_candidate & candidate,
+                          t_goodness_mp & ret) const {
+      ret = pow(g_j, candidate.size());
+    }
 }
 }

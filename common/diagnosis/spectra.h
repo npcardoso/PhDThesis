@@ -5,6 +5,8 @@
 #include "diagnosis/spectra_filter.h"
 #include "diagnosis/spectra_iterator.h"
 
+#include "utils/mpreal.h"
+
 #include "exceptions.h"
 #include "types.h"
 
@@ -14,6 +16,9 @@
 #include <boost/shared_ptr.hpp>
 
 namespace diagnosis {
+
+typedef mpfr::mpreal t_probability_mp;
+typedef t_probability_mp t_goodness_mp;
 
 class t_spectra {
 public:
@@ -25,8 +30,11 @@ public:
   virtual t_count get_count(t_component_id component,
                             t_transaction_id transaction) const = 0;
 
-//  virtual const T_ACTIVITY & get_activity(t_component_id component,
-//                                          t_transaction_id transaction) const = 0;
+  template <class G>
+    void probability(const t_candidate & candidate,
+                     const G & goodnesses,
+                     t_probability_mp & ret,
+                     const t_spectra_filter * filter = NULL) const;
 
   virtual bool is_error(t_transaction_id transaction) const = 0;
   virtual t_error get_error(t_transaction_id transaction) const = 0;
@@ -73,6 +81,41 @@ public:
   virtual void error(t_transaction_id transaction,
                      t_error set=1);
 };
+  
+template <class G>
+void t_spectra::probability(const t_candidate & candidate,
+                            const G & goodnesses,
+                            t_probability_mp & ret,
+                            const t_spectra_filter * filter) const {
+  assert(candidate.size() > 0);
+
+  t_goodness_mp tmp (goodnesses[0]);
+
+  ret = 1;
+
+  t_spectra_iterator it(get_component_count(),
+                        get_transaction_count(),
+                        filter);
+
+  while(it.next_transaction()) {
+    tmp = 1;
+    t_candidate::const_iterator c_it = candidate.begin();
+    t_id c = 0;
+    while(c_it != candidate.end()) {
+      t_count count = get_count(*c_it, it.get_transaction());
+      if(count)
+        tmp *= count * goodnesses[c];
+      c_it++;
+      c++;
+    }
+
+    if(is_error(it.get_transaction()))
+      tmp = 1 - tmp;
+
+    ret *= tmp;
+  }
+}
 
 }
+
 #endif

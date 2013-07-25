@@ -58,6 +58,7 @@ else:
 env['CXX'] = env['clang']
 env['ENV']['TERM'] = os.environ['TERM']
 
+env['LINKFLAGS'] = '-lgmp -lmpfr '
 #vars.Save('.scons.conf', env)
 
 Export('env')

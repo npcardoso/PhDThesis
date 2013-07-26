@@ -6,7 +6,7 @@ oldenv = env
 env = oldenv.Clone()
 env.Append(CPPPATH = Dir(env['common_dir']), LDFLAGS = "-lpthread")
 
-header_install_dir = join(env['include_dir'], "lib%s" % env['libinstrument'])
+header_install_dir = join(env['include_dir'], "lib%s" % env['libdiag'])
 
 wildcards = ""
 headers = []
@@ -21,6 +21,11 @@ common_objects = env.SharedObject(sources)
 oldenv['common_objects'] = common_objects
 
 env.Default(common_objects)
+
+libdiag = env.SharedLibrary(target = 'libdiag', source=common_objects)
+ 
+libdiag = env.Install(env['lib_dir'], libdiag)
+env.Default(libdiag)
 
 for h in headers:
   install = join(header_install_dir, os.path.dirname(str(h)))

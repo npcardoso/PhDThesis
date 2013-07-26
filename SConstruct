@@ -11,6 +11,7 @@ vars.Add('prefix', '', '/usr/local')
 vars.Add('build_dir', '', join(root, 'obj'))
 vars.Add('libext', '', 'so')
 
+vars.Add('libdiag', '', 'diag')
 vars.Add('libinstrument', '', 'instrument')
 vars.Add('llvminstrument', '', 'llvminstrument')
 

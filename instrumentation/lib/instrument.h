@@ -5,7 +5,7 @@
 #include "probe.h"
 #include "transaction.h"
 
-#include "utils/preprocessor.h"
+#include "preprocessor.h"
 #include <assert.h>
 #ifdef __cplusplus
 extern "C" {

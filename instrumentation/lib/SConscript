@@ -14,13 +14,12 @@ target  = "instrument"
 header_install_dir = join(env['include_dir'], "lib%s" % env['libinstrument'])
 
 wildcards = ""
-headers = []
+headers = ['instrument.h', 'oracle.h', 'probe.h', 'transaction.h', 'types.h', 'preprocessor.h']
 sources = []
 common_sources = []
 
 for i in range(4):
   wildcards = join(wildcards, "*")
-  headers += env.Glob(wildcards + "h")
   sources += env.Glob(wildcards + "cpp")
 
 sources += env['common_objects']
@@ -31,7 +30,7 @@ env.Default(lib_install)
 
 
 for h in headers:
-  install = join(header_install_dir, os.path.dirname(str(h)))
-  install = env.Install(install, h)
+  install = env.Install(header_install_dir, h)
   env.Default(install)
+  env.Depends(install, lib_install)
 

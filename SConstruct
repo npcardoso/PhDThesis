@@ -22,6 +22,8 @@ vars.Add('debug', '', False)
 vars.Add('boost_lib', '', None)
 vars.Add('boost_include', '', None)
 
+vars.Add('R_include', '', '/usr/include/R')
+
 vars.Add('clang', '', 'clang++')
 vars.Add('llvmconfig', '', 'llvm-config')
 vars.Add('OPT', '', 'opt')

@@ -10,6 +10,13 @@ namespace diagnosis {
 
 class t_candidate: public std::set<t_component_id> {
 public:
+  inline t_candidate(){}
+  template <class InputIterator>
+    t_candidate (InputIterator first, InputIterator last,
+                 const key_compare& comp = key_compare(),
+                 const allocator_type& alloc = allocator_type()): set<t_component_id>(first, last, comp, alloc) {
+    
+    }
   virtual std::istream & read(std::istream & in);
   virtual std::ostream & print(std::ostream & out) const;
 };

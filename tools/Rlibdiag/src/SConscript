@@ -1,0 +1,13 @@
+from os.path import join
+
+Import('env')
+env = env.Clone()
+env.Append(
+	CCFLAGS= " -Wno-c++11-extensions `Rscript -e 'Rcpp:::CxxFlags()'`",
+	CPPPATH = [Dir(env['common_dir']), Dir(env['R_include'])],
+	LINKFLAGS = " -lboost_system -lboost_thread `Rscript -e 'Rcpp:::LdFlags()'` " + join(env['lib_dir'], "lib" + env['libdiag'] + ".a"))
+
+sources = [Glob("*cpp")] + env['common_objects']
+
+obj = env.SharedLibrary(target = "Rlibdiag", source = sources)
+env.Default(obj)#env.Install(env['bin_dir'], obj))

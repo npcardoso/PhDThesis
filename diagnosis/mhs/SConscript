@@ -1,15 +1,11 @@
 Import('env')
 env = env.Clone()
 env.Append(
-	CCFLAGS = " -Wno-c++11-extensions " + '`mpic++ --showme:compile`',
+	CCFLAGS= " -Wno-c++11-extensions",
 	CPPPATH = Dir(env['common_dir']),
-	LINKFLAGS = "-lpthread -lboost_system -lboost_thread " + '`mpic++ --showme:link`')
+	LINKFLAGS = "-lpthread -lboost_system -lboost_thread  -L%s -l%s %s " % (env['lib_dir'], env['libdiag'], env['mpi_link']) )
 
-
-sources = env['common_objects'] + [ Glob("*cpp")]
-
-
-
+sources = Glob("*cpp")
 
 obj = env.Program(target = "mhs", source = sources)
 env.Default(env.Install(env['bin_dir'], obj))

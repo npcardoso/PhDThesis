@@ -51,6 +51,10 @@ if 'boost_include' in env:
 if 'boost_lib' in env:
 	env.Append(LIBPATH = [env['boost_lib']])
 
+env['mpi_include'] = '`mpic++ --showme:compile`'
+env['mpi_link'] = '`mpic++ --showme:link`'
+
+
 if(env['debug']):
   env['CCFLAGS'] = "-g -O0"
 else:

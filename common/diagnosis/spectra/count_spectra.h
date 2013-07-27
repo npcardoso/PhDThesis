@@ -23,6 +23,10 @@ public:
 
   virtual t_count get_count(t_component_id component,
                             t_transaction_id transaction) const;
+  virtual void set_count(t_component_id component,
+                         t_transaction_id transaction,
+                         t_count count,
+                         bool ignore_unknown_components=false);
 
   virtual const t_count & get_activity(t_component_id component,
                                        t_transaction_id transaction) const;
@@ -34,8 +38,8 @@ public:
 
   void hit(t_component_id component,
            t_transaction_id transaction,
-           bool ignore_unknown_components,
-           t_count count = 1);
+           t_count count = 1,
+           bool ignore_unknown_components=false);
   
   virtual std::ostream & print(std::ostream & out, 
                                const t_spectra_filter * filter = NULL) const;

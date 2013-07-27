@@ -36,6 +36,25 @@ t_count t_count_spectra::get_count(t_component_id component,
   return get_activity(component, transaction);
 }
 
+void t_count_spectra::set_count(t_component_id component,
+                                t_transaction_id transaction,
+                                t_count count,
+                                bool ignore_unknown_components) {
+  assert(component > 0);
+  assert(transaction > 0);
+
+  if(component > get_component_count() ||
+     transaction > get_transaction_count()) {
+    if(!ignore_unknown_components)
+      set_element_count(std::max(component, get_component_count()),
+                        std::max(transaction, get_transaction_count()));
+    else
+      return;
+  }
+
+  activity[(transaction - 1) * get_component_count() + (component - 1)] = count;
+}
+
 const t_count & t_count_spectra::get_activity(t_component_id component,
                                               t_transaction_id transaction) const {
   assert(component > 0);
@@ -53,8 +72,8 @@ t_transaction_id t_count_spectra::new_transaction() {
 
 void t_count_spectra::hit(t_component_id component,
                           t_transaction_id transaction,
-                          bool ignore_unknown_components,
-                          t_count count) {
+                          t_count count,
+                          bool ignore_unknown_components) {
   assert(component > 0);
   assert(transaction > 0);
 

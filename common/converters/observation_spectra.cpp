@@ -27,7 +27,7 @@ void t_observations_to_count_spectra::operator ()(const t_transaction_observatio
 
   BOOST_FOREACH(t_probe_observation::t_ptr p, 
                 tr.probes) {
-    spectra.hit(p->c_id, tid, ignore_unknown_components);
+    spectra.hit(p->c_id, tid, 1, ignore_unknown_components);
   }
 }
 

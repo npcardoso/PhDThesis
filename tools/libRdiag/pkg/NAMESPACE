@@ -1,0 +1,3 @@
+useDynLib('libRdiag')
+export(mhs2, fuzzinel)
+exportPattern("^[[:alpha:]]+")

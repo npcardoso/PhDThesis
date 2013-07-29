@@ -7,7 +7,13 @@ env.Append(
 	CPPPATH = [Dir(env['common_dir']), Dir(env['R_include'])],
 	LINKFLAGS = " -lboost_system -lboost_thread `Rscript -e 'Rcpp:::LdFlags()'` " + join(env['lib_dir'], "lib" + env['libdiag'] + ".a"))
 
-sources = [Glob("*cpp")] + env['common_objects']
+sources = [Glob("src/*cpp")] + env['common_objects']
 
-obj = env.SharedLibrary(target = "Rlibdiag", source = sources)
+obj = env.SharedLibrary(target = "libRdiag", source = sources)
+
+path = "*"
+for i in range(3):
+	env.Depends(obj, Dir('pkg').srcnode().glob(path, source=True))
+	path = join(path, '*')
+
 env.Default(obj)#env.Install(env['bin_dir'], obj))

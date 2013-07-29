@@ -1,9 +1,9 @@
-Package: Rlibdiag
+Package: libRdiag
 Type: Package
 Title: R binding for libdiag
 Version: 1.0
 Date: 2013-07-26
 Author: Nuno Cardoso
-Maintainer: nunopcardoso@gmail.com
+Maintainer: Nuno Cardoso <nunopcardoso@gmail.com>
 Description: R binding for libdiag
 License: What license is it under?

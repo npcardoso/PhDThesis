@@ -25,4 +25,5 @@ for i in range(4):
   sources += env.Glob(join("..", "common", "src", wildcards + "cpp"))
 
 obj = env.Program(target = target, source = sources)
+env.Depends(obj, env['libdiag_shared'])
 env.Default(env.Install(env['bin_dir'], obj))

@@ -6,9 +6,11 @@ env = env.Clone()
 target = "fractal"
 sources = Glob("*.cpp")
 
-env.Append(LINKFLAGS = " -lpthread")
+env.Append(LINKFLAGS = " -lpthread -ldiag")
 
 obj = env.Instrument(target, sources, env['llvm_passes'])
+env.Depends(obj, env['libinstrument_shared'])
+
 bin_install = env.Install(env['bin_dir'], obj)
 
 env.Default(bin_install)

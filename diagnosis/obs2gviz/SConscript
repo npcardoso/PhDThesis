@@ -8,4 +8,5 @@ env.Append(
 sources = Glob("*cpp")
 
 obj = env.Program(target = "obs2gviz", source = sources)
+env.Depends(obj, env['libdiag_shared'])
 env.Default(env.Install(env['bin_dir'], obj))

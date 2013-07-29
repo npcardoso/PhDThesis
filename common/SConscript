@@ -26,10 +26,11 @@ env.Default(common_objects)
 libdiag = env.SharedLibrary(target = 'libdiag', source=common_objects)
 libdiag = env.Install(env['lib_dir'], libdiag)
 env.Default(libdiag)
+oldenv['libdiag_shared'] = libdiag
 
 libdiagstatic = env.StaticLibrary(target = 'libdiag', source=common_objects)
 libdiagstatic = env.Install(env['lib_dir'], libdiagstatic)
-env.Default(libdiagstatic)
+oldenv['libdiag_static'] = libdiagstatic
 
 for h in headers:
   install = join(header_install_dir, os.path.dirname(str(h)))

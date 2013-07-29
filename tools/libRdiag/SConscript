@@ -16,4 +16,6 @@ for i in range(3):
 	env.Depends(obj, Dir('pkg').srcnode().glob(path, source=True))
 	path = join(path, '*')
 
-env.Default(obj)#env.Install(env['bin_dir'], obj))
+env.Depends(obj, env['libdiag_static'])
+
+env.Default(obj)

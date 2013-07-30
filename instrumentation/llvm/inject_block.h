@@ -3,9 +3,9 @@
 namespace Instrument {
 class BlockInstrumentPass : public InjectPass {
 protected:
-  virtual bool handleBasicBlock(Module & M, BasicBlock & B);
+    virtual bool handleBasicBlock (Module & M, BasicBlock & B);
 public:
-  static char ID;
-  inline BlockInstrumentPass() : InjectPass(ID){}
+    static char ID;
+    inline BlockInstrumentPass () : InjectPass(ID) {}
 };
 }

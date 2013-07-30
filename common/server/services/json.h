@@ -9,22 +9,22 @@
 
 class t_json_service {
 public:
-  DEFINE_BOOST_SHARED_PTRS(t_json_service);
+    DEFINE_BOOST_SHARED_PTRS(t_json_service);
 
-  virtual void operator ()(std::istream & in,
-                           std::ostream & out,
-                           const boost::property_tree::ptree & pt) = 0;
+    virtual void operator () (std::istream & in,
+                              std::ostream & out,
+                              const boost::property_tree::ptree & pt) = 0;
 };
 
 
-class t_json_adapter_service: public t_service {
+class t_json_adapter_service : public t_service {
 private:
-  t_json_service::t_ptr srv;
+    t_json_service::t_ptr srv;
 public:
-  t_json_adapter_service(const t_json_service::t_ptr & srv);
+    t_json_adapter_service (const t_json_service::t_ptr & srv);
 
-  virtual void operator ()(std::istream & in,
-                           std::ostream & out);
+    virtual void operator () (std::istream & in,
+                              std::ostream & out);
 };
 
 #endif

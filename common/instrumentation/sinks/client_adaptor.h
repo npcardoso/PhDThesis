@@ -7,22 +7,21 @@
 
 namespace instrumentation {
 namespace sinks {
-
-class t_client_adaptor: public t_observation_sink {
+class t_client_adaptor : public t_observation_sink {
 public:
-  DEFINE_BOOST_SHARED_PTRS(t_client_adaptor);
-  
-  t_client_adaptor(t_client::t_ptr client,
-                   t_observation_serializer::t_ptr serializer);
+    DEFINE_BOOST_SHARED_PTRS(t_client_adaptor);
 
-  bool operator << (const t_transaction_observation::t_ptr & obs);
-  bool operator << (const t_oracle_observation::t_ptr & obs);
-  bool operator << (const t_probe_observation::t_ptr & obs);
+    t_client_adaptor (t_client::t_ptr client,
+                      t_observation_serializer::t_ptr serializer);
+
+    bool operator << (const t_transaction_observation::t_ptr & obs);
+    bool operator << (const t_oracle_observation::t_ptr & obs);
+    bool operator << (const t_probe_observation::t_ptr & obs);
 
 private:
 
-  t_client::t_ptr client;
-  t_observation_serializer::t_ptr serializer;
+    t_client::t_ptr client;
+    t_observation_serializer::t_ptr serializer;
 };
 }
 }

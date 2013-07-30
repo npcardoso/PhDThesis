@@ -10,17 +10,16 @@
 namespace instrumentation {
 class t_construct {
 public:
-  typedef std::map<std::string, std::string> t_metadata_storage;
-  t_metadata_storage _metadata;
+    typedef std::map < std::string, std::string >t_metadata_storage;
+    t_metadata_storage _metadata;
 
-  t_construct_id c_id;
+    t_construct_id c_id;
 
-  DEFINE_BOOST_SHARED_PTRS(t_construct);
+    DEFINE_BOOST_SHARED_PTRS(t_construct);
 
-  virtual void metadata(t_construct_id o_id, 
-                        std::string key, 
-                        std::string value);
-
+    virtual void metadata (t_construct_id o_id,
+                           std::string key,
+                           std::string value);
 };
 }
 #endif

@@ -5,8 +5,8 @@
 
 typedef long double t_time_interval;
 
-t_time_interval time_interval();
+t_time_interval time_interval ();
 
-void msleep(t_time_interval milliseconds);
+void msleep (t_time_interval milliseconds);
 
 #endif

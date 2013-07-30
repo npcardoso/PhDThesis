@@ -7,23 +7,23 @@
 #include "instrumentation/observation.h"
 
 namespace instrumentation {
-class t_oracle_construct: public t_construct {
+class t_oracle_construct : public t_construct {
 public:
-  DEFINE_BOOST_SHARED_PTRS(t_oracle_construct);
+    DEFINE_BOOST_SHARED_PTRS(t_oracle_construct);
 };
 
-class t_oracle_observation: public t_observation_single {
+class t_oracle_observation : public t_observation_single {
 public:
-  float health, confidence;
+    float health, confidence;
 
 public:
-  DEFINE_BOOST_SHARED_PTRS(t_oracle_observation);
-  
-  t_oracle_observation();
-  t_oracle_observation(t_time_interval time,
-                       t_construct_id c_id,
-                       float health,
-                       float confidence);
+    DEFINE_BOOST_SHARED_PTRS(t_oracle_observation);
+
+    t_oracle_observation ();
+    t_oracle_observation (t_time_interval time,
+                          t_construct_id c_id,
+                          float health,
+                          float confidence);
 };
 }
 

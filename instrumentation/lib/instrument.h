@@ -11,16 +11,16 @@
 extern "C" {
 #endif
 
-  /* Common */
+/* Common */
 #define _instr_str_aux(x) #x
 #define _instr_str(x) _instr_str_aux(x)
 
 #define _instr_expand_aux(item) item
 #define _instr_expand(item) _instr_expand_aux item
 
-#define _instr_metadata_location(register_fun) register_fun ("Location",( __FILE__  ":"  _instr_str(__LINE__)))
+#define _instr_metadata_location(register_fun) register_fun("Location", (__FILE__  ":"  _instr_str(__LINE__)))
 
-#define instr_void 0 
+#define instr_void 0
 
 #ifdef NINSTR
 
@@ -33,11 +33,11 @@ void _instr_metadata (t_construct_id c_id,
                       const char * val);
 
 
-#define instr_metadata(key, value) _instr_metadata (0, (key), (value))
+#define instr_metadata(key, value) _instr_metadata(0, (key), (value))
 
 #endif
 
-  /* Oracle */
+/* Oracle */
 
 #ifdef NINSTR
 
@@ -51,30 +51,31 @@ void _instr_metadata (t_construct_id c_id,
 
 #define instr_oracle(condition, confidence) _instr_oracle_observation(0, (condition), (confidence))
 
-#define instr_assert_oracle(condition, confidence){\
-  instr_oracle((condition), (confidence));\
-  assert((condition))\
-}
+#define instr_assert_oracle(condition, confidence)\
+    {\
+        instr_oracle((condition), (confidence));\
+        assert((condition))\
+    }
 
 #endif
 
-  /* Probe */
+/* Probe */
 
 #ifdef NINSTR
 
-#define instr_pvar(item) 
+#define instr_pvar(item)
 
 #define instr_probe(items...)
 
 #else
 
-#define instr_pvar(item) sizeof(item), ((void *)&(item))
+#define instr_pvar(item) sizeof(item), ((void*) &(item))
 
 #define instr_probe(items...) _instr_probe_observation(0, items, 0, 0)
 
 #endif
-  
-  /* Transaction */
+
+/* Transaction */
 
 #ifdef NINSTR
 

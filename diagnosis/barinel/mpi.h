@@ -6,9 +6,9 @@
 
 #include <iostream>
 
-void mpi_reduce_trie(diagnosis::structs::t_trie & trie,
-                     bool hierarchical,
-                     size_t buffer_size,
-                     t_stats & stats);
+void mpi_reduce_trie (diagnosis::structs::t_trie & trie,
+                      bool hierarchical,
+                      size_t buffer_size,
+                      t_stats & stats);
 
 #endif

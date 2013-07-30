@@ -9,64 +9,62 @@
 
 namespace diagnosis {
 namespace structs {
-
-
 class t_trie_iterator;
 
 class t_trie {
-  typedef std::map<t_component_id, t_trie> t_children;
+    typedef std::map < t_component_id, t_trie >t_children;
 
-  const t_trie * parent;
-  t_children children;
-  bool exists;
+    const t_trie * parent;
+    t_children children;
+    bool exists;
 
-  t_count elements;
+    t_count elements;
 
-  bool add(const t_candidate & candidate, 
-           t_candidate::const_iterator component,
-           bool composites);
+    bool add (const t_candidate & candidate,
+              t_candidate::const_iterator component,
+              bool composites);
 
-  bool purge_composites(const t_candidate & candidate,
-                        t_candidate::const_iterator component);
+    bool purge_composites (const t_candidate & candidate,
+                           t_candidate::const_iterator component);
 
-  bool is_composite(const t_candidate & candidate,
-                    t_candidate::const_iterator component,
-                    bool strict = false) const;
+    bool is_composite (const t_candidate & candidate,
+                       t_candidate::const_iterator component,
+                       bool strict=false) const;
 
 public:
-  typedef t_trie_iterator iterator;
+    typedef t_trie_iterator iterator;
 
-  inline t_trie() {
-    exists = false;
-    parent = NULL;
-    elements = 0;
-  }
+    inline t_trie () {
+        exists = false;
+        parent = NULL;
+        elements = 0;
+    }
 
-  void add(const t_candidate & candidate, 
-           bool purge_composites = true,
-           bool check_composite = true);
+    void add (const t_candidate & candidate,
+              bool purge_composites=true,
+              bool check_composite=true);
 
-  inline bool is_composite(const t_candidate & candidate,
-                           bool strict = false) const {
-    return is_composite(candidate, candidate.begin(), strict);  
-  }
+    inline bool is_composite (const t_candidate & candidate,
+                              bool strict=false) const {
+        return is_composite(candidate, candidate.begin(), strict);
+    }
 
-  inline t_count size() const {
-    return elements;
-  }
+    inline t_count size () const {
+        return elements;
+    }
 
-  std::ostream & print(std::ostream & out) const;
+    std::ostream& print (std::ostream & out) const;
 
-  iterator begin() const;
-  iterator end() const;
-  
-  inline void clear() {
-    children.clear();
-    exists = false;
-    elements = 0;
-  }
+    iterator begin () const;
+    iterator end () const;
 
-  friend class t_trie_iterator;
+    inline void clear () {
+        children.clear();
+        exists = false;
+        elements = 0;
+    }
+
+    friend class t_trie_iterator;
 };
 
 std::ostream & operator << (std::ostream & out, const t_trie & trie);
@@ -74,18 +72,18 @@ std::istream & operator >> (std::istream & in, t_trie & trie);
 
 
 class t_trie_iterator {
-  t_candidate current;
-  const t_trie * level;
+    t_candidate current;
+    const t_trie * level;
 public:
 
-  t_trie_iterator(const t_trie * level);
-  bool operator != (const t_trie_iterator & it) const;
-  bool operator == (const t_trie_iterator & it) const;
+    t_trie_iterator (const t_trie * level);
+    bool operator != (const t_trie_iterator & it) const;
+    bool operator == (const t_trie_iterator & it) const;
 
-  t_trie_iterator operator++(int);
+    t_trie_iterator operator ++ (int);
 
-  const t_candidate * operator->() const;
-  const t_candidate & operator*() const;
+    const t_candidate*operator -> () const;
+    const t_candidate & operator * () const;
 };
 }
 }

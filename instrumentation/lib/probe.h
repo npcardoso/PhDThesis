@@ -16,9 +16,9 @@
 extern "C" {
 #endif
 
-  void _instr_probe_observation(t_construct_id c_id, ...);
+void _instr_probe_observation (t_construct_id c_id, ...);
 
-  void _instr_hit_probe_observation(t_construct_id c_id);
+void _instr_hit_probe_observation (t_construct_id c_id);
 
 #ifdef __cplusplus
 }

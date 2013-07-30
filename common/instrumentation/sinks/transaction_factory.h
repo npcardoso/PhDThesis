@@ -11,24 +11,23 @@
 
 namespace instrumentation {
 namespace sinks {
-
-class t_transaction_factory: public t_observation_sink {
-  typedef std::stack<t_transaction_observation::t_ptr> t_stack;
-  t_stack transactions;
-  t_observation_sink::t_ptr sink;
+class t_transaction_factory : public t_observation_sink {
+    typedef std::stack < t_transaction_observation::t_ptr >t_stack;
+    t_stack transactions;
+    t_observation_sink::t_ptr sink;
 
 public:
-  DEFINE_BOOST_SHARED_PTRS(t_transaction_factory);
+    DEFINE_BOOST_SHARED_PTRS(t_transaction_factory);
 
-  t_transaction_factory(t_observation_sink::t_ptr sink = t_observation_sink::t_ptr());
+    t_transaction_factory (t_observation_sink::t_ptr sink=t_observation_sink::t_ptr());
 
-  size_t num_active() const;
+    size_t num_active () const;
 
-  virtual bool operator << (const t_transaction_observation::t_ptr & obs);
-  
-  virtual bool operator << (const t_oracle_observation::t_ptr & obs);
+    virtual bool operator << (const t_transaction_observation::t_ptr & obs);
 
-  virtual bool operator << (const t_probe_observation::t_ptr & obs);
+    virtual bool operator << (const t_oracle_observation::t_ptr & obs);
+
+    virtual bool operator << (const t_probe_observation::t_ptr & obs);
 };
 }
 }

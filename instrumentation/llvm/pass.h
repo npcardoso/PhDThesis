@@ -20,18 +20,16 @@ using namespace llvm;
 
 
 namespace Instrument {
-
 class Pass : public ModulePass {
 protected:
-  virtual bool handleFunction(Module & M, Function & F);
-  virtual bool handleBasicBlock(Module & M, BasicBlock & B);
-  virtual bool handleInstruction(Module & M, Instruction & I);
-  virtual bool handleFunctionCall(Module & M, CallInst & call);
+    virtual bool handleFunction (Module & M, Function & F);
+    virtual bool handleBasicBlock (Module & M, BasicBlock & B);
+    virtual bool handleInstruction (Module & M, Instruction & I);
+    virtual bool handleFunctionCall (Module & M, CallInst & call);
 
-  inline Pass(char ID) : ModulePass(ID) {}
-public:
-  ~Pass();
+    inline Pass (char ID) : ModulePass(ID) {}
+public: ~Pass ();
 
-  virtual bool runOnModule(Module & M);
+    virtual bool runOnModule (Module & M);
 };
 }

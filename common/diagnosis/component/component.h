@@ -8,24 +8,21 @@
 
 namespace diagnosis {
 namespace component {
-
 class t_component {
-
 public:
-  t_component(t_probability_model::t_ptr g_model);
+    t_component (t_probability_model::t_ptr g_model);
 
-  const t_goodness_model & goodness_model() const;
+    const t_goodness_model& goodness_model () const;
 
-  const char * metadata(std::string key) const;
-  void metadata(std::string key, std::string value);
+    const char*metadata (std::string key) const;
+    void metadata (std::string key, std::string value);
 
 private:
-  t_probability_model::t_ptr g_model;
-  
-  typedef std::map <std::string, std::string> t_metadata;
-  t_metadata mdata;
-};
+    t_probability_model::t_ptr g_model;
 
+    typedef std::map < std::string, std::string >t_metadata;
+    t_metadata mdata;
+};
 }
 }
 #endif

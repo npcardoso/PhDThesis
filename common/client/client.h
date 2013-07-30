@@ -10,10 +10,10 @@
 
 class t_client {
 public:
-  DEFINE_BOOST_SHARED_PTRS(t_client);
+    DEFINE_BOOST_SHARED_PTRS(t_client);
 
-  virtual t_client & operator << (const std::stringstream & s);
-  virtual t_client & operator << (const std::string & s) = 0;
+    virtual t_client & operator << (const std::stringstream & s);
+    virtual t_client & operator << (const std::string & s) = 0;
 };
 
 #endif

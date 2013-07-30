@@ -15,9 +15,9 @@
 extern "C" {
 #endif
 
-  void _instr_transaction_start(t_construct_id c_id);
+void _instr_transaction_start (t_construct_id c_id);
 
-  void _instr_transaction_end(t_construct_id c_id); 
+void _instr_transaction_end (t_construct_id c_id);
 
 #ifdef __cplusplus
 }

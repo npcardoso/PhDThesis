@@ -3,10 +3,10 @@
 
 #include "server/service.h"
 
-class t_echo_service: public t_service {
+class t_echo_service : public t_service {
 public:
-  virtual void operator ()(std::istream & in,
-                           std::ostream & out);
+    virtual void operator () (std::istream & in,
+                              std::ostream & out);
 };
 
 #endif

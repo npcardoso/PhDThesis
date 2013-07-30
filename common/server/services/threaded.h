@@ -5,21 +5,21 @@
 
 #include <boost/thread.hpp>
 
-class t_threaded_service: public t_service {
-  boost::thread_group workers;
-  t_service::t_ptr srv;
+class t_threaded_service : public t_service {
+    boost::thread_group workers;
+    t_service::t_ptr srv;
 
-  void launch(t_iostream_ptr * in,
-              t_iostream_ptr * out);
+    void launch (t_iostream_ptr * in,
+                 t_iostream_ptr * out);
 
 public:
-  t_threaded_service(t_service::t_ptr srv);
+    t_threaded_service (t_service::t_ptr srv);
 
-  void operator()(const t_iostream_ptr & in,
-                  const t_iostream_ptr & out);
+    void operator () (const t_iostream_ptr & in,
+                      const t_iostream_ptr & out);
 
-  virtual void operator ()(std::istream & in,
-                           std::ostream & out);
+    virtual void operator () (std::istream & in,
+                              std::ostream & out);
 };
 
 #endif

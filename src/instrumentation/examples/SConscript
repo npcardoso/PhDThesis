@@ -2,7 +2,7 @@ from os.path import join
 
 Import('env')
 
-env = env.Clone()
+oldenv = env.Clone()
 env.Append(
     LLVM_INSTRUMENT_LIB = join(env['lib_dir'], "lib%s.%s" % (env['llvminstrument'], env['libext'])),
     INSTRUMENT_LIB = join(env['lib_dir'], "lib%s.%s" % (env['libinstrument'], env['libext'])),
@@ -11,6 +11,8 @@ env.Append(
 	CPP_PATH = "-I%s" % env['include_dir'])
 env.Tool('Instrument')
 
-env.Export('env')
 env.SConscript('fractal/SConscript')
 env.SConscript('webfs/SConscript')
+
+env = oldenv
+env.Export('env')

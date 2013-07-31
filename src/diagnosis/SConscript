@@ -3,7 +3,7 @@ oldenv = env
 env = env.Clone()
 
 	
-env.Append(LINKFLAGS = "-Wl,-rpath,'$$ORIGIN/../lib' ")
+env.Append(LINKFLAGS = " -Wl,-rpath,'$$ORIGIN/../lib' ")
 Export('env')
 
 env.SConscript('barinel/SConscript')
@@ -15,4 +15,5 @@ env.SConscript('obs2gviz/SConscript')
 env.SConscript('proxy/SConscript')
 env.SConscript('trie/SConscript')
 
-Export('oldenv')
+env = oldenv
+Export('env')

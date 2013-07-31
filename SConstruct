@@ -41,7 +41,7 @@ env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=0
 env['prefix']  = env.Dir(env['prefix']).abspath
 env['build_dir']  = env.Dir(env['build_dir']).abspath
 
-env['common_dir'] = join(root, "common")
+env['common_dir'] = join(root, "src", "common")
 
 env['include_dir'] = join(env['prefix'], "include")
 env['lib_dir'] = join(env['prefix'], "lib")

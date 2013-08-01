@@ -60,15 +60,21 @@ t_basic_spectra::t_basic_spectra (t_count component_count,
 
 t_count t_basic_spectra::get_error_count (const t_spectra_filter * filter) const {
     // FIXME: Improve performance
-    t_count filtered_errors = 0;
+    t_count total_errors = 0;
 
 
-    if (filter)
-        for (t_id i = 1; i <= get_component_count(); i++)
-            if (is_error(i) && filter->is_transaction(i))
-                filtered_errors++;
+    if (filter) {
+        for (t_id i = 1; i <= get_transaction_count(); i++)
+            if (is_error(i) && !filter->is_transaction(i))
+                total_errors++;
+    }
+    else {
+        for (t_id i = 1; i <= get_transaction_count(); i++)
+            if (is_error(i))
+                total_errors++;
+    }
 
-    return errors.size() - filtered_errors;
+    return total_errors;
 }
 
 t_count t_basic_spectra::get_component_count (const t_spectra_filter * filter) const {

@@ -64,6 +64,7 @@ public:
         elements = 0;
     }
 
+    bool operator == (const t_trie & t);
     friend class t_trie_iterator;
 };
 

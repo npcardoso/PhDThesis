@@ -132,6 +132,21 @@ t_trie::iterator t_trie::end () const {
     return iterator(NULL);
 }
 
+bool t_trie::operator == (const t_trie & t) {
+    iterator my = begin(), other = t.begin();
+
+
+    while (my != end() && other != t.end()) {
+        if (*my != *other)
+            return false;
+
+        my++;
+        other++;
+    }
+
+    return (my == end() && other == t.end());
+}
+
 t_trie_iterator::t_trie_iterator (const t_trie * level) : level(level) {
     if (level && !level->exists)
         (*this)++;

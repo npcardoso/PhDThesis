@@ -18,7 +18,7 @@ public:
   }
 
   void operator ()(const instrumentation::t_transaction_observation & tr,
-                   diagnosis::t_count_spectra<t_count> & spectra);
+                   diagnosis::t_count_spectra & spectra);
 };
 
 }

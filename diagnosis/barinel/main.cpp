@@ -18,7 +18,7 @@ int main(int argc, char ** argv){
   if(options.configure(argc, argv))
     return 1;
       
-  t_count_spectra<t_count> spectra;
+  t_count_spectra spectra;
   structs::t_trie D;
   algorithms::t_mhs  mhs(options.mhs);
   

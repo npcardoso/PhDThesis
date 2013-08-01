@@ -9,18 +9,22 @@
 #include <iomanip>
 
 namespace diagnosis {
+template <class T>
+class t_basic_count_spectra;
+
+typedef t_basic_count_spectra<t_count> t_count_spectra;
 
 template <class T>
-class t_count_spectra: public t_basic_spectra {
+class t_basic_count_spectra: public t_basic_spectra {
   typedef boost::shared_ptr<T[]> t_activity_ptr;
   t_activity_ptr activity;
 
 public:
 
-  inline t_count_spectra() {
+  inline t_basic_count_spectra() {
   }
   
-  inline t_count_spectra(t_count component_count, 
+  inline t_basic_count_spectra(t_count component_count,
                          t_count transaction_count){
     set_element_count(component_count, transaction_count);
 

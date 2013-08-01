@@ -3,17 +3,13 @@ oldenv = env
 env = env.Clone()
 
 	
-env.Append(LINKFLAGS = " -Wl,-rpath,'$$ORIGIN/../lib' ")
+env.Append(LINKFLAGS = " -Wl,-rpath,'$$ORIGIN/../lib' %s " % env['mpfr_link'] )
 Export('env')
 
-env.SConscript('barinel/SConscript')
-env.SConscript('iscandidate/SConscript')
-env.SConscript('knn/SConscript')
-env.SConscript('mhs/SConscript')
-env.SConscript('obs2cspectra/SConscript')
-env.SConscript('obs2gviz/SConscript')
-env.SConscript('proxy/SConscript')
-env.SConscript('trie/SConscript')
+sub_folders = Glob('*/SConscript')
+
+for f in sub_folders:
+  env.SConscript(f)
 
 env = oldenv
 Export('env')

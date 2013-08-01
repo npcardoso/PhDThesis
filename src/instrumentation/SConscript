@@ -1,4 +1,8 @@
 Import('env')
-env.SConscript('llvm/SConscript')
-env.SConscript('lib/SConscript')
-env.SConscript('examples/SConscript')
+
+if env['default_instrumentation']:
+  env.SConscript('llvm/SConscript')
+  env.SConscript('lib/SConscript')
+
+  if env['default_instrumentation_examples']:
+	env.SConscript('examples/SConscript')

@@ -19,12 +19,10 @@ defines = "\
            -DUSE_THREADS=1\
            -D_REENTRANT"
 
-env.Append(LINKFLAGS = " -lpthread -ldiag", CFLAGS = defines)
-
+env.Append(CFLAGS = defines)
 
 obj = env.Instrument(target, sources, env['llvm_passes'])
 env.Depends(obj, env['libinstrument_shared'])
 
 bin_install = env.Install(env['bin_dir'], obj)
-
 env.Default(bin_install)

@@ -31,7 +31,8 @@ void t_mhs::calculate (const t_spectra & spectra,
     t_candidate candidate;
 
 
-    calculate(spectra, D, filter, candidate);
+    if (spectra.get_error_count(filter))
+        calculate(spectra, D, filter, candidate);
 }
 
 void t_mhs::calculate (const t_spectra & spectra,

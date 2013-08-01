@@ -4,7 +4,7 @@
 
 
 int main(int argc, char ** argv){
-  diagnosis::t_count_spectra spectra;
+  diagnosis::t_count_spectra<t_count> spectra;
   t_iscandidate_options options(argv[0]);
       
   if(options.configure(argc, argv))

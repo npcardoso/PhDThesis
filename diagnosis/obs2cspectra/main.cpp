@@ -33,7 +33,7 @@ int main() {
     t_json_observation_unserializer unserializer(collector);
     unserializer(tree);
 
-    t_count_spectra res;
+    t_count_spectra<t_count> res;
 
     t_observations_to_count_spectra converter;
     BOOST_FOREACH(t_transaction_observation::t_ptr tr, 

@@ -8,7 +8,7 @@ using namespace diagnosis;
 namespace converters {
 
 void t_observations_to_count_spectra::operator ()(const t_transaction_observation & tr,
-                                                  t_count_spectra & spectra) {
+                                                  t_count_spectra<t_count> & spectra) {
 
 
   t_transaction_id tid = spectra.new_transaction();

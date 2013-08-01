@@ -141,34 +141,44 @@ public:
     }
 
     virtual std::istream& read (std::istream & in) {
+        std::ios::iostate in_exceptions = in.exceptions();
         t_count component_count, transaction_count;
         t_transaction_id transaction_offset = get_transaction_count();
 
 
-        in >> component_count >> transaction_count;
-        set_element_count(std::max(component_count, get_component_count()),
-                          transaction_offset + transaction_count);
+        try {
+            in.exceptions(std::istream::failbit | std::istream::badbit | std::istream::eofbit);
 
-        t_count value;
+            in >> component_count >> transaction_count;
+            set_element_count(std::max(component_count, get_component_count()),
+                              transaction_offset + transaction_count);
 
-        for (t_transaction_id transaction = 1;
-             transaction <= transaction_count;
-             transaction++) {
-            for (t_component_id component = 1;
-                 component <= component_count;
-                 component++) {
-                in >> value;
+            t_count value;
 
-                if (value)
-                    hit(component, transaction_offset + transaction, true);
+            for (t_transaction_id transaction = 1;
+                 transaction <= transaction_count;
+                 transaction++) {
+                for (t_component_id component = 1;
+                     component <= component_count;
+                     component++) {
+                    in >> value;
+
+                    if (value)
+                        hit(component, transaction_offset + transaction, true);
+                }
+
+                char result; // TODO: input for fuzzy error values
+                in >> result;
+
+                if (result == '1' || result == '-' || result == 'x' || result == 'X')
+                    error(transaction_offset + transaction);
             }
-
-            char result; // TODO: input for fuzzy error values
-            in >> result;
-
-            if (result == '1' || result == '-' || result == 'x' || result == 'X')
-                error(transaction_offset + transaction);
         }
+        catch (std::ios_base::failure e) {}
+
+        std::ios::iostate in_state = in.rdstate();
+        in.exceptions(in_exceptions);
+        in.setstate(in_state);
 
         return in;
     }

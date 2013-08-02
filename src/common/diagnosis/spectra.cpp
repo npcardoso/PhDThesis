@@ -29,9 +29,9 @@ bool t_spectra::is_candidate (const t_candidate & candidate,
     return true;
 }
 
-std::ostream & t_spectra::print (std::ostream & out,
+std::ostream & t_spectra::write (std::ostream & out,
                                  const t_spectra_filter * filter) const {
-    return out << "Filtered Spectra output";
+    throw e_not_implemented();
 }
 
 std::istream & t_spectra::read (std::istream & in) {
@@ -43,7 +43,7 @@ std::istream & operator >> (std::istream & in, t_spectra & spectra) {
 }
 
 std::ostream & operator << (std::ostream & out, const t_spectra & spectra) {
-    return spectra.print(out);
+    return spectra.write(out);
 }
 
 t_basic_spectra::t_basic_spectra () {

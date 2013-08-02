@@ -29,7 +29,7 @@ public:
     virtual t_count get_count (t_component_id component,
                                t_transaction_id transaction) const = 0;
 
-    template < class G >
+    template <class G>
     void probability (const t_candidate & candidate,
                       const G & goodnesses,
                       t_probability_mp & ret,
@@ -41,7 +41,7 @@ public:
     virtual bool is_candidate (const t_candidate & candidate,
                                const t_spectra_filter * filter=NULL) const;
 
-    virtual std::ostream& print (std::ostream & out,
+    virtual std::ostream& write (std::ostream & out,
                                  const t_spectra_filter * filter=NULL) const;
 
     virtual std::istream& read (std::istream & in);
@@ -51,7 +51,7 @@ std::istream & operator >> (std::istream & in, t_spectra & spectra);
 std::ostream & operator << (std::ostream & out, const t_spectra & spectra);
 
 class t_basic_spectra : public t_spectra {
-    typedef std::vector < t_error >t_errors;
+    typedef std::vector<t_error> t_errors;
     t_errors errors;
     t_count component_count;
     t_count transaction_count;
@@ -80,7 +80,7 @@ public:
                         t_error set=1);
 };
 
-template < class G >
+template <class G>
 void t_spectra::probability (const t_candidate & candidate,
                              const G & goodnesses,
                              t_probability_mp & ret,

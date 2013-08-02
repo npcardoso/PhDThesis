@@ -1,5 +1,5 @@
-#ifndef __COUNT_SPECTRA_H__
-#define __COUNT_SPECTRA_H__
+#ifndef __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
+#define __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
 
 #include "diagnosis/spectra_iterator.h"
 #include "diagnosis/spectra.h"
@@ -9,14 +9,14 @@
 #include <iomanip>
 
 namespace diagnosis {
-template < class T >
+template <class T>
 class t_basic_count_spectra;
 
-typedef t_basic_count_spectra < t_count >t_count_spectra;
+typedef t_basic_count_spectra<t_count> t_count_spectra;
 
-template < class T >
+template <class T>
 class t_basic_count_spectra : public t_basic_spectra {
-    typedef boost::shared_ptr < T[] >t_activity_ptr;
+    typedef boost::shared_ptr<T[]> t_activity_ptr;
     t_activity_ptr activity;
 
 public:
@@ -30,7 +30,11 @@ public:
 
     virtual T get_count (t_component_id component,
                          t_transaction_id transaction) const {
-        return get_activity(component, transaction);
+        assert(component > 0);
+        assert(component <= get_component_count());
+        assert(transaction > 0);
+        assert(transaction <= get_transaction_count());
+        return activity[(transaction - 1) * get_component_count() + (component - 1)];
     }
 
     virtual void set_count (t_component_id component,
@@ -50,16 +54,6 @@ public:
         }
 
         activity[(transaction - 1) * get_component_count() + (component - 1)] = count;
-    }
-
-    virtual const T& get_activity (t_component_id component,
-                                   t_transaction_id transaction) const {
-        assert(component > 0);
-        assert(component <= get_component_count());
-        assert(transaction > 0);
-        assert(transaction <= get_transaction_count());
-
-        return activity[(transaction - 1) * get_component_count() + (component - 1)];
     }
 
     virtual void set_element_count (t_count component_count,
@@ -111,7 +105,7 @@ public:
         activity[(transaction - 1) * get_component_count() + (component - 1)] += count;
     }
 
-    virtual std::ostream& print (std::ostream & out,
+    virtual std::ostream& write (std::ostream & out,
                                  const t_spectra_filter * filter=NULL) const {
         if (filter) {
             assert(filter->get_last_component() <= get_component_count());

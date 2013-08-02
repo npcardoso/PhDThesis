@@ -1,13 +1,19 @@
-llvminstrument
+libdiag
 ==============
 
-A c/c++ instrumentation tool
+A diagnosis library.
 
-## Running examples ##
+Implements:
+ - Count Spectra
+ - MHS2
+ - Fuzzinel
+ - Ochiai
 
-	$ scons
-	$ ./run_test.sh fractal | xdot -  # shows the graphviz output of the captured data
-	$ ./run_test.sh webfs &           # runs an instrumented version of webfs in port 8090
-	$ echo -n "graphviz" | nc 127.0.0.1 12345 | xdot - # connects to library tcp/ip interface at port 12345 and requests graphviz output
+Tools:
+ - libRdiag: R binding
+ - llvmInstrument: An instrumentation tool
+ - libinstrument: An instrumentation colection framework
 
-
+TODO:
+ - NFGE
+ - README

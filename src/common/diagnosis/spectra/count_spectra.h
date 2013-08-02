@@ -1,5 +1,5 @@
-#ifndef __COUNT_SPECTRA_H__
-#define __COUNT_SPECTRA_H__
+#ifndef __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
+#define __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
 
 #include "diagnosis/spectra_iterator.h"
 #include "diagnosis/spectra.h"
@@ -9,14 +9,14 @@
 #include <iomanip>
 
 namespace diagnosis {
-template < class T >
+template <class T>
 class t_basic_count_spectra;
 
-typedef t_basic_count_spectra < t_count >t_count_spectra;
+typedef t_basic_count_spectra<t_count> t_count_spectra;
 
-template < class T >
+template <class T>
 class t_basic_count_spectra : public t_basic_spectra {
-    typedef boost::shared_ptr < T[] >t_activity_ptr;
+    typedef boost::shared_ptr<T[]> t_activity_ptr;
     t_activity_ptr activity;
 
 public:
@@ -30,7 +30,11 @@ public:
 
     virtual T get_count (t_component_id component,
                          t_transaction_id transaction) const {
-        return get_activity(component, transaction);
+        assert(component > 0);
+        assert(component <= get_component_count());
+        assert(transaction > 0);
+        assert(transaction <= get_transaction_count());
+        return activity[(transaction - 1) * get_component_count() + (component - 1)];
     }
 
     virtual void set_count (t_component_id component,
@@ -50,16 +54,6 @@ public:
         }
 
         activity[(transaction - 1) * get_component_count() + (component - 1)] = count;
-    }
-
-    virtual const T& get_activity (t_component_id component,
-                                   t_transaction_id transaction) const {
-        assert(component > 0);
-        assert(component <= get_component_count());
-        assert(transaction > 0);
-        assert(transaction <= get_transaction_count());
-
-        return activity[(transaction - 1) * get_component_count() + (component - 1)];
     }
 
     virtual void set_element_count (t_count component_count,
@@ -111,7 +105,7 @@ public:
         activity[(transaction - 1) * get_component_count() + (component - 1)] += count;
     }
 
-    virtual std::ostream& print (std::ostream & out,
+    virtual std::ostream& write (std::ostream & out,
                                  const t_spectra_filter * filter=NULL) const {
         if (filter) {
             assert(filter->get_last_component() <= get_component_count());
@@ -141,34 +135,44 @@ public:
     }
 
     virtual std::istream& read (std::istream & in) {
+        std::ios::iostate in_exceptions = in.exceptions();
         t_count component_count, transaction_count;
         t_transaction_id transaction_offset = get_transaction_count();
 
 
-        in >> component_count >> transaction_count;
-        set_element_count(std::max(component_count, get_component_count()),
-                          transaction_offset + transaction_count);
+        try {
+            in.exceptions(std::istream::failbit | std::istream::badbit | std::istream::eofbit);
 
-        t_count value;
+            in >> component_count >> transaction_count;
+            set_element_count(std::max(component_count, get_component_count()),
+                              transaction_offset + transaction_count);
 
-        for (t_transaction_id transaction = 1;
-             transaction <= transaction_count;
-             transaction++) {
-            for (t_component_id component = 1;
-                 component <= component_count;
-                 component++) {
-                in >> value;
+            t_count value;
 
-                if (value)
-                    hit(component, transaction_offset + transaction, true);
+            for (t_transaction_id transaction = 1;
+                 transaction <= transaction_count;
+                 transaction++) {
+                for (t_component_id component = 1;
+                     component <= component_count;
+                     component++) {
+                    in >> value;
+
+                    if (value)
+                        hit(component, transaction_offset + transaction, true);
+                }
+
+                char result; // TODO: input for fuzzy error values
+                in >> result;
+
+                if (result == '1' || result == '-' || result == 'x' || result == 'X')
+                    error(transaction_offset + transaction);
             }
-
-            char result; // TODO: input for fuzzy error values
-            in >> result;
-
-            if (result == '1' || result == '-' || result == 'x' || result == 'X')
-                error(transaction_offset + transaction);
         }
+        catch (std::ios_base::failure e) {}
+
+        std::ios::iostate in_state = in.rdstate();
+        in.exceptions(in_exceptions);
+        in.setstate(in_state);
 
         return in;
     }

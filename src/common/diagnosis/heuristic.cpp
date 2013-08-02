@@ -60,7 +60,7 @@ std::ostream & t_heuristic::print (std::ostream & out) const {
 
 t_heuristic::t_order_buffer t_heuristic::get_ordering_buffer (const t_spectra & spectra,
                                                               const t_spectra_filter * filter) {
-    return t_order_buffer(new t_rank_element[spectra.get_component_count(filter)]);
+    return t_order_buffer(new t_rank_element[spectra.get_component_count(filter) + 1]);
 }
 
 std::ostream & operator << (std::ostream & out, const t_heuristic & heuristic) {

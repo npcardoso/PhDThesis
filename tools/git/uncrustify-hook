@@ -47,12 +47,12 @@ __indent_C() {
 	then
 		return;
 	fi
-	echo $file $ext
- 
+	
 	echo "Indenting " $file
 	"$INDENT" -c $CONF_PATH --no-backup "$file"
 	git add "$file"
 }
 
-cd $(git rev-parse --show-cdup)
+GIT_ROOT=$(git rev-parse --show-cdup )
+[[ ! -z $GIT_ROOT ]] && cd $GIT_ROOT
 indent

@@ -15,8 +15,6 @@ vars.Add('libdiag', '', 'diag')
 vars.Add('libinstrument', '', 'instrument')
 vars.Add('llvminstrument', '', 'llvminstrument')
 
-vars.Add('llvm_passes', '', '-instrument_function -instrument_prepare')
-
 vars.Add('debug', '', False)
 
 vars.Add('boost_lib', '', None)
@@ -24,13 +22,18 @@ vars.Add('boost_include', '', None)
 
 vars.Add('R_include', '', '/usr/include/R')
 
+vars.Add('llvm_passes', '', '-instrument_function -instrument_prepare')
 vars.Add('clang', '', 'clang++')
 vars.Add('llvmconfig', '', 'llvm-config')
 vars.Add('OPT', '', 'opt')
 vars.Add('LLC', '', 'llc')
 vars.Add('LLI', '', 'lli')
-vars.Add('CXX', '', 'g++')
+vars.Add('CXX', '', 'clang++')
 
+### Defaults ###
+vars.Add('default_instrumentation_examples', '', True)
+vars.Add('default_instrumentation', '', True)
+vars.Add('default_libRdiag', '', True)
 
 env = Environment()
 
@@ -41,12 +44,13 @@ env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=0
 env['prefix']  = env.Dir(env['prefix']).abspath
 env['build_dir']  = env.Dir(env['build_dir']).abspath
 
-env['common_dir'] = join(root, "common")
+env['common_dir'] = join(root, "src", "common")
 
 env['include_dir'] = join(env['prefix'], "include")
 env['lib_dir'] = join(env['prefix'], "lib")
 env['bin_dir'] = join(env['prefix'], "bin")
 
+### Link Flags ###
 if 'boost_include' in env:
 	env.Append(CPPPATH = [env['boost_include']])
 
@@ -55,6 +59,7 @@ if 'boost_lib' in env:
 
 env['mpi_include'] = '`mpic++ --showme:compile`'
 env['mpi_link'] = '`mpic++ --showme:link`'
+env['mpfr_link'] = '-lgmp -lmpfr '
 
 
 if(env['debug']):
@@ -65,7 +70,6 @@ else:
 env['CXX'] = env['clang']
 env['ENV']['TERM'] = os.environ['TERM']
 
-env['LINKFLAGS'] = '-lgmp -lmpfr '
 #vars.Save('.scons.conf', env)
 
 Export('env')

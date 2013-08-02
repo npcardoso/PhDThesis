@@ -1,0 +1,21 @@
+from os.path import join
+
+Import('env')
+env = env.Clone()
+env.Append(
+	CCFLAGS= " -Wno-c++11-extensions `Rscript -e 'Rcpp:::CxxFlags()'`",
+	CPPPATH = [Dir(env['common_dir']), Dir(env['R_include'])],
+	LINKFLAGS = " -lboost_system -lboost_thread `Rscript -e 'Rcpp:::LdFlags()'` " + join(env['lib_dir'], "lib" + env['libdiag'] + ".a"))
+
+sources = [Glob("src/*cpp")] + env['common_objects']
+
+obj = env.SharedLibrary(target = "libRdiag", source = sources)
+
+path = "*"
+for i in range(3):
+	env.Depends(obj, Dir('pkg').srcnode().glob(path, source=True))
+	path = join(path, '*')
+
+env.Depends(obj, env['libdiag_static'])
+
+env.Default(obj)

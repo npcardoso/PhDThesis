@@ -49,7 +49,7 @@ _instrument_asm_builder = SCons.Builder.Builder(
     single_source = 1)
 
 _instrument_linker_builder = SCons.Builder.Builder(
-    action = SCons.Action.Action('$GCC $LINK_PATH $LINKFLAGS -o $TARGET $SOURCES'),
+    action = SCons.Action.Action('$CLANGPP $LINK_PATH $LINKFLAGS -o $TARGET $SOURCES'),
     src_suffix = '$INSTR_ASM_SUFFIX')
 
 def RecursiveScanner(scanner, file):
@@ -137,7 +137,7 @@ _required_vars = ['LLVM_INSTRUMENT_LIB',
 _instrument_apps = [('CLANG', 'clang'),
                     ('OPT', 'opt'),
                     ('LLC', 'llc'),
-                    ('GCC', 'g++')]
+                    ('CLANGPP', 'clang++')]
 def generate(env):
     """Add Builders and construction variables to the Environment."""
     exists(env)

@@ -1,0 +1,18 @@
+from os.path import join
+
+Import('env')
+
+oldenv = env.Clone()
+env.Append(
+	LLVM_INSTRUMENT_LIB = join(env['lib_dir'], "lib%s.%s" % (env['llvminstrument'], env['libext'])),
+	INSTRUMENT_LIB = join(env['lib_dir'], "lib%s.%s" % (env['libinstrument'], env['libext'])),
+	LINK_PATH = "-L%s" % env['lib_dir'],
+	LINKFLAGS = "-lpthread -l%s -l%s" % (env['libinstrument'], env['libdiag']),
+	CPP_PATH = "-I%s" % env['include_dir'])
+env.Tool('Instrument')
+
+env.SConscript('fractal/SConscript')
+env.SConscript('webfs/SConscript')
+
+env = oldenv
+env.Export('env')

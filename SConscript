@@ -1,9 +1,8 @@
 Import('env')
 
-env.SConscript('common/SConscript')
-env.SConscript('instrumentation/SConscript')
-env.SConscript('diagnosis/SConscript')
-env.SConscript('sandbox/SConscript')
-#env.SConscript('tools/Rlibdiag/src/SConscript')
+env.SConscript('src/common/SConscript')
+env.SConscript('src/instrumentation/SConscript')
+env.SConscript('src/diagnosis/SConscript')
 
-env.SConscript('examples/SConscript')
+if env['default_libRdiag']:
+  env.SConscript('tools/libRdiag/SConscript')

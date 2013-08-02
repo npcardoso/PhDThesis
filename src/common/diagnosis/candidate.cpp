@@ -1,7 +1,7 @@
 #include "candidate.h"
 namespace diagnosis {
 std::istream & t_candidate::read (std::istream & in) {
-    t_component_id component;
+    t_component_id component = 0;
 
 
     while (true) {

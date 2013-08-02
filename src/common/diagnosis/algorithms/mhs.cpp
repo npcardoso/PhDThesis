@@ -65,7 +65,7 @@ void t_mhs::calculate (const t_spectra & spectra,
                 if (max_candidates && D.size() >= max_candidates)
                     return;
 
-                std::pair < t_candidate::iterator, bool >tmp = candidate.insert(it.get_component());
+                std::pair<t_candidate::iterator, bool> tmp = candidate.insert(it.get_component());
                 assert(tmp.second);
 
                 D.add(candidate);
@@ -83,16 +83,19 @@ void t_mhs::calculate (const t_spectra & spectra,
     if (max_candidate_size && candidate.size() + 2 > max_candidate_size)
         return;
 
+    /* Creating complex candidates */
+
+    t_count remaining_components = spectra.get_component_count() - tmp_filter.get_filtered_component_count();
+
+    if (remaining_components <= 0)
+        return;
+
     /* Ranking */
 
     t_heuristic::t_order_buffer order_buffer = t_heuristic::get_ordering_buffer(spectra,
                                                                                 &tmp_filter);
 
     get_heuristic(candidate.size()) (spectra, order_buffer.get(), &tmp_filter);
-
-    /* Creating complex candidates */
-
-    t_count remaining_components = spectra.get_component_count() - tmp_filter.get_filtered_component_count();
 
     for (t_id i = 0; i < remaining_components; i++) {
         t_component_id component = order_buffer[i].get_component();
@@ -121,7 +124,7 @@ void t_mhs::calculate (const t_spectra & spectra,
         strip(component, spectra, strip_filter);
 
         /* Insert the component into the candidate */
-        std::pair < t_candidate::iterator, bool >tmp = candidate.insert(component);
+        std::pair<t_candidate::iterator, bool> tmp = candidate.insert(component);
         assert(tmp.second);
 
         calculate(spectra, D, &strip_filter, candidate, start_time);
@@ -134,7 +137,7 @@ void t_mhs::update (const t_spectra & spectra,
                     t_trie & D,
                     t_trie & old_D,
                     const t_spectra_filter & filter) const {
-    std::list < t_candidate >candidates;
+    std::list<t_candidate> candidates;
 
     {
         t_trie::iterator it = old_D.begin();
@@ -149,7 +152,7 @@ void t_mhs::update (const t_spectra & spectra,
         }
     }
     {
-        std::list < t_candidate >::iterator it = candidates.begin();
+        std::list<t_candidate>::iterator it = candidates.begin();
 
         while (it != candidates.end()) {
             t_candidate candidate = *it;
@@ -167,7 +170,7 @@ void t_mhs::combine (const t_spectra & spectra,
                      const t_trie & D_second,
                      const t_spectra_filter & filter_first,
                      const t_spectra_filter & filter_second) {
-    std::list < t_candidate >c_first, c_second;
+    std::list<t_candidate> c_first, c_second;
 
     {
         t_trie::iterator it = D_first.begin();
@@ -193,10 +196,10 @@ void t_mhs::combine (const t_spectra & spectra,
         }
     }
     {
-        std::list < t_candidate >::iterator first_it = c_first.begin();
+        std::list<t_candidate>::iterator first_it = c_first.begin();
 
         while (first_it != c_first.end()) {
-            std::list < t_candidate >::iterator second_it = c_second.begin();
+            std::list<t_candidate>::iterator second_it = c_second.begin();
 
             while (second_it != c_second.end()) {
                 t_candidate tmp = *first_it;

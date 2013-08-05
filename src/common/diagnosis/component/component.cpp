@@ -8,7 +8,7 @@ void t_component::metadata (std::string key, std::string value) {
     mdata[key] = value;
 }
 
-const char*t_component::metadata (std::string key) const {
+const char * t_component::metadata (std::string key) const {
     t_metadata::const_iterator pos = mdata.find(key);
 
 

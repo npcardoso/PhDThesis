@@ -3,8 +3,6 @@
 
 #include "diagnosis/component/density.h"
 
-#include <boost/random/mersenne_twister.hpp>
-
 namespace diagnosis {
 namespace component {
 typedef float t_probability;
@@ -24,7 +22,7 @@ public:
     virtual t_label_id label (t_density_model::t_ptr model,
                               bool good);
 
-    virtual const t_density_model::t_ptr& label (t_label_id lbl) const;
+    virtual const t_density_model::t_ptr & label (t_label_id lbl) const;
     virtual t_count label_count () const;
 
     virtual t_probability operator () (const t_state & obs) const = 0;
@@ -32,10 +30,10 @@ public:
 
 
 private:
-    typedef std::vector < t_density_model::t_ptr >t_labels;
+    typedef std::vector<t_density_model::t_ptr> t_labels;
     t_labels labels;
 
-    typedef std::vector < bool >t_good;
+    typedef std::vector<bool> t_good;
     t_good good;
 };
 }

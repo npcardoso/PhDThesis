@@ -19,6 +19,14 @@ public:
     add(t_opt('d', "distance", true, false, "Sets the distance function"));
   }
 private:
+  bool handle_distance(std::string distance) {
+    if(distance == "euclidean")
+      configs.dist_function = algorithms::euclidean_distance;
+    else if(distance == "manhattan")
+      configs.dist_function = algorithms::manhattan_distance;
+    return false;
+  }
+  
   virtual bool short_opt (int c, char * param) {
       switch (c) {
       case 'm':
@@ -32,6 +40,9 @@ private:
           
       case 'f':
           return verb_strtoi(optarg, configs.locked_centroids, true);
+
+      case 'd':
+          return handle_distance(optarg);
 
       default:
           return t_options::short_opt(c, param);

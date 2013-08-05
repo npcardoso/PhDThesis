@@ -24,13 +24,13 @@ namespace algorithms {
       if(spectra.is_error(t)) {
         for(t_id c = 1; c <= components; c++) {
           MATRIX_CELL(centroids,0,(c-1),components) += 
-            t_data(spectra.get_activity(c,t)) / faulty_transactions;
+            t_data(spectra.get_count(c,t)) / faulty_transactions;
         }
       }
       else {
         for(t_id c = 1; c <= components; c++) {
           MATRIX_CELL(centroids,1,(c-1),components) += 
-            t_data(spectra.get_activity(c,t)) / normal_transactions;
+            t_data(spectra.get_count(c,t)) / normal_transactions;
         }
       }
     }

@@ -71,7 +71,7 @@ namespace algorithms {
 
       for(t_id p = 1; p <= points; p++)
         for(t_id d = 1; d <= dimensions; d++) {
-          MATRIX_CELL(data_spectra, (p-1), (d-1), dimensions) = spectra.get_activity(d,p);
+          MATRIX_CELL(data_spectra, (p-1), (d-1), dimensions) = spectra.get_count(d,p);
         }
       this->data = data_spectra;
     }

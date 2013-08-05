@@ -42,6 +42,9 @@ public:
                                  const t_spectra_filter * filter=NULL) const;
 
     virtual std::istream& read (std::istream & in);
+
+private:
+    t_error read_error (std::istream & in) const;
 };
 }
 

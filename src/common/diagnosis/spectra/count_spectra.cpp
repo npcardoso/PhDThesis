@@ -113,37 +113,32 @@ std::ostream & t_count_spectra::write (std::ostream & out,
 
 std::istream & t_count_spectra::read (std::istream & in) {
     std::ios::iostate in_exceptions = in.exceptions();
-    t_count component_count, transaction_count;
-    t_transaction_id transaction_offset = get_transaction_count();
+
+
+    // assert(in.good());
+
+    t_count_spectra spectra;
 
 
     try {
-        in.exceptions(std::istream::failbit | std::istream::badbit | std::istream::eofbit);
+        t_count c_count, tr_count;
 
-        in >> component_count >> transaction_count;
-        set_element_count(std::max(component_count, get_component_count()),
-                          transaction_offset + transaction_count);
+        in.exceptions(std::istream::failbit | std::istream::badbit);
 
-        t_count value;
+        in >> c_count >> tr_count;
+        spectra.set_element_count(c_count, tr_count);
 
-        for (t_transaction_id transaction = 1;
-             transaction <= transaction_count;
-             transaction++) {
-            for (t_component_id component = 1;
-                 component <= component_count;
-                 component++) {
+        for (t_transaction_id tr = 1; tr <= tr_count; tr++) {
+            for (t_component_id c = 1; c <= c_count; c++) {
+                t_count value;
                 in >> value;
-
-                if (value)
-                    hit(component, transaction_offset + transaction, true);
+                spectra.hit(c, tr, value);
             }
 
-            char result; // TODO: input for fuzzy error values
-            in >> result;
-
-            if (result == '1' || result == '-' || result == 'x' || result == 'X')
-                set_error(transaction_offset + transaction);
+            spectra.set_error(tr, read_error(in));
         }
+
+        *this = spectra;
     }
     catch (std::ios_base::failure e) {}
 
@@ -152,5 +147,28 @@ std::istream & t_count_spectra::read (std::istream & in) {
     in.setstate(in_state);
 
     return in;
+}
+
+t_error t_count_spectra::read_error (std::istream & in) const {
+    std::string str;
+    std::stringstream ss;
+
+
+    in >> str;
+    ss.str(str);
+    ss.exceptions(std::istream::failbit | std::istream::badbit);
+
+    try {
+        t_error result;
+        ss >> result;
+
+        return result;
+    }
+    catch (std::ios_base::failure e) {}
+
+    if (str == "1" || str == "-" || str == "x" || str == "X")
+        return 1;
+
+    return 0;
 }
 }

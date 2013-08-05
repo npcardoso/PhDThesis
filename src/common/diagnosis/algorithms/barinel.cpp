@@ -63,7 +63,6 @@ void t_barinel::calculate (const t_spectra & spectra,
         spectra.probability(candidate, g, pr, filter);
 
         // Check stop conditions
-
         if (abs(pr - old_pr) < epsilon)
             break;
 
@@ -105,8 +104,10 @@ void t_barinel::model (const t_spectra & spectra,
                 symbol += 1 << comp;
         }
 
-        model.pass[symbol] += 1 - spectra.get_error(it.get_transaction());
-        model.fail[symbol] += spectra.get_error(it.get_transaction());
+        t_confidence conf = spectra.get_confidence(it.get_transaction());
+        t_error err = spectra.get_error(it.get_transaction());
+        model.pass[symbol] += conf * (1 - err);
+        model.fail[symbol] += conf * err;
     }
 }
 

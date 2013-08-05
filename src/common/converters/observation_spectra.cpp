@@ -22,7 +22,7 @@ void t_observations_to_count_spectra::operator () (const t_transaction_observati
         health /= tr.oracles.size();
     }
 
-    spectra.error(tid, health < threshold);
+    spectra.set_error(tid, health);
 
     BOOST_FOREACH(t_probe_observation::t_ptr p,
                   tr.probes) {

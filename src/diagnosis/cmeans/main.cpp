@@ -8,15 +8,6 @@
 
 using namespace diagnosis;
 
-void print(std::ostream & out, t_count nrows, t_count ncols, algorithms::t_value_const_ptr p) {
-  for (t_id i = 0; i < nrows; i++) {
-    out << (i +1) << '\t';
-    for (t_id j = 0; j < ncols; j++)
-      out << MATRIX_CELL(p,i,j,ncols) << '\t';
-    out << std::endl;
-  }
-}
-
 int main(int argc, char ** argv) {
   t_cmeans_options options(argv[0]);
   
@@ -27,9 +18,9 @@ int main(int argc, char ** argv) {
   options.input() >> spectra;
 
   algorithms::t_cmeans cm(spectra);
-  algorithms::t_membership_ptr fuzzy_cluster = cm.clustering(spectra,options.configs);
-
-  print(options.output(), spectra.get_transaction_count(), 2, fuzzy_cluster);
+  structs::t_membership fuzzy_cluster = cm.clustering(spectra,options.configs);
+  
+  options.output() << fuzzy_cluster;
   
   return 0;
 }

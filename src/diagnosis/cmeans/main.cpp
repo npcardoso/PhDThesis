@@ -1,4 +1,6 @@
+#include "diagnosis/spectra/count_spectra.h"
 #include "diagnosis/algorithms/cmeans.h"
+#include "configure.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -8,35 +10,26 @@ using namespace diagnosis;
 
 void print(std::ostream & out, t_count nrows, t_count ncols, algorithms::t_value_const_ptr p) {
   for (t_id i = 0; i < nrows; i++) {
+    out << (i +1) << '\t';
     for (t_id j = 0; j < ncols; j++)
       out << MATRIX_CELL(p,i,j,ncols) << '\t';
     out << std::endl;
   }
 }
 
-int main() {
-  srand (time(NULL));
+int main(int argc, char ** argv) {
+  t_cmeans_options options(argv[0]);
   
-  t_count number_points = 5;
-  t_count dimension_point = 5;
-  t_count num_centroids = 3;
+  if (options.configure(argc, argv))
+      return 1;
   
-  t_count size = number_points * dimension_point;
-  algorithms::t_value_ptr data(new t_value[number_points * dimension_point]);
-  for(t_id i = 0; i < size; i++)
-    data[i] = t_value(rand() % 100);
-  
-  std::cout << "Data" << std::endl;
-  print(std::cout, number_points, dimension_point, data);
-  
-  algorithms::t_cmeans_options options;
-  options.m = 1.6;
-  
-  algorithms::t_cmeans cm(number_points,dimension_point,data);
-  algorithms::t_membership_ptr fuzzy_cluster = cm.clustering(num_centroids,options);
-  
-  std::cout << "Fuzzy cluster" << std::endl;
-  print(std::cout, number_points, num_centroids, fuzzy_cluster);
+  t_count_spectra spectra;
+  options.input() >> spectra;
+
+  algorithms::t_cmeans cm(spectra);
+  algorithms::t_membership_ptr fuzzy_cluster = cm.clustering(spectra,options.configs);
+
+  print(options.output(), spectra.get_transaction_count(), 2, fuzzy_cluster);
   
   return 0;
 }

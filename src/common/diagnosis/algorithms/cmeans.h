@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "utils/boost.h"
+#include "diagnosis/spectra/count_spectra.h"
 
 typedef double t_value;
 
@@ -39,9 +40,9 @@ namespace algorithms {
                                 t_id centroids_row,
                                 t_count dimensions);
 
-  class t_cmeans_options {
+  class t_cmeans_configs {
   public:
-    t_cmeans_options() {
+    t_cmeans_configs() {
       initialize_defaults();
     }
 
@@ -66,16 +67,36 @@ namespace algorithms {
       dimensions(dimensions),
       data(data) { }
     
+    t_cmeans(t_count_spectra & spectra): 
+      points(spectra.get_transaction_count()),
+      dimensions(spectra.get_component_count()) {
+      t_value_ptr data_spectra(new t_value[points * dimensions]);
+
+      for(t_id p = 1; p <= points; p++)
+        for(t_id d = 1; d <= dimensions; d++) {
+          MATRIX_CELL(data_spectra, (p-1), (d-1), dimensions) = spectra.get_activity(d,p);
+        }
+      this->data = data_spectra;
+    }
+    
     t_value_ptr clustering(t_count num_centroids, 
                            t_value_ptr centroids,
-                           t_cmeans_options options = t_cmeans_options());
+                           t_cmeans_configs configs = t_cmeans_configs());
                         
     t_value_ptr clustering(t_count num_centroids,
-                           t_cmeans_options options = t_cmeans_options()) {
+                           t_cmeans_configs configs = t_cmeans_configs()) {
       t_value_ptr centroids = initial_centroids(num_centroids);
-      return clustering(num_centroids, centroids, options);
+      return clustering(num_centroids, centroids, configs);
     }
-
+    
+    t_value_ptr clustering(const t_count_spectra & spectra,
+                           t_cmeans_configs configs = t_cmeans_configs()) {
+      t_value_ptr centroids = get_spectra_centroids(spectra);
+      return clustering(2, centroids, configs);
+    }
+    
+    t_value_ptr get_spectra_centroids(const t_count_spectra & spectra);
+    
   private:
     t_value_ptr initial_centroids(t_id num_centroids);
     
@@ -99,7 +120,7 @@ namespace algorithms {
     t_distance_ptr distances;
     t_membership_ptr memberships;
     t_count num_centroids, points, dimensions;
-    t_cmeans_options options;
+    t_cmeans_configs configs;
   };
 
 }

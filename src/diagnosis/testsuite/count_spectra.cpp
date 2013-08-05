@@ -1,6 +1,11 @@
 #include <boost/test/unit_test.hpp>
+
 #include "diagnosis/spectra/count_spectra.h"
 #include "diagnosis/spectra/randomizer/bernoulli.h"
+
+#include <sstream>
+
+using namespace std;
 
 void check_equal (diagnosis::t_count_spectra & spectra, diagnosis::t_count_spectra & spectra2, int n_comp, int n_tran) {
     for (t_transaction_id t = 1; t <= n_tran; t++) {
@@ -56,15 +61,54 @@ BOOST_AUTO_TEST_CASE(error) {
 
 
     for (int i = 1; i <= n_tran; i++) {
-        spectra.error(i);
+        spectra.set_error(i);
         BOOST_CHECK(spectra.is_error(i));
         BOOST_CHECK(spectra.get_error_count() == i);
     }
 
     for (int i = n_tran; i > 0; i--) {
-        spectra.error(i, 0);
+        spectra.set_error(i, 0);
         BOOST_CHECK(spectra.is_error(i) == false);
         BOOST_CHECK(spectra.get_error_count() == i - 1);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(io) {
+    diagnosis::t_count_spectra spectra;
+
+    stringstream s;
+
+
+    s.str("1 9\
+           1 1\
+           1 -\
+           1 X\
+           1 x\
+           1 0.75\
+           1 0.25\
+           1 +\
+           1 .\
+           1 0\
+           ");
+    s >> spectra;
+    BOOST_CHECK(s.good());
+    BOOST_CHECK(spectra.get_component_count() == 1);
+    BOOST_CHECK(spectra.get_transaction_count() == 9);
+
+    for (t_id i = 1; i <= 4; i++) {
+        BOOST_CHECK_MESSAGE(spectra.is_error(i), "Failed for transaction " << i);
+        BOOST_CHECK_MESSAGE(spectra.get_error(i) == 1, "Failed for transaction " << i);
+    }
+
+    BOOST_CHECK_MESSAGE(spectra.is_error(5), "Failed for transaction " << 5);
+    BOOST_CHECK_MESSAGE(spectra.get_error(5) == 0.75, "Failed for transaction " << 5);
+
+    BOOST_CHECK_MESSAGE(!spectra.is_error(6), "Failed for transaction " << 6);
+    BOOST_CHECK_MESSAGE(spectra.get_error(6) == 0.25, "Failed for transaction " << 6);
+
+    for (t_id i = 7; i <= 9; i++) {
+        BOOST_CHECK_MESSAGE(spectra.is_error(i) == 0, "Failed for transaction " << i);
+        BOOST_CHECK_MESSAGE(spectra.get_error(i) == 0, "Failed for transaction " << i);
     }
 }
 

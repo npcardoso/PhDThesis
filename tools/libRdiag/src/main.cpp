@@ -17,7 +17,7 @@ void matrix_to_spectra (NumericMatrix A, NumericVector e, t_count_spectra & spec
         for (t_component_id c = 0; c < A.ncol(); c++)
             spectra.set_count(c + 1, t + 1, A.column(c)[t]);
 
-        spectra.error(t + 1, e[t]);
+        spectra.set_error(t + 1, e[t]);
     }
 }
 
@@ -74,11 +74,11 @@ RcppExport SEXP fuzzinel (SEXP AA, SEXP ee, SEXP DD) {
     diagnosis::algorithms::t_barinel barinel;
 
     t_goodness_mp total_ret;
-    std::list < t_goodness_mp >ret_tmp;
-    std::list < t_goodness_mp >::iterator ret_tmp_it;
+    std::list<t_goodness_mp> ret_tmp;
+    std::list<t_goodness_mp>::iterator ret_tmp_it;
 
     for (int i = 0; i < D.size(); i++) {
-        NumericVector d = as < NumericVector > (D[i]);
+        NumericVector d = as<NumericVector> (D[i]);
         t_candidate tmp_d(d.begin(), d.end());
         t_goodness_mp tmp;
 

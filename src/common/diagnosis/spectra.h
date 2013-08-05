@@ -38,6 +38,8 @@ public:
     virtual bool is_error (t_transaction_id transaction) const = 0;
     virtual t_error get_error (t_transaction_id transaction) const = 0;
 
+    virtual t_confidence get_confidence (t_transaction_id transaction) const = 0;
+
     virtual bool is_candidate (const t_candidate & candidate,
                                const t_spectra_filter * filter=NULL) const;
 
@@ -51,7 +53,9 @@ std::istream & operator >> (std::istream & in, t_spectra & spectra);
 std::ostream & operator << (std::ostream & out, const t_spectra & spectra);
 
 class t_basic_spectra : public t_spectra {
+    typedef std::vector<t_confidence> t_confidences;
     typedef std::vector<t_error> t_errors;
+    t_confidences confidences;
     t_errors errors;
     t_count component_count;
     t_count transaction_count;
@@ -76,8 +80,12 @@ public:
 
     virtual t_error get_error (t_transaction_id transaction) const;
     virtual bool is_error (t_transaction_id transaction) const;
-    virtual void error (t_transaction_id transaction,
-                        t_error set=1);
+    virtual void set_error (t_transaction_id transaction,
+                            t_error error=1);
+
+    virtual t_confidence get_confidence (t_transaction_id transaction) const;
+    virtual t_confidence set_confidence (t_transaction_id transaction,
+                                         t_confidence confidence);
 };
 
 template <class G>
@@ -98,20 +106,25 @@ void t_spectra::probability (const t_candidate & candidate,
     while (it.next_transaction()) {
         tmp = 1;
         t_candidate::const_iterator c_it = candidate.begin();
-        t_id c = 0;
+        t_id comp = 0;
 
         while (c_it != candidate.end()) {
             t_count count = get_count(*c_it, it.get_transaction());
 
             if (count)
-                tmp *= count * goodnesses[c];
+                tmp *= count * goodnesses[comp];
 
             c_it++;
-            c++;
+            comp++;
         }
 
-        if (is_error(it.get_transaction()))
-            tmp = 1 - tmp;
+        // Fuzzy health
+        t_error e = get_error(it.get_transaction());
+        tmp = e * (1 - tmp) + (1 - e) * tmp;
+
+        // Confidence scaling
+        t_confidence c = get_confidence(it.get_transaction());
+        tmp = (1 - c) + (c * tmp);
 
         ret *= tmp;
     }

@@ -56,15 +56,34 @@ BOOST_AUTO_TEST_CASE(error) {
 
 
     for (int i = 1; i <= n_tran; i++) {
-        spectra.error(i);
+        spectra.set_error(i);
         BOOST_CHECK(spectra.is_error(i));
         BOOST_CHECK(spectra.get_error_count() == i);
     }
 
     for (int i = n_tran; i > 0; i--) {
-        spectra.error(i, 0);
+        spectra.set_error(i, 0);
         BOOST_CHECK(spectra.is_error(i) == false);
         BOOST_CHECK(spectra.get_error_count() == i - 1);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(confidence) {
+    int n_comp = rand() % 500;
+    int n_tran = rand() % 500;
+
+    diagnosis::t_count_spectra spectra(n_comp, n_tran);
+
+
+    for (int i = 1; i < n_tran; i++) {
+        spectra.set_confidence(i, 0);
+        BOOST_CHECK(spectra.get_confidence(i) == 0);
+        spectra.set_confidence(i, 0.4);
+        BOOST_CHECK(spectra.get_confidence(i) == 0.4);
+        spectra.set_confidence(i, 1);
+        BOOST_CHECK(spectra.get_confidence(i) == 1);
+        spectra.set_confidence(i, 0.6);
+        BOOST_CHECK(spectra.get_confidence(i) == 0.6);
     }
 }
 

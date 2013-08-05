@@ -101,7 +101,8 @@ void t_basic_spectra::set_element_count (t_count component_count,
 
     this->transaction_count = transaction_count;
 
-    errors.resize(transaction_count, false);
+    errors.resize(transaction_count, 0);
+    confidences.resize(transaction_count, 1);
 }
 
 void t_basic_spectra::set_component_count (t_count component_count) {
@@ -126,11 +127,30 @@ bool t_basic_spectra::is_error (t_transaction_id transaction) const {
     return get_error(transaction) > 0.5; // TODO: arbitrary threshold
 }
 
-void t_basic_spectra::error (t_transaction_id transaction,
-                             t_error set) {
+void t_basic_spectra::set_error (t_transaction_id transaction,
+                                 t_error error) {
+    assert(transaction > 0);
+    assert(transaction <= transaction_count);
+    assert(error >= 0);
+    assert(error <= 1);
+
+    errors[transaction - 1] = error;
+}
+
+t_confidence t_basic_spectra::get_confidence (t_transaction_id transaction) const {
     assert(transaction > 0);
     assert(transaction <= transaction_count);
 
-    errors[transaction - 1] = set;
+    return confidences[transaction - 1];
+}
+
+t_confidence t_basic_spectra::set_confidence (t_transaction_id transaction,
+                                              t_confidence confidence) {
+    assert(transaction > 0);
+    assert(transaction <= transaction_count);
+    assert(confidence >= 0);
+    assert(confidence <= 1);
+
+    return confidences[transaction - 1] = confidence;
 }
 }

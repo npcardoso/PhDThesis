@@ -23,7 +23,8 @@ vars.Add('boost_include', '', None)
 vars.Add('R_include', '', '/usr/include/R')
 
 vars.Add('llvm_passes', '', '-instrument_function -instrument_prepare')
-vars.Add('clang', '', 'clang++')
+vars.Add('clang', '', 'clang')
+vars.Add('clangpp', '', 'clang++')
 vars.Add('llvmconfig', '', 'llvm-config')
 vars.Add('OPT', '', 'opt')
 vars.Add('LLC', '', 'llc')
@@ -52,10 +53,10 @@ env['bin_dir'] = join(env['prefix'], "bin")
 
 ### Link Flags ###
 if 'boost_include' in env:
-	env.Append(CPPPATH = [env['boost_include']])
+    env.Append(CPPPATH = [env['boost_include']])
 
 if 'boost_lib' in env:
-	env.Append(LIBPATH = [env['boost_lib']])
+    env.Append(LIBPATH = [env['boost_lib']])
 
 env['mpi_include'] = '`mpic++ --showme:compile`'
 env['mpi_link'] = '`mpic++ --showme:link`'
@@ -67,7 +68,9 @@ if(env['debug']):
 else:
   env['CCFLAGS'] = "-O3 -DNDEBUG"
 
-env['CXX'] = env['clang']
+env['CLANG'] = env['clang']
+env['CLANGPP'] = env['clangpp']
+env['CXX'] = env['clangpp']
 env['ENV']['TERM'] = os.environ['TERM']
 
 #vars.Save('.scons.conf', env)

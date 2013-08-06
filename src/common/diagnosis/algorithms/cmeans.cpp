@@ -9,7 +9,7 @@ namespace diagnosis {
 namespace algorithms {
 t_cmeans_configs::t_cmeans_configs () {
     num_iterations = 50;
-    dist_function = euclidean_distance;
+    dist_function = new t_euclidean_distance();
     m = 2;
     epsilon = 0.0001;
     locked_centroids = 0;
@@ -126,7 +126,7 @@ void t_cmeans::calculate_memberships () {
     for (t_id i = 0; i < points; i++)
         for (t_id j = 0; j < num_centroids; j++)
             MATRIX_CELL(distances, i, j, num_centroids) =
-                (*(configs.dist_function))(data, i, centroids, j, dimensions);
+                (*configs.dist_function)(data, i, centroids, j, dimensions);
 
     t_data coef = 0;
 
@@ -178,40 +178,6 @@ t_data t_cmeans::calculate_error () const {
         for (t_id j = 0; j < num_centroids; j++)
             sum += memberships.get_membership(i, j, 0) *
                    MATRIX_CELL(distances, i, j, num_centroids);
-
-    return sum;
-}
-
-t_distance euclidean_distance (t_data_const_ptr data,
-                               t_id data_row,
-                               t_data_const_ptr centroids,
-                               t_id centroids_row,
-                               t_count dimensions) {
-    t_distance v, sum = 0;
-
-
-    for (t_id i = 0; i < dimensions; i++) {
-        v = MATRIX_CELL(data, data_row, i, dimensions) -
-            MATRIX_CELL(centroids, centroids_row, i, dimensions);
-        sum += v * v;
-    }
-
-    return sqrt(sum);
-}
-
-t_distance manhattan_distance (t_data_const_ptr data,
-                               t_id data_row,
-                               t_data_const_ptr centroids,
-                               t_id centroids_row,
-                               t_count dimensions) {
-    t_distance v, sum = 0;
-
-
-    for (t_id i = 0; i < dimensions; i++) {
-        v = MATRIX_CELL(data, data_row, i, dimensions) -
-            MATRIX_CELL(centroids, centroids_row, i, dimensions);
-        sum += std::fabs(v);
-    }
 
     return sum;
 }

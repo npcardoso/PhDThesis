@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "utils/boost.h"
+#include "diagnosis/distance.h"
 #include "diagnosis/spectra/count_spectra.h"
 #include "diagnosis/structs/membership.h"
 
@@ -12,34 +13,13 @@ typedef double t_data;
 typedef boost::shared_ptr<t_data[]> t_data_ptr;
 typedef boost::shared_ptr<const t_data[]> t_data_const_ptr;
 
-typedef double t_distance;
-typedef boost::shared_ptr<t_distance[]> t_distance_ptr;
-
-typedef t_distance (* f_distance)(t_data_const_ptr data,
-                                  t_id data_row,
-                                  t_data_const_ptr centroids,
-                                  t_id centroids_row,
-                                  t_count dimensions);
-
-t_distance euclidean_distance (t_data_const_ptr data,
-                               t_id data_row,
-                               t_data_const_ptr centroids,
-                               t_id centroids_row,
-                               t_count dimensions);
-
-t_distance manhattan_distance (t_data_const_ptr data,
-                               t_id data_row,
-                               t_data_const_ptr centroids,
-                               t_id centroids_row,
-                               t_count dimensions);
-
 class t_cmeans_configs {
 public:
     t_cmeans_configs ();
 
     t_count num_iterations, locked_centroids;
     t_data m, epsilon;
-    f_distance dist_function;
+    t_distance_function * dist_function;
 };
 
 class t_cmeans {

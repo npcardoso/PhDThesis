@@ -3,7 +3,7 @@ env = env.Clone()
 env.Append(
 	CCFLAGS= " -Wno-c++11-extensions",
 	CPPPATH = Dir(env['common_dir']),
-	LINKFLAGS = "-lpthread -lboost_system -lboost_thread -lboost_unit_test_framework -L%s -ldiag" % env['lib_dir'] )
+	LINKFLAGS = "-lpthread -lboost_system -lboost_thread -L%s -ldiag" % env['lib_dir'] )
 
 sources = Glob('*.cpp')
 

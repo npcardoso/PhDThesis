@@ -13,6 +13,8 @@ namespace algorithms {
     
     t_count last = components * transactions;
     t_data_ptr centroids( new t_data[last] );
+    for(t_id i = 0; i < last; i++)
+      centroids[i] = 0;
     
     t_data faulty_transactions = spectra.get_error_count();
     t_data normal_transactions = transactions - faulty_transactions;

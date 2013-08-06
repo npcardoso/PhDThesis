@@ -32,11 +32,15 @@ namespace structs {
                                       t_id centroid, 
                                       t_id offset = 1) const;
     
+    t_id hard_cluster(t_id point, t_id offset = 1) const;
+    
+    t_count get_hard_cluster_count(t_id cluster, t_id offset = 1) const;
+    
     std::ostream & print(std::ostream & out) const;
     
-    t_count get_num_points() const;
+    t_count get_point_count() const;
     
-    t_count get_num_centroids() const;
+    t_count get_centroid_count() const;
     
   private:
     t_count num_points, num_centroids;

@@ -18,7 +18,7 @@ int main(int argc, char ** argv) {
   options.input() >> spectra;
 
   algorithms::t_cmeans cm(spectra);
-  structs::t_membership fuzzy_cluster = cm.clustering(spectra,options.configs);
+  structs::t_membership fuzzy_cluster = cm.clustering(options.configs);
   
   options.output() << fuzzy_cluster;
   

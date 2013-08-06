@@ -26,11 +26,42 @@ namespace structs {
     return memberships[point * num_centroids + centroid];
   }
   
-  t_count t_membership::get_num_points() const {
+  t_id t_membership::hard_cluster(t_id point, t_id offset) const {
+    point -= offset;
+    assert(point >= 0 && point < num_points);
+    assert(num_centroids >= 1);
+    
+    t_id point_offset = point * num_centroids;
+    t_membership_value current, max = memberships[point_offset];
+    t_id centroid = 0;
+    for(t_id c = 1; c < num_centroids; c++) {
+      current = memberships[point_offset + c];
+      if(current > max) {
+        max = current;
+        centroid = c;
+      }
+    }
+      
+    return centroid + offset;
+  }
+  
+  t_count t_membership::get_hard_cluster_count(t_id cluster, t_id offset) const {
+    cluster -= offset;
+    assert(cluster >= 0 && cluster < num_centroids);
+    
+    t_count count = 0;
+    for(t_id p = 0; p < num_points; p++)
+      if(hard_cluster(p,0) == cluster)
+        count++;
+    
+    return count;
+  }
+  
+  t_count t_membership::get_point_count() const {
     return num_points;
   }
   
-  t_count t_membership::get_num_centroids() const {
+  t_count t_membership::get_centroid_count() const {
     return num_centroids;
   }
   

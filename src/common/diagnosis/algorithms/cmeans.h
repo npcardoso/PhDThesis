@@ -74,6 +74,8 @@ namespace algorithms {
           MATRIX_CELL(data_spectra, (p-1), (d-1), dimensions) = spectra.get_count(d,p);
         }
       this->data = data_spectra;
+      this->num_centroids = 2;
+      this->centroids = get_spectra_centroids(spectra);
     }
     
     structs::t_membership clustering(t_count num_centroids, 
@@ -86,10 +88,8 @@ namespace algorithms {
       return clustering(num_centroids, centroids, configs);
     }
     
-    structs::t_membership clustering(const t_count_spectra & spectra,
-                                     t_cmeans_configs configs = t_cmeans_configs()) {
-      t_data_ptr centroids = get_spectra_centroids(spectra);
-      return clustering(2, centroids, configs);
+    structs::t_membership clustering(t_cmeans_configs configs = t_cmeans_configs()) {
+      return clustering(this->num_centroids, this->centroids, configs);
     }
     
     t_data_ptr get_spectra_centroids(const t_count_spectra & spectra);

@@ -21,14 +21,12 @@ public:
 
 private:
     bool handle_distance (std::string distance) {
-        if (configs.dist_function != NULL)
-            delete configs.dist_function;
-
-        if (distance == "manhattan")
-            configs.dist_function = new t_manhattan_distance();
-
-        else
-            configs.dist_function = new t_euclidean_distance();
+        if (distance == "euclidean")
+            configs.dist_function =
+                t_distance_function::t_ptr(new diagnosis::t_euclidean_distance());
+        else if (distance == "manhattan")
+            configs.dist_function =
+                t_distance_function::t_ptr(new diagnosis::t_manhattan_distance());
 
         return false;
     }

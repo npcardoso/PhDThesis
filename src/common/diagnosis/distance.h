@@ -13,6 +13,8 @@ typedef boost::shared_ptr<t_distance[]> t_distance_ptr;
 
 class t_distance_function {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_distance_function);
+
     t_distance_function ();
     virtual ~t_distance_function ();
 

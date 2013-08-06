@@ -9,7 +9,7 @@ namespace diagnosis {
 namespace algorithms {
 t_cmeans_configs::t_cmeans_configs () {
     num_iterations = 50;
-    dist_function = new t_euclidean_distance();
+    dist_function = t_distance_function::t_ptr(new t_euclidean_distance());
     m = 2;
     epsilon = 0.0001;
     locked_centroids = 0;

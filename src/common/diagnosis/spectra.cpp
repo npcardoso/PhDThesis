@@ -29,6 +29,31 @@ bool t_spectra::is_candidate (const t_candidate & candidate,
     return true;
 }
 
+bool t_spectra::is_valid (const t_spectra_filter * filter) const {
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          filter);
+
+
+    while (it.next_transaction()) {
+        bool hit = false;
+
+        if (!is_error(it.get_transaction()))
+            continue;
+
+        while (it.next_component())
+            if (get_count(it.get_component(), it.get_transaction())) {
+                hit = true;
+                break;
+            }
+
+        if (!hit)
+            return false;
+    }
+
+    return true;
+}
+
 std::ostream & t_spectra::write (std::ostream & out,
                                  const t_spectra_filter * filter) const {
     throw e_not_implemented();

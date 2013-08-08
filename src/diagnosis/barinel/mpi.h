@@ -1,14 +1,28 @@
 #ifndef __MPI_H__
 #define __MPI_H__
 
+#include "diagnosis/algorithms/mhs.h"
 #include "diagnosis/structs/trie.h"
 #include "stats.h"
 
 #include <iostream>
 
-void mpi_reduce_trie (diagnosis::structs::t_trie & trie,
-                      bool hierarchical,
-                      size_t buffer_size,
-                      t_stats & stats);
+void mhs2_reduce (diagnosis::structs::t_trie & trie,
+                  bool hierarchical,
+                  size_t buffer_size,
+                  t_stats & stats);
 
+void mhs2_map (const diagnosis::algorithms::t_mhs & mhs,
+               const diagnosis::t_spectra & spectra,
+               diagnosis::structs::t_trie & D,
+               t_stats & stats,
+               const diagnosis::t_spectra_filter * filter=NULL);
+
+void mhs2_heuristic_setup (diagnosis::algorithms::t_mhs & mhs,
+                           t_count mpi_level,
+                           t_count mpi_stride);
+
+void mhs2_collect_stats (std::ostream & out,
+                         const diagnosis::structs::t_trie & D,
+                         t_stats & stats);
 #endif

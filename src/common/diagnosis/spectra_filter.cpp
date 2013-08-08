@@ -21,6 +21,28 @@ t_component_id t_spectra_filter::next_component (t_component_id component) const
         return f_component[component];
 }
 
+t_transaction_id t_spectra_filter::next_filtered_transaction (t_transaction_id transaction) const {
+    if (transaction >= f_transaction.size())
+        return 0;
+    else
+        for (t_id i = transaction; i < f_transaction.size(); i++)
+            if (f_transaction[i] != i + 1)
+                return i + 1;
+
+    return 0;
+}
+
+t_component_id t_spectra_filter::next_filtered_component (t_component_id component) const {
+    if (component >= f_component.size())
+        return 0;
+    else
+        for (t_id i = component; i < f_component.size(); i++)
+            if (f_component[i] != i + 1)
+                return i + 1;
+
+    return 0;
+}
+
 t_component_id t_spectra_filter::get_last_component () const {
     return f_component.size() ? (f_component.size() - 1) : 0UL;
 }
@@ -120,6 +142,9 @@ void t_spectra_filter::resize_components (t_component_id size) {
     t_count old_size = f_component.size();
 
 
+    assert(size >= old_size);
+
+
     f_component.resize(size + 1);
 
     while (old_size++ < f_component.size())
@@ -129,6 +154,8 @@ void t_spectra_filter::resize_components (t_component_id size) {
 void t_spectra_filter::resize_transactions (t_transaction_id size) {
     t_count old_size = f_transaction.size();
 
+
+    assert(size >= old_size);
 
     f_transaction.resize(size + 1);
 

@@ -1,5 +1,6 @@
 #include "ambiguity_groups.h"
 
+#include "utils/iostream.h"
 
 #include <boost/uuid/sha1.hpp>
 
@@ -13,7 +14,7 @@ std::string sha1_to_string (sha1 & s) {
     s.get_digest(digest);
 
     for (int i = 0; i < 5; ++i) {
-        const char * tmp = reinterpret_cast<char*> (digest);
+        const char * tmp = reinterpret_cast<char *> (digest);
         hash[i * 4] = tmp[i * 4 + 3];
         hash[i * 4 + 1] = tmp[i * 4 + 2];
         hash[i * 4 + 2] = tmp[i * 4 + 1];
@@ -21,6 +22,11 @@ std::string sha1_to_string (sha1 & s) {
     }
 
     return hash;
+}
+
+t_ambiguity_groups::t_ambiguity_groups () {
+    component_count = 0;
+    transaction_count = 0;
 }
 
 t_ambiguity_groups::t_ambiguity_groups (const t_spectra & spectra,
@@ -71,12 +77,34 @@ const t_spectra_filter & t_ambiguity_groups::filter () const {
     return _filter;
 }
 
-const t_ambiguity_groups::t_group & t_ambiguity_groups::group (t_component_id c_id) const {
+const t_ambiguity_groups::t_group * t_ambiguity_groups::group (t_component_id c_id) const {
     t_group_map::const_iterator it = groups.find(c_id);
 
 
-    assert(it != groups.end());
+    if (it != groups.end())
+        return &it->second;
 
-    return it->second;
+    return NULL;
 }
+}
+
+std::ostream & std::operator << (std::ostream & out, const diagnosis::t_ambiguity_groups & ag) {
+    const diagnosis::t_spectra_filter & f = ag.filter();
+
+    t_component_id next_group = 0;
+
+
+    while (true) {
+        next_group = f.next_component(next_group);
+
+        if (next_group > ag.get_component_count())
+            break;
+
+        const diagnosis::t_ambiguity_groups::t_group * g = ag.group(next_group);
+
+        if (g)
+            out << "g(" << next_group << ") = " << *g << std::endl;
+    }
+
+    return out;
 }

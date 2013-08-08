@@ -5,7 +5,7 @@
 
 namespace diagnosis {
 namespace component {
-typedef std::vector < float >t_state;
+typedef float t_state;
 }
 }
 

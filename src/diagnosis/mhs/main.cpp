@@ -50,12 +50,10 @@ int main (int argc, char ** argv) {
         int seed = time(NULL);
         MPI_Bcast(&seed, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
 
-        boost::random::mt19937 gen(seed);
-
         if (options.mpi_stride)
             heuristic.push(new heuristics::t_divide(rank, ntasks, options.mpi_stride));
         else
-            heuristic.push(new heuristics::t_random_divide(rank, ntasks, gen));
+            heuristic.push(new heuristics::t_random_divide(rank, ntasks, seed));
 
         mhs.set_heuristic(mpi_level, heuristic);
     }

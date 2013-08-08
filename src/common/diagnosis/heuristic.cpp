@@ -62,8 +62,7 @@ t_heuristic::t_order_buffer t_heuristic::get_ordering_buffer (const t_spectra & 
                                                               const t_spectra_filter * filter) {
     return t_order_buffer(new t_rank_element[spectra.get_component_count(filter) + 1]);
 }
-
-std::ostream & operator << (std::ostream & out, const t_heuristic & heuristic) {
-    return heuristic.print(out);
 }
+std::ostream & std::operator << (std::ostream & out, const diagnosis::t_heuristic & heuristic) {
+    return heuristic.print(out);
 }

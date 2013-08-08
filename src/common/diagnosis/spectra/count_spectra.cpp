@@ -97,7 +97,7 @@ std::ostream & t_count_spectra::write (std::ostream & out,
     while (it.next_component())
         out << std::setw(3) << it.get_component() << "|";
 
-    out << "Err\n";
+    out << "Err (q,c)\n";
 
     while (it.next_transaction()) {
         out << std::setw(3) << it.get_transaction() << "|";
@@ -105,24 +105,25 @@ std::ostream & t_count_spectra::write (std::ostream & out,
         while (it.next_component())
             out << std::setw(3) << get_count(it.get_component(), it.get_transaction()) << "|";
 
-        out << " " << is_error(it.get_transaction()) << "(" << get_error(it.get_transaction()) << ")\n";
+        out << " " << is_error(it.get_transaction()) << "(" << get_error(it.get_transaction()) << ", " << get_confidence(it.get_transaction()) << ")\n";
     }
 
     return out;
 }
 
-std::istream & t_count_spectra::read (std::istream & in) {
+std::istream & t_count_spectra::read (std::istream & in,
+                                      bool has_confidence) {
     std::ios::iostate in_exceptions = in.exceptions();
 
 
     // assert(in.good());
 
     t_count_spectra spectra;
+    t_count read_components = 0, read_transactions = 0;
+    t_count c_count = 0, tr_count = 0;
 
 
     try {
-        t_count c_count, tr_count;
-
         in.exceptions(std::istream::failbit | std::istream::badbit);
 
         in >> c_count >> tr_count;
@@ -133,14 +134,35 @@ std::istream & t_count_spectra::read (std::istream & in) {
                 t_count value;
                 in >> value;
                 spectra.hit(c, tr, value);
+                read_components++;
             }
 
             spectra.set_error(tr, read_error(in));
+
+            if (has_confidence) {
+                t_confidence conf;
+                in >> conf;
+                spectra.set_confidence(tr, conf);
+            }
+
+            read_transactions++;
+            read_components = 0;
         }
 
         *this = spectra;
     }
-    catch (std::ios_base::failure e) {}
+    catch (std::ios_base::failure e) {
+        if (c_count && tr_count) {
+            if (c_count == read_components)
+                std::cerr << "Problem reading error/confidence in transaction " << read_transactions;
+            else
+                std::cerr << "Problem reading spectra after " << read_transactions << " transactions and " << read_components << " components";
+
+            std::cerr << " (has_confidence: " << has_confidence << ", read size: " << c_count << " " << tr_count << ")" << std::endl;
+        }
+        else
+            std::cerr << "Problem reading spectra size " << std::endl;
+    }
 
     std::ios::iostate in_state = in.rdstate();
     in.exceptions(in_exceptions);

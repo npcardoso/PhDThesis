@@ -1,9 +1,9 @@
 #include "configure.h"
 #include "diagnosis/spectra/count_spectra.h"
+#include "diagnosis/spectra/ambiguity_groups.h"
 #include "diagnosis/algorithms/barinel.h"
 #include "mpi.h"
 #include "opt.h"
-#include "stats.h"
 #include "utils/time.h"
 
 
@@ -12,8 +12,10 @@
 
 using namespace diagnosis;
 
+
 int main (int argc, char ** argv) {
     t_mhs_options options(argv[0]);
+    t_ambiguity_groups ambiguity_groups;
 
 
     if (options.configure(argc, argv))
@@ -36,87 +38,73 @@ int main (int argc, char ** argv) {
     if (rank == 0)
         options.debug() << options << std::endl;
 
-    options.input() >> spectra;
+    spectra.read(options.input(), options.has_confidence);
 
-    t_time_interval time_begin = time_interval();
-
-    if (ntasks > 1) {
-        t_count mpi_level = 1;
-
-        if (options.mpi_level)
-            mpi_level = options.mpi_level;
-
-        t_heuristic heuristic = mhs.get_heuristic(mpi_level);
-        mhs.set_heuristic(mpi_level + 1, heuristic);
-
-        int seed = time(NULL);
-        MPI_Bcast(&seed, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
-
-        boost::random::mt19937 gen(seed);
-
-        if (options.mpi_stride)
-            heuristic.push(new heuristics::t_divide(rank, ntasks, options.mpi_stride));
-        else
-            heuristic.push(new heuristics::t_random_divide(rank, ntasks, gen));
-
-        mhs.set_heuristic(mpi_level, heuristic);
+    if (!options.input().good()) {
+        std::cerr << "Problem reading spectra" << std::endl;
+        return 1;
     }
 
-    t_time_interval time = time_interval();
-
-    mhs.calculate(spectra, D);
-
-    stats.items_generated = D.size();
-    stats.total_calc = (time_interval() - time);
-    time = time_interval();
-
-    if (ntasks > 1) {
-        mpi_reduce_trie(D, options.mpi_hierarchical, options.mpi_buffer, stats);
-
-        stats.total_transfer = (time_interval() - time);
-        time = time_interval();
+    if (!spectra.is_valid()) {
+        std::cerr << "Invalid spectra (some failing transactions do not activate any components)" << std::endl;
+        return 1;
     }
 
-    stats.runtime = (time_interval() - time_begin);
+    if (options.print_spectra)
+        options.output() << spectra;
+
+    if (options.ambiguity_groups) {
+        ambiguity_groups = t_ambiguity_groups(spectra);
+
+        if (options.print_spectra)
+            spectra.write(options.output(), &ambiguity_groups.filter()) << std::endl;
+
+        options.output() << ambiguity_groups << std::endl;
+    }
+
+    if (ntasks > 1)
+        mhs2_heuristic_setup(mhs, options.mpi_level, options.mpi_stride);
+
+    mhs2_map(mhs, spectra, D, stats, &ambiguity_groups.filter());
+    options.debug() << "MHS2_map: Ended" << std::endl;
+
+    if (ntasks > 1) {
+        mhs2_reduce(D, options.mpi_hierarchical, options.mpi_buffer, stats);
+        options.debug() << "MHS2_reduce: Ended" << std::endl;
+    }
+
+    mhs2_collect_stats(options.debug(), D, stats);
 
     if (rank == 0) {
-        MPI_Status status;
+        if (options.fuzzinel) {
+            // Fuzzinel stuff
+            diagnosis::algorithms::t_barinel barinel;
+            diagnosis::t_probability_mp ret;
+            diagnosis::t_probability_mp total_ret(0);
+            std::vector<std::pair<diagnosis::t_goodness_mp, t_candidate> > probs;
 
-        for (t_count i = ntasks; --i;) {
-            t_stats tmp_stats;
-            MPI_Recv(&tmp_stats, sizeof(t_stats), MPI::BYTE, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &status);
-            tmp_stats.print(options.debug(), i, false);
+            diagnosis::structs::t_trie::iterator it = D.begin();
+
+            while (it != D.end()) {
+                barinel.calculate(spectra, *it, ret);
+                options.debug() << "Fuzzinel: Ended for candidate (" << * it << ") with score " << ret << std::endl;
+                probs.push_back(std::pair<diagnosis::t_goodness_mp, t_candidate> (-ret, *it));
+                total_ret += ret;
+                it++;
+            }
+
+            sort(probs.begin(), probs.end());
+
+            std::vector<std::pair<diagnosis::t_goodness_mp, t_candidate> >::iterator it_prob = probs.begin();
+
+            while (it_prob != probs.end()) {
+                options.output() << (-it_prob->first / total_ret) << ": " << it_prob->second << std::endl;
+                it_prob++;
+            }
         }
-
-        stats.print(options.debug(), 0, true);
-        options.debug() << "Candidates: " << D.size() << std::endl;
-
-        // Barinel stuff
-        diagnosis::algorithms::t_barinel barinel;
-        diagnosis::t_probability_mp ret;
-        diagnosis::t_probability_mp total_ret(0);
-        std::vector < std::pair < diagnosis::t_goodness_mp, t_candidate > >probs;
-
-        diagnosis::structs::t_trie::iterator it = D.begin();
-
-        while (it != D.end()) {
-            barinel.calculate(spectra, *it, ret);
-            probs.push_back(std::pair < diagnosis::t_goodness_mp, t_candidate > (-ret, *it));
-            total_ret += ret;
-            it++;
+        else {
+            options.output() << D;
         }
-
-        sort(probs.begin(), probs.end());
-
-        std::vector < std::pair < diagnosis::t_goodness_mp, t_candidate > >::iterator it_prob = probs.begin();
-
-        while (it_prob != probs.end()) {
-            options.output() << (-it_prob->first / total_ret) << ": " << it_prob->second << std::endl;
-            it_prob++;
-        }
-    }
-    else {
-        MPI_Send(&stats, sizeof(t_stats), MPI::BYTE, 0, 1, MPI_COMM_WORLD);
     }
 
     /* Shut down MPI */

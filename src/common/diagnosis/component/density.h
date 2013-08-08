@@ -43,7 +43,7 @@ public:
     t_density_mixture & operator << (const t_density_model::t_ptr & density_model);
 
 private:
-    std::list < t_density_model::t_ptr >densities;
+    std::list<t_density_model::t_ptr> densities;
 };
 }
 }

@@ -1,6 +1,7 @@
 #include "spectra.h"
 
 namespace diagnosis {
+namespace structs {
 using namespace diagnosis::structs;
 
 bool t_spectra::is_candidate (const t_candidate & candidate,
@@ -179,5 +180,6 @@ t_confidence t_basic_spectra::set_confidence (t_transaction_id transaction,
     assert(confidence <= 1);
 
     return confidences[transaction - 1] = confidence;
+}
 }
 }

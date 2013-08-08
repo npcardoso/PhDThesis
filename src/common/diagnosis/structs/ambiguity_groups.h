@@ -1,8 +1,8 @@
 #ifndef __DIAGNOSIS_SPECTRA_AMBIGUITY_SIMPLIFY_H__
 #define __DIAGNOSIS_SPECTRA_AMBIGUITY_SIMPLIFY_H__
 
-#include "diagnosis/spectra.h"
-#include "diagnosis/spectra_iterator.h"
+#include "diagnosis/structs/spectra.h"
+#include "diagnosis/structs/spectra_iterator.h"
 #include "types.h"
 
 #include <cstring>
@@ -11,6 +11,7 @@
 #include <set>
 
 namespace diagnosis {
+namespace structs {
 class t_ambiguity_groups {
 public:
     typedef std::set<t_component_id> t_group;
@@ -35,8 +36,10 @@ private:
             transaction_count;
 };
 }
+}
 
 namespace std {
-ostream & operator << (ostream & out, const diagnosis::t_ambiguity_groups & ag);
+ostream & operator << (ostream & out, const diagnosis::structs::t_ambiguity_groups & ag);
 }
+
 #endif

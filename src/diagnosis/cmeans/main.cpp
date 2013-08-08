@@ -1,4 +1,4 @@
-#include "diagnosis/spectra/count_spectra.h"
+#include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/algorithms/cmeans.h"
 #include "configure.h"
 
@@ -7,9 +7,11 @@
 #include <ctime>
 
 using namespace diagnosis;
+using namespace diagnosis::structs;
 
 int main (int argc, char ** argv) {
     t_cmeans_options options(argv[0]);
+
 
     if (options.configure(argc, argv))
         return 1;
@@ -18,7 +20,7 @@ int main (int argc, char ** argv) {
     options.input() >> spectra;
 
     algorithms::t_cmeans cm(spectra);
-    structs::t_membership fuzzy_cluster = cm.clustering(options.configs);
+    t_membership fuzzy_cluster = cm.clustering(options.configs);
 
     options.output() << fuzzy_cluster;
 

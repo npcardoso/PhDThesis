@@ -4,6 +4,8 @@
 
 namespace diagnosis {
 namespace heuristics {
+using namespace structs;
+
 t_divide::t_divide (t_count self,
                     t_count division_count,
                     t_count stride) {

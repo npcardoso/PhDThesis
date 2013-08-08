@@ -1,13 +1,15 @@
-#ifndef __DIAGNOSIS_SPECTRA_FILTER_H__
-#define __DIAGNOSIS_SPECTRA_FILTER_H__
+#ifndef __DIAGNOSIS_STRUCTS_SPECTRA_FILTER_H__
+#define __DIAGNOSIS_STRUCTS_SPECTRA_FILTER_H__
 
 #include "types.h"
 #include "diagnosis/structs/candidate.h"
+
 #include <cassert>
 #include <iostream>
 #include <vector>
 
 namespace diagnosis {
+namespace structs {
 class t_spectra_filter {
     std::vector<t_component_id> f_component;
     std::vector<t_transaction_id> f_transaction;
@@ -44,5 +46,6 @@ public:
     void resize_components (t_component_id size);
     void resize_transactions (t_component_id size);
 };
+}
 }
 #endif

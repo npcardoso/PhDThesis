@@ -1,14 +1,14 @@
-#ifndef __DIAGNOSIS_SPECTRA_H__
-#define __DIAGNOSIS_SPECTRA_H__
+#ifndef __DIAGNOSIS_STRUCTS_SPECTRA_H__
+#define __DIAGNOSIS_STRUCTS_SPECTRA_H__
 
+#include "types.h"
+#include "diagnosis/types.h"
 #include "diagnosis/structs/candidate.h"
-#include "diagnosis/spectra_filter.h"
-#include "diagnosis/spectra_iterator.h"
+#include "diagnosis/structs/spectra_filter.h"
+#include "diagnosis/structs/spectra_iterator.h"
 
-#include "utils/mpreal.h"
 
 #include "exceptions.h"
-#include "types.h"
 
 #include <cassert>
 #include <iostream>
@@ -16,9 +16,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace diagnosis {
-typedef mpfr::mpreal t_probability_mp;
-typedef t_probability_mp t_goodness_mp;
-
+namespace structs {
 class t_spectra {
 public:
 
@@ -132,5 +130,5 @@ void t_spectra::probability (const structs::t_candidate & candidate,
     }
 }
 }
-
+}
 #endif

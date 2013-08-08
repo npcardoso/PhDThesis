@@ -4,6 +4,7 @@
 namespace diagnosis {
 namespace algorithms {
 using namespace structs;
+
 t_barinel_model::t_barinel_model () : pass(1, 0), fail(1, 0) {}
 
 t_barinel_model::t_barinel_model (size_t components) {

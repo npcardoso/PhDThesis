@@ -1,13 +1,15 @@
 #include <boost/test/unit_test.hpp>
 
-#include "diagnosis/spectra/count_spectra.h"
-#include "diagnosis/spectra/randomizer/bernoulli.h"
+#include "diagnosis/structs/count_spectra.h"
+#include "diagnosis/structs/randomizer/bernoulli.h"
 
 #include <sstream>
 
 using namespace std;
+using namespace diagnosis;
+using namespace diagnosis::structs;
 
-void check_equal (diagnosis::t_count_spectra & spectra, diagnosis::t_count_spectra & spectra2, int n_comp, int n_tran) {
+void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, int n_comp, int n_tran) {
     for (t_transaction_id t = 1; t <= n_tran; t++) {
         BOOST_CHECK(spectra.get_error(t) == spectra2.get_error(t));
         BOOST_CHECK(spectra.is_error(t) == spectra2.is_error(t));
@@ -23,19 +25,19 @@ BOOST_AUTO_TEST_CASE(size) {
     int n_comp = 10 + rand() % 20;
     int n_tran = 10 + rand() % 20;
 
-    diagnosis::t_count_spectra spectra;
+    t_count_spectra spectra;
 
 
     BOOST_CHECK(spectra.get_component_count() == 0);
     BOOST_CHECK(spectra.get_transaction_count() == 0);
     BOOST_CHECK(spectra.get_error_count() == 0);
 
-    diagnosis::t_bernoulli_randomizer randomizer(0.5, 0.5);
+    t_bernoulli_randomizer randomizer(0.5, 0.5);
     randomizer.n_comp = n_comp;
     randomizer.n_tran = n_tran;
     randomizer.randomize(spectra);
 
-    diagnosis::t_count_spectra spectra_half = spectra;
+    t_count_spectra spectra_half = spectra;
     spectra_half.set_element_count(n_comp / 2, n_tran / 2);
 
     BOOST_CHECK(spectra.get_component_count() == n_comp);
@@ -57,7 +59,7 @@ BOOST_AUTO_TEST_CASE(error) {
     int n_comp = rand() % 500;
     int n_tran = rand() % 500;
 
-    diagnosis::t_count_spectra spectra(n_comp, n_tran);
+    t_count_spectra spectra(n_comp, n_tran);
 
 
     for (int i = 1; i <= n_tran; i++) {
@@ -74,7 +76,7 @@ BOOST_AUTO_TEST_CASE(error) {
 }
 
 BOOST_AUTO_TEST_CASE(io) {
-    diagnosis::t_count_spectra spectra;
+    t_count_spectra spectra;
 
     stringstream s;
 

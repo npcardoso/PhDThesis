@@ -2,9 +2,10 @@
 #define __DIAGNOSIS_ALGORITHMS_BARINEL_H__
 
 #include "diagnosis/heuristic.h"
-#include "diagnosis/spectra.h"
-#include "diagnosis/spectra_filter.h"
-#include "diagnosis/spectra_iterator.h"
+#include "diagnosis/types.h"
+#include "diagnosis/structs/spectra.h"
+#include "diagnosis/structs/spectra_filter.h"
+#include "diagnosis/structs/spectra_iterator.h"
 #include "diagnosis/structs/trie.h"
 
 #include <map>
@@ -29,15 +30,15 @@ public:
     t_barinel ();
     t_barinel (size_t precision);
 
-    void calculate (const t_spectra & spectra,
+    void calculate (const structs::t_spectra & spectra,
                     const structs::t_candidate & candidate,
                     t_probability_mp & ret,
-                    const t_spectra_filter * filter=NULL) const;
+                    const structs::t_spectra_filter * filter=NULL) const;
 
-    void model (const t_spectra & spectra,
+    void model (const structs::t_spectra & spectra,
                 const structs::t_candidate & candidate,
                 t_barinel_model & model,
-                const t_spectra_filter * filter=NULL) const;
+                const structs::t_spectra_filter * filter=NULL) const;
 
     void gradient (const t_barinel_model & model,
                    const t_barinel_goodnesses & goodnesses,

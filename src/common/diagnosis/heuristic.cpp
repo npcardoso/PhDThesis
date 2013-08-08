@@ -1,6 +1,7 @@
 #include "heuristic.h"
 
 namespace diagnosis {
+using namespace structs;
 std::ostream & t_heuristic_filter::print (std::ostream & out) const {
     return out << "Not Implemented";
 }

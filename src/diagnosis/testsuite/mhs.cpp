@@ -3,8 +3,8 @@
 #include "diagnosis/heuristics/sort.h"
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/heuristics/parallelization.h"
-#include "diagnosis/spectra/count_spectra.h"
-#include "diagnosis/spectra/randomizer/bernoulli.h"
+#include "diagnosis/structs/count_spectra.h"
+#include "diagnosis/structs/randomizer/bernoulli.h"
 
 #include <fstream>
 using namespace diagnosis;

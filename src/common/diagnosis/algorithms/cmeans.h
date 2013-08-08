@@ -4,7 +4,7 @@
 #include "types.h"
 #include "utils/boost.h"
 #include "diagnosis/distance.h"
-#include "diagnosis/spectra/count_spectra.h"
+#include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/membership.h"
 
 namespace diagnosis {
@@ -26,7 +26,7 @@ class t_cmeans {
 public:
     t_cmeans (t_count points, t_count dimensions, t_data_const_ptr data);
 
-    t_cmeans (t_count_spectra & spectra);
+    t_cmeans (structs::t_count_spectra & spectra);
 
     structs::t_membership clustering (t_count num_centroids,
                                       t_data_ptr centroids,
@@ -37,7 +37,7 @@ public:
 
     structs::t_membership clustering (t_cmeans_configs configs=t_cmeans_configs());
 
-    t_data_ptr get_spectra_centroids (const t_count_spectra & spectra) const;
+    t_data_ptr get_spectra_centroids (const structs::t_count_spectra & spectra) const;
 
 private:
     t_data_ptr initial_centroids (t_id num_centroids) const;

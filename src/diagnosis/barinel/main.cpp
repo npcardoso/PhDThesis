@@ -1,6 +1,6 @@
 #include "configure.h"
-#include "diagnosis/spectra/count_spectra.h"
-#include "diagnosis/spectra/ambiguity_groups.h"
+#include "diagnosis/structs/count_spectra.h"
+#include "diagnosis/structs/ambiguity_groups.h"
 #include "diagnosis/algorithms/barinel.h"
 #include "mpi.h"
 #include "opt.h"

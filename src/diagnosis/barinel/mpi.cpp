@@ -265,7 +265,7 @@ void mhs2_map (const t_mhs & mhs,
                const t_spectra & spectra,
                t_trie & D,
                t_stats & stats,
-               const diagnosis::t_spectra_filter * filter) {
+               const t_spectra_filter * filter) {
     int ntasks, rank;
     t_time_interval time = time_interval();
 

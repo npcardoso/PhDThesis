@@ -1,6 +1,6 @@
 #include "similarity.h"
 
-#include "diagnosis/spectra_iterator.h"
+#include "diagnosis/structs/spectra_iterator.h"
 
 #include <cstring>
 #include <cmath>
@@ -9,6 +9,8 @@
 
 namespace diagnosis {
 namespace heuristics {
+using namespace structs;
+
 void t_similarity::operator () (const t_spectra & spectra,
                                 t_rank_element * ret,
                                 const t_spectra_filter * filter) const {

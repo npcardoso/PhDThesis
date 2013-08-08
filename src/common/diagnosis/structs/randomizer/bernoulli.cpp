@@ -4,6 +4,8 @@
 using boost::bernoulli_distribution;
 
 namespace diagnosis {
+using namespace structs;
+
 t_bernoulli_randomizer::t_bernoulli_randomizer (float activation_rate, float error_rate) {
     this->activation_rate = activation_rate;
     this->error_rate = error_rate;

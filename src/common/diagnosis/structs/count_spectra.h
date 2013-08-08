@@ -1,12 +1,13 @@
 #ifndef __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
 #define __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
 
-#include "diagnosis/spectra_iterator.h"
-#include "diagnosis/spectra.h"
 #include "types.h"
+#include "diagnosis/structs/spectra_iterator.h"
+#include "diagnosis/structs/spectra.h"
 
 
 namespace diagnosis {
+namespace structs {
 class t_count_spectra : public t_basic_spectra {
 public:
 
@@ -53,5 +54,5 @@ private:
     t_activity_ptr activity;
 };
 }
-
+}
 #endif

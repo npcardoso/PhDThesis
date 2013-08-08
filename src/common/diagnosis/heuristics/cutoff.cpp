@@ -2,6 +2,8 @@
 
 namespace diagnosis {
 namespace heuristics {
+using namespace structs;
+
 t_cutoff::t_cutoff (t_rank_element::t_rank_score value_cutoff, float lambda) {
     this->value_cutoff = value_cutoff;
     this->lambda = lambda;

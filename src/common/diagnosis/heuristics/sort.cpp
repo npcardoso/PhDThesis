@@ -2,6 +2,8 @@
 
 namespace diagnosis {
 namespace heuristics {
+using namespace structs;
+
 void t_sort::operator () (const t_spectra & spectra,
                           t_rank_element * ret,
                           const t_spectra_filter * filter) const {

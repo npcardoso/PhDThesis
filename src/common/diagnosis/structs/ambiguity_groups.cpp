@@ -6,6 +6,7 @@
 
 using boost::uuids::detail::sha1;
 namespace diagnosis {
+namespace structs {
 std::string sha1_to_string (sha1 & s) {
     unsigned int digest[5];
     std::string hash(20, 0);
@@ -87,9 +88,12 @@ const t_ambiguity_groups::t_group * t_ambiguity_groups::group (t_component_id c_
     return NULL;
 }
 }
+}
 
-std::ostream & std::operator << (std::ostream & out, const diagnosis::t_ambiguity_groups & ag) {
-    const diagnosis::t_spectra_filter & f = ag.filter();
+using namespace diagnosis::structs;
+
+std::ostream & std::operator << (std::ostream & out, const t_ambiguity_groups & ag) {
+    const t_spectra_filter & f = ag.filter();
 
     t_component_id next_group = 0;
 
@@ -100,7 +104,7 @@ std::ostream & std::operator << (std::ostream & out, const diagnosis::t_ambiguit
         if (next_group > ag.get_component_count())
             break;
 
-        const diagnosis::t_ambiguity_groups::t_group * g = ag.group(next_group);
+        const t_ambiguity_groups::t_group * g = ag.group(next_group);
 
         if (g)
             out << "g(" << next_group << ") = " << *g << std::endl;

@@ -1,10 +1,10 @@
 #include <Rcpp.h>
 
-#include "diagnosis/spectra/count_spectra.h"
 #include "diagnosis/algorithms/barinel.h"
 #include "diagnosis/algorithms/mhs.h"
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/heuristics/sort.h"
+#include "diagnosis/structs/count_spectra.h"
 
 using namespace Rcpp;
 using namespace diagnosis;

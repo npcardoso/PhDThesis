@@ -188,7 +188,7 @@ t_error t_count_spectra::read_error (std::istream & in) const {
     }
     catch (std::ios_base::failure e) {}
 
-    if (str == " 1 " || str == " - " || str == "x " || str == "X ")
+    if (str == "1" || str == "-" || str == "x" || str == "X")
         return 1;
 
     return 0;

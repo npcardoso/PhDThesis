@@ -124,12 +124,15 @@ void t_mhs::calculate (const t_spectra & spectra,
         strip(component, spectra, strip_filter);
 
         /* Insert the component into the candidate */
+        size_t candidate_size = candidate.size();
         std::pair<t_candidate::iterator, bool> tmp = candidate.insert(component);
+
         assert(tmp.second);
 
         calculate(spectra, D, &strip_filter, candidate, start_time);
-
         candidate.erase(tmp.first);
+
+        assert(candidate_size == candidate.size());
     }
 }
 

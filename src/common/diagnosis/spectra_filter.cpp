@@ -120,6 +120,9 @@ void t_spectra_filter::resize_components (t_component_id size) {
     t_count old_size = f_component.size();
 
 
+    assert(size >= old_size);
+
+
     f_component.resize(size + 1);
 
     while (old_size++ < f_component.size())
@@ -129,6 +132,8 @@ void t_spectra_filter::resize_components (t_component_id size) {
 void t_spectra_filter::resize_transactions (t_transaction_id size) {
     t_count old_size = f_transaction.size();
 
+
+    assert(size >= old_size);
 
     f_transaction.resize(size + 1);
 

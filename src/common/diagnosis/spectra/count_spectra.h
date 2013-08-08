@@ -8,9 +8,6 @@
 
 namespace diagnosis {
 class t_count_spectra : public t_basic_spectra {
-    typedef boost::shared_ptr<t_count[]> t_activity_ptr;
-    t_activity_ptr activity;
-
 public:
 
     inline t_count_spectra () {}
@@ -38,13 +35,22 @@ public:
               t_count count=1,
               bool ignore_unknown_components=false);
 
-    virtual std::ostream& write (std::ostream & out,
-                                 const t_spectra_filter * filter=NULL) const;
+    virtual std::ostream & write (std::ostream & out,
+                                  const t_spectra_filter * filter=NULL) const;
 
-    virtual std::istream& read (std::istream & in);
+    virtual std::istream & read (std::istream & in) {
+        return read(in, false);
+    }
+
+    virtual std::istream & read (std::istream & in,
+                                 bool has_confidence);
 
 private:
     t_error read_error (std::istream & in) const;
+
+private:
+    typedef boost::shared_ptr<t_count[]> t_activity_ptr;
+    t_activity_ptr activity;
 };
 }
 

@@ -111,7 +111,8 @@ std::ostream & t_count_spectra::write (std::ostream & out,
     return out;
 }
 
-std::istream & t_count_spectra::read (std::istream & in) {
+std::istream & t_count_spectra::read (std::istream & in,
+                                      bool has_confidence) {
     std::ios::iostate in_exceptions = in.exceptions();
 
 
@@ -136,6 +137,12 @@ std::istream & t_count_spectra::read (std::istream & in) {
             }
 
             spectra.set_error(tr, read_error(in));
+
+            if (has_confidence) {
+                t_confidence conf;
+                in >> conf;
+                spectra.set_confidence(tr, conf);
+            }
         }
 
         *this = spectra;

@@ -2,7 +2,7 @@
 #define __DIAGNOSIS_SPECTRA_FILTER_H__
 
 #include "types.h"
-#include "diagnosis/candidate.h"
+#include "diagnosis/structs/candidate.h"
 #include <cassert>
 #include <iostream>
 #include <vector>
@@ -34,7 +34,7 @@ public:
     bool is_component (t_component_id component) const;
     bool is_transaction (t_transaction_id transaction) const;
 
-    void filter_all_components_but (const t_candidate & candidate);
+    void filter_all_components_but (const structs::t_candidate & candidate);
     void filter_component (t_component_id component);
     void filter_transaction (t_transaction_id transaction);
 

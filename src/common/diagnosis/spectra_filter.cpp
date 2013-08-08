@@ -2,6 +2,8 @@
 #include "utils/iostream.h"
 
 namespace diagnosis {
+using namespace diagnosis::structs;
+
 t_spectra_filter::t_spectra_filter () {
     filtered_component_count = 0;
     filtered_transaction_count = 0;

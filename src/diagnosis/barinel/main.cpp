@@ -11,6 +11,7 @@
 #include <mpi.h>
 
 using namespace diagnosis;
+using namespace diagnosis::structs;
 
 
 int main (int argc, char ** argv) {

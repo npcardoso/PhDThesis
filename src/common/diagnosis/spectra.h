@@ -1,7 +1,7 @@
 #ifndef __DIAGNOSIS_SPECTRA_H__
 #define __DIAGNOSIS_SPECTRA_H__
 
-#include "diagnosis/candidate.h"
+#include "diagnosis/structs/candidate.h"
 #include "diagnosis/spectra_filter.h"
 #include "diagnosis/spectra_iterator.h"
 
@@ -30,7 +30,7 @@ public:
                                t_transaction_id transaction) const = 0;
 
     template <class G>
-    void probability (const t_candidate & candidate,
+    void probability (const structs::t_candidate & candidate,
                       const G & goodnesses,
                       t_probability_mp & ret,
                       const t_spectra_filter * filter=NULL) const;
@@ -40,7 +40,7 @@ public:
 
     virtual t_confidence get_confidence (t_transaction_id transaction) const = 0;
 
-    virtual bool is_candidate (const t_candidate & candidate,
+    virtual bool is_candidate (const structs::t_candidate & candidate,
                                const t_spectra_filter * filter=NULL) const;
 
     virtual bool is_valid (const t_spectra_filter * filter=NULL) const;
@@ -91,7 +91,7 @@ public:
 };
 
 template <class G>
-void t_spectra::probability (const t_candidate & candidate,
+void t_spectra::probability (const structs::t_candidate & candidate,
                              const G & goodnesses,
                              t_probability_mp & ret,
                              const t_spectra_filter * filter) const {
@@ -107,7 +107,7 @@ void t_spectra::probability (const t_candidate & candidate,
 
     while (it.next_transaction()) {
         tmp = 1;
-        t_candidate::const_iterator c_it = candidate.begin();
+        structs::t_candidate::const_iterator c_it = candidate.begin();
         t_id comp = 0;
 
         while (c_it != candidate.end()) {

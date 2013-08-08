@@ -13,8 +13,8 @@ namespace diagnosis {
 namespace algorithms {
 class t_barinel_model {
 public:
-    std::vector < t_error >pass;
-    std::vector < t_error >fail;
+    std::vector<t_error> pass;
+    std::vector<t_error> fail;
 
     t_barinel_model ();
     t_barinel_model (size_t components);
@@ -22,7 +22,7 @@ public:
     void set_size (size_t components);
 };
 
-typedef std::vector < t_goodness_mp >t_barinel_goodnesses;
+typedef std::vector<t_goodness_mp> t_barinel_goodnesses;
 
 class t_barinel {
 public:
@@ -30,12 +30,12 @@ public:
     t_barinel (size_t precision);
 
     void calculate (const t_spectra & spectra,
-                    const t_candidate & candidate,
+                    const structs::t_candidate & candidate,
                     t_probability_mp & ret,
                     const t_spectra_filter * filter=NULL) const;
 
     void model (const t_spectra & spectra,
-                const t_candidate & candidate,
+                const structs::t_candidate & candidate,
                 t_barinel_model & model,
                 const t_spectra_filter * filter=NULL) const;
 
@@ -44,7 +44,7 @@ public:
                    t_id component,
                    t_goodness_mp & ret) const;
 
-    virtual void prior (const t_candidate & candidate,
+    virtual void prior (const structs::t_candidate & candidate,
                         t_goodness_mp & ret) const;
 
     t_goodness_mp g_j;

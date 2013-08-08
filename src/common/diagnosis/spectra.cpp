@@ -1,6 +1,8 @@
 #include "spectra.h"
 
 namespace diagnosis {
+using namespace diagnosis::structs;
+
 bool t_spectra::is_candidate (const t_candidate & candidate,
                               const t_spectra_filter * filter) const {
     t_spectra_iterator it(get_component_count(),

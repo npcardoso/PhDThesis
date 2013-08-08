@@ -13,7 +13,7 @@
 namespace diagnosis {
 namespace algorithms {
 class t_mhs {
-    typedef std::map < t_count, t_heuristic >t_heuristics;
+    typedef std::map<t_count, t_heuristic> t_heuristics;
 
     t_heuristics heuristics;
 
@@ -24,7 +24,7 @@ public:
     t_mhs (const t_heuristic & heuristic);
 
     void set_heuristic (t_count start_level, const t_heuristic & heuristic);
-    const t_heuristic& get_heuristic (t_count level) const;
+    const t_heuristic & get_heuristic (t_count level) const;
 
     void calculate (const t_spectra & spectra,
                     structs::t_trie & D,
@@ -33,7 +33,7 @@ public:
     void calculate (const t_spectra & spectra,
                     structs::t_trie & D,
                     const t_spectra_filter * filter,
-                    t_candidate & candidate,
+                    structs::t_candidate & candidate,
                     t_time_interval start_time=time_interval()) const;
 
     void update (const t_spectra & spectra,
@@ -54,7 +54,7 @@ private:
                      const t_spectra & spectra,
                      const t_spectra_filter & filter) const;
 
-    void strip (t_candidate candidate,
+    void strip (structs::t_candidate candidate,
                 const t_spectra & spectra,
                 t_spectra_filter & filter) const;
 

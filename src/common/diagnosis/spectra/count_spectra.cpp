@@ -97,7 +97,7 @@ std::ostream & t_count_spectra::write (std::ostream & out,
     while (it.next_component())
         out << std::setw(3) << it.get_component() << "|";
 
-    out << "Err\n";
+    out << "Err (q,c)\n";
 
     while (it.next_transaction()) {
         out << std::setw(3) << it.get_transaction() << "|";
@@ -105,7 +105,7 @@ std::ostream & t_count_spectra::write (std::ostream & out,
         while (it.next_component())
             out << std::setw(3) << get_count(it.get_component(), it.get_transaction()) << "|";
 
-        out << " " << is_error(it.get_transaction()) << "(" << get_error(it.get_transaction()) << ")\n";
+        out << " " << is_error(it.get_transaction()) << "(" << get_error(it.get_transaction()) << ", " << get_confidence(it.get_transaction()) << ")\n";
     }
 
     return out;

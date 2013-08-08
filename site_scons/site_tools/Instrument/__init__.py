@@ -30,9 +30,15 @@ def _detect_app(env, var_name, app_name):
     return None
 
 
-_instrument_llvm_builder = SCons.Builder.Builder(
+_instrument_llvm_builder_c = SCons.Builder.Builder(
     action = SCons.Action.Action('$CLANG -S -emit-llvm -g $CFLAGS $CPP_PATH -c $SOURCE -o $TARGET'),
-    src_suffix = '$INSTR_SOURCE_SUFFIX',
+    src_suffix = '$INSTR_SOURCE_SUFFIX_C',
+    suffix = '$INSTR_LLVM_SUFFIX',
+    single_source = 1)
+
+_instrument_llvm_builder_cpp = SCons.Builder.Builder(
+    action = SCons.Action.Action('$CLANGPP -S -emit-llvm -g $CFLAGS $CPP_PATH -c $SOURCE -o $TARGET'),
+    src_suffix = '$INSTR_SOURCE_SUFFIX_CPP',
     suffix = '$INSTR_LLVM_SUFFIX',
     single_source = 1)
 
@@ -79,7 +85,8 @@ def RecursiveScanner(scanner, file):
 def Instrument(env, target, source=None, passes="-instrument_prepare", *args, **kw):
     env['LLVM_INSTRUMENT_PASSES'] = passes
 
-    source_suffix = env.subst('$INSTR_SOURCE_SUFFIX')
+    source_suffixes = [[env.subst('$INSTR_SOURCE_SUFFIX_C'), _instrument_llvm_builder_c],
+                       [env.subst('$INSTR_SOURCE_SUFFIX_CPP'), _instrument_llvm_builder_cpp]]
 
     llvm_suffix = env.subst('$INSTR_LLVM_SUFFIX')
     llvm_instr_suffix = env.subst('$INSTR_LLVM_INSTR_SUFFIX')
@@ -98,14 +105,16 @@ def Instrument(env, target, source=None, passes="-instrument_prepare", *args, **
         if not os.path.exists(s.srcnode().abspath):
             continue
 
-        if src.endswith(source_suffix):
-            stem = src[:-len(source_suffix)]
-        else:
-            stem = src
-        llvm_obj = _instrument_llvm_builder.__call__(env,
-                                                     stem + llvm_suffix,
-                                                     src,
-                                                     **kw)
+        suffix = None
+        for suf, fun in source_suffixes:
+            if src.endswith(suf):
+                stem = src[:-len(suf)]
+                llvm_obj = fun.__call__(env, stem + llvm_suffix, src, **kw)
+                suffix = suf
+                break
+        if suffix is None:
+            raise Exception("Unknown filetype (%s)" % src)
+
 
         llvm_instrument_obj = _instrument_llvm_instrument_builder.__call__(env,
                                                                            stem + llvm_instr_suffix,
@@ -150,7 +159,8 @@ def generate(env):
 
     env.SetDefault(
         # Suffixes/prefixes
-        INSTR_SOURCE_SUFFIX = '.cpp',
+        INSTR_SOURCE_SUFFIX_C = '.c',
+        INSTR_SOURCE_SUFFIX_CPP = '.cpp',
         INSTR_LLVM_SUFFIX = '.bc',
         INSTR_LLVM_INSTR_SUFFIX = '.bci',
         INSTR_ASM_SUFFIX = '.s')

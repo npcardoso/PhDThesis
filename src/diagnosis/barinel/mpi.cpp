@@ -1,7 +1,9 @@
 #include "mpi.h"
 
 #include "types.h"
+#include "diagnosis/heuristics/parallelization.h"
 #include "utils/time.h"
+
 
 #include <mpi.h>
 
@@ -10,7 +12,9 @@
 #include <list>
 #include <vector>
 
+using namespace std;
 using namespace diagnosis;
+using namespace diagnosis::algorithms;
 using namespace diagnosis::structs;
 
 t_count send_candidates (const t_trie & trie,
@@ -53,12 +57,12 @@ t_count send_candidates (const t_trie & trie,
     return trie.size();
 }
 
-template < class T >
+template <class T>
 class t_candidate_pool {
     size_t sze;
 public:
-    typedef std::list < T >t_inner_storage;
-    typedef std::vector < t_inner_storage >t_storage;
+    typedef std::list<T> t_inner_storage;
+    typedef std::vector<t_inner_storage> t_storage;
     t_storage storage;
 
     inline size_t size () const {
@@ -95,8 +99,8 @@ public:
     }
 };
 
-template < class T >
-t_count receive_candidates (t_candidate_pool < T > & candidate_pool,
+template <class T>
+t_count receive_candidates (t_candidate_pool<T> & candidate_pool,
                             t_count chunk_size,
                             int source,
                             int tag,
@@ -141,69 +145,163 @@ inline int get_receiver (int rank, int turn) {
     return rank - (1ul << (turn - 1));
 }
 
-void mpi_reduce_trie (t_trie & trie, bool hierarchical, size_t buffer_size, t_stats & stats) {
+void mhs2_reduce_normal (t_trie & trie,
+                         size_t buffer_size, t_stats & stats) {
+    int ntasks, rank;
+    t_time_interval time_begin = time_interval();
+
+
+    typedef t_candidate_pool<t_candidate> t_candidates;
+    t_candidates candidate_pool;
+
+
+    MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (rank) {
+        stats.items_sent += send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
+
+        stats.total_comm += time_interval() - time_begin;
+        time_begin = time_interval();
+    }
+    else {
+        for (t_count i = 1; i < ntasks; i++)
+            stats.items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+
+        stats.total_comm += time_interval() - time_begin;
+        time_begin = time_interval();
+
+        candidate_pool.add(trie);
+        trie.clear();
+        candidate_pool.trie(trie);
+
+        stats.total_merge += time_interval() - time_begin;
+        time_begin = time_interval();
+    }
+}
+
+void mhs2_reduce_hierarchical (t_trie & trie,
+                               size_t buffer_size, t_stats & stats) {
+    int ntasks, rank;
+    t_time_interval time_begin = time_interval();
+
+
+    typedef t_candidate_pool<t_candidate> t_candidates;
+    t_candidates candidate_pool;
+
+    t_count i = 1;
+
+
+    MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    while (i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
+        if (get_sender(rank, i) < ntasks)
+            stats.items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+
+        i++;
+    }
+
+    stats.total_comm += time_interval() - time_begin;
+    time_begin = time_interval();
+
+    if (candidate_pool.size()) {
+        candidate_pool.add(trie);
+        trie.clear();
+        candidate_pool.trie(trie);
+    }
+
+    stats.total_merge += time_interval() - time_begin;
+    time_begin = time_interval();
+
+    if (rank)
+        stats.items_sent += send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
+
+    stats.total_comm += time_interval() - time_begin;
+    time_begin = time_interval();
+}
+
+void mhs2_reduce (t_trie & trie,
+                  bool hierarchical,
+                  size_t buffer_size, t_stats & stats) {
+    t_time_interval time_begin = time_interval();
+
+
+    if (hierarchical)
+        mhs2_reduce_hierarchical(trie, buffer_size, stats);
+    else
+        mhs2_reduce_normal(trie, buffer_size, stats);
+
+    stats.total_transfer = (time_interval() - time_begin);
+}
+
+void mhs2_heuristic_setup (t_mhs & mhs,
+                           t_count mpi_level,
+                           t_count mpi_stride) {
     int ntasks, rank;
 
 
     MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    typedef t_candidate_pool < t_candidate >t_candidates;
+    if (!mpi_level)
+        mpi_level = 1;
 
-    t_candidates candidate_pool;
+    t_heuristic heuristic = mhs.get_heuristic(mpi_level);
+    mhs.set_heuristic(mpi_level + 1, heuristic);
+
+    if (mpi_stride)
+        heuristic.push(new heuristics::t_divide(rank, ntasks, mpi_stride));
+    else {
+        int seed = time(NULL);
+        MPI_Bcast(&seed, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        heuristic.push(new heuristics::t_random_divide(rank, ntasks, seed));
+    }
+
+    mhs.set_heuristic(mpi_level, heuristic);
+}
+
+void mhs2_map (const t_mhs & mhs,
+               const t_spectra & spectra,
+               t_trie & D,
+               t_stats & stats) {
+    int ntasks, rank;
+    t_time_interval time = time_interval();
 
 
-    t_time_interval time_begin = time_interval();
+    MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    if (hierarchical) {
-        t_count i = 1;
 
-        while (i < sqrt(ntasks) + 1 && !is_sender(rank, i)) {
-            if (get_sender(rank, i) < ntasks)
+    mhs.calculate(spectra, D);
 
-                stats.items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
+    stats.items_generated = D.size();
+    stats.total_calc = (time_interval() - time);
+    time = time_interval();
+}
 
-            i++;
+void mhs2_collect_stats (ostream & out,
+                         const t_trie & D,
+                         t_stats & stats) {
+    int ntasks, rank;
+
+
+    MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (rank == 0) {
+        MPI_Status status;
+
+        for (t_count i = ntasks; --i;) {
+            t_stats tmp_stats;
+            MPI_Recv(&tmp_stats, sizeof(t_stats), MPI::BYTE, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &status);
+            tmp_stats.print(out, i, false);
         }
 
-        stats.total_comm += time_interval() - time_begin;
-        time_begin = time_interval();
-
-        if (candidate_pool.size()) {
-            candidate_pool.add(trie);
-            trie.clear();
-            candidate_pool.trie(trie);
-        }
-
-        stats.total_merge += time_interval() - time_begin;
-        time_begin = time_interval();
-
-        if (rank)
-            stats.items_sent += send_candidates(trie, buffer_size, get_receiver(rank, i), 0, MPI_COMM_WORLD);
-
-        stats.total_comm += time_interval() - time_begin;
-        time_begin = time_interval();
+        stats.print(out, 0, true);
+        out << "Candidates: " << D.size() << std::endl;
     }
     else {
-        if (rank) {
-            stats.items_sent += send_candidates(trie, buffer_size, 0, 0, MPI_COMM_WORLD);
-
-            stats.total_comm += time_interval() - time_begin;
-            time_begin = time_interval();
-        }
-        else {
-            for (t_count i = 1; i < ntasks; i++)
-                stats.items_recv += receive_candidates(candidate_pool, buffer_size, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
-
-            stats.total_comm += time_interval() - time_begin;
-            time_begin = time_interval();
-
-            candidate_pool.add(trie);
-            trie.clear();
-            candidate_pool.trie(trie);
-
-            stats.total_merge += time_interval() - time_begin;
-            time_begin = time_interval();
-        }
+        MPI_Send(&stats, sizeof(t_stats), MPI::BYTE, 0, 1, MPI_COMM_WORLD);
     }
 }

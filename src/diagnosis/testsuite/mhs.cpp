@@ -2,6 +2,7 @@
 #include "diagnosis/algorithms/mhs.h"
 #include "diagnosis/heuristics/sort.h"
 #include "diagnosis/heuristics/similarity.h"
+#include "diagnosis/heuristics/parallelization.h"
 #include "diagnosis/spectra/count_spectra.h"
 #include "diagnosis/spectra/randomizer/bernoulli.h"
 
@@ -76,6 +77,73 @@ BOOST_AUTO_TEST_CASE(mhs) {
 
         mhs.calculate(spectra, D);
         BOOST_CHECK(D == D_ref);
+
+        t_trie::iterator it = D.begin();
+
+        while (it != D.end())
+            BOOST_CHECK(spectra.is_candidate(*(it++)));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(parallelization) {
+    t_count_spectra spectra;
+    t_bernoulli_randomizer randomizer(0.25, 1);
+    t_trie reference;
+
+
+    randomizer.n_comp = 15;
+    randomizer.n_tran = 15;
+    randomizer.randomize(spectra);
+
+    {
+        t_heuristic heuristic;
+        heuristic.push(new heuristics::t_ochiai());
+        heuristic.push(new heuristics::t_sort());
+
+        t_mhs mhs(heuristic);
+        reference.clear();
+        mhs.calculate(spectra, reference);
+    }
+
+    t_count level = 2;
+
+    for (t_count stride = 0; stride < 4; stride++) {
+        for (t_count ntasks = 1; ntasks < 10; ntasks++) {
+            t_trie D;
+            t_count D_size = 0;
+
+            for (t_count rank = 0; rank < ntasks; rank++) {
+                t_heuristic heuristic;
+                heuristic.push(new heuristics::t_ochiai());
+                heuristic.push(new heuristics::t_sort());
+
+                t_mhs mhs(heuristic);
+
+                heuristic = mhs.get_heuristic(level);
+                mhs.set_heuristic(level + 1, heuristic);
+
+                if (stride)
+                    heuristic.push(new heuristics::t_divide(rank, ntasks, stride));
+                else
+                    heuristic.push(new heuristics::t_random_divide(rank, ntasks, 1234));
+
+                heuristic.push(new heuristics::t_divide(rank, ntasks, 1));
+                mhs.set_heuristic(level, heuristic);
+
+                BOOST_CHECK(mhs.get_heuristic(level - 1) == mhs.get_heuristic(level + 1));
+                BOOST_CHECK(mhs.get_heuristic(level - 1) != mhs.get_heuristic(level));
+                BOOST_CHECK(mhs.get_heuristic(level + 1) != mhs.get_heuristic(level));
+
+                mhs.calculate(spectra, D);
+                BOOST_CHECK_MESSAGE(D_size != D.size(), "Failed for stride = " << stride << " ntasks = " << ntasks << " rank = " <<
+                                    rank << ". D.size() = " << D.size() << " reference.size() = " << reference.size());
+                D_size = D.size();
+            }
+
+            BOOST_CHECK_MESSAGE(D == reference, "Failed for stride = " << stride << " ntasks = " << ntasks <<
+                                ". D.size() = " << D.size() <<
+                                " reference.size() = " << reference.size());
+        }
     }
 }
 

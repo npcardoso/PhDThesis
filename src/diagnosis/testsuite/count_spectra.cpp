@@ -110,6 +110,42 @@ BOOST_AUTO_TEST_CASE(io) {
         BOOST_CHECK_MESSAGE(spectra.is_error(i) == 0, "Failed for transaction " << i);
         BOOST_CHECK_MESSAGE(spectra.get_error(i) == 0, "Failed for transaction " << i);
     }
+
+    s.str("1 9\
+           1 1 0.1\
+           1 - 0.2\
+           1 X 0.3\
+           1 x 0.4\
+           1 0.75 0.5\
+           1 0.25 0.6\
+           1 + 0.7\
+           1 . 0.8\
+           1 0 0.9\
+           ");
+    spectra.read(s, true);
+    BOOST_CHECK(s.good());
+    BOOST_CHECK(spectra.get_component_count() == 1);
+    BOOST_CHECK(spectra.get_transaction_count() == 9);
+
+    for (t_id i = 1; i <= 9; i++) {
+        BOOST_CHECK_MESSAGE(spectra.get_confidence(i) - i / 10.0 < 0.00001, "Failed for transaction " << i);
+    }
+
+    for (t_id i = 1; i <= 4; i++) {
+        BOOST_CHECK_MESSAGE(spectra.is_error(i), "Failed for transaction " << i);
+        BOOST_CHECK_MESSAGE(spectra.get_error(i) == 1, "Failed for transaction " << i);
+    }
+
+    BOOST_CHECK_MESSAGE(spectra.is_error(5), "Failed for transaction " << 5);
+    BOOST_CHECK_MESSAGE(spectra.get_error(5) == 0.75, "Failed for transaction " << 5);
+
+    BOOST_CHECK_MESSAGE(!spectra.is_error(6), "Failed for transaction " << 6);
+    BOOST_CHECK_MESSAGE(spectra.get_error(6) == 0.25, "Failed for transaction " << 6);
+
+    for (t_id i = 7; i <= 9; i++) {
+        BOOST_CHECK_MESSAGE(spectra.is_error(i) == 0, "Failed for transaction " << i);
+        BOOST_CHECK_MESSAGE(spectra.get_error(i) == 0, "Failed for transaction " << i);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -40,7 +40,13 @@ t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, 
 bool t_mhs_options::short_opt (int c, char * param) {
     switch (c) {
     case 't':
-        return verb_strtof(optarg, mhs.max_time, true);
+
+        if (verb_strtof(optarg, mhs.max_time, true))
+            return true;
+
+        mhs.max_time *= 1e6;
+        return false;
+
 
     case 'd':
         return verb_strtoi(optarg, mhs.max_candidates, true);

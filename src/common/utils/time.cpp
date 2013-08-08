@@ -8,7 +8,7 @@ t_time_interval time_interval () {
 
 
     gettimeofday(&time, NULL);
-    return time.tv_sec * 10e6 + time.tv_usec;
+    return time.tv_sec * 1e6 + time.tv_usec;
 }
 
 void msleep (t_time_interval milliseconds) {

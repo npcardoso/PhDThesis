@@ -91,8 +91,8 @@ BOOST_AUTO_TEST_CASE(parallelization) {
     t_trie reference;
 
 
-    randomizer.n_comp = 15;
-    randomizer.n_tran = 15;
+    randomizer.n_comp = 25;
+    randomizer.n_tran = 25;
     randomizer.randomize(spectra);
 
     {
@@ -108,9 +108,9 @@ BOOST_AUTO_TEST_CASE(parallelization) {
     t_count level = 2;
 
     for (t_count stride = 0; stride < 4; stride++) {
-        for (t_count ntasks = 1; ntasks < 10; ntasks++) {
+        for (t_count ntasks = 1; ntasks < 100; ntasks++) {
             t_trie D;
-            t_count D_size = 0;
+            D.clear();
 
             for (t_count rank = 0; rank < ntasks; rank++) {
                 t_heuristic heuristic;
@@ -127,17 +127,14 @@ BOOST_AUTO_TEST_CASE(parallelization) {
                 else
                     heuristic.push(new heuristics::t_random_divide(rank, ntasks, 1234));
 
-                heuristic.push(new heuristics::t_divide(rank, ntasks, 1));
                 mhs.set_heuristic(level, heuristic);
 
                 BOOST_CHECK(mhs.get_heuristic(level - 1) == mhs.get_heuristic(level + 1));
                 BOOST_CHECK(mhs.get_heuristic(level - 1) != mhs.get_heuristic(level));
                 BOOST_CHECK(mhs.get_heuristic(level + 1) != mhs.get_heuristic(level));
+                // std::cout << mhs.get_heuristic(level - 1) << mhs.get_heuristic(level) << mhs.get_heuristic(level + 1) << std::endl;
 
                 mhs.calculate(spectra, D);
-                BOOST_CHECK_MESSAGE(D_size != D.size(), "Failed for stride = " << stride << " ntasks = " << ntasks << " rank = " <<
-                                    rank << ". D.size() = " << D.size() << " reference.size() = " << reference.size());
-                D_size = D.size();
             }
 
             BOOST_CHECK_MESSAGE(D == reference, "Failed for stride = " << stride << " ntasks = " << ntasks <<

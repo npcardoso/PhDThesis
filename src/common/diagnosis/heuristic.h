@@ -46,6 +46,8 @@ private:
 };
 }
 
+namespace std {
 std::ostream & operator << (std::ostream & out, const diagnosis::t_heuristic & heuristic);
+}
 
 #endif

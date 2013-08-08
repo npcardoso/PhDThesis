@@ -22,7 +22,7 @@ public:
     void iterator (t_spectra_iterator & it) const;
     const t_spectra_filter & filter () const;
 
-    const t_group & group(t_component_id) const;
+    const t_group * group(t_component_id) const;
 
     inline t_count get_component_count () const {return component_count;}
     inline t_count get_transaction_count () const {return transaction_count;}

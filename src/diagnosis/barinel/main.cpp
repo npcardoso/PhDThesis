@@ -38,7 +38,7 @@ int main (int argc, char ** argv) {
     if (rank == 0)
         options.debug() << options << std::endl;
 
-    options.input() >> spectra;
+    spectra.read(options.input(), options.has_confidence);
 
     if (!options.input().good()) {
         std::cerr << "Problem reading spectra" << std::endl;
@@ -84,7 +84,6 @@ int main (int argc, char ** argv) {
 
             while (it != D.end()) {
                 barinel.calculate(spectra, *it, ret);
-                options.output() << ret << ": " << * it << std::endl;
                 probs.push_back(std::pair<diagnosis::t_goodness_mp, t_candidate> (-ret, *it));
                 total_ret += ret;
                 it++;

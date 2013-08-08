@@ -21,8 +21,8 @@ BOOST_AUTO_TEST_CASE(AG1) {
 
     BOOST_CHECK(!ag.filter().is_component(1));
     BOOST_CHECK(ag.filter().is_component(2));
-    BOOST_CHECK(ag.group(1).count(2));
-    BOOST_CHECK(ag.group(1).size() == 1);
+    BOOST_CHECK(ag.group(1)->count(2));
+    BOOST_CHECK(ag.group(1)->size() == 1);
 
     ss.str("3 2\
            1 1 0 1\
@@ -37,8 +37,8 @@ BOOST_AUTO_TEST_CASE(AG1) {
     BOOST_CHECK(!ag.filter().is_component(1));
     BOOST_CHECK(ag.filter().is_component(2));
     BOOST_CHECK(!ag.filter().is_component(3));
-    BOOST_CHECK(ag.group(1).count(2));
-    BOOST_CHECK(ag.group(1).size() == 1);
+    BOOST_CHECK(ag.group(1)->count(2));
+    BOOST_CHECK(ag.group(1)->size() == 1);
 
     ss.str("10 3\
            0 1 0 0 1 0 1 1 1 1 1\
@@ -61,18 +61,18 @@ BOOST_AUTO_TEST_CASE(AG1) {
     BOOST_CHECK(ag.filter().is_component(9));
     BOOST_CHECK(ag.filter().is_component(10));
 
-    BOOST_CHECK(ag.group(1).count(3));
-    BOOST_CHECK(ag.group(1).size() == 1);
+    BOOST_CHECK(ag.group(1)->count(3));
+    BOOST_CHECK(ag.group(1)->size() == 1);
 
-    BOOST_CHECK(ag.group(2).count(5));
-    BOOST_CHECK(ag.group(2).count(9));
-    BOOST_CHECK(ag.group(2).size() == 2);
+    BOOST_CHECK(ag.group(2)->count(5));
+    BOOST_CHECK(ag.group(2)->count(9));
+    BOOST_CHECK(ag.group(2)->size() == 2);
 
-    BOOST_CHECK(ag.group(4).count(6));
-    BOOST_CHECK(ag.group(4).size() == 1);
+    BOOST_CHECK(ag.group(4)->count(6));
+    BOOST_CHECK(ag.group(4)->size() == 1);
 
-    BOOST_CHECK(ag.group(7).count(10));
-    BOOST_CHECK(ag.group(7).size() == 1);
+    BOOST_CHECK(ag.group(7)->count(10));
+    BOOST_CHECK(ag.group(7)->size() == 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

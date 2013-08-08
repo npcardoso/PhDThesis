@@ -77,13 +77,14 @@ const t_spectra_filter & t_ambiguity_groups::filter () const {
     return _filter;
 }
 
-const t_ambiguity_groups::t_group & t_ambiguity_groups::group (t_component_id c_id) const {
+const t_ambiguity_groups::t_group * t_ambiguity_groups::group (t_component_id c_id) const {
     t_group_map::const_iterator it = groups.find(c_id);
 
 
-    assert(it != groups.end());
+    if (it != groups.end())
+        return &it->second;
 
-    return it->second;
+    return NULL;
 }
 }
 
@@ -99,7 +100,10 @@ std::ostream & std::operator << (std::ostream & out, const diagnosis::t_ambiguit
         if (next_group > ag.get_component_count())
             break;
 
-        out << "g(" << next_group << ") = " << ag.group(next_group) << std::endl;
+        const diagnosis::t_ambiguity_groups::t_group * g = ag.group(next_group);
+
+        if (g)
+            out << "g(" << next_group << ") = " << *g << std::endl;
     }
 
     return out;

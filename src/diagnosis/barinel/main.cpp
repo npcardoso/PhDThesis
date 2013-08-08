@@ -38,6 +38,14 @@ int main (int argc, char ** argv) {
 
     options.input() >> spectra;
 
+    if (!options.input().good()) {
+        std::cerr << "Problem reading spectra" << std::endl;
+        return 1;
+    }
+
+    if (options.print_spectra)
+        options.output() << spectra;
+
     if (ntasks > 1)
         mhs2_heuristic_setup(mhs, options.mpi_level, options.mpi_stride);
 

@@ -26,6 +26,8 @@ public:
     bool fuzzinel;
     bool has_confidence;
 
+    bool print_spectra;
+
     algorithms::t_mhs mhs;
 };
 

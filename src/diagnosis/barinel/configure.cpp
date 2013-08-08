@@ -20,8 +20,10 @@ t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, 
 
     fuzzinel = false;
     has_confidence = false;
+    print_spectra = false;
 
     // add(t_opt('p', "partition", true, false, "Sets the partition to compute (format  <p>:<np>)"));
+    add(t_opt('p', "print-spectra", false, false, "Prints the spectra read from input"));
     add(t_opt('b', "mpi-buffer", true, false, "Sets the buffer size for reduce task"));
     add(t_opt('l', "mpi-level", true, false, "Sets the forking level"));
     add(t_opt('s', "mpi-stride", true, false, "Sets the stride factor"));
@@ -55,6 +57,10 @@ bool t_mhs_options::short_opt (int c, char * param) {
 
     case 'C':
         has_confidence = true;
+        break;
+
+    case 'p':
+        print_spectra = true;
         break;
 
     case 'f':

@@ -1,5 +1,6 @@
 #include "configure.h"
 #include "diagnosis/spectra/count_spectra.h"
+#include "diagnosis/spectra/ambiguity_groups.h"
 #include "diagnosis/algorithms/barinel.h"
 #include "mpi.h"
 #include "opt.h"
@@ -14,6 +15,7 @@ using namespace diagnosis;
 
 int main (int argc, char ** argv) {
     t_mhs_options options(argv[0]);
+    t_ambiguity_groups ambiguity_groups;
 
 
     if (options.configure(argc, argv))
@@ -51,10 +53,19 @@ int main (int argc, char ** argv) {
     if (options.print_spectra)
         options.output() << spectra;
 
+    if (options.ambiguity_groups) {
+        ambiguity_groups = t_ambiguity_groups(spectra);
+
+        if (options.print_spectra)
+            spectra.write(options.output(), &ambiguity_groups.filter()) << std::endl;
+
+        options.output() << ambiguity_groups << std::endl;
+    }
+
     if (ntasks > 1)
         mhs2_heuristic_setup(mhs, options.mpi_level, options.mpi_stride);
 
-    mhs2_map(mhs, spectra, D, stats);
+    mhs2_map(mhs, spectra, D, stats, &ambiguity_groups.filter());
 
     if (ntasks > 1)
         mhs2_reduce(D, options.mpi_hierarchical, options.mpi_buffer, stats);
@@ -73,6 +84,7 @@ int main (int argc, char ** argv) {
 
             while (it != D.end()) {
                 barinel.calculate(spectra, *it, ret);
+                options.output() << ret << ": " << * it << std::endl;
                 probs.push_back(std::pair<diagnosis::t_goodness_mp, t_candidate> (-ret, *it));
                 total_ret += ret;
                 it++;

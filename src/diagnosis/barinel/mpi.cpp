@@ -264,7 +264,8 @@ void mhs2_heuristic_setup (t_mhs & mhs,
 void mhs2_map (const t_mhs & mhs,
                const t_spectra & spectra,
                t_trie & D,
-               t_stats & stats) {
+               t_stats & stats,
+               const diagnosis::t_spectra_filter * filter) {
     int ntasks, rank;
     t_time_interval time = time_interval();
 
@@ -273,7 +274,7 @@ void mhs2_map (const t_mhs & mhs,
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 
-    mhs.calculate(spectra, D);
+    mhs.calculate(spectra, D, filter);
 
     stats.items_generated = D.size();
     stats.total_calc = (time_interval() - time);

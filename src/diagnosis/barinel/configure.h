@@ -25,6 +25,7 @@ public:
 
     bool fuzzinel;
     bool has_confidence;
+    bool ambiguity_groups;
 
     bool print_spectra;
 

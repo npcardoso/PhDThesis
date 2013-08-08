@@ -9,8 +9,8 @@
 
 namespace diagnosis {
 class t_spectra_filter {
-    std::vector < t_component_id >f_component;
-    std::vector < t_transaction_id >f_transaction;
+    std::vector<t_component_id> f_component;
+    std::vector<t_transaction_id> f_transaction;
 
     t_count filtered_component_count;
     t_count filtered_transaction_count;
@@ -21,6 +21,9 @@ public:
 
     t_transaction_id next_transaction (t_transaction_id transaction) const;
     t_component_id next_component (t_component_id component) const;
+
+    t_transaction_id next_filtered_transaction (t_transaction_id transaction) const;
+    t_component_id next_filtered_component (t_component_id component) const;
 
     t_component_id get_last_component () const;
     t_transaction_id get_last_transaction () const;

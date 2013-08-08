@@ -21,6 +21,7 @@ t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, 
     fuzzinel = false;
     has_confidence = false;
     print_spectra = false;
+    ambiguity_groups = false;
 
     // add(t_opt('p', "partition", true, false, "Sets the partition to compute (format  <p>:<np>)"));
     add(t_opt('p', "print-spectra", false, false, "Prints the spectra read from input"));
@@ -32,6 +33,7 @@ t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, 
     add(t_opt('d', "candidates", true, false, "Sets maximum number of candidates"));
     add(t_opt('c', "cardinality", true, false, "Sets maximum candidate cardinality"));
     add(t_opt('f', "fuzzinel", false, false, "Enables fuzzinel diagnosis"));
+    add(t_opt('a', "ambiguity", false, false, "Turn on ambiguity groups simplification"));
     add(t_opt('C', "confidence", false, false, "Enables confidence in the spectra"));
 }
 
@@ -67,6 +69,10 @@ bool t_mhs_options::short_opt (int c, char * param) {
         fuzzinel = true;
         break;
 
+    case 'a':
+        ambiguity_groups = true;
+        break;
+
     case 'H':
         mpi_hierarchical = true;
         break;
@@ -90,6 +96,8 @@ std::ostream & t_mhs_options::print (std::ostream & out) const {
     out << ", Candidates: " << mhs.max_candidates;
     out << ", Time: " << mhs.max_time;
     out << ", Fuzzinel: " << fuzzinel;
+    out << ", Ambiguity_Groups: " << ambiguity_groups;
     out << ", Has_Confidence: " << has_confidence;
+    out << ", Print_Spectra: " << print_spectra;
     return out;
 }

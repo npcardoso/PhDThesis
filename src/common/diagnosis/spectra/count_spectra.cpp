@@ -119,11 +119,11 @@ std::istream & t_count_spectra::read (std::istream & in,
     // assert(in.good());
 
     t_count_spectra spectra;
+    t_count read_components = 0, read_transactions = 0;
+    t_count c_count = 0, tr_count = 0;
 
 
     try {
-        t_count c_count, tr_count;
-
         in.exceptions(std::istream::failbit | std::istream::badbit);
 
         in >> c_count >> tr_count;
@@ -134,6 +134,7 @@ std::istream & t_count_spectra::read (std::istream & in,
                 t_count value;
                 in >> value;
                 spectra.hit(c, tr, value);
+                read_components++;
             }
 
             spectra.set_error(tr, read_error(in));
@@ -143,11 +144,25 @@ std::istream & t_count_spectra::read (std::istream & in,
                 in >> conf;
                 spectra.set_confidence(tr, conf);
             }
+
+            read_transactions++;
+            read_components = 0;
         }
 
         *this = spectra;
     }
-    catch (std::ios_base::failure e) {}
+    catch (std::ios_base::failure e) {
+        if (c_count && tr_count) {
+            if (c_count == read_components)
+                std::cerr << "Problem reading error/confidence in transaction " << read_transactions;
+            else
+                std::cerr << "Problem reading spectra after " << read_transactions << " transactions and " << read_components << " components";
+
+            std::cerr << " (has_confidence: " << has_confidence << ", read size: " << c_count << " " << tr_count << ")" << std::endl;
+        }
+        else
+            std::cerr << "Problem reading spectra size " << std::endl;
+    }
 
     std::ios::iostate in_state = in.rdstate();
     in.exceptions(in_exceptions);
@@ -173,7 +188,7 @@ t_error t_count_spectra::read_error (std::istream & in) const {
     }
     catch (std::ios_base::failure e) {}
 
-    if (str == "1" || str == "-" || str == "x" || str == "X")
+    if (str == " 1 " || str == " - " || str == "x " || str == "X ")
         return 1;
 
     return 0;

@@ -43,6 +43,11 @@ int main (int argc, char ** argv) {
         return 1;
     }
 
+    if (!spectra.is_valid()) {
+        std::cerr << "Invalid spectra (some failing transactions do not activate any components)" << std::endl;
+        return 1;
+    }
+
     if (options.print_spectra)
         options.output() << spectra;
 

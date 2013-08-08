@@ -43,10 +43,12 @@ public:
     virtual bool is_candidate (const t_candidate & candidate,
                                const t_spectra_filter * filter=NULL) const;
 
-    virtual std::ostream& write (std::ostream & out,
-                                 const t_spectra_filter * filter=NULL) const;
+    virtual bool is_valid (const t_spectra_filter * filter=NULL) const;
 
-    virtual std::istream& read (std::istream & in);
+    virtual std::ostream & write (std::ostream & out,
+                                  const t_spectra_filter * filter=NULL) const;
+
+    virtual std::istream & read (std::istream & in);
 };
 
 std::istream & operator >> (std::istream & in, t_spectra & spectra);

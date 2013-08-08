@@ -66,9 +66,12 @@ int main (int argc, char ** argv) {
         mhs2_heuristic_setup(mhs, options.mpi_level, options.mpi_stride);
 
     mhs2_map(mhs, spectra, D, stats, &ambiguity_groups.filter());
+    options.debug() << "MHS2_map: Ended" << std::endl;
 
-    if (ntasks > 1)
+    if (ntasks > 1) {
         mhs2_reduce(D, options.mpi_hierarchical, options.mpi_buffer, stats);
+        options.debug() << "MHS2_reduce: Ended" << std::endl;
+    }
 
     mhs2_collect_stats(options.debug(), D, stats);
 
@@ -84,6 +87,7 @@ int main (int argc, char ** argv) {
 
             while (it != D.end()) {
                 barinel.calculate(spectra, *it, ret);
+                options.debug() << "Fuzzinel: Ended for candidate (" << * it << ") with score " << ret << std::endl;
                 probs.push_back(std::pair<diagnosis::t_goodness_mp, t_candidate> (-ret, *it));
                 total_ret += ret;
                 it++;

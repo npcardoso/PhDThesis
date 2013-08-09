@@ -4,13 +4,14 @@
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/heuristics/parallelization.h"
 #include "diagnosis/structs/count_spectra.h"
-#include "diagnosis/structs/randomizer/bernoulli.h"
+#include "diagnosis/randomizers/bernoulli.h"
 
 #include <fstream>
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
-using namespace diagnosis::structs;
 using namespace diagnosis::heuristics;
+using namespace diagnosis::structs;
+using namespace diagnosis::randomizers;
 
 BOOST_AUTO_TEST_SUITE(MHS2)
 

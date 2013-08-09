@@ -4,6 +4,7 @@
 using boost::bernoulli_distribution;
 
 namespace diagnosis {
+namespace randomizers {
 using namespace structs;
 
 t_bernoulli_randomizer::t_bernoulli_randomizer (float activation_rate, float error_rate) {
@@ -33,5 +34,6 @@ void t_bernoulli_randomizer::randomize (t_count_spectra & spectra) const {
             spectra.set_count(c, t, activation(gen));
         }
     }
+}
 }
 }

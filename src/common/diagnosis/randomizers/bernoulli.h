@@ -5,6 +5,7 @@
 #include "diagnosis/structs/count_spectra.h"
 
 namespace diagnosis {
+namespace randomizers {
 class t_bernoulli_randomizer : public t_spectra_randomizer<structs::t_count_spectra> {
 public:
     t_bernoulli_randomizer (float activation_rate, float error_rate);
@@ -17,6 +18,7 @@ public:
     float error_rate;
     float activation_rate;
 };
+}
 }
 
 #endif

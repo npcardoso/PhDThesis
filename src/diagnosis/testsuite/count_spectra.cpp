@@ -1,13 +1,14 @@
 #include <boost/test/unit_test.hpp>
 
 #include "diagnosis/structs/count_spectra.h"
-#include "diagnosis/structs/randomizer/bernoulli.h"
+#include "diagnosis/randomizers/bernoulli.h"
 
 #include <sstream>
 
 using namespace std;
 using namespace diagnosis;
 using namespace diagnosis::structs;
+using namespace diagnosis::randomizers;
 
 void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, int n_comp, int n_tran) {
     for (t_transaction_id t = 1; t <= n_tran; t++) {

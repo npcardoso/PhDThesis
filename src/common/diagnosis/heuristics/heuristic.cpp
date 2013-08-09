@@ -1,7 +1,9 @@
 #include "heuristic.h"
 
 namespace diagnosis {
+namespace heuristics {
 using namespace structs;
+
 std::ostream & t_heuristic_filter::print (std::ostream & out) const {
     return out << "Not Implemented";
 }
@@ -64,6 +66,8 @@ t_heuristic::t_order_buffer t_heuristic::get_ordering_buffer (const t_spectra & 
     return t_order_buffer(new t_rank_element[spectra.get_component_count(filter) + 1]);
 }
 }
-std::ostream & std::operator << (std::ostream & out, const diagnosis::t_heuristic & heuristic) {
+}
+
+std::ostream & std::operator << (std::ostream & out, const diagnosis::heuristics::t_heuristic & heuristic) {
     return heuristic.print(out);
 }

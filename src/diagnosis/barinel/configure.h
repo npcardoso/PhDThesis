@@ -8,6 +8,7 @@
 #define MPI_BUFFER (1 << 16)
 
 using namespace diagnosis;
+using namespace diagnosis::heuristics;
 
 class t_mhs_options : public t_options {
 public:

@@ -1,9 +1,7 @@
 #ifndef __DIAGNOSIS_HEURISTICS_SORT_H__
 #define __DIAGNOSIS_HEURISTICS_SORT_H__
 
-#include "diagnosis/heuristic.h"
-
-#include <algorithm>
+#include "diagnosis/heuristics/heuristic.h"
 
 namespace diagnosis {
 namespace heuristics {

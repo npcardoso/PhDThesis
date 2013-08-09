@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_HEURISTIC_H__
-#define __DIAGNOSIS_HEURISTIC_H__
+#ifndef __DIAGNOSIS_HEURISTICS_HEURISTIC_H__
+#define __DIAGNOSIS_HEURISTICS_HEURISTIC_H__
 
 #include "diagnosis/rank_element.h"
 #include "diagnosis/structs/spectra.h"
@@ -8,6 +8,10 @@
 #include <vector>
 
 namespace diagnosis {
+namespace heuristics {
+typedef double t_score;
+typedef diagnosis::t_rank_element<t_score, t_component_id> t_rank_element;
+
 class t_heuristic_filter {
 public:
     virtual void operator () (const structs::t_spectra & spectra,
@@ -45,9 +49,10 @@ private:
     t_filters filters;
 };
 }
+}
 
 namespace std {
-std::ostream & operator << (std::ostream & out, const diagnosis::t_heuristic & heuristic);
+std::ostream & operator << (std::ostream & out, const diagnosis::heuristics::t_heuristic & heuristic);
 }
 
 #endif

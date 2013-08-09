@@ -10,6 +10,7 @@
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
 using namespace diagnosis::structs;
+using namespace diagnosis::heuristics;
 
 BOOST_AUTO_TEST_SUITE(MHS2)
 
@@ -108,7 +109,7 @@ BOOST_AUTO_TEST_CASE(parallelization) {
     t_count level = 2;
 
     for (t_count stride = 0; stride < 4; stride++) {
-        for (t_count ntasks = 1; ntasks < 100; ntasks++) {
+        for (t_count ntasks = 1; ntasks < 10; ntasks++) {
             t_trie D;
             D.clear();
 

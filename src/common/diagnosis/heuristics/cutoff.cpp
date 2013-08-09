@@ -4,7 +4,7 @@ namespace diagnosis {
 namespace heuristics {
 using namespace structs;
 
-t_cutoff::t_cutoff (t_rank_element::t_rank_score value_cutoff, float lambda) {
+t_cutoff::t_cutoff (t_rank_element::t_score value_cutoff, float lambda) {
     this->value_cutoff = value_cutoff;
     this->lambda = lambda;
 }
@@ -21,7 +21,7 @@ void t_cutoff::operator () (const t_spectra & spectra,
     t_id i = 0;
 
     while (i < max_component) {
-        t_rank_element::t_rank_score value = ret[i].get_value();
+        t_rank_element::t_score value = ret[i].get_score();
 
         if (value >= 0 && value < value_cutoff)
             ret[i] = t_rank_element(0, -1);

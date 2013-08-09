@@ -1,7 +1,6 @@
 #ifndef __DIAGNOSIS_ALGORITHMS_BARINEL_H__
 #define __DIAGNOSIS_ALGORITHMS_BARINEL_H__
 
-#include "diagnosis/heuristic.h"
 #include "diagnosis/types.h"
 #include "diagnosis/structs/spectra.h"
 #include "diagnosis/structs/spectra_filter.h"

@@ -16,6 +16,7 @@ using namespace std;
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
 using namespace diagnosis::structs;
+using namespace diagnosis::heuristics;
 
 t_count send_candidates (const t_trie & trie,
                          t_count chunk_size,

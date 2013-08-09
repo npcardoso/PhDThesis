@@ -1,7 +1,7 @@
 #ifndef __DIAGNOSIS_HEURISTICS_PARALLELIZATION_H__
 #define __DIAGNOSIS_HEURISTICS_PARALLELIZATION_H__
 
-#include "diagnosis/heuristic.h"
+#include "diagnosis/heuristics/heuristic.h"
 
 #include <boost/random/mersenne_twister.hpp>
 

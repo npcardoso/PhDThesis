@@ -1,7 +1,7 @@
 #ifndef __DIAGNOSIS_ALGORITHMS_MHS_H__
 #define __DIAGNOSIS_ALGORITHMS_MHS_H__
 
-#include "diagnosis/heuristic.h"
+#include "diagnosis/heuristics/heuristic.h"
 #include "diagnosis/structs/spectra.h"
 #include "diagnosis/structs/spectra_filter.h"
 #include "diagnosis/structs/spectra_iterator.h"
@@ -13,7 +13,7 @@
 namespace diagnosis {
 namespace algorithms {
 class t_mhs {
-    typedef std::map<t_count, t_heuristic> t_heuristics;
+    typedef std::map<t_count, heuristics::t_heuristic> t_heuristics;
 
     t_heuristics heuristics;
 
@@ -21,10 +21,10 @@ public:
     t_count max_candidate_size, max_candidates;
     t_time_interval max_time;
 
-    t_mhs (const t_heuristic & heuristic);
+    t_mhs (const heuristics::t_heuristic & heuristic);
 
-    void set_heuristic (t_count start_level, const t_heuristic & heuristic);
-    const t_heuristic & get_heuristic (t_count level) const;
+    void set_heuristic (t_count start_level, const heuristics::t_heuristic & heuristic);
+    const heuristics::t_heuristic & get_heuristic (t_count level) const;
 
     void calculate (const structs::t_spectra & spectra,
                     structs::t_trie & D,

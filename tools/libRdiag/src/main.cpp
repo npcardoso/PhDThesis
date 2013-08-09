@@ -9,6 +9,7 @@
 using namespace Rcpp;
 using namespace diagnosis;
 using namespace diagnosis::structs;
+using namespace diagnosis::heuristics;
 
 void matrix_to_spectra (NumericMatrix A, NumericVector e, t_count_spectra & spectra) {
     spectra.set_element_count(A.ncol(), A.nrow());

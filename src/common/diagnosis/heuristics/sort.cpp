@@ -1,5 +1,8 @@
 #include "sort.h"
 
+#include <algorithm>
+
+
 namespace diagnosis {
 namespace heuristics {
 using namespace structs;

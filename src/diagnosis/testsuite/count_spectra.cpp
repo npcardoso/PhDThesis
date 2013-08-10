@@ -9,6 +9,7 @@ using namespace std;
 using namespace diagnosis;
 using namespace diagnosis::structs;
 using namespace diagnosis::randomizers;
+using namespace boost::random;
 
 void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, int n_comp, int n_tran) {
     for (t_transaction_id t = 1; t <= n_tran; t++) {
@@ -27,6 +28,8 @@ BOOST_AUTO_TEST_CASE(size) {
     int n_tran = 10 + rand() % 20;
 
     t_count_spectra spectra;
+    t_candidate correct;
+    mt19937 gen;
 
 
     BOOST_CHECK(spectra.get_component_count() == 0);
@@ -36,7 +39,7 @@ BOOST_AUTO_TEST_CASE(size) {
     t_bernoulli_randomizer randomizer(0.5, 0.5);
     randomizer.n_comp = n_comp;
     randomizer.n_tran = n_tran;
-    randomizer.randomize(spectra);
+    randomizer(spectra, correct, gen);
 
     t_count_spectra spectra_half = spectra;
     spectra_half.set_element_count(n_comp / 2, n_tran / 2);

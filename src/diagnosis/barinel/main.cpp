@@ -79,27 +79,29 @@ int main (int argc, char ** argv) {
     if (rank == 0) {
         if (options.fuzzinel) {
             // Fuzzinel stuff
+            typedef diagnosis::t_rank_element<const t_candidate *, t_probability_mp> t_rank_element;
+            typedef std::vector<t_rank_element> t_rank;
             diagnosis::algorithms::t_barinel barinel;
             diagnosis::t_probability_mp ret;
             diagnosis::t_probability_mp total_ret(0);
-            std::vector<std::pair<diagnosis::t_goodness_mp, t_candidate> > probs;
+            t_rank probs;
 
             diagnosis::structs::t_trie::iterator it = D.begin();
 
             while (it != D.end()) {
                 barinel.calculate(spectra, *it, ret);
                 options.debug() << "Fuzzinel: Ended for candidate (" << * it << ") with score " << ret << std::endl;
-                probs.push_back(std::pair<diagnosis::t_goodness_mp, t_candidate> (-ret, *it));
+                probs.push_back(t_rank_element(&(*it), ret));
                 total_ret += ret;
                 it++;
             }
 
             sort(probs.begin(), probs.end());
 
-            std::vector<std::pair<diagnosis::t_goodness_mp, t_candidate> >::iterator it_prob = probs.begin();
+            t_rank::iterator it_prob = probs.begin();
 
             while (it_prob != probs.end()) {
-                options.output() << (-it_prob->first / total_ret) << ": " << it_prob->second << std::endl;
+                options.output() << (-it_prob->get_score() / total_ret) << ": " << *it_prob->get_element() << std::endl;
                 it_prob++;
             }
         }

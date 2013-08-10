@@ -275,7 +275,7 @@ void mhs2_map (const t_mhs & mhs,
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 
-    mhs.calculate(spectra, D, filter);
+    mhs(spectra, D, filter);
 
     stats.items_generated = D.size();
     stats.total_calc = (time_interval() - time);

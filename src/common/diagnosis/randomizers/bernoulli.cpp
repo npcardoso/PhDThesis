@@ -14,10 +14,9 @@ t_bernoulli_randomizer::t_bernoulli_randomizer (float activation_rate, float err
     this->n_tran = 0;
 }
 
-void t_bernoulli_randomizer::randomize (t_count_spectra & spectra) const {
-    boost::random::mt19937 gen;
-
-
+void t_bernoulli_randomizer::operator () (structs::t_count_spectra & spectra,
+                                          t_candidate & correct_candidate,
+                                          boost::random::mt19937 & gen) const {
     bernoulli_distribution<> activation(activation_rate);
     bernoulli_distribution<> error(error_rate);
 
@@ -26,6 +25,8 @@ void t_bernoulli_randomizer::randomize (t_count_spectra & spectra) const {
 
     if (n_tran)
         spectra.set_transaction_count(n_tran);
+
+    correct_candidate.clear();
 
     for (t_transaction_id t = 1; t <= n_tran; t++) {
         spectra.set_error(t, error(gen));

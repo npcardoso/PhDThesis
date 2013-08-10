@@ -26,9 +26,9 @@ const t_heuristic & t_mhs::get_heuristic (t_count level) const {
     return it->second;
 }
 
-void t_mhs::calculate (const t_spectra & spectra,
-                       t_trie & D,
-                       const t_spectra_filter * filter) const {
+void t_mhs::operator () (const t_spectra & spectra,
+                         t_trie & D,
+                         const t_spectra_filter * filter) const {
     t_candidate candidate;
 
 

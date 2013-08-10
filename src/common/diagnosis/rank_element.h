@@ -4,7 +4,7 @@
 #include "types.h"
 
 namespace diagnosis {
-template <class S, class C>
+template <class C, class S>
 class t_rank_element {
 public:
     typedef S t_score;
@@ -22,7 +22,7 @@ public:
         return score;
     }
 
-    bool operator < (const t_rank_element<S, C> & elem) const {
+    bool operator < (const t_rank_element<C, S> & elem) const {
         return score > elem.score;
     }
 
@@ -31,4 +31,12 @@ private:
     t_score score;
 };
 }
+
+namespace std {
+template <class C, class S>
+ostream & operator << (ostream & out, const diagnosis::t_rank_element<C, S> & re) {
+    return out << "t_rank_element(" << re.get_element() << "," << re.get_score() << ")";
+}
+}
+
 #endif

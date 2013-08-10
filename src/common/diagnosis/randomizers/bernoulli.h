@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_SPECTRA_RANDOMIZER_BERNOULLI_H__
-#define __DIAGNOSIS_SPECTRA_RANDOMIZER_BERNOULLI_H__
+#ifndef __DIAGNOSIS_RANDOMIZER_BERNOULLI_H__
+#define __DIAGNOSIS_RANDOMIZER_BERNOULLI_H__
 
 #include "randomizer.h"
 #include "diagnosis/structs/count_spectra.h"
@@ -10,7 +10,9 @@ class t_bernoulli_randomizer : public t_spectra_randomizer<structs::t_count_spec
 public:
     t_bernoulli_randomizer (float activation_rate, float error_rate);
 
-    virtual void randomize (structs::t_count_spectra & spectra) const;
+    virtual void operator () (structs::t_count_spectra & spectra,
+                              structs::t_candidate & correct_candidate,
+                              boost::random::mt19937 & gen) const;
 
 public:
     t_count n_comp;

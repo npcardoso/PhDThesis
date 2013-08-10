@@ -52,7 +52,7 @@ RcppExport SEXP mhs2 (SEXP AA, SEXP ee, SEXP maxrt, SEXP maxc, SEXP maxcs) {
     t_count_spectra spectra;
 
     matrix_to_spectra(A, e, spectra);
-    mhs.calculate(spectra, D);
+    mhs(spectra, D);
 
     List ret;
     trie_to_list(D, ret);

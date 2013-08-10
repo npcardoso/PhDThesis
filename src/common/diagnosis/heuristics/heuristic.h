@@ -10,7 +10,7 @@
 namespace diagnosis {
 namespace heuristics {
 typedef double t_score;
-typedef diagnosis::t_rank_element<t_score, t_component_id> t_rank_element;
+typedef diagnosis::t_rank_element<t_component_id, t_score> t_rank_element;
 
 class t_heuristic_filter {
 public:

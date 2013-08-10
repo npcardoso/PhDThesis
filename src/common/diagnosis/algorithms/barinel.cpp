@@ -1,5 +1,4 @@
 #include "barinel.h"
-#include "utils/iostream.h"
 
 namespace diagnosis {
 namespace algorithms {
@@ -32,6 +31,21 @@ t_barinel::t_barinel (size_t precision) {
     this->precision = precision;
 }
 
+void t_barinel::operator () (const structs::t_spectra & spectra,
+                             const structs::t_trie & D,
+                             t_ret_type & probs,
+                             const structs::t_spectra_filter * filter) const {
+    t_trie::iterator it = D.begin();
+
+
+    while (it != D.end()) {
+        t_probability_mp ret;
+        calculate(spectra, *it, ret);
+        probs.push_back(ret.toDouble());
+        it++;
+    }
+}
+
 void t_barinel::calculate (const t_spectra & spectra,
                            const t_candidate & candidate,
                            t_probability_mp & ret,
@@ -40,6 +54,7 @@ void t_barinel::calculate (const t_spectra & spectra,
 
 
     model(spectra, candidate, m, filter);
+
     t_barinel_goodnesses g(candidate.size(), t_goodness_mp(0.5, precision)),
     old_g(candidate.size(), t_goodness_mp(0.5, precision));
 

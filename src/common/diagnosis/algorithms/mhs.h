@@ -2,9 +2,7 @@
 #define __DIAGNOSIS_ALGORITHMS_MHS_H__
 
 #include "diagnosis/heuristics/heuristic.h"
-#include "diagnosis/structs/spectra.h"
-#include "diagnosis/structs/spectra_filter.h"
-#include "diagnosis/structs/spectra_iterator.h"
+#include "diagnosis/diagnosis_system.h"
 #include "diagnosis/structs/trie.h"
 #include "utils/time.h"
 
@@ -12,7 +10,7 @@
 
 namespace diagnosis {
 namespace algorithms {
-class t_mhs {
+class t_mhs : public t_candidate_generator {
     typedef std::map<t_count, heuristics::t_heuristic> t_heuristics;
 
     t_heuristics heuristics;
@@ -26,9 +24,9 @@ public:
     void set_heuristic (t_count start_level, const heuristics::t_heuristic & heuristic);
     const heuristics::t_heuristic & get_heuristic (t_count level) const;
 
-    void calculate (const structs::t_spectra & spectra,
-                    structs::t_trie & D,
-                    const structs::t_spectra_filter * filter=NULL) const;
+    virtual void operator () (const structs::t_spectra & spectra,
+                              t_ret_type & D,
+                              const structs::t_spectra_filter * filter=NULL) const;
 
     void calculate (const structs::t_spectra & spectra,
                     structs::t_trie & D,

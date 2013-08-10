@@ -138,11 +138,11 @@ BOOST_AUTO_TEST_CASE(io) {
     }
 
     for (t_id i = 1; i <= 4; i++) {
-        BOOST_CHECK_MESSAGE(spectra.is_error(i), "Failed for transaction " << i);
+        BOOST_CHECK_MESSAGE(!spectra.is_error(i), "Failed for transaction " << i);
         BOOST_CHECK_MESSAGE(spectra.get_error(i) == 1, "Failed for transaction " << i);
     }
 
-    BOOST_CHECK_MESSAGE(spectra.is_error(5), "Failed for transaction " << 5);
+    BOOST_CHECK_MESSAGE(!spectra.is_error(5), "Failed for transaction " << 5);
     BOOST_CHECK_MESSAGE(spectra.get_error(5) == 0.75, "Failed for transaction " << 5);
 
     BOOST_CHECK_MESSAGE(!spectra.is_error(6), "Failed for transaction " << 6);

@@ -152,7 +152,7 @@ bool t_basic_spectra::is_error (t_transaction_id transaction) const {
     assert(transaction > 0);
     assert(transaction <= transaction_count);
 
-    return get_error(transaction) > 0.5; // TODO: arbitrary threshold
+    return get_error(transaction) * get_confidence(transaction) > 0.5; // TODO: arbitrary threshold
 }
 
 void t_basic_spectra::set_error (t_transaction_id transaction,

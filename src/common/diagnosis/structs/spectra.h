@@ -31,7 +31,9 @@ public:
     void probability (const structs::t_candidate & candidate,
                       const G & goodnesses,
                       t_probability_mp & ret,
-                      const t_spectra_filter * filter=NULL) const;
+                      const t_spectra_filter * filter=NULL,
+                      bool use_confidence=true,
+                      bool use_fuzzy_error=true) const;
 
     virtual bool is_error (t_transaction_id transaction) const = 0;
     virtual t_error get_error (t_transaction_id transaction) const = 0;
@@ -92,7 +94,9 @@ template <class G>
 void t_spectra::probability (const structs::t_candidate & candidate,
                              const G & goodnesses,
                              t_probability_mp & ret,
-                             const t_spectra_filter * filter) const {
+                             const t_spectra_filter * filter,
+                             bool use_confidence,
+                             bool use_fuzzy_error) const {
     assert(candidate.size() > 0);
 
     t_goodness_mp tmp(goodnesses[0]);
@@ -119,12 +123,16 @@ void t_spectra::probability (const structs::t_candidate & candidate,
         }
 
         // Fuzzy health
-        t_error e = get_error(it.get_transaction());
+        t_error e = use_fuzzy_error ? get_error(it.get_transaction()) : is_error(it.get_transaction());
+
+
         tmp = e * (1 - tmp) + (1 - e) * tmp;
 
         // Confidence scaling
-        t_confidence c = get_confidence(it.get_transaction());
-        tmp = (1 - c) + (c * tmp);
+        if (use_confidence) {
+            t_confidence c = get_confidence(it.get_transaction());
+            tmp = (1 - c) + (c * tmp);
+        }
 
         ret *= tmp;
     }

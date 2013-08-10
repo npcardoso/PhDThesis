@@ -25,6 +25,8 @@ typedef std::vector<t_goodness_mp> t_barinel_goodnesses;
 
 class t_barinel : public t_candidate_ranker {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_barinel);
+
     t_barinel ();
     t_barinel (size_t precision);
 
@@ -56,6 +58,8 @@ public:
     double lambda;
     t_count iterations;
     size_t precision;
+    bool use_fuzzy_error;
+    bool use_confidence;
 };
 }
 }

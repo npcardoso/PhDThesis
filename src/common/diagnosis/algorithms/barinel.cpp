@@ -21,6 +21,8 @@ t_barinel::t_barinel () {
     lambda = 0.0001;
     precision = 128;
     iterations = 100000;
+    use_fuzzy_error = true;
+    use_confidence = true;
 }
 
 t_barinel::t_barinel (size_t precision) {
@@ -77,7 +79,7 @@ void t_barinel::calculate (const t_spectra & spectra,
         old_g = g;
 
         // Calculate probability
-        spectra.probability(candidate, g, pr, filter);
+        spectra.probability(candidate, g, pr, filter, use_confidence, use_fuzzy_error);
 
         // Check stop conditions
         if (abs(pr - old_pr) < epsilon)
@@ -121,8 +123,8 @@ void t_barinel::model (const t_spectra & spectra,
                 symbol += 1 << comp;
         }
 
-        t_confidence conf = spectra.get_confidence(it.get_transaction());
-        t_error err = spectra.get_error(it.get_transaction());
+        t_confidence conf = use_confidence ? spectra.get_confidence(it.get_transaction()) : 1;
+        t_error err = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
         model.pass[symbol] += conf * (1 - err);
         model.fail[symbol] += conf * err;
     }

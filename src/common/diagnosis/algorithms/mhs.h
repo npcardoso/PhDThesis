@@ -11,11 +11,9 @@
 namespace diagnosis {
 namespace algorithms {
 class t_mhs : public t_candidate_generator {
-    typedef std::map<t_count, heuristics::t_heuristic> t_heuristics;
-
-    t_heuristics heuristics;
-
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_mhs);
+
     t_count max_candidate_size, max_candidates;
     t_time_interval max_time;
 
@@ -60,6 +58,10 @@ private:
     void strip (t_component_id component,
                 const structs::t_spectra & spectra,
                 structs::t_spectra_filter & filter) const;
+private:
+    typedef std::map<t_count, heuristics::t_heuristic> t_heuristics;
+
+    t_heuristics heuristics;
 };
 }
 }

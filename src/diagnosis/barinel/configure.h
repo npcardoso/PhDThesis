@@ -25,6 +25,9 @@ public:
     bool mpi_hierarchical;
 
     bool fuzzinel;
+    bool use_confidence;
+    bool fuzzy_error;
+
     bool has_confidence;
     bool ambiguity_groups;
 

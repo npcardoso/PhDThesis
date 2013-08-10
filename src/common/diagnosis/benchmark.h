@@ -28,29 +28,34 @@ public:
     t_diagnosis_cost operator () (boost::random::mt19937 & gen) const {
         t_spectra_type spectra;
         structs::t_candidate correct;
-        t_candidate_generator::t_ret_type D;
-        t_candidate_ranker::t_ret_type probs;
 
 
         (* randomizer)(spectra, correct, gen);
+        return (* this)(spectra, correct);
+    }
+
+    t_diagnosis_cost operator () (const t_spectra_type & spectra,
+                                  const structs::t_candidate & correct) const {
+        t_candidate_generator::t_ret_type D;
+        t_candidate_ranker::t_ret_type probs;
+
 
         (* generator)(spectra, D);
         (* ranker)(spectra, D, probs);
 
 
-        t_probability total = 0;
         t_candidate_generator::t_ret_type::iterator it = D.begin();
         t_candidate_ranker::t_ret_type::iterator it_prob = probs.begin();
 
         std::list<structs::t_candidate> D_list;
-        typedef diagnosis::t_rank_element<const structs::t_candidate *, t_probability> t_rank_element_tmp;
+        typedef diagnosis::t_rank_element<const structs::t_candidate *, t_probability_mp> t_rank_element_tmp;
         typedef std::vector<t_rank_element_tmp> t_rank;
         t_rank rank;
 
         while (it != D.end()) {
-            total += *it_prob;
             D_list.push_front(*it);
             rank.push_back(t_rank_element_tmp(&(D_list.front()), *it_prob));
+            it_prob++;
             it++;
         }
 

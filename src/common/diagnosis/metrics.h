@@ -63,7 +63,7 @@ t_diagnosis_cost Cd_multi (const structs::t_candidate & candidate,
     structs::t_candidate remaining(candidate), inspected;
 
     while (it != candidate_list.end()) {
-        if (it->get_score() != current_score) {
+        if (!(it->get_score() == current_score)) {
             if (remaining.size() == 0)
                 break;
 
@@ -95,6 +95,7 @@ t_diagnosis_cost Cd_multi (const structs::t_candidate & candidate,
     // Candidate not even considered
     if (remaining.size())
         return NAN;
+
 
     assert((inspected.size() - candidate.size()) - (elements / 2.0) >= 0);
 

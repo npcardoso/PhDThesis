@@ -23,7 +23,7 @@ public:
 
 class t_candidate_ranker {
 public:
-    typedef std::list<t_probability> t_ret_type;
+    typedef std::list<t_probability_mp> t_ret_type;
     DEFINE_BOOST_SHARED_PTRS(t_candidate_ranker);
 
     virtual void operator () (const structs::t_spectra & spectra,
@@ -34,15 +34,14 @@ public:
 
 class t_diagnosis_system {
 public:
-    typedef std::list<t_probability> t_ret_type;
     DEFINE_BOOST_SHARED_PTRS(t_diagnosis_system);
 
     inline t_diagnosis_system (const t_candidate_generator::t_ptr & gen,
                                const t_candidate_ranker::t_ptr & rank) : generator(gen), ranker(rank) {}
 
     virtual void operator () (const structs::t_spectra & spectra,
-                              structs::t_trie & D,
-                              t_ret_type & probs,
+                              t_candidate_generator::t_ret_type & D,
+                              t_candidate_ranker::t_ret_type & probs,
                               const structs::t_spectra_filter * filter=NULL) const;
 
 protected:

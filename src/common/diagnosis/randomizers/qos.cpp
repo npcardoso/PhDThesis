@@ -53,10 +53,12 @@ void t_qos_randomizer::operator () (structs::t_count_spectra & spectra,
             t_error e = 0;
             t_component_id c = erroneous(gen);
 
-            correct_candidate.insert(c + 1);
             spectra.set_count(c + 1, t, 1);
             e = faulty_components[c].gen_error(gen);
             spectra.set_error(t, e);
+
+            if (spectra.is_error(t))
+                correct_candidate.insert(c + 1);
         }
     }
 }

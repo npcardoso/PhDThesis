@@ -88,6 +88,9 @@ int main (int argc, char ** argv) {
 
             diagnosis::structs::t_trie::iterator it = D.begin();
 
+            barinel.use_confidence = options.use_confidence;
+            barinel.use_fuzzy_error = options.fuzzy_error;
+
             while (it != D.end()) {
                 barinel.calculate(spectra, *it, ret);
                 options.debug() << "Fuzzinel: Ended for candidate (" << * it << ") with score " << ret << std::endl;
@@ -101,7 +104,7 @@ int main (int argc, char ** argv) {
             t_rank::iterator it_prob = probs.begin();
 
             while (it_prob != probs.end()) {
-                options.output() << (-it_prob->get_score() / total_ret) << ": " << *it_prob->get_element() << std::endl;
+                options.output() << (it_prob->get_score() / total_ret) << ": " << *it_prob->get_element() << std::endl;
                 it_prob++;
             }
         }

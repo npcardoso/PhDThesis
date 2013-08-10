@@ -19,6 +19,7 @@ t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, 
     mpi_hierarchical = false;
 
     fuzzinel = false;
+
     has_confidence = false;
     print_spectra = false;
     ambiguity_groups = false;
@@ -35,6 +36,7 @@ t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, 
     add(t_opt('f', "fuzzinel", false, false, "Enables fuzzinel diagnosis"));
     add(t_opt('a', "ambiguity", false, false, "Turn on ambiguity groups simplification"));
     add(t_opt('C', "confidence", false, false, "Enables confidence in the spectra"));
+    add(t_opt('B', "barinel", false, false, "Enables confidence in the spectra"));
 }
 
 bool t_mhs_options::short_opt (int c, char * param) {
@@ -73,6 +75,14 @@ bool t_mhs_options::short_opt (int c, char * param) {
 
     case 'f':
         fuzzinel = true;
+        use_confidence = true;
+        fuzzy_error = true;
+        break;
+
+    case 'B':
+        fuzzinel = true;
+        use_confidence = false;
+        fuzzy_error = false;
         break;
 
     case 'a':

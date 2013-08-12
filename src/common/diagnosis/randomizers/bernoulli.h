@@ -6,13 +6,13 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_bernoulli_randomizer : public t_spectra_randomizer<structs::t_count_spectra> {
+class t_bernoulli : public t_spectra_randomizer<structs::t_count_spectra> {
 public:
-    t_bernoulli_randomizer (float activation_rate, float error_rate);
+    t_bernoulli (float activation_rate, float error_rate);
 
-    virtual void operator () (structs::t_count_spectra & spectra,
-                              structs::t_candidate & correct_candidate,
-                              boost::random::mt19937 & gen) const;
+    virtual const t_self_type & operator () (structs::t_count_spectra & spectra,
+                                             structs::t_candidate & correct_candidate,
+                                             boost::random::mt19937 & gen) const;
 
 public:
     t_count n_comp;

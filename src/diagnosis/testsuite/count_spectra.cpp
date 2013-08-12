@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(size) {
     BOOST_CHECK(spectra.get_transaction_count() == 0);
     BOOST_CHECK(spectra.get_error_count() == 0);
 
-    t_bernoulli_randomizer randomizer(0.5, 0.5);
+    t_bernoulli randomizer(0.5, 0.5);
     randomizer.n_comp = n_comp;
     randomizer.n_tran = n_tran;
     randomizer(spectra, correct, gen);

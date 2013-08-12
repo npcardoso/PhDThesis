@@ -10,12 +10,13 @@ namespace randomizers {
 template <class T>
 class t_spectra_randomizer {
 public:
+    typedef t_spectra_randomizer<T> t_self_type;
     typedef boost::shared_ptr<t_spectra_randomizer<T> > t_ptr;
     typedef boost::shared_ptr<const t_spectra_randomizer<T> > t_const_ptr;
 
-    virtual void operator () (T & spectra,
-                              structs::t_candidate & correct_candidate,
-                              boost::random::mt19937 & gen) const = 0;
+    virtual const t_self_type & operator () (T & spectra,
+                                             structs::t_candidate & correct_candidate,
+                                             boost::random::mt19937 & gen) const = 0;
 };
 }
 }

@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_SUITE(MHS2)
 BOOST_AUTO_TEST_CASE(stop_flags) {
     t_count_spectra spectra;
     t_candidate correct;
-    t_bernoulli_randomizer randomizer(0.25, 1);
+    t_bernoulli randomizer(0.25, 1);
     mt19937 gen;
     t_heuristic heuristic;
     t_trie D;
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(mhs) {
 BOOST_AUTO_TEST_CASE(parallelization) {
     t_count_spectra spectra;
     t_candidate correct;
-    t_bernoulli_randomizer randomizer(0.25, 1);
+    t_bernoulli randomizer(0.25, 1);
     mt19937 gen;
     t_trie reference;
 

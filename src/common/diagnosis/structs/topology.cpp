@@ -12,37 +12,42 @@ namespace diagnosis {
 namespace structs {
 t_fault::t_fault () {
     this->goodness = 0;
+    this->failure = 1;
     this->e_min = 1;
     this->e_max = 1;
 }
 
-t_fault::t_fault (t_goodness goodness) {
+t_fault::t_fault (t_goodness goodness,
+                  t_probability failure) {
     assert(goodness >= 0);
     assert(goodness <= 1);
 
     this->goodness = goodness;
+    this->failure = failure;
 
-    if (goodness) {
-        this->e_min = 0;
-        this->e_max = 1;
-    }
+    this->e_min = goodness ? 0 : 0.5;
+    this->e_max = 1;
 }
 
 t_fault::t_fault (t_goodness goodness,
+                  t_probability failure,
                   t_error e_min,
                   t_error e_max) {
-    this->goodness = goodness;
-    this->e_min = e_min;
-    this->e_max = e_max;
-
     assert(!(e_min >= 0.5 && goodness > 0));
     assert(!(e_min < 0.5 && goodness == 0));
+    assert(failure >= 0);
+    assert(failure <= 1);
     assert(goodness >= 0);
     assert(goodness <= 1);
     assert(e_min >= 0);
     assert(e_max >= 0.5);
     assert(e_min <= e_max);
     assert(e_max <= 1);
+
+    this->goodness = goodness;
+    this->failure = failure;
+    this->e_min = e_min;
+    this->e_max = e_max;
 }
 
 t_error t_fault::gen_pass_value (boost::random::mt19937 & gen) const {
@@ -51,24 +56,22 @@ t_error t_fault::gen_pass_value (boost::random::mt19937 & gen) const {
     if (e_min == 0.5)
         return 0.5;
 
-    uniform_real_distribution<t_error> error(e_min, 0.5);
-
-    return error(gen);
+    return uniform_real_distribution<t_error> (e_min, 0.5) (gen);
 }
 
 t_error t_fault::gen_error_value (boost::random::mt19937 & gen) const {
     if (e_max - e_min <= 0.00001)
         return e_max;
 
-    uniform_real_distribution<t_error> error((e_min > 0.5) ? e_min : 0.5, e_max);
+    return uniform_real_distribution<t_error> ((e_min > 0.5) ? e_min : 0.5, e_max) (gen);
+}
 
-    return error(gen);
+bool t_fault::gen_failure (boost::random::mt19937 & gen) const {
+    return bernoulli_distribution<> (failure) (gen);
 }
 
 bool t_fault::gen_error (boost::random::mt19937 & gen) const {
-    bernoulli_distribution<> error(1 - goodness);
-
-    return error(gen);
+    return bernoulli_distribution<> (1 - goodness) (gen);
 }
 
 bool t_fault::can_pass () const {
@@ -142,6 +145,10 @@ const t_fault * t_topology::get_fault (t_component_id comp) const {
     else return &(*it->second);
 }
 
+const t_topology::t_components & t_topology::get_components () const {
+    return components;
+}
+
 std::ostream & t_topology::graphviz (std::ostream & out) const {
     out << "digraph g {\n";
     BOOST_FOREACH(t_component_id c,
@@ -167,6 +174,12 @@ std::ostream & t_topology::graphviz_component (std::ostream & out, t_component_i
     out << "C" << comp << " [\n";
     out << "rankdir=LR,\n";
     out << "shape=record,\n";
+
+    if (f)
+        out << "color=\"#" << t_rgb(1 - f->get_goodness(), f->get_goodness(), 0) << "\",\n";
+    else
+        out << "color=\"#" << t_rgb(0, 1, 0) << "\",\n";
+
     out << "label=\"{<name> C" << comp;
 
     if (f) {
@@ -209,7 +222,7 @@ std::ostream & t_topology::graphviz_links (std::ostream & out, t_component_id co
 
             if (l.get_branch2()) {
                 out << "C" << comp << ":L" << i << "->C" << l.get_branch2();
-                out << "[color=\" #" << t_rgb(0, 0, 0, 1 - l.get_prob()) << "\"];\n";
+                out << "[color=\"#" << t_rgb(0, 0, 0, 1 - l.get_prob()) << "\"];\n";
             }
 
             i++;

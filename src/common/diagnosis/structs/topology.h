@@ -2,6 +2,7 @@
 #define __DIAGNOSIS_STRUCTS_TOPOLOGY_H__
 
 #include "diagnosis/types.h"
+#include "utils/boost.h"
 
 #include <list>
 #include <map>
@@ -12,10 +13,12 @@ namespace structs {
 class t_fault {
 public:
     t_fault ();
-    t_fault (t_goodness goodness);
-    t_fault (t_goodness goodness, t_error e_min, t_error e_max);
+    t_fault (t_goodness goodness, t_probability failure);
+    t_fault (t_goodness goodness, t_probability failure, t_error e_min, t_error e_max);
 
     bool gen_error (boost::random::mt19937 & gen) const;
+    bool gen_failure (boost::random::mt19937 & gen) const;
+
     t_error gen_pass_value (boost::random::mt19937 & gen) const;
     t_error gen_error_value (boost::random::mt19937 & gen) const;
     bool can_pass () const;
@@ -49,7 +52,9 @@ private:
 
 class t_topology {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_topology);
     typedef std::list<t_link> t_interface;
+    typedef std::set<t_component_id> t_components;
 
 
     t_topology & operator () (t_component_id comp, const t_fault & f);
@@ -57,6 +62,7 @@ public:
 
     const t_interface * get_interface (t_component_id comp) const;
     const t_fault * get_fault (t_component_id comp) const;
+    const t_components & get_components () const;
 
     std::ostream & graphviz (std::ostream & out) const;
 
@@ -66,7 +72,6 @@ private:
 
     typedef std::list<t_interface> t_interfaces;
     typedef std::list<t_fault> t_faults;
-    typedef std::set<t_component_id> t_components;
     typedef std::map<t_component_id, t_faults::iterator> t_fault_bind;
     typedef std::map<t_component_id, t_interfaces::iterator> t_interface_bind;
 

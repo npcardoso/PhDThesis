@@ -6,6 +6,7 @@
 
 #include <list>
 #include <map>
+#include <vector>
 #include <boost/random/mersenne_twister.hpp>
 
 namespace diagnosis {
@@ -36,17 +37,21 @@ private:
 
 class t_link {
 public:
-    t_link (t_probability prob, t_component_id branch1, t_component_id branch2=0);
+    typedef std::pair<t_component_id, t_probability> t_sink;
+    typedef std::vector<t_sink> t_sinks;
+
+    inline t_link () {total = 0;}
 
     t_component_id operator () (boost::random::mt19937 & gen) const;
 
-    inline t_component_id get_branch1 () const {return branch1;}
-    inline t_component_id get_branch2 () const {return branch2;}
-    inline t_probability get_prob () const {return prob;}
+    t_link & add_sink (t_component_id comp, t_probability prob);
+
+    inline const t_sinks & get_sinks () const {return sinks;}
+    inline t_probability get_normalization_value () const {return total;}
 
 private:
-    t_probability prob;
-    t_component_id branch1, branch2;
+    std::vector<t_sink> sinks;
+    t_probability total;
 };
 
 

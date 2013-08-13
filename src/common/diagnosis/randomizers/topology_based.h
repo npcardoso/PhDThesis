@@ -26,6 +26,7 @@ public:
                                         t_probability prob);
     t_topology_based & set_stack_size (t_count size);
     t_topology_based & set_max_transactions (t_count max_transactions);
+    t_topology_based & set_max_activations (t_count max_activations);
     t_topology_based & set_until_nerrors (t_count nerrors);
 
 protected:
@@ -40,6 +41,7 @@ private:
 
     std::vector<t_entry_point> entry_points;
     t_count stack_size;
+    t_count max_activations;
     t_count max_transactions;
     t_count until_nerrors;
 };

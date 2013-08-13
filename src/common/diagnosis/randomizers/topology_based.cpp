@@ -46,6 +46,11 @@ t_topology_based & t_topology_based::set_max_transactions (t_count max_transacti
     return (*this);
 }
 
+t_topology_based & t_topology_based::set_max_activations (t_count max_activations) {
+    this->max_activations = max_activations;
+    return (*this);
+}
+
 t_topology_based & t_topology_based::set_until_nerrors (t_count nerrors) {
     until_nerrors = nerrors;
     return (*this);
@@ -60,6 +65,7 @@ const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_
     std::stack<t_stack_element> stack;
 
     t_component_id comp = gen_entry_point(gen);
+    t_count activations = 0;
 
     bool fail = false;
     spectra.set_error(tran, 0);
@@ -70,6 +76,7 @@ const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_
         const t_fault * fault = topology->get_fault(comp);
 
         spectra.hit(comp, tran);
+        activations++;
 
         if (fault) {
             bool err = fault->gen_error(gen);
@@ -90,6 +97,10 @@ const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_
 
             spectra.set_error(tran, tmp_err_value > 1 ? 1 : tmp_err_value);
         }
+
+        // Max activations check
+        if (max_activations && activations > max_activations)
+            break;
 
         if (iface)
             stack.push(t_stack_element(iface->begin(),

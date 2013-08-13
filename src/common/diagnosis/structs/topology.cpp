@@ -78,18 +78,29 @@ bool t_fault::can_pass () const {
     return e_min < 0.5 && goodness > 0;
 }
 
-t_link::t_link (t_probability prob, t_component_id branch1, t_component_id branch2) {
+t_link & t_link::add_sink (t_component_id comp, t_probability prob) {
     assert(prob >= 0);
     assert(prob <= 1);
-    assert(branch1 > 0);
 
-    this->prob = prob;
-    this->branch1 = branch1;
-    this->branch2 = branch2;
+    total += prob;
+    sinks.push_back(t_sink(comp, prob));
+    return *this;
 }
 
 t_component_id t_link::operator () (boost::random::mt19937 & gen) const {
-    return bernoulli_distribution<> (prob)(gen) ? branch1 : branch2;
+    if (sinks.size() == 0)
+        return 0;
+
+    uniform_int_distribution<> dist(0, sinks.size() - 1);
+
+    while (true) {
+        t_component_id c = dist(gen);
+
+        if (bernoulli_distribution<> (sinks[c].second / get_normalization_value()) (gen))
+            return c;
+    }
+
+    return 0;
 }
 
 t_topology & t_topology::operator () (t_component_id comp, const t_fault & f) {
@@ -115,11 +126,10 @@ t_topology & t_topology::operator () (t_component_id comp, const t_link & l) {
         components.insert(comp);
     }
 
-    if (l.get_branch1())
-        components.insert(l.get_branch1());
-
-    if (l.get_branch2())
-        components.insert(l.get_branch2());
+    BOOST_FOREACH(const t_link::t_sink & s, l.get_sinks()) {
+        if (s.first)
+            components.insert(s.first);
+    }
 
 
     interface_bind[comp]->push_back(l);
@@ -191,12 +201,13 @@ std::ostream & t_topology::graphviz_component (std::ostream & out, t_component_i
 
     if (iface) {
         t_id i = 1;
-        BOOST_FOREACH(t_link l,
+        BOOST_FOREACH(const t_link &l,
                       *iface) {
-            out << " | <L" << i++ << "> " <<
-                l.get_prob() << " ? C" <<
-                l.get_branch1() << " : C" <<
-                l.get_branch2();
+            out << " | <L" << i++ << "> ";
+            BOOST_FOREACH(const t_link::t_sink & s, l.get_sinks()) {
+                if (s.first)
+                    out << " C" << s.first << ": " << s.second / l.get_normalization_value();
+            }
         }
     }
 
@@ -213,17 +224,15 @@ std::ostream & t_topology::graphviz_links (std::ostream & out, t_component_id co
 
     if (iface) {
         t_id i = 1;
-        BOOST_FOREACH(t_link l,
+        BOOST_FOREACH(const t_link &l,
                       *iface) {
-            if (l.get_branch1()) {
-                out << "C" << comp << ":L" << i << "->C" << l.get_branch1();
-                out << "[color=\" #" << t_rgb(0, 0, 0, l.get_prob()) << "\"];\n";
+            BOOST_FOREACH(const t_link::t_sink & s, l.get_sinks()) {
+                if (s.first) {
+                    out << "C" << comp << ":L" << i << "->C" << s.first << ":name";
+                    out << "[color=\" #" << t_rgb(0, 0, 0, s.second / l.get_normalization_value()) << "\"];\n";
+                }
             }
 
-            if (l.get_branch2()) {
-                out << "C" << comp << ":L" << i << "->C" << l.get_branch2();
-                out << "[color=\"#" << t_rgb(0, 0, 0, 1 - l.get_prob()) << "\"];\n";
-            }
 
             i++;
         }

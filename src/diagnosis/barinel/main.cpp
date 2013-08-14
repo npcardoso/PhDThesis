@@ -81,6 +81,7 @@ int main (int argc, char ** argv) {
             // Fuzzinel stuff
             typedef diagnosis::t_rank_element<const t_candidate *, t_probability_mp> t_rank_element;
             typedef std::vector<t_rank_element> t_rank;
+            std::list<t_candidate> candidates;
             diagnosis::algorithms::t_barinel barinel;
             diagnosis::t_probability_mp ret;
             diagnosis::t_probability_mp total_ret(0);
@@ -94,7 +95,8 @@ int main (int argc, char ** argv) {
             while (it != D.end()) {
                 barinel.calculate(spectra, *it, ret);
                 options.debug() << "Fuzzinel: Ended for candidate (" << * it << ") with score " << ret << std::endl;
-                probs.push_back(t_rank_element(&(*it), ret));
+                candidates.push_back(*it);
+                probs.push_back(t_rank_element(&(candidates.back()), ret));
                 total_ret += ret;
                 it++;
             }

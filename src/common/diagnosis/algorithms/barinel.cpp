@@ -1,4 +1,5 @@
 #include "barinel.h"
+#include "utils/iostream.h"
 
 namespace diagnosis {
 namespace algorithms {
@@ -79,21 +80,21 @@ void t_barinel_model::update (const t_barinel_goodnesses & g,
                               t_barinel_goodnesses & ret,
                               double lambda) const {
     for (t_id c = 0; c < g.size(); c++) {
-        ret[c] = g[c] + lambda * grad[c];
+        ret[c] = g[c] + (lambda * g[c] / grad[c]);
 
         if (ret[c] <= 0)
-            ret[c] = 0;
-        else if (g[c] >= 1)
-            ret[c] = 1;
+            ret[c] = 0.0000000001;
+        else if (ret[c] >= 1)
+            ret[c] = 1 - 0.0000000001;
     }
 }
 
 t_barinel::t_barinel () {
     g_j = 0.001;
     epsilon = 0.0001;
-    lambda = 0.0001;
+    lambda = 1e-20;
     precision = 128;
-    iterations = 100000;
+    iterations = 0;
     use_fuzzy_error = true;
     use_confidence = true;
 }
@@ -101,8 +102,10 @@ t_barinel::t_barinel () {
 t_barinel::t_barinel (size_t precision) {
     g_j = 0.001;
     epsilon = 0.0001;
-    lambda = 0.0001;
+    lambda = 1e-20;
     iterations = 0;
+    use_fuzzy_error = true;
+    use_confidence = true;
     this->precision = precision;
 }
 
@@ -115,16 +118,17 @@ void t_barinel::operator () (const structs::t_spectra & spectra,
 
     while (it != D.end()) {
         t_probability_mp ret;
-        calculate(spectra, *it, ret);
+        (* this)(spectra, * it, ret);
         probs.push_back(ret);
         it++;
     }
 }
 
-void t_barinel::calculate (const t_spectra & spectra,
-                           const t_candidate & candidate,
-                           t_probability_mp & ret,
-                           const t_spectra_filter * filter) const {
+void t_barinel::operator () (const t_spectra & spectra,
+                             const t_candidate & candidate,
+                             t_probability_mp & ret,
+                             const t_spectra_filter * filter) const {
+    std::cerr << "Barinel candidate " << candidate << std::endl;
     t_barinel_model m(spectra,
                       candidate,
                       use_fuzzy_error,
@@ -133,32 +137,72 @@ void t_barinel::calculate (const t_spectra & spectra,
 
 
     t_barinel_goodnesses g(candidate.size(), t_goodness_mp(0.5, precision));
-    t_barinel_goodnesses g_tmp(candidate.size(), t_goodness_mp(0.5, precision));
-    t_barinel_goodnesses grad(candidate.size(), t_goodness_mp(0.5, precision));
+    t_barinel_goodnesses g_old(candidate.size(), t_goodness_mp(0.5, precision));
 
     t_probability_mp pr(0, precision);
-    t_probability_mp old_pr(0, precision);
+    t_probability_mp pr_old(0, precision);
+
+    t_barinel_goodnesses grad(candidate.size(), t_goodness_mp(0.5, precision));
+
     t_count it = 0;
 
+    double lambda = 1;
 
-    while (true) {
-        if (iterations && ++it > iterations)
-            break;
+
+    // Calculate probability
+    probability(spectra, candidate, g, pr, filter);
+
+    while (!iterations || it++ < iterations) {
+        // Update olds
+        pr_old = pr;
+        g_old = g;
 
         // Update goodness values;
-        m.gradient(g, grad);
-        m.update(g, grad, g, lambda);
-
+        m.gradient(g_old, grad);
+        m.update(g_old, grad, g, lambda);
 
         // Calculate probability
-        spectra.probability(candidate, g, pr, filter, use_confidence, use_fuzzy_error);
+        probability(spectra, candidate, g, pr, filter);
+
+        // Overshooting
+        if (pr <= pr_old) {
+            while (pr <= pr_old && lambda >= this->lambda) {
+                lambda /= 2;
+                m.update(g_old, grad, g, lambda);
+
+                // Calculate probability
+                probability(spectra, candidate, g, pr, filter);
+                std::cerr << "Overshooting... updating lambda = " << lambda << std::endl;
+            }
+        }
+        // Look for undershooting
+        else {
+            t_probability_mp pr_tmp(0, precision);
+            t_barinel_goodnesses g_tmp(candidate.size(), t_goodness_mp(0.5, precision));
+
+            while (true) {
+                m.update(g_old, grad, g_tmp, lambda * 2);
+                probability(spectra, candidate, g_tmp, pr_tmp, filter);
+
+                if (pr <= pr_tmp) {
+                    std::cerr << "Undershooting... updating lambda = " << lambda << std::endl;
+                    pr = pr_tmp;
+                    g = g_tmp;
+                    lambda *= 2;
+                }
+                else break;
+            }
+        }
 
         // Check stop conditions
-        // if ((pr - old_pr) < epsilon)
-        if (2 * (pr - old_pr) / (pr + old_pr) < epsilon)
+        if (lambda < this->lambda)
             break;
 
-        old_pr = pr;
+        // if ((pr - pr_old) < epsilon)
+        if (2 * (pr - pr_old) / (pr + pr_old) < epsilon)
+            break;
+
+        std::cerr << "Old Probability: " << pr_old << " Probability: " << pr << std::endl;
     }
 
     t_probability_mp prior_pr;

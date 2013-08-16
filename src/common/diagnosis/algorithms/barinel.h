@@ -45,15 +45,23 @@ public:
                               t_ret_type & probs,
                               const structs::t_spectra_filter * filter=NULL) const;
 
-    virtual void calculate (const structs::t_spectra & spectra,
-                            const structs::t_candidate & candidate,
-                            t_probability_mp & ret,
-                            const structs::t_spectra_filter * filter=NULL) const;
+    virtual void operator () (const structs::t_spectra & spectra,
+                              const structs::t_candidate & candidate,
+                              t_probability_mp & ret,
+                              const structs::t_spectra_filter * filter=NULL) const;
 
 
     virtual void prior (const structs::t_candidate & candidate,
                         t_goodness_mp & ret) const;
 
+private:
+    inline void probability (const structs::t_spectra & spectra,
+                             const structs::t_candidate & candidate,
+                             const t_barinel_goodnesses & goodnesses,
+                             t_probability_mp & ret,
+                             const structs::t_spectra_filter * filter=NULL) const {spectra.probability(candidate, goodnesses, ret, filter, use_confidence, use_fuzzy_error);}
+
+public:
     t_goodness_mp g_j;
     double epsilon;
     double lambda;

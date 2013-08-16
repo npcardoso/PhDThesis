@@ -96,7 +96,7 @@ int main (int argc, char ** argv) {
             barinel.use_fuzzy_error = options.fuzzy_error;
 
             while (it != D.end()) {
-                barinel.calculate(spectra, *it, ret);
+                barinel(spectra, *it, ret);
                 options.debug() << "Fuzzinel: Ended for candidate (" << * it << ") with score " << ret << std::endl;
                 candidates.push_back(*it);
                 probs.push_back(t_rank_element(&(candidates.back()), ret));

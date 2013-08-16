@@ -47,8 +47,7 @@ public:
 
     virtual void gradient (const t_barinel_model & model,
                            const t_barinel_goodnesses & goodnesses,
-                           t_id component,
-                           t_goodness_mp & ret) const;
+                           t_barinel_goodnesses & ret) const;
 
     virtual void prior (const structs::t_candidate & candidate,
                         t_goodness_mp & ret) const;

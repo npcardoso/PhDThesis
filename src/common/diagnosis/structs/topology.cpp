@@ -97,7 +97,7 @@ t_component_id t_link::operator () (boost::random::mt19937 & gen) const {
         t_component_id c = dist(gen);
 
         if (bernoulli_distribution<> (sinks[c].second / get_normalization_value()) (gen))
-            return c;
+            return sinks[c].first;
     }
 
     return 0;

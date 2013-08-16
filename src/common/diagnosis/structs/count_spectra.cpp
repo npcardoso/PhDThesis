@@ -93,12 +93,34 @@ std::ostream & t_count_spectra::write (std::ostream & out,
     t_spectra_iterator it(get_component_count(),
                           get_transaction_count(),
                           filter);
+    out << get_component_count(filter) << " " << get_transaction_count(filter) << "\n";
+
+    while (it.next_transaction()) {
+        while (it.next_component())
+            out << get_count(it.get_component(), it.get_transaction()) << " ";
+
+        out << " " << get_error(it.get_transaction()) << "\n";
+    }
+
+    return out;
+}
+
+std::ostream & t_count_spectra::print (std::ostream & out,
+                                       const t_spectra_filter * filter) const {
+    if (filter) {
+        assert(filter->get_last_component() <= get_component_count());
+        assert(filter->get_last_transaction() <= get_transaction_count());
+    }
+
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          filter);
     out << "Tr |";
 
     while (it.next_component())
         out << std::setw(3) << it.get_component() << "|";
 
-    out << "Err (q,c)\n";
+    out << "|Err (q,c)\n";
 
     while (it.next_transaction()) {
         out << std::setw(3) << it.get_transaction() << "|";
@@ -106,7 +128,7 @@ std::ostream & t_count_spectra::write (std::ostream & out,
         while (it.next_component())
             out << std::setw(3) << get_count(it.get_component(), it.get_transaction()) << "|";
 
-        out << " " << is_error(it.get_transaction()) << "(" << get_error(it.get_transaction()) << ", " << get_confidence(it.get_transaction()) << ")\n";
+        out << "| " << is_error(it.get_transaction()) << "(" << get_error(it.get_transaction()) << ", " << get_confidence(it.get_transaction()) << ")\n";
     }
 
     return out;

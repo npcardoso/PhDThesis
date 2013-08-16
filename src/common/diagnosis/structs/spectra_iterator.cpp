@@ -47,10 +47,8 @@ t_transaction_id t_spectra_iterator::_next_transaction (t_transaction_id transac
 t_component_id t_spectra_iterator::next_component (bool wrap) {
     component = _next_component(component);
 
-    if (!component && wrap) {
+    if (!component && wrap)
         transaction = _next_transaction(transaction);
-        component = 0;
-    }
 
     assert(component <= max_components);
     assert(transaction <= max_transactions);
@@ -60,10 +58,8 @@ t_component_id t_spectra_iterator::next_component (bool wrap) {
 t_transaction_id t_spectra_iterator::next_transaction (bool wrap) {
     transaction = _next_transaction(transaction);
 
-    if (!transaction && wrap) {
+    if (!transaction && wrap)
         component = _next_component(component);
-        transaction = 0;
-    }
 
     assert(component <= max_components);
     assert(transaction <= max_transactions);

@@ -44,6 +44,8 @@ bool t_spectra::is_valid (const t_spectra_filter * filter) const {
         if (!is_error(it.get_transaction()))
             continue;
 
+        it.set_component(0);
+
         while (it.next_component())
             if (get_count(it.get_component(), it.get_transaction())) {
                 hit = true;
@@ -55,6 +57,42 @@ bool t_spectra::is_valid (const t_spectra_filter * filter) const {
     }
 
     return true;
+}
+
+bool t_spectra::check_valid (t_invalid_transactions & ret,
+                             const t_spectra_filter * filter) const {
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          filter);
+
+
+    ret.clear();
+
+    while (it.next_transaction()) {
+        bool hit = false;
+
+        if (!is_error(it.get_transaction()))
+            continue;
+
+        it.set_component(0);
+
+        while (it.next_component())
+            if (get_count(it.get_component(), it.get_transaction())) {
+                hit = true;
+                break;
+            }
+
+        if (!hit)
+            ret.insert(it.get_transaction());
+    }
+
+    assert((ret.size() == 0) == is_valid(filter));
+    return ret.size() == 0;
+}
+
+std::ostream & t_spectra::print (std::ostream & out,
+                                 const t_spectra_filter * filter) const {
+    throw e_not_implemented();
 }
 
 std::ostream & t_spectra::write (std::ostream & out,

@@ -19,6 +19,7 @@ namespace diagnosis {
 namespace structs {
 class t_spectra {
 public:
+    typedef std::set<t_transaction_id> t_invalid_transactions;
 
     virtual t_count get_error_count (const t_spectra_filter * filter=NULL) const = 0;
     virtual t_count get_transaction_count (const t_spectra_filter * filter=NULL) const = 0;
@@ -44,6 +45,11 @@ public:
                                const t_spectra_filter * filter=NULL) const;
 
     virtual bool is_valid (const t_spectra_filter * filter=NULL) const;
+    virtual bool check_valid (t_invalid_transactions & ret,
+                              const t_spectra_filter * filter=NULL) const;
+
+    virtual std::ostream & print (std::ostream & out,
+                                  const t_spectra_filter * filter=NULL) const;
 
     virtual std::ostream & write (std::ostream & out,
                                   const t_spectra_filter * filter=NULL) const;

@@ -5,6 +5,7 @@
 #include "mpi.h"
 #include "opt.h"
 #include "utils/time.h"
+#include "utils/iostream.h"
 
 
 #include <list>
@@ -46,13 +47,15 @@ int main (int argc, char ** argv) {
         return 1;
     }
 
-    if (!spectra.is_valid()) {
-        std::cerr << "Invalid spectra (some failing transactions do not activate any components)" << std::endl;
+    if (options.print_spectra)
+        spectra.print(options.output());
+
+    t_spectra::t_invalid_transactions invalid_transactions;
+
+    if (!spectra.check_valid(invalid_transactions)) {
+        std::cerr << "Invalid spectra (some failing transactions do not activate any components: " << invalid_transactions << ")" << std::endl;
         return 1;
     }
-
-    if (options.print_spectra)
-        options.output() << spectra;
 
     if (options.ambiguity_groups) {
         ambiguity_groups = t_ambiguity_groups(spectra);

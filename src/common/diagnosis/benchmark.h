@@ -37,13 +37,22 @@ public:
 
     const t_benchmark<S> & operator () (const t_randomizer_type & randomizer,
                                         boost::random::mt19937 & gen,
-                                        t_benchmark_results & benchmark_results) const {
-        t_spectra_type spectra;
-        structs::t_candidate correct;
+                                        t_benchmark_results & benchmark_results,
+                                        t_spectra_type * spectra_ret=NULL,
+                                        structs::t_candidate * correct_ret=NULL) const {
+        t_spectra_type * spectra = spectra_ret ? spectra_ret : new t_spectra_type();
+        structs::t_candidate * correct = correct_ret ? correct_ret : new structs::t_candidate();
 
 
-        randomizer(spectra, correct, gen);
-        (* this)(spectra, correct, benchmark_results);
+        randomizer(*spectra, *correct, gen);
+        (* this)(* spectra, * correct, benchmark_results);
+
+        if (!spectra_ret)
+            delete spectra;
+
+        if (!correct_ret)
+            delete correct;
+
         return *this;
     }
 
@@ -63,7 +72,7 @@ public:
                 D.clear();
                 std::cerr << "Generating Candidates" << std::endl;
                 (*generators[c.first])(spectra, D);
-                std::cerr << "Done Generating Candidates" << std::endl;
+                std::cerr << "Done Generating Candidates |D| == " << D.size() << std::endl << D;
                 last_gen_id = c.first;
             }
 

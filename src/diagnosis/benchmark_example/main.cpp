@@ -1,6 +1,8 @@
 #include "types.h"
+#include "utils/iostream.h"
 #include "diagnosis/metrics.h"
 #include "diagnosis/benchmark.h"
+#include "diagnosis/algorithms/single_fault.h"
 #include "diagnosis/algorithms/mhs.h"
 #include "diagnosis/algorithms/barinel.h"
 #include "diagnosis/heuristics/sort.h"
@@ -16,6 +18,7 @@
 using namespace std;
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
+using namespace diagnosis::heuristics;
 using namespace diagnosis::metrics;
 using namespace diagnosis::randomizers;
 using namespace diagnosis::structs;
@@ -34,11 +37,11 @@ void generate_topology (mt19937 & gen,
     t_count c = ncomp;
 
 
-    uniform_int_distribution<> int_dist(nfaults + nparallel, ncomp);
+    uniform_int_distribution<> int_dist(nfaults + nparallel + 1, ncomp);
     uniform_real_distribution<> real_dist(0, 2.0 / ncomp);
 
     while (c > nfaults + nparallel) {
-        (* topology)(ncomp + 2, t_link().add_sink(c, 0.3));
+        (* topology)(ncomp + 2, t_link().add_sink(c, 0.2).add_sink(0, 0.8));
 
         t_link tmp_link;
 
@@ -59,12 +62,12 @@ void generate_topology (mt19937 & gen,
     }
 
     while (c) {
-        (* topology)(1, fault);
+        (* topology)(c, fault);
         tmp_link.add_sink(c, 1);
         c--;
     }
 
-    (* topology) (ncomp + 1, tmp_link);
+    (* topology) (ncomp + 1, tmp_link) (ncomp + 1, t_link().add_sink(ncomp + 2, 1));
 }
 
 int main (int argc, char ** argv) {
@@ -73,19 +76,16 @@ int main (int argc, char ** argv) {
     t_topology::t_ptr topology(new t_topology());
 
 
-#define NCOMPS 20
-#define NFAULTS 2
-    generate_topology(gen, topology, t_fault(0.9, 0, 0, 0.7), NCOMPS, NFAULTS, 3, 10);
+#define NCOMPS 100
+#define NFAULTS 10
+    generate_topology(gen, topology, t_fault(0.4, 0, 0, 0.7), NCOMPS, NFAULTS, 3, 10);
 
     topology->graphviz(std::cout);
-
-
-    return 1;
 
     t_topology_based topology_randomizer(topology);
 
     topology_randomizer
-    .set_until_nerrors(1)
+    .set_until_nerrors(6)
     .set_max_activations(15)
     .add_entry_point(NCOMPS + 1, 0.5);
 
@@ -96,26 +96,37 @@ int main (int argc, char ** argv) {
 
     t_mhs * mhs_ptr;
     t_candidate_generator::t_ptr mhs(mhs_ptr = new t_mhs(heuristic));
+    t_candidate_generator::t_ptr single_fault(new t_single_fault());
     t_barinel * barinel_ptr;
     t_candidate_ranker::t_ptr barinel(barinel_ptr = new t_barinel());
     t_candidate_ranker::t_ptr fuzzinel(new t_barinel());
+    t_candidate_ranker::t_ptr ochiai(new t_ochiai());
 
 
-    mhs_ptr->max_time = 1;
+    mhs_ptr->max_time = 1e6;
+
     barinel_ptr->use_confidence = false;
     barinel_ptr->use_fuzzy_error = false;
 
     t_benchmark<t_count_spectra> benchmark;
     benchmark.add_generator(mhs);
+    benchmark.add_generator(single_fault);
+
     benchmark.add_ranker(barinel);
     benchmark.add_ranker(fuzzinel);
+    benchmark.add_ranker(ochiai);
 
     benchmark.add_connection(0, 0);
     benchmark.add_connection(0, 1);
+    benchmark.add_connection(1, 2);
 
-    for (t_id i = 1; i < 100; i++) {
+    for (t_id i = 0; i < 1; i++) {
+        t_count_spectra spectra;
+        t_candidate correct;
         t_benchmark_results res;
-        benchmark(topology_randomizer, gen, res);
+
+        benchmark(topology_randomizer, gen, res, &spectra, &correct);
+        std::cout << spectra << std::endl << correct << std::endl;
         BOOST_FOREACH(t_benchmark_result & r, res) {
             std::cout << "Setup G:" << r.generator << " R:" << r.ranker << " Cd: " << r.cost << " | ";
         }

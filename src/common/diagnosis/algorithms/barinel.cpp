@@ -15,6 +15,50 @@ void t_barinel_model::set_size (size_t components) {
     fail.resize(1 << components, 0);
 }
 
+void t_barinel_model::gradient (const t_barinel_goodnesses & goodnesses,
+                                t_barinel_goodnesses & ret) const {
+    size_t precision = goodnesses[0].get_prec();
+    t_goodness_mp tmp_f(0, precision);
+
+
+    ret = t_barinel_goodnesses(goodnesses.size(), t_goodness_mp(0, precision));
+
+    for (t_id pattern = 0; pattern < (1 << (goodnesses.size())); pattern++) {
+        // PASS stuff
+        for (t_id c = 0; c < goodnesses.size(); c++)
+            ret[c] += pass[pattern] / goodnesses[c];
+
+        // FAIL stuff
+        tmp_f = 1;
+
+        t_id pattern_tmp = pattern;
+
+        for (t_id c = 0; pattern_tmp; c++, pattern_tmp >>= 1)
+            if (pattern_tmp & 1)
+                tmp_f *= goodnesses[c];
+
+        pattern_tmp = pattern;
+
+        for (t_id c = 0; pattern_tmp; c++, pattern_tmp >>= 1)
+            if (pattern_tmp & 1)
+                ret[c] += -fail[pattern] * (tmp_f / goodnesses[c]) / (1 - tmp_f);
+    }
+}
+
+void t_barinel_model::update (const t_barinel_goodnesses & g,
+                              const t_barinel_goodnesses & grad,
+                              t_barinel_goodnesses & ret,
+                              double lambda) const {
+    for (t_id c = 0; c < g.size(); c++) {
+        ret[c] = g[c] + lambda * grad[c];
+
+        if (ret[c] <= 0)
+            ret[c] = 0;
+        else if (g[c] >= 1)
+            ret[c] = 1;
+    }
+}
+
 t_barinel::t_barinel () {
     g_j = 0.001;
     epsilon = 0.0001;
@@ -69,16 +113,8 @@ void t_barinel::calculate (const t_spectra & spectra,
             break;
 
         // Update goodness values;
-        gradient(m, g, grad);
-
-        for (t_id c = 0; c < candidate.size(); c++) {
-            g[c] += lambda * grad[c];
-
-            if (g[c] <= 0)
-                g[c] = 0.00001;
-            else if (g[c] >= 1)
-                g[c] = 1 - 0.00001;
-        }
+        m.gradient(g, grad);
+        m.update(g, grad, g, lambda);
 
 
         // Calculate probability
@@ -131,36 +167,6 @@ void t_barinel::model (const t_spectra & spectra,
         t_error err = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
         model.pass[symbol] += conf * (1 - err);
         model.fail[symbol] += conf * err;
-    }
-}
-
-void t_barinel::gradient (const t_barinel_model & model,
-                          const t_barinel_goodnesses & goodnesses,
-                          t_barinel_goodnesses & ret) const {
-    t_goodness_mp tmp_f(0, precision);
-
-
-    ret = t_barinel_goodnesses(goodnesses.size(), t_goodness_mp(0, precision));
-
-    for (t_id pattern = 0; pattern < (1 << (goodnesses.size())); pattern++) {
-        // PASS stuff
-        for (t_id c = 0; c < goodnesses.size(); c++)
-            ret[c] += model.pass[pattern] / goodnesses[c];
-
-        // FAIL stuff
-        tmp_f = 1;
-
-        t_id pattern_tmp = pattern;
-
-        for (t_id c = 0; pattern_tmp; c++, pattern_tmp >>= 1)
-            if (pattern_tmp & 1)
-                tmp_f *= goodnesses[c];
-
-        pattern_tmp = pattern;
-
-        for (t_id c = 0; pattern_tmp; c++, pattern_tmp >>= 1)
-            if (pattern_tmp & 1)
-                ret[c] += -model.fail[pattern] * (tmp_f / goodnesses[c]) / (1 - tmp_f);
     }
 }
 

@@ -14,13 +14,11 @@ typedef std::vector<t_goodness_mp> t_barinel_goodnesses;
 
 class t_barinel_model {
 public:
-    std::vector<t_error> pass;
-    std::vector<t_error> fail;
-
-    t_barinel_model ();
-    t_barinel_model (size_t components);
-
-    void set_size (size_t components);
+    t_barinel_model (const structs::t_spectra & spectra,
+                     const structs::t_candidate & candidate,
+                     bool use_fuzzy_error=true,
+                     bool use_confidence=true,
+                     const structs::t_spectra_filter * filter=NULL);
 
     virtual void gradient (const t_barinel_goodnesses & goodnesses,
                            t_barinel_goodnesses & ret) const;
@@ -29,6 +27,9 @@ public:
                          const t_barinel_goodnesses & grad,
                          t_barinel_goodnesses & ret,
                          double lambda) const;
+private:
+    std::vector<t_error> pass;
+    std::vector<t_error> fail;
 };
 
 
@@ -48,11 +49,6 @@ public:
                             const structs::t_candidate & candidate,
                             t_probability_mp & ret,
                             const structs::t_spectra_filter * filter=NULL) const;
-
-    virtual void model (const structs::t_spectra & spectra,
-                        const structs::t_candidate & candidate,
-                        t_barinel_model & model,
-                        const structs::t_spectra_filter * filter=NULL) const;
 
 
     virtual void prior (const structs::t_candidate & candidate,

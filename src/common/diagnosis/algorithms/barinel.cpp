@@ -4,15 +4,44 @@ namespace diagnosis {
 namespace algorithms {
 using namespace structs;
 
-t_barinel_model::t_barinel_model () : pass(1, 0), fail(1, 0) {}
+t_barinel_model::t_barinel_model (const t_spectra & spectra,
+                                  const t_candidate & candidate,
+                                  bool use_fuzzy_error,
+                                  bool use_confidence,
+                                  const t_spectra_filter * filter) {
+    assert(candidate.size() < sizeof(t_component_id) * 8);
 
-t_barinel_model::t_barinel_model (size_t components) {
-    set_size(components);
-}
+    t_spectra_filter tmp_filter;
 
-void t_barinel_model::set_size (size_t components) {
-    pass.resize(1 << components, 0);
-    fail.resize(1 << components, 0);
+    if (filter)
+        tmp_filter = *filter;
+
+    // Init filter
+    tmp_filter.resize_components(spectra.get_component_count());
+    tmp_filter.filter_all_components_but(candidate);
+
+    t_spectra_iterator it(spectra.get_component_count(),
+                          spectra.get_transaction_count(),
+                          &tmp_filter);
+
+    // Set container size
+    pass.resize(1 << candidate.size(), 0);
+    fail.resize(1 << candidate.size(), 0);
+
+    while (it.next_transaction()) {
+        t_id symbol = 0;
+
+        for (t_id comp = 0; it.next_component(); comp++) {
+            if (spectra.get_count(it.get_component(),
+                                  it.get_transaction()))
+                symbol += 1 << comp;
+        }
+
+        t_confidence conf = use_confidence ? spectra.get_confidence(it.get_transaction()) : 1;
+        t_error err = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
+        pass[symbol] += conf * (1 - err);
+        fail[symbol] += conf * err;
+    }
 }
 
 void t_barinel_model::gradient (const t_barinel_goodnesses & goodnesses,
@@ -87,7 +116,7 @@ void t_barinel::operator () (const structs::t_spectra & spectra,
     while (it != D.end()) {
         t_probability_mp ret;
         calculate(spectra, *it, ret);
-        probs.push_back(ret.toDouble());
+        probs.push_back(ret);
         it++;
     }
 }
@@ -96,17 +125,21 @@ void t_barinel::calculate (const t_spectra & spectra,
                            const t_candidate & candidate,
                            t_probability_mp & ret,
                            const t_spectra_filter * filter) const {
-    t_barinel_model m(candidate.size());
+    t_barinel_model m(spectra,
+                      candidate,
+                      use_fuzzy_error,
+                      use_confidence,
+                      filter);
 
-
-    model(spectra, candidate, m, filter);
 
     t_barinel_goodnesses g(candidate.size(), t_goodness_mp(0.5, precision));
+    t_barinel_goodnesses g_tmp(candidate.size(), t_goodness_mp(0.5, precision));
     t_barinel_goodnesses grad(candidate.size(), t_goodness_mp(0.5, precision));
 
-    t_probability_mp pr(0, precision),
-    old_pr(0, precision);
+    t_probability_mp pr(0, precision);
+    t_probability_mp old_pr(0, precision);
     t_count it = 0;
+
 
     while (true) {
         if (iterations && ++it > iterations)
@@ -132,42 +165,6 @@ void t_barinel::calculate (const t_spectra & spectra,
     prior(candidate, prior_pr);
 
     ret = prior_pr * pr;
-}
-
-void t_barinel::model (const t_spectra & spectra,
-                       const t_candidate & candidate,
-                       t_barinel_model & model,
-                       const t_spectra_filter * filter) const {
-    assert(candidate.size() < sizeof(t_component_id) * 8);
-
-    t_spectra_filter tmp_filter;
-
-    if (filter)
-        tmp_filter = *filter;
-
-    tmp_filter.resize_components(spectra.get_component_count());
-    tmp_filter.filter_all_components_but(candidate);
-
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
-                          &tmp_filter);
-
-    model.set_size(candidate.size());
-
-    while (it.next_transaction()) {
-        t_id symbol = 0;
-
-        for (t_id comp = 0; it.next_component(); comp++) {
-            if (spectra.get_count(it.get_component(),
-                                  it.get_transaction()))
-                symbol += 1 << comp;
-        }
-
-        t_confidence conf = use_confidence ? spectra.get_confidence(it.get_transaction()) : 1;
-        t_error err = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
-        model.pass[symbol] += conf * (1 - err);
-        model.fail[symbol] += conf * err;
-    }
 }
 
 void t_barinel::prior (const t_candidate & candidate,

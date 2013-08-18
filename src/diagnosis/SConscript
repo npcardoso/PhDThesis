@@ -3,7 +3,7 @@ oldenv = env
 env = env.Clone()
 
 	
-env.Append(LINKFLAGS = " -Wl,-rpath,'$$ORIGIN/../lib' %s " % env['mpfr_link'] )
+env.Append(LINKFLAGS = " -lboost_filesystem -Wl,-rpath,'$$ORIGIN/../lib' %s " % env['mpfr_link'] )
 Export('env')
 
 sub_folders = Glob('*/SConscript')

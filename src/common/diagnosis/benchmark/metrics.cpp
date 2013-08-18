@@ -1,6 +1,6 @@
 #include "metrics.h"
 namespace diagnosis {
-namespace metrics {
+namespace benchmark {
 t_diagnosis_quality quality (t_diagnosis_cost cost, t_count total) {
     assert(total > 0);
     assert(total > cost);

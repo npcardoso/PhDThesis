@@ -1,9 +1,9 @@
 #include <boost/test/unit_test.hpp>
-#include "diagnosis/metrics.h"
+#include "diagnosis/benchmark/metrics.h"
 
 #include <fstream>
 using namespace diagnosis;
-using namespace diagnosis::metrics;
+using namespace diagnosis::benchmark;
 
 BOOST_AUTO_TEST_SUITE(Metrics)
 

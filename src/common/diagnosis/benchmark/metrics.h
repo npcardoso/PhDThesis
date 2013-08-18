@@ -11,7 +11,7 @@
 #include "utils/iostream.h"
 
 namespace diagnosis {
-namespace metrics {
+namespace benchmark {
 typedef double t_diagnosis_cost;
 typedef double t_diagnosis_quality;
 

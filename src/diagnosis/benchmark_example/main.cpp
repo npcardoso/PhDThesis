@@ -1,7 +1,7 @@
 #include "types.h"
 #include "utils/iostream.h"
-#include "diagnosis/metrics.h"
-#include "diagnosis/benchmark.h"
+#include "diagnosis/benchmark/metrics.h"
+#include "diagnosis/benchmark/benchmark.h"
 #include "diagnosis/algorithms/single_fault.h"
 #include "diagnosis/algorithms/mhs.h"
 #include "diagnosis/algorithms/barinel.h"
@@ -19,7 +19,7 @@ using namespace std;
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
 using namespace diagnosis::heuristics;
-using namespace diagnosis::metrics;
+using namespace diagnosis::benchmark;
 using namespace diagnosis::randomizers;
 using namespace diagnosis::structs;
 using namespace boost::random;
@@ -76,16 +76,16 @@ int main (int argc, char ** argv) {
     t_topology::t_ptr topology(new t_topology());
 
 
-#define NCOMPS 100
+#define NCOMPS 30
 #define NFAULTS 10
-    generate_topology(gen, topology, t_fault(0.4, 0, 0, 0.7), NCOMPS, NFAULTS, 3, 10);
+    generate_topology(gen, topology, t_fault(0, 0, 1, 1), NCOMPS, NFAULTS, 3, 10);
 
     topology->graphviz(std::cout);
 
     t_topology_based topology_randomizer(topology);
 
     topology_randomizer
-    .set_until_nerrors(6)
+    .set_until_nerrors(1)
     .set_max_activations(15)
     .add_entry_point(NCOMPS + 1, 0.5);
 
@@ -116,20 +116,19 @@ int main (int argc, char ** argv) {
     benchmark.add_ranker(fuzzinel);
     benchmark.add_ranker(ochiai);
 
-    benchmark.add_connection(0, 0);
-    benchmark.add_connection(0, 1);
+    benchmark.add_connection(1, 1);
     benchmark.add_connection(1, 2);
+    benchmark.add_connection(2, 3);
 
     for (t_id i = 0; i < 1; i++) {
         t_count_spectra spectra;
         t_candidate correct;
-        t_benchmark_results res;
+        t_save_hook<t_count_spectra> hook("fooo");
 
-        benchmark(topology_randomizer, gen, res, &spectra, &correct);
-        std::cout << spectra << std::endl << correct << std::endl;
-        BOOST_FOREACH(t_benchmark_result & r, res) {
-            std::cout << "Setup G:" << r.generator << " R:" << r.ranker << " Cd: " << r.cost << " | ";
-        }
+        benchmark(topology_randomizer, gen, hook);
+        // BOOST_FOREACH(t_benchmark_result & r, res) {
+        // std::cout << "Setup G:" << r.generator << " R:" << r.ranker << " Cd: " << r.cost << " | ";
+        // }
         std::cout << std::endl;
     }
 

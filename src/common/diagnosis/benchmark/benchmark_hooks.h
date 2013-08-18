@@ -84,11 +84,21 @@ public:
         f_spectra.exceptions(std::ifstream::failbit | std::ifstream::badbit);
         f_spectra << spectra;
         f_spectra.close();
+
+        base_file = root_dir;
+        base_file /= boost::lexical_cast<std::string> (iterations);
+        base_file += ".correct";
+
+        std::ofstream f_correct(base_file.c_str());
+        f_correct.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        f_correct << correct;
+        f_correct.close();
     }
 
     virtual void cleanup () {
         assert(this->ranker_id == 0);
         generator_id = 0;
+        write_iterations(iterations);
     }
 
     virtual void pre_gen (t_id generator_id) {
@@ -134,27 +144,23 @@ public:
         base_file += ".Probs";
 
         std::ofstream f(base_file.c_str());
+        f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
         f << probs;
         f.close();
         ranker_id = 0;
     }
 
 private:
-    t_count write_iterations () const {
+    void write_iterations (t_count iterations) const {
         t_path f_iterations(root_dir);
 
 
         f_iterations /= "num_iteration.txt";
 
-        std::ifstream f(f_iterations.c_str());
-        t_count iterations;
+        std::ofstream f(f_iterations.c_str());
+        f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
-        f >> iterations;
-
-        if (f.good())
-            return iterations;
-
-        return 0;
+        f << iterations;
     }
 
     t_count read_iterations () const {
@@ -164,14 +170,11 @@ private:
         f_iterations /= "num_iteration.txt";
 
         std::ifstream f(f_iterations.c_str());
-        t_count iterations;
+        t_count iterations = 0;
 
         f >> iterations;
 
-        if (f.good())
-            return iterations;
-
-        return 0;
+        return iterations;
     }
 
 private:

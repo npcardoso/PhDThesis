@@ -79,6 +79,7 @@ public:
             hooks.post_rank(probs);
         }
         // Hook: Cleanup
+        hooks.cleanup();
         return *this;
     }
 

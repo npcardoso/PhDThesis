@@ -120,7 +120,7 @@ int main (int argc, char ** argv) {
     benchmark.add_connection(1, 2);
     benchmark.add_connection(2, 3);
 
-    for (t_id i = 0; i < 1; i++) {
+    for (t_id i = 0; i < 10; i++) {
         t_count_spectra spectra;
         t_candidate correct;
         t_save_hook<t_count_spectra> hook("fooo");

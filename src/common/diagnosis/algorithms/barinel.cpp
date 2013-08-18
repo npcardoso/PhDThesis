@@ -1,6 +1,8 @@
 #include "barinel.h"
 #include "utils/iostream.h"
 
+#include <boost/foreach.hpp>
+
 namespace diagnosis {
 namespace algorithms {
 using namespace structs;
@@ -38,11 +40,15 @@ t_barinel_model::t_barinel_model (const t_spectra & spectra,
                 symbol += 1 << comp;
         }
 
-        t_confidence conf = use_confidence ? spectra.get_confidence(it.get_transaction()) : 1;
-        t_error err = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
-        pass[symbol] += conf * (1 - err);
-        fail[symbol] += conf * err;
+        if (symbol) {
+            t_confidence conf = use_confidence ? spectra.get_confidence(it.get_transaction()) : 1;
+            t_error err = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
+            pass[symbol] += conf * (1 - err);
+            fail[symbol] += conf * err;
+        }
     }
+
+    std::cout << "Symbols p:" << pass << " f:" << fail << std::endl;
 }
 
 void t_barinel_model::gradient (const t_barinel_goodnesses & goodnesses,
@@ -53,7 +59,7 @@ void t_barinel_model::gradient (const t_barinel_goodnesses & goodnesses,
 
     ret = t_barinel_goodnesses(goodnesses.size(), t_goodness_mp(0, precision));
 
-    for (t_id pattern = 0; pattern < (1 << (goodnesses.size())); pattern++) {
+    for (t_id pattern = 1; pattern < (1 << (goodnesses.size())); pattern++) {
         // PASS stuff
         for (t_id c = 0; c < goodnesses.size(); c++)
             ret[c] += pass[pattern] / goodnesses[c];
@@ -79,13 +85,19 @@ void t_barinel_model::update (const t_barinel_goodnesses & g,
                               const t_barinel_goodnesses & grad,
                               t_barinel_goodnesses & ret,
                               double lambda) const {
+    t_goodness_mp lambda_mp(lambda, g[0].get_prec());
+
+
     for (t_id c = 0; c < g.size(); c++) {
-        ret[c] = g[c] + (lambda * g[c] / grad[c]);
+        if (grad[c] == 0)
+            continue;
+
+        ret[c] = g[c] + (lambda_mp * g[c] / grad[c]);
 
         if (ret[c] <= 0)
-            ret[c] = 0.0000000001;
+            ret[c] = 0;
         else if (ret[c] >= 1)
-            ret[c] = 1 - 0.0000000001;
+            ret[c] = 1;
     }
 }
 
@@ -152,13 +164,14 @@ void t_barinel::operator () (const t_spectra & spectra,
     // Calculate probability
     probability(spectra, candidate, g, pr, filter);
 
-    while (!iterations || it++ < iterations) {
+    while (it++ < iterations || !iterations) {
         // Update olds
         pr_old = pr;
         g_old = g;
 
         // Update goodness values;
         m.gradient(g_old, grad);
+
         m.update(g_old, grad, g, lambda);
 
         // Calculate probability
@@ -167,12 +180,12 @@ void t_barinel::operator () (const t_spectra & spectra,
         // Overshooting
         if (pr <= pr_old) {
             while (pr <= pr_old && lambda >= this->lambda) {
-                lambda /= 2;
+                lambda /= 8;
                 m.update(g_old, grad, g, lambda);
 
+                std::cerr << "it: " << it << " Overshooting... Pr_old: " << pr_old << " Pr: " << pr << " g_old: " << g_old << " g: " << g << " updating lambda = " << lambda << std::endl;
                 // Calculate probability
                 probability(spectra, candidate, g, pr, filter);
-                std::cerr << "Overshooting... updating lambda = " << lambda << std::endl;
             }
         }
         // Look for undershooting
@@ -184,11 +197,11 @@ void t_barinel::operator () (const t_spectra & spectra,
                 m.update(g_old, grad, g_tmp, lambda * 2);
                 probability(spectra, candidate, g_tmp, pr_tmp, filter);
 
-                if (pr <= pr_tmp) {
-                    std::cerr << "Undershooting... updating lambda = " << lambda << std::endl;
+                if (pr < pr_tmp) {
                     pr = pr_tmp;
                     g = g_tmp;
                     lambda *= 2;
+                    std::cerr << "it: " << it << " Undershooting... Pr: " << pr << " Pr_tmp: " << pr_tmp << " updating lambda = " << lambda << std::endl;
                 }
                 else break;
             }
@@ -199,7 +212,7 @@ void t_barinel::operator () (const t_spectra & spectra,
             break;
 
         // if ((pr - pr_old) < epsilon)
-        if (2 * (pr - pr_old) / (pr + pr_old) < epsilon)
+        if (2 * (pr - pr_old) / abs(pr + pr_old) < epsilon)
             break;
 
         std::cerr << "Old Probability: " << pr_old << " Probability: " << pr << std::endl;

@@ -121,8 +121,11 @@ void t_spectra::probability (const structs::t_candidate & candidate,
         while (c_it != candidate.end()) {
             t_count count = get_count(*c_it, it.get_transaction());
 
+            assert(goodnesses[comp] >= 0);
+            assert(goodnesses[comp] <= 1);
+
             if (count)
-                tmp *= count * goodnesses[comp];
+                tmp *= pow(goodnesses[comp], count);
 
             c_it++;
             comp++;
@@ -142,6 +145,9 @@ void t_spectra::probability (const structs::t_candidate & candidate,
 
         ret *= tmp;
     }
+
+    assert(ret >= 0);
+    assert(ret <= 1);
 }
 }
 }

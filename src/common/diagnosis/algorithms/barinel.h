@@ -27,6 +27,7 @@ public:
                          const t_barinel_goodnesses & grad,
                          t_barinel_goodnesses & ret,
                          double lambda) const;
+
 private:
     std::vector<t_error> pass;
     std::vector<t_error> fail;

@@ -24,6 +24,8 @@ public:
     virtual t_count get_error_count (const t_spectra_filter * filter=NULL) const = 0;
     virtual t_count get_transaction_count (const t_spectra_filter * filter=NULL) const = 0;
     virtual t_count get_component_count (const t_spectra_filter * filter=NULL) const = 0;
+    virtual t_probability get_activation_rate (const t_spectra_filter * filter=NULL) const;
+    virtual t_probability get_error_rate (const t_spectra_filter * filter=NULL) const;
 
     virtual t_count get_count (t_component_id component,
                                t_transaction_id transaction) const = 0;

@@ -10,7 +10,31 @@ namespace benchmark {
 t_statistics_hook::t_statistics_hook (std::string d) : t_writer_hook(d) {}
 
 void t_statistics_hook::_init (const structs::t_spectra & spectra,
-                               const structs::t_candidate & correct) {}
+                               const structs::t_candidate & correct) {
+    t_writer_hook::t_path fname(get_root_dir());
+    bool new_file;
+
+
+    fname /= "spectra.stats";
+    new_file = !boost::filesystem::exists(fname);
+
+    std::ofstream f(fname.c_str(), std::ios_base::app);
+    f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+    // Print header on first iteration
+    if (new_file)
+        f << "date, run, component_count, transaction_count, activation_rate, error_count, error_rate" << std::endl;
+
+    f << "\"" << to_simple_string(second_clock::local_time()) << "\", ";
+    f << get_iterations() << ", ";
+    f << spectra.get_component_count() << ", ";
+    f << spectra.get_transaction_count() << ", ";
+    f << spectra.get_activation_rate() << ", ";
+    f << spectra.get_error_count() << ", ";
+    f << spectra.get_error_rate() << std::endl;
+
+    f.close();
+}
 
 void t_statistics_hook::_cleanup () {}
 

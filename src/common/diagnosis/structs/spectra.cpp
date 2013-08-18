@@ -4,6 +4,25 @@ namespace diagnosis {
 namespace structs {
 using namespace diagnosis::structs;
 
+t_probability t_spectra::get_activation_rate (const t_spectra_filter * filter) const {
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          filter);
+
+    t_probability hit_count = 0;
+
+
+    while (it.next_transaction())
+        while (it.next_component())
+            hit_count += get_count(it.get_component(), it.get_transaction()) ? 1 : 0;
+
+    return hit_count / (get_component_count(filter) * get_transaction_count(filter));
+}
+
+t_probability t_spectra::get_error_rate (const t_spectra_filter * filter) const {
+    return get_error_count(filter) / (t_probability) get_transaction_count(filter);
+}
+
 bool t_spectra::is_candidate (const t_candidate & candidate,
                               const t_spectra_filter * filter) const {
     t_spectra_iterator it(get_component_count(),

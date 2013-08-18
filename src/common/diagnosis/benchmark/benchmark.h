@@ -1,12 +1,8 @@
-#ifndef __DIAGNOSIS_BENCHMARK_H__
-#define __DIAGNOSIS_BENCHMARK_H__
+#ifndef __BENCHMARK_H__85256f48709bab034e918f5de145de7e4bc6af2b__
+#define __BENCHMARK_H__85256f48709bab034e918f5de145de7e4bc6af2b__
 
-#include "diagnosis/diagnosis_system.h"
-#include "diagnosis/benchmark/metrics.h"
-#include "diagnosis/benchmark/benchmark_hooks.h"
-#include "diagnosis/rank_element.h"
+#include "diagnosis/benchmark/benchmark_hook.h"
 #include "diagnosis/randomizers/randomizer.h"
-#include "diagnosis/structs/candidate.h"
 
 #include <algorithm>
 #include <cassert>
@@ -29,28 +25,28 @@ public:
 
     const t_benchmark<S> & operator () (const t_randomizer_type & randomizer,
                                         boost::random::mt19937 & gen,
-                                        t_benchmark_hooks<t_spectra_type> & hooks) const {
+                                        t_benchmark_hook & hook) const {
         t_spectra_type spectra;
         structs::t_candidate correct;
 
 
         randomizer(spectra, correct, gen);
-        (* this)(spectra, correct, hooks);
+        (* this)(spectra, correct, hook);
 
         return *this;
     }
 
     const t_benchmark<S> & operator () (const t_spectra_type & spectra,
                                         const structs::t_candidate & correct,
-                                        t_benchmark_hooks<t_spectra_type> & hooks) const {
+                                        t_benchmark_hook & hook) const {
         t_candidate_generator::t_ret_type D;
 
         t_id last_gen_id = generators.size();
 
 
         // Hook: Init
-        hooks.init(spectra,
-                   correct);
+        hook.init(spectra,
+                  correct);
 
         BOOST_FOREACH(const t_connection &c, connections) {
             t_candidate_ranker::t_ret_type probs;
@@ -60,32 +56,30 @@ public:
                 D.clear();
 
                 // Hook: Pre-gen
-                hooks.pre_gen(c.first + 1);
+                hook.pre_gen(c.first + 1);
 
+                t_time_interval last_time = time_interval();
                 (*generators[c.first])(spectra, D);
 
                 // Hook: Post-gen
-                hooks.post_gen(D);
+                hook.post_gen(D, time_interval() - last_time);
 
                 last_gen_id = c.first;
             }
 
             // Hook: Pre-rank
-            hooks.pre_rank(c.second + 1);
+            hook.pre_rank(c.second + 1);
 
+            t_time_interval last_time = time_interval();
             (*rankers[c.second])(spectra, D, probs);
 
             // Hook: Post-rank
-            hooks.post_rank(probs);
+            hook.post_rank(probs, time_interval() - last_time);
         }
         // Hook: Cleanup
-        hooks.cleanup();
+        hook.cleanup();
         return *this;
     }
-
-    void batch (const t_randomizer_type & randomizer,
-                boost::random::mt19937 & gen,
-                std::string target_dir) const {}
 
     t_benchmark & add_generator (t_candidate_generator::t_ptr & generator) {
         generators.push_back(generator);

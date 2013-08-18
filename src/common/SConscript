@@ -5,7 +5,7 @@ Import('env')
 oldenv = env
 env = oldenv.Clone()
 env.Append(CPPPATH = Dir(env['common_dir']), 
-	LINKFLAGS = " -lboost_filesystem -lboost_system -lboost_thread %s" % env['mpfr_link']  )
+	LINKFLAGS = " -lboost_filesystem -lboost_system -lboost_thread -lboost_date_time %s" % env['mpfr_link']  )
 
 header_install_dir = join(env['include_dir'], "lib%s" % env['libdiag'])
 

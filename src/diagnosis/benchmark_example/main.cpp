@@ -1,5 +1,11 @@
 #include "types.h"
 #include "utils/iostream.h"
+#include "diagnosis/benchmark/hook_combiner.h"
+#include "diagnosis/benchmark/verbose_hook.h"
+#include "diagnosis/benchmark/statistics_hook.h"
+#include "diagnosis/benchmark/save_hook.h"
+#include "diagnosis/benchmark/statistics_hook.h"
+#include "diagnosis/benchmark/benchmark.h"
 #include "diagnosis/benchmark/metrics.h"
 #include "diagnosis/benchmark/benchmark.h"
 #include "diagnosis/algorithms/single_fault.h"
@@ -120,10 +126,13 @@ int main (int argc, char ** argv) {
     benchmark.add_connection(1, 2);
     benchmark.add_connection(2, 3);
 
+    t_hook_combiner hook;
+    std::string dest("foooo");
+    hook << new t_verbose_hook() << new t_save_hook(dest) << new t_statistics_hook(dest);
+
     for (t_id i = 0; i < 10; i++) {
         t_count_spectra spectra;
         t_candidate correct;
-        t_save_hook<t_count_spectra> hook("fooo");
 
         benchmark(topology_randomizer, gen, hook);
         // BOOST_FOREACH(t_benchmark_result & r, res) {

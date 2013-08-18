@@ -16,6 +16,7 @@ using namespace std;
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
 using namespace diagnosis::structs;
+using namespace diagnosis::heuristics;
 
 t_count send_candidates (const t_trie & trie,
                          t_count chunk_size,
@@ -265,7 +266,7 @@ void mhs2_map (const t_mhs & mhs,
                const t_spectra & spectra,
                t_trie & D,
                t_stats & stats,
-               const diagnosis::t_spectra_filter * filter) {
+               const t_spectra_filter * filter) {
     int ntasks, rank;
     t_time_interval time = time_interval();
 
@@ -274,7 +275,7 @@ void mhs2_map (const t_mhs & mhs,
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 
-    mhs.calculate(spectra, D, filter);
+    mhs(spectra, D, filter);
 
     stats.items_generated = D.size();
     stats.total_calc = (time_interval() - time);

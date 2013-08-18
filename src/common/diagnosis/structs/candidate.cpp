@@ -1,5 +1,6 @@
 #include "candidate.h"
 namespace diagnosis {
+namespace structs {
 std::istream & t_candidate::read (std::istream & in) {
     t_component_id component = 0;
 
@@ -24,5 +25,6 @@ std::ostream & t_candidate::print (std::ostream & out) const {
         out << *(component++) << " ";
 
     return out << "0";
+}
 }
 }

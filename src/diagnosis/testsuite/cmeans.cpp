@@ -1,13 +1,14 @@
 #include <boost/test/unit_test.hpp>
 
-#include "diagnosis/spectra/count_spectra.h"
 #include "diagnosis/algorithms/cmeans.h"
+#include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/membership.h"
 
 #include <iostream>
 #include <fstream>
 
 using namespace diagnosis;
+using namespace diagnosis::structs;
 
 BOOST_AUTO_TEST_SUITE(CMEANS)
 

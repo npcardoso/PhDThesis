@@ -4,6 +4,7 @@
 #include <iomanip>
 
 namespace diagnosis {
+namespace structs {
 t_count t_count_spectra::get_count (t_component_id component,
                                     t_transaction_id transaction) const {
     assert(component > 0);
@@ -192,5 +193,6 @@ t_error t_count_spectra::read_error (std::istream & in) const {
         return 1;
 
     return 0;
+}
 }
 }

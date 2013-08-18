@@ -1,9 +1,10 @@
 #include <boost/test/unit_test.hpp>
-#include "diagnosis/spectra/ambiguity_groups.h"
-#include "diagnosis/spectra/count_spectra.h"
+#include "diagnosis/structs/ambiguity_groups.h"
+#include "diagnosis/structs/count_spectra.h"
 
 #include <fstream>
 using namespace diagnosis;
+using namespace diagnosis::structs;
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(AMBIGUITY_GROUPS)

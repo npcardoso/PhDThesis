@@ -2,7 +2,7 @@
 #define __CONVERTERS_OBSERVATION_SPECTRA_H__
 
 #include "instrumentation/transaction.h"
-#include "diagnosis/spectra/count_spectra.h"
+#include "diagnosis/structs/count_spectra.h"
 
 namespace converters {
 class t_observations_to_count_spectra {
@@ -17,7 +17,7 @@ public:
     }
 
     void operator () (const instrumentation::t_transaction_observation & tr,
-                      diagnosis::t_count_spectra & spectra);
+                      diagnosis::structs::t_count_spectra & spectra);
 };
 }
 #endif

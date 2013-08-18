@@ -4,17 +4,19 @@
 using boost::bernoulli_distribution;
 
 namespace diagnosis {
-t_bernoulli_randomizer::t_bernoulli_randomizer (float activation_rate, float error_rate) {
+namespace randomizers {
+using namespace structs;
+
+t_bernoulli::t_bernoulli (float activation_rate, float error_rate) {
     this->activation_rate = activation_rate;
     this->error_rate = error_rate;
     this->n_comp = 0;
     this->n_tran = 0;
 }
 
-void t_bernoulli_randomizer::randomize (t_count_spectra & spectra) const {
-    boost::random::mt19937 gen;
-
-
+const t_bernoulli::t_self_type & t_bernoulli::operator () (structs::t_count_spectra & spectra,
+                                                           t_candidate & correct_candidate,
+                                                           boost::random::mt19937 & gen) const {
     bernoulli_distribution<> activation(activation_rate);
     bernoulli_distribution<> error(error_rate);
 
@@ -24,6 +26,8 @@ void t_bernoulli_randomizer::randomize (t_count_spectra & spectra) const {
     if (n_tran)
         spectra.set_transaction_count(n_tran);
 
+    correct_candidate.clear();
+
     for (t_transaction_id t = 1; t <= n_tran; t++) {
         spectra.set_error(t, error(gen));
 
@@ -31,5 +35,8 @@ void t_bernoulli_randomizer::randomize (t_count_spectra & spectra) const {
             spectra.set_count(c, t, activation(gen));
         }
     }
+
+    return (*this);
+}
 }
 }

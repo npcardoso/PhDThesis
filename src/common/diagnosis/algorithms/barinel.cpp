@@ -1,8 +1,9 @@
 #include "barinel.h"
-#include "utils/iostream.h"
 
 namespace diagnosis {
 namespace algorithms {
+using namespace structs;
+
 t_barinel_model::t_barinel_model () : pass(1, 0), fail(1, 0) {}
 
 t_barinel_model::t_barinel_model (size_t components) {
@@ -20,6 +21,8 @@ t_barinel::t_barinel () {
     lambda = 0.0001;
     precision = 128;
     iterations = 100000;
+    use_fuzzy_error = true;
+    use_confidence = true;
 }
 
 t_barinel::t_barinel (size_t precision) {
@@ -30,6 +33,21 @@ t_barinel::t_barinel (size_t precision) {
     this->precision = precision;
 }
 
+void t_barinel::operator () (const structs::t_spectra & spectra,
+                             const structs::t_trie & D,
+                             t_ret_type & probs,
+                             const structs::t_spectra_filter * filter) const {
+    t_trie::iterator it = D.begin();
+
+
+    while (it != D.end()) {
+        t_probability_mp ret;
+        calculate(spectra, *it, ret);
+        probs.push_back(ret.toDouble());
+        it++;
+    }
+}
+
 void t_barinel::calculate (const t_spectra & spectra,
                            const t_candidate & candidate,
                            t_probability_mp & ret,
@@ -38,6 +56,7 @@ void t_barinel::calculate (const t_spectra & spectra,
 
 
     model(spectra, candidate, m, filter);
+
     t_barinel_goodnesses g(candidate.size(), t_goodness_mp(0.5, precision)),
     old_g(candidate.size(), t_goodness_mp(0.5, precision));
 
@@ -60,7 +79,7 @@ void t_barinel::calculate (const t_spectra & spectra,
         old_g = g;
 
         // Calculate probability
-        spectra.probability(candidate, g, pr, filter);
+        spectra.probability(candidate, g, pr, filter, use_confidence, use_fuzzy_error);
 
         // Check stop conditions
         if (abs(pr - old_pr) < epsilon)
@@ -104,8 +123,8 @@ void t_barinel::model (const t_spectra & spectra,
                 symbol += 1 << comp;
         }
 
-        t_confidence conf = spectra.get_confidence(it.get_transaction());
-        t_error err = spectra.get_error(it.get_transaction());
+        t_confidence conf = use_confidence ? spectra.get_confidence(it.get_transaction()) : 1;
+        t_error err = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
         model.pass[symbol] += conf * (1 - err);
         model.fail[symbol] += conf * err;
     }

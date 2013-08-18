@@ -1,14 +1,15 @@
 #include <Rcpp.h>
 
-#include "diagnosis/spectra/count_spectra.h"
 #include "diagnosis/algorithms/barinel.h"
 #include "diagnosis/algorithms/mhs.h"
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/heuristics/sort.h"
+#include "diagnosis/structs/count_spectra.h"
 
 using namespace Rcpp;
 using namespace diagnosis;
 using namespace diagnosis::structs;
+using namespace diagnosis::heuristics;
 
 void matrix_to_spectra (NumericMatrix A, NumericVector e, t_count_spectra & spectra) {
     spectra.set_element_count(A.ncol(), A.nrow());
@@ -51,7 +52,7 @@ RcppExport SEXP mhs2 (SEXP AA, SEXP ee, SEXP maxrt, SEXP maxc, SEXP maxcs) {
     t_count_spectra spectra;
 
     matrix_to_spectra(A, e, spectra);
-    mhs.calculate(spectra, D);
+    mhs(spectra, D);
 
     List ret;
     trie_to_list(D, ret);

@@ -1,6 +1,9 @@
 #include "spectra.h"
 
 namespace diagnosis {
+namespace structs {
+using namespace diagnosis::structs;
+
 bool t_spectra::is_candidate (const t_candidate & candidate,
                               const t_spectra_filter * filter) const {
     t_spectra_iterator it(get_component_count(),
@@ -149,7 +152,7 @@ bool t_basic_spectra::is_error (t_transaction_id transaction) const {
     assert(transaction > 0);
     assert(transaction <= transaction_count);
 
-    return get_error(transaction) > 0.5; // TODO: arbitrary threshold
+    return get_error(transaction) * get_confidence(transaction) >= 0.5; // TODO: arbitrary threshold
 }
 
 void t_basic_spectra::set_error (t_transaction_id transaction,
@@ -177,5 +180,6 @@ t_confidence t_basic_spectra::set_confidence (t_transaction_id transaction,
     assert(confidence <= 1);
 
     return confidences[transaction - 1] = confidence;
+}
 }
 }

@@ -1,6 +1,6 @@
 #include "similarity.h"
 
-#include "diagnosis/spectra_iterator.h"
+#include "diagnosis/structs/spectra_iterator.h"
 
 #include <cstring>
 #include <cmath>
@@ -9,6 +9,8 @@
 
 namespace diagnosis {
 namespace heuristics {
+using namespace structs;
+
 void t_similarity::operator () (const t_spectra & spectra,
                                 t_rank_element * ret,
                                 const t_spectra_filter * filter) const {
@@ -30,13 +32,13 @@ void t_similarity::operator () (const t_spectra & spectra,
         }
 
         assert(n[0][0] + n[0][1] + n[1][0] + n[1][1] == spectra.get_transaction_count(filter));
-        t_rank_element::t_rank_score value = similarity_coefficient(n);
+        t_rank_element::t_score value = similarity_coefficient(n);
         ret[i++] = t_rank_element(it.get_component(), value);
     }
 }
 
-t_rank_element::t_rank_score t_ochiai::similarity_coefficient (const t_count n[2][2]) const {
-    t_rank_element::t_rank_score tmp = (n[1][1] + n[0][1]) * (n[1][1] + n[1][0]);
+t_rank_element::t_score t_ochiai::similarity_coefficient (const t_count n[2][2]) const {
+    t_rank_element::t_score tmp = (n[1][1] + n[0][1]) * (n[1][1] + n[1][0]);
 
 
     if (tmp)

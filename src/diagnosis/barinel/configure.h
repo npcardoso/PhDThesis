@@ -8,6 +8,7 @@
 #define MPI_BUFFER (1 << 16)
 
 using namespace diagnosis;
+using namespace diagnosis::heuristics;
 
 class t_mhs_options : public t_options {
 public:
@@ -24,6 +25,9 @@ public:
     bool mpi_hierarchical;
 
     bool fuzzinel;
+    bool use_confidence;
+    bool fuzzy_error;
+
     bool has_confidence;
     bool ambiguity_groups;
 

@@ -7,6 +7,8 @@
 
 namespace diagnosis {
 namespace algorithms {
+using namespace structs;
+
 t_cmeans_configs::t_cmeans_configs () {
     num_iterations = 50;
     dist_function = t_distance_function::t_ptr(new t_euclidean_distance());

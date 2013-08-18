@@ -1,18 +1,22 @@
-#ifndef __DIAGNOSIS_HEURISTIC_H__
-#define __DIAGNOSIS_HEURISTIC_H__
+#ifndef __DIAGNOSIS_HEURISTICS_HEURISTIC_H__
+#define __DIAGNOSIS_HEURISTICS_HEURISTIC_H__
 
 #include "diagnosis/rank_element.h"
-#include "diagnosis/spectra.h"
-#include "diagnosis/spectra_filter.h"
+#include "diagnosis/structs/spectra.h"
+#include "diagnosis/structs/spectra_filter.h"
 
 #include <vector>
 
 namespace diagnosis {
+namespace heuristics {
+typedef double t_score;
+typedef diagnosis::t_rank_element<t_component_id, t_score> t_rank_element;
+
 class t_heuristic_filter {
 public:
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const structs::t_spectra & spectra,
                               t_rank_element * ret,
-                              const t_spectra_filter * filter=NULL) const = 0;
+                              const structs::t_spectra_filter * filter=NULL) const = 0;
     virtual std::ostream & print (std::ostream & out) const;
 };
 
@@ -29,14 +33,14 @@ public:
 
     void push (const t_heuristic_filter * filter);
 
-    void operator () (const t_spectra & spectra,
+    void operator () (const structs::t_spectra & spectra,
                       t_rank_element * ret,
-                      const t_spectra_filter * filter=NULL) const;
+                      const structs::t_spectra_filter * filter=NULL) const;
 
     virtual std::ostream & print (std::ostream & out) const;
 
-    static t_order_buffer get_ordering_buffer (const t_spectra & spectra,
-                                               const t_spectra_filter * filter=NULL);
+    static t_order_buffer get_ordering_buffer (const structs::t_spectra & spectra,
+                                               const structs::t_spectra_filter * filter=NULL);
 
     inline bool operator == (const t_heuristic & h) const {return filters == h.filters;}
     inline bool operator != (const t_heuristic & h) const {return filters != h.filters;}
@@ -45,9 +49,10 @@ private:
     t_filters filters;
 };
 }
+}
 
 namespace std {
-std::ostream & operator << (std::ostream & out, const diagnosis::t_heuristic & heuristic);
+std::ostream & operator << (std::ostream & out, const diagnosis::heuristics::t_heuristic & heuristic);
 }
 
 #endif

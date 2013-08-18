@@ -13,10 +13,10 @@ void mhs2_reduce (diagnosis::structs::t_trie & trie,
                   t_stats & stats);
 
 void mhs2_map (const diagnosis::algorithms::t_mhs & mhs,
-               const diagnosis::t_spectra & spectra,
+               const diagnosis::structs::t_spectra & spectra,
                diagnosis::structs::t_trie & D,
                t_stats & stats,
-               const diagnosis::t_spectra_filter * filter=NULL);
+               const diagnosis::structs::t_spectra_filter * filter=NULL);
 
 void mhs2_heuristic_setup (diagnosis::algorithms::t_mhs & mhs,
                            t_count mpi_level,

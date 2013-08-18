@@ -3,33 +3,38 @@
 #include "diagnosis/heuristics/sort.h"
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/heuristics/parallelization.h"
-#include "diagnosis/spectra/count_spectra.h"
-#include "diagnosis/spectra/randomizer/bernoulli.h"
+#include "diagnosis/structs/count_spectra.h"
+#include "diagnosis/randomizers/bernoulli.h"
 
 #include <fstream>
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
+using namespace diagnosis::heuristics;
 using namespace diagnosis::structs;
+using namespace diagnosis::randomizers;
+using namespace boost::random;
 
 BOOST_AUTO_TEST_SUITE(MHS2)
 
 BOOST_AUTO_TEST_CASE(stop_flags) {
     t_count_spectra spectra;
-    t_bernoulli_randomizer randomizer(0.25, 1);
+    t_candidate correct;
+    t_bernoulli randomizer(0.25, 1);
+    mt19937 gen;
     t_heuristic heuristic;
     t_trie D;
 
 
     randomizer.n_comp = 100;
     randomizer.n_tran = 100;
-    randomizer.randomize(spectra);
+    randomizer(spectra, correct, gen);
 
     heuristic.push(new heuristics::t_ochiai());
     heuristic.push(new heuristics::t_sort());
 
     t_mhs mhs(heuristic);
     mhs.max_candidate_size = 2;
-    mhs.calculate(spectra, D);
+    mhs(spectra, D);
 
     // Max Candidate Size
     t_trie::iterator it = D.begin();
@@ -41,7 +46,7 @@ BOOST_AUTO_TEST_CASE(stop_flags) {
     mhs = t_mhs(heuristic);
     mhs.max_candidates = 4000;
     D.clear();
-    mhs.calculate(spectra, D);
+    mhs(spectra, D);
     BOOST_CHECK(D.size() <= mhs.max_candidates);
 }
 
@@ -75,7 +80,7 @@ BOOST_AUTO_TEST_CASE(mhs) {
 
         algorithms::t_mhs mhs(heuristic);
 
-        mhs.calculate(spectra, D);
+        mhs(spectra, D);
         BOOST_CHECK(D == D_ref);
 
         t_trie::iterator it = D.begin();
@@ -87,13 +92,15 @@ BOOST_AUTO_TEST_CASE(mhs) {
 
 BOOST_AUTO_TEST_CASE(parallelization) {
     t_count_spectra spectra;
-    t_bernoulli_randomizer randomizer(0.25, 1);
+    t_candidate correct;
+    t_bernoulli randomizer(0.25, 1);
+    mt19937 gen;
     t_trie reference;
 
 
     randomizer.n_comp = 25;
     randomizer.n_tran = 25;
-    randomizer.randomize(spectra);
+    randomizer(spectra, correct, gen);
 
     {
         t_heuristic heuristic;
@@ -102,13 +109,13 @@ BOOST_AUTO_TEST_CASE(parallelization) {
 
         t_mhs mhs(heuristic);
         reference.clear();
-        mhs.calculate(spectra, reference);
+        mhs(spectra, reference);
     }
 
     t_count level = 2;
 
     for (t_count stride = 0; stride < 4; stride++) {
-        for (t_count ntasks = 1; ntasks < 100; ntasks++) {
+        for (t_count ntasks = 1; ntasks < 10; ntasks++) {
             t_trie D;
             D.clear();
 
@@ -134,7 +141,7 @@ BOOST_AUTO_TEST_CASE(parallelization) {
                 BOOST_CHECK(mhs.get_heuristic(level + 1) != mhs.get_heuristic(level));
                 // std::cout << mhs.get_heuristic(level - 1) << mhs.get_heuristic(level) << mhs.get_heuristic(level + 1) << std::endl;
 
-                mhs.calculate(spectra, D);
+                mhs(spectra, D);
             }
 
             BOOST_CHECK_MESSAGE(D == reference, "Failed for stride = " << stride << " ntasks = " << ntasks <<

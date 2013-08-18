@@ -1,10 +1,12 @@
-#include "diagnosis/spectra/count_spectra.h"
+#include "diagnosis/structs/count_spectra.h"
 #include "types.h"
 #include "configure.h"
 
+using namespace diagnosis;
+using namespace diagnosis::structs;
 
 int main (int argc, char ** argv) {
-    diagnosis::t_count_spectra spectra;
+    t_count_spectra spectra;
     t_iscandidate_options options(argv[0]);
 
 
@@ -15,7 +17,7 @@ int main (int argc, char ** argv) {
     options.spectra_input() >> spectra;
 
     while (true) {
-        diagnosis::t_candidate c;
+        t_candidate c;
         options.input() >> c;
 
         if (!c.size())

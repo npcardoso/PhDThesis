@@ -5,6 +5,7 @@
 namespace diagnosis {
 namespace algorithms {
 using namespace diagnosis::structs;
+using namespace diagnosis::heuristics;
 
 t_mhs::t_mhs (const t_heuristic & heuristic) {
     max_candidate_size = 0;
@@ -25,9 +26,9 @@ const t_heuristic & t_mhs::get_heuristic (t_count level) const {
     return it->second;
 }
 
-void t_mhs::calculate (const t_spectra & spectra,
-                       t_trie & D,
-                       const t_spectra_filter * filter) const {
+void t_mhs::operator () (const t_spectra & spectra,
+                         t_trie & D,
+                         const t_spectra_filter * filter) const {
     t_candidate candidate;
 
 
@@ -98,7 +99,7 @@ void t_mhs::calculate (const t_spectra & spectra,
     get_heuristic(candidate.size()) (spectra, order_buffer.get(), &tmp_filter);
 
     for (t_id i = 0; i < remaining_components; i++) {
-        t_component_id component = order_buffer[i].get_component();
+        heuristics::t_rank_element::t_element component = order_buffer[i].get_element();
 
         /* Result Length cutoff */
         if (max_candidates && D.size() >= max_candidates)
@@ -113,7 +114,7 @@ void t_mhs::calculate (const t_spectra & spectra,
             break;
 
         /* Heuristic signalling skip */
-        if (order_buffer[i].get_value() <= 0) {
+        if (order_buffer[i].get_score() <= 0) {
             tmp_filter.filter_component(component);
             continue;
         }

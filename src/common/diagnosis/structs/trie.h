@@ -1,8 +1,8 @@
 #ifndef __DIAGNOSIS_STRUCTS_TRIE_H__
 #define __DIAGNOSIS_STRUCTS_TRIE_H__
 
-#include "../candidate.h"
 #include "types.h"
+#include "diagnosis/structs/candidate.h"
 
 #include <map>
 #include <boost/lexical_cast.hpp>
@@ -12,7 +12,7 @@ namespace structs {
 class t_trie_iterator;
 
 class t_trie {
-    typedef std::map < t_component_id, t_trie >t_children;
+    typedef std::map<t_component_id, t_trie> t_children;
 
     const t_trie * parent;
     t_children children;
@@ -53,7 +53,7 @@ public:
         return elements;
     }
 
-    std::ostream& print (std::ostream & out) const;
+    std::ostream & print (std::ostream & out) const;
 
     iterator begin () const;
     iterator end () const;
@@ -83,7 +83,7 @@ public:
 
     t_trie_iterator operator ++ (int);
 
-    const t_candidate*operator -> () const;
+    const t_candidate * operator -> () const;
     const t_candidate & operator * () const;
 };
 }

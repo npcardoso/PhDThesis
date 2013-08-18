@@ -1,14 +1,14 @@
-#ifndef __DIAGNOSIS_SPECTRA_H__
-#define __DIAGNOSIS_SPECTRA_H__
+#ifndef __DIAGNOSIS_STRUCTS_SPECTRA_H__
+#define __DIAGNOSIS_STRUCTS_SPECTRA_H__
 
-#include "diagnosis/candidate.h"
-#include "diagnosis/spectra_filter.h"
-#include "diagnosis/spectra_iterator.h"
+#include "types.h"
+#include "diagnosis/types.h"
+#include "diagnosis/structs/candidate.h"
+#include "diagnosis/structs/spectra_filter.h"
+#include "diagnosis/structs/spectra_iterator.h"
 
-#include "utils/mpreal.h"
 
 #include "exceptions.h"
-#include "types.h"
 
 #include <cassert>
 #include <iostream>
@@ -16,9 +16,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace diagnosis {
-typedef mpfr::mpreal t_probability_mp;
-typedef t_probability_mp t_goodness_mp;
-
+namespace structs {
 class t_spectra {
 public:
 
@@ -30,17 +28,19 @@ public:
                                t_transaction_id transaction) const = 0;
 
     template <class G>
-    void probability (const t_candidate & candidate,
+    void probability (const structs::t_candidate & candidate,
                       const G & goodnesses,
                       t_probability_mp & ret,
-                      const t_spectra_filter * filter=NULL) const;
+                      const t_spectra_filter * filter=NULL,
+                      bool use_confidence=true,
+                      bool use_fuzzy_error=true) const;
 
     virtual bool is_error (t_transaction_id transaction) const = 0;
     virtual t_error get_error (t_transaction_id transaction) const = 0;
 
     virtual t_confidence get_confidence (t_transaction_id transaction) const = 0;
 
-    virtual bool is_candidate (const t_candidate & candidate,
+    virtual bool is_candidate (const structs::t_candidate & candidate,
                                const t_spectra_filter * filter=NULL) const;
 
     virtual bool is_valid (const t_spectra_filter * filter=NULL) const;
@@ -91,10 +91,12 @@ public:
 };
 
 template <class G>
-void t_spectra::probability (const t_candidate & candidate,
+void t_spectra::probability (const structs::t_candidate & candidate,
                              const G & goodnesses,
                              t_probability_mp & ret,
-                             const t_spectra_filter * filter) const {
+                             const t_spectra_filter * filter,
+                             bool use_confidence,
+                             bool use_fuzzy_error) const {
     assert(candidate.size() > 0);
 
     t_goodness_mp tmp(goodnesses[0]);
@@ -107,7 +109,7 @@ void t_spectra::probability (const t_candidate & candidate,
 
     while (it.next_transaction()) {
         tmp = 1;
-        t_candidate::const_iterator c_it = candidate.begin();
+        structs::t_candidate::const_iterator c_it = candidate.begin();
         t_id comp = 0;
 
         while (c_it != candidate.end()) {
@@ -121,16 +123,20 @@ void t_spectra::probability (const t_candidate & candidate,
         }
 
         // Fuzzy health
-        t_error e = get_error(it.get_transaction());
+        t_error e = use_fuzzy_error ? get_error(it.get_transaction()) : is_error(it.get_transaction());
+
+
         tmp = e * (1 - tmp) + (1 - e) * tmp;
 
         // Confidence scaling
-        t_confidence c = get_confidence(it.get_transaction());
-        tmp = (1 - c) + (c * tmp);
+        if (use_confidence) {
+            t_confidence c = get_confidence(it.get_transaction());
+            tmp = (1 - c) + (c * tmp);
+        }
 
         ret *= tmp;
     }
 }
 }
-
+}
 #endif

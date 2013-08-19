@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(C_d) {
 
     BOOST_CHECK_CLOSE(Cd_single(1, l), 0, 0.00001);
     BOOST_CHECK_CLOSE(quality(Cd_single(1, l), l.size()), 1, 0.00001);
-    BOOST_CHECK(isnan(Cd_single(2, l)));
+    BOOST_CHECK(std::isnan(Cd_single(2, l)));
 
     l.push_back(t_rank_element(2, -2));
     l.push_back(t_rank_element(21, -2));
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(C_d) {
     BOOST_CHECK_CLOSE(quality(Cd_single(1, l), l.size()), 1, 0.00001);
     BOOST_CHECK_CLOSE(Cd_single(2, l), 2, 0.00001);
     BOOST_CHECK_CLOSE(quality(Cd_single(2, l), l.size()), 1 - (2 / 3.0), 0.00001);
-    BOOST_CHECK(isnan(Cd_single(3, l)));
+    BOOST_CHECK(std::isnan(Cd_single(3, l)));
 
     l.push_back(t_rank_element(3, -3));
     l.push_back(t_rank_element(31, -3));
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(C_d) {
     BOOST_CHECK_CLOSE(quality(Cd_single(2, l), l.size()), 1 - (2 / 10.0), 0.00001);
     BOOST_CHECK_CLOSE(Cd_single(3, l), 7, 0.00001);
     BOOST_CHECK_CLOSE(quality(Cd_single(3, l), l.size()), 1 - (7 / 10.0), 0.00001);
-    BOOST_CHECK(isnan(Cd_single(4, l)));
+    BOOST_CHECK(std::isnan(Cd_single(4, l)));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

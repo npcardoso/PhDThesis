@@ -21,6 +21,9 @@ protected:
     virtual void _pre_rank ();
     virtual void _post_rank (const t_candidate_ranker::t_ret_type & probs,
                              t_time_interval duration);
+
+private:
+    const t_candidate_generator::t_ret_type * D;
 };
 }
 }

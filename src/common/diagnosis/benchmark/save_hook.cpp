@@ -1,5 +1,6 @@
 #include "save_hook.h"
 
+#include "diagnosis/structs/diagnosis_report.h"
 #include "utils/iostream.h"
 
 #include <boost/lexical_cast.hpp>
@@ -7,7 +8,9 @@
 
 namespace diagnosis {
 namespace benchmark {
-t_save_hook::t_save_hook (std::string d) : t_writer_hook(d) {}
+t_save_hook::t_save_hook (std::string d) : t_writer_hook(d) {
+    D = NULL;
+}
 
 void t_save_hook::_init (const structs::t_spectra & spectra,
                          const structs::t_candidate & correct) {
@@ -50,6 +53,8 @@ void t_save_hook::_post_gen (t_candidate_generator::t_ret_type & D,
     f_D.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     f_D << D;
     f_D.close();
+
+    this->D = &D;
 }
 
 void t_save_hook::_pre_rank () {}
@@ -69,6 +74,23 @@ void t_save_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
     std::ofstream f(base_file.c_str());
     f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     f << probs;
+    f.close();
+
+
+    structs::t_diagnosis_report diagnosis_rep(*D, probs);
+    base_file = get_root_dir();
+
+
+    base_file /= boost::lexical_cast<std::string> (get_iterations());
+    base_file += ".";
+    base_file += boost::lexical_cast<std::string> (get_generator_id());
+    base_file += ".";
+    base_file += boost::lexical_cast<std::string> (get_ranker_id());
+    base_file += ".Report";
+
+    f.open(base_file.c_str());
+    f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    f << diagnosis_rep;
     f.close();
 }
 }

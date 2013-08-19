@@ -10,7 +10,7 @@ std::ostream & operator << (std::ostream & out, const t_trie & trie) {
 
 std::istream & operator >> (std::istream & in, t_trie & trie) {
     while (true) {
-        t_candidate c;
+        t_trie::t_value_type c;
         in >> c;
 
         if (!c.size())
@@ -23,8 +23,8 @@ std::istream & operator >> (std::istream & in, t_trie & trie) {
     return in;
 }
 
-bool t_trie::add (const t_candidate & candidate,
-                  t_candidate::const_iterator component,
+bool t_trie::add (const t_value_type & candidate,
+                  t_value_type::const_iterator component,
                   bool composites) {
     if (!composites && exists)
         return false;
@@ -49,8 +49,8 @@ bool t_trie::add (const t_candidate & candidate,
     return false;
 }
 
-bool t_trie::purge_composites (const t_candidate & candidate,
-                               t_candidate::const_iterator component) {
+bool t_trie::purge_composites (const t_value_type & candidate,
+                               t_value_type::const_iterator component) {
     if (component == candidate.end()) {
         elements = 0;
         exists = false;
@@ -60,7 +60,7 @@ bool t_trie::purge_composites (const t_candidate & candidate,
     t_children::iterator it = children.begin();
 
     while (it != children.end()) {
-        t_candidate::const_iterator tmp = component;
+        t_value_type::const_iterator tmp = component;
 
         if (it->first == *component)
             tmp++;
@@ -81,8 +81,8 @@ bool t_trie::purge_composites (const t_candidate & candidate,
     return !exists && !children.size();
 }
 
-bool t_trie::is_composite (const t_candidate & candidate,
-                           t_candidate::const_iterator component,
+bool t_trie::is_composite (const t_value_type & candidate,
+                           t_value_type::const_iterator component,
                            bool strict) const {
     if (exists && (!strict || component != candidate.end()))
         return true;
@@ -102,7 +102,7 @@ bool t_trie::is_composite (const t_candidate & candidate,
     return false;
 }
 
-void t_trie::add (const t_candidate & candidate,
+void t_trie::add (const t_value_type & candidate,
                   bool purge_composites,
                   bool check_composite) {
     if (check_composite && is_composite(candidate))
@@ -166,6 +166,10 @@ bool t_trie_iterator::operator == (const t_trie_iterator & it) const {
     return current == it.current;
 }
 
+t_trie_iterator t_trie_iterator::operator ++ () {
+    return (*this)++;
+}
+
 t_trie_iterator t_trie_iterator::operator ++ (int) {
     assert(level);
     t_trie_iterator ret(*this);
@@ -206,12 +210,12 @@ t_trie_iterator t_trie_iterator::operator ++ (int) {
     return ret;
 }
 
-const t_candidate*t_trie_iterator::operator -> () const {
+const t_trie::t_value_type * t_trie_iterator::operator -> () const {
     assert(level);
     return &current;
 }
 
-const t_candidate & t_trie_iterator::operator * () const {
+const t_trie::t_value_type & t_trie_iterator::operator * () const {
     assert(level);
     return current;
 }

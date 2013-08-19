@@ -47,8 +47,8 @@ void t_basic_benchmark_hook::post_rank (const t_candidate_ranker::t_ret_type & p
                                         t_time_interval duration) {
     assert(get_generator_id() != 0);
     assert(get_ranker_id() != 0);
-    ranker_id = 0;
     _post_rank(probs, duration);
+    ranker_id = 0;
 }
 
 t_id t_basic_benchmark_hook::get_generator_id () const {

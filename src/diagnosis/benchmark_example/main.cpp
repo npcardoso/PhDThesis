@@ -1,6 +1,7 @@
 #include "types.h"
 #include "utils/iostream.h"
 #include "diagnosis/benchmark/hook_combiner.h"
+#include "diagnosis/benchmark/metrics_hook.h"
 #include "diagnosis/benchmark/verbose_hook.h"
 #include "diagnosis/benchmark/statistics_hook.h"
 #include "diagnosis/benchmark/save_hook.h"
@@ -128,7 +129,9 @@ int main (int argc, char ** argv) {
 
     t_hook_combiner hook;
     std::string dest("foooo");
-    hook << new t_verbose_hook() << new t_save_hook(dest) << new t_statistics_hook(dest);
+    t_metrics_hook * metrics_hook = new t_metrics_hook(dest);
+    (*metrics_hook) << new t_Cd();
+    hook << new t_verbose_hook() << new t_save_hook(dest) << new t_statistics_hook(dest) << metrics_hook;
 
     for (t_id i = 0; i < 10; i++) {
         t_count_spectra spectra;

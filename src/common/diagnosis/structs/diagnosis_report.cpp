@@ -95,7 +95,7 @@ bool t_diagnosis_report::compare (const t_rank_element & r1, const t_rank_elemen
 
 namespace std {
 std::ostream & operator << (std::ostream & out, const diagnosis::structs::t_diagnosis_report & dr) {
-    for (t_id i = 0; i < dr.size(); i++)
+    for (t_id i = 1; i <= dr.size(); i++)
         out << (dr.get_probability(i) / dr.get_probability()) << ": " << dr.get_candidate(i) << std::endl;
 
     return out;

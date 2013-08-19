@@ -15,7 +15,7 @@ void t_statistics_hook::_init (const structs::t_spectra & spectra,
     bool new_file;
 
 
-    fname /= "spectra.stats";
+    fname /= "spectra.stats.csv";
     new_file = !boost::filesystem::exists(fname);
 
     std::ofstream f(fname.c_str(), std::ios_base::app);
@@ -46,7 +46,7 @@ void t_statistics_hook::_post_gen (t_candidate_generator::t_ret_type & D,
     bool new_file;
 
 
-    fname /= "D.stats";
+    fname /= "D.stats.csv";
     new_file = !boost::filesystem::exists(fname);
 
     std::ofstream f(fname.c_str(), std::ios_base::app);
@@ -69,7 +69,7 @@ void t_statistics_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs
     bool new_file;
 
 
-    fname /= "Probs.stats";
+    fname /= "probs.stats.csv";
     new_file = !boost::filesystem::exists(fname);
 
     std::ofstream f(fname.c_str(), std::ios_base::app);

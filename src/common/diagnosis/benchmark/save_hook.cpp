@@ -18,7 +18,7 @@ void t_save_hook::_init (const structs::t_spectra & spectra,
 
 
     base_file /= boost::lexical_cast<std::string> (get_iterations());
-    base_file += ".spectra";
+    base_file += ".spectra.txt";
 
     std::ofstream f_spectra(base_file.c_str());
     f_spectra.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -27,7 +27,7 @@ void t_save_hook::_init (const structs::t_spectra & spectra,
 
     base_file = get_root_dir();
     base_file /= boost::lexical_cast<std::string> (get_iterations());
-    base_file += ".correct";
+    base_file += ".correct.txt";
 
     std::ofstream f_correct(base_file.c_str());
     f_correct.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -47,7 +47,7 @@ void t_save_hook::_post_gen (t_candidate_generator::t_ret_type & D,
     base_file /= boost::lexical_cast<std::string> (get_iterations());
     base_file += ".";
     base_file += boost::lexical_cast<std::string> (get_generator_id());
-    base_file += ".D";
+    base_file += ".D.txt";
 
     std::ofstream f_D(base_file.c_str());
     f_D.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -69,7 +69,7 @@ void t_save_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
     base_file += boost::lexical_cast<std::string> (get_generator_id());
     base_file += ".";
     base_file += boost::lexical_cast<std::string> (get_ranker_id());
-    base_file += ".Probs";
+    base_file += ".probs.txt";
 
     std::ofstream f(base_file.c_str());
     f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -86,7 +86,7 @@ void t_save_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
     base_file += boost::lexical_cast<std::string> (get_generator_id());
     base_file += ".";
     base_file += boost::lexical_cast<std::string> (get_ranker_id());
-    base_file += ".Report";
+    base_file += ".report.txt";
 
     f.open(base_file.c_str());
     f.exceptions(std::ifstream::failbit | std::ifstream::badbit);

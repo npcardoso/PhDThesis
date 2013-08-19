@@ -1,8 +1,10 @@
-#ifndef __DIAGNOSIS_METRICS_H__
-#define __DIAGNOSIS_METRICS_H__
+#ifndef __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
+#define __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 
-#include "diagnosis/rank_element.h"
+#include "diagnosis/diagnosis_system.h"
 #include "diagnosis/structs/candidate.h"
+#include "diagnosis/structs/diagnosis_report.h"
+#include "utils/boost.h"
 
 #include <algorithm>
 #include <cassert>
@@ -12,50 +14,33 @@
 
 namespace diagnosis {
 namespace benchmark {
-typedef double t_diagnosis_cost;
-typedef double t_diagnosis_quality;
+class t_metric {
+public:
+    DEFINE_BOOST_SHARED_PTRS(t_metric);
+    typedef std::map<std::string, std::string> t_ret_type;
 
-t_diagnosis_quality quality (t_diagnosis_cost cost, t_count total);
+    virtual void operator () (const structs::t_spectra & spectra,
+                              const structs::t_candidate & correct,
+                              const t_candidate_generator::t_ret_type & D,
+                              const t_candidate_ranker::t_ret_type & probs,
+                              const structs::t_diagnosis_report & dr,
+                              t_ret_type & ret) = 0;
+};
 
+class t_Cd : public t_metric {
+public:
+    virtual void operator () (const structs::t_spectra & spectra,
+                              const structs::t_candidate & correct,
+                              const t_candidate_generator::t_ret_type & D,
+                              const t_candidate_ranker::t_ret_type & probs,
+                              const structs::t_diagnosis_report & dr,
+                              t_ret_type & ret);
+};
 
-template <class LT>
-t_diagnosis_cost Cd_single (const t_component_id & candidate,
-                            const LT & candidate_list) {
-    typename LT::const_iterator it = candidate_list.begin();
-    typename LT::value_type::t_score current_score = NAN;
-    t_count total_elements = 0, elements = 0;
-    bool quit = false;
-
-    while (it != candidate_list.end()) {
-        if (it->get_score() == current_score)
-            elements++;
-        else {
-            if (quit)
-                break;
-
-            current_score = it->get_score();
-            elements = 1;
-        }
-
-        total_elements++;
-
-        if (candidate == it->get_element())
-            quit = true;
-
-        it++;
-    }
-
-    // Candidate not even considered
-    if (!quit)
-        return NAN;
-
-    assert(((total_elements - 1) - ((elements - 1) / 2.0)) >= 0);
-    return (total_elements - 1) - ((elements - 1) / 2.0);
-}
 
 template <class LT>
-t_diagnosis_cost Cd_multi (const structs::t_candidate & candidate,
-                           const LT & candidate_list) {
+double Cd_multi (const structs::t_candidate & candidate,
+                 const LT & candidate_list) {
     typename LT::const_iterator it = candidate_list.begin();
     typename LT::value_type::t_score current_score = NAN;
 
@@ -103,4 +88,5 @@ t_diagnosis_cost Cd_multi (const structs::t_candidate & candidate,
 }
 }
 }
+
 #endif

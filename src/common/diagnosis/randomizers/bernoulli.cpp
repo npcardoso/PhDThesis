@@ -32,7 +32,7 @@ const t_bernoulli::t_self_type & t_bernoulli::operator () (structs::t_count_spec
         spectra.set_error(t, error(gen));
 
         for (t_component_id c = 1; c <= n_comp; c++) {
-            spectra.set_count(c, t, activation(gen));
+            spectra.set_activations(c, t, activation(gen));
         }
     }
 

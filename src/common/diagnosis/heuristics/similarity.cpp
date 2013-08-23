@@ -66,7 +66,7 @@ t_rank_element::t_score t_similarity::similarity_coefficient (const structs::t_s
     memset(n, 0, sizeof(t_count) * 4);
 
     while (it.next_transaction()) {
-        bool activity = spectra.get_count(comp, it.get_transaction());
+        bool activity = spectra.is_active(comp, it.get_transaction());
         bool error = spectra.is_error(it.get_transaction());
         n[activity ? 1 : 0][error ? 1 : 0]++;
     }

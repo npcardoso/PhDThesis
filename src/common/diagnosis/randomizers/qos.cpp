@@ -30,11 +30,11 @@ const t_fuzzy_bernoulli::t_self_type & t_fuzzy_bernoulli::operator () (structs::
         spectra.new_transaction();
 
         for (t_component_id c = 1; c <= spectra.get_component_count(); c++) {
-            spectra.set_count(c, t, activation(gen));
+            spectra.set_activations(c, t, activation(gen));
         }
 
         for (t_component_id c = 1; c <= faulty_components.size(); c++) {
-            if (!spectra.get_count(c, t))
+            if (!spectra.get_activations(c, t))
                 continue;
 
             t_error e = faulty_components[c].gen_error(gen);

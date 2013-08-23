@@ -116,7 +116,7 @@ const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_
     assert(entry_points.size());
     assert(until_nerrors || max_transactions);
 
-    spectra.set_element_count(*topology->get_components().rbegin(), 0);
+    spectra.set_count(*topology->get_components().rbegin(), 0);
 
     while (true) {
         spectra.new_transaction();

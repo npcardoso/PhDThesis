@@ -52,7 +52,7 @@ int main (int argc, char ** argv) {
 
     t_spectra::t_invalid_transactions invalid_transactions;
 
-    if (!spectra.check_valid(invalid_transactions)) {
+    if (spectra.get_invalid(invalid_transactions)) {
         std::cerr << "Invalid spectra (some failing transactions do not activate any components: " << invalid_transactions << ")" << std::endl;
         return 1;
     }

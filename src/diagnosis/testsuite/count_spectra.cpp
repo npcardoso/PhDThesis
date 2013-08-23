@@ -17,7 +17,7 @@ void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, int n_c
         BOOST_CHECK(spectra.is_error(t) == spectra2.is_error(t));
 
         for (t_component_id c = 1; c <= n_comp; c++)
-            BOOST_CHECK(spectra.get_count(c, t) == spectra2.get_count(c, t));
+            BOOST_CHECK(spectra.get_activations(c, t) == spectra2.get_activations(c, t));
     }
 }
 
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(size) {
     randomizer(spectra, correct, gen);
 
     t_count_spectra spectra_half = spectra;
-    spectra_half.set_element_count(n_comp / 2, n_tran / 2);
+    spectra_half.set_count(n_comp / 2, n_tran / 2);
 
     BOOST_CHECK(spectra.get_component_count() == n_comp);
     BOOST_CHECK(spectra.get_transaction_count() == n_tran);
@@ -52,11 +52,11 @@ BOOST_AUTO_TEST_CASE(size) {
 
     check_equal(spectra, spectra_half, n_comp / 2, n_tran / 2);
 
-    spectra_half.set_element_count(n_comp, n_tran);
+    spectra_half.set_count(n_comp, n_tran);
     check_equal(spectra, spectra_half, n_comp / 2, n_tran / 2);
 
-    spectra_half.set_count(1, 1, spectra.get_count(1, 1) - 1);
-    BOOST_CHECK(spectra.get_count(1, 1) - 1 == spectra_half.get_count(1, 1));
+    spectra_half.set_activations(1, 1, spectra.get_activations(1, 1) - 1);
+    BOOST_CHECK(spectra.get_activations(1, 1) - 1 == spectra_half.get_activations(1, 1));
 }
 
 BOOST_AUTO_TEST_CASE(error) {
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(error) {
 
 
     for (int i = 1; i <= n_tran; i++) {
-        spectra.set_error(i);
+        spectra.set_error(i, 1);
         BOOST_CHECK(spectra.is_error(i));
         BOOST_CHECK(spectra.get_error_count() == i);
     }
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(io) {
         BOOST_CHECK_MESSAGE(spectra.get_error(i) == 1, "Failed for transaction " << i);
     }
 
-    BOOST_CHECK_MESSAGE(spectra.is_error(5), "Failed for transaction " << 5);
+    BOOST_CHECK_MESSAGE(!spectra.is_error(5), "Failed for transaction " << 5);
     BOOST_CHECK_MESSAGE(spectra.get_error(5) == 0.75, "Failed for transaction " << 5);
 
     BOOST_CHECK_MESSAGE(!spectra.is_error(6), "Failed for transaction " << 6);

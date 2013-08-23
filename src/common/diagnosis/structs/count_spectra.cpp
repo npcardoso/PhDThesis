@@ -5,8 +5,8 @@
 
 namespace diagnosis {
 namespace structs {
-t_count t_count_spectra::get_count (t_component_id component,
-                                    t_transaction_id transaction) const {
+t_count t_count_spectra::get_activations (t_component_id component,
+                                          t_transaction_id transaction) const {
     assert(component > 0);
     assert(component <= get_component_count());
     assert(transaction > 0);
@@ -15,18 +15,18 @@ t_count t_count_spectra::get_count (t_component_id component,
     return activity[(transaction - 1) * get_component_count() + (component - 1)];
 }
 
-void t_count_spectra::set_count (t_component_id component,
-                                 t_transaction_id transaction,
-                                 t_count count,
-                                 bool ignore_unknown_components) {
+void t_count_spectra::set_activations (t_component_id component,
+                                       t_transaction_id transaction,
+                                       t_count count,
+                                       bool ignore_unknown_components) {
     assert(component > 0);
     assert(transaction > 0);
 
     if (component > get_component_count() ||
         transaction > get_transaction_count()) {
         if (!ignore_unknown_components)
-            set_element_count(std::max(component, get_component_count()),
-                              std::max(transaction, get_transaction_count()));
+            set_count(std::max(component, get_component_count()),
+                      std::max(transaction, get_transaction_count()));
         else
             return;
     }
@@ -34,8 +34,8 @@ void t_count_spectra::set_count (t_component_id component,
     activity[(transaction - 1) * get_component_count() + (component - 1)] = count;
 }
 
-void t_count_spectra::set_element_count (t_count component_count,
-                                         t_count transaction_count) {
+void t_count_spectra::set_count (t_count component_count,
+                                 t_count transaction_count) {
     t_activity_ptr old_activity(activity);
 
     t_component_id max_component = std::min(component_count, get_component_count());
@@ -55,12 +55,12 @@ void t_count_spectra::set_element_count (t_count component_count,
                 old_activity[transaction * get_component_count() + component];
         }
 
-    t_basic_spectra::set_element_count(component_count,
-                                       transaction_count);
+    t_basic_spectra::set_count(component_count,
+                               transaction_count);
 }
 
 t_transaction_id t_count_spectra::new_transaction () {
-    set_element_count(get_component_count(), get_transaction_count() + 1);
+    set_count(get_component_count(), get_transaction_count() + 1);
     return get_transaction_count();
 }
 
@@ -74,8 +74,8 @@ void t_count_spectra::hit (t_component_id component,
     if (component > get_component_count() ||
         transaction > get_transaction_count()) {
         if (!ignore_unknown_components)
-            set_element_count(std::max(component, get_component_count()),
-                              std::max(transaction, get_transaction_count()));
+            set_count(std::max(component, get_component_count()),
+                      std::max(transaction, get_transaction_count()));
         else
             return;
     }
@@ -97,7 +97,7 @@ std::ostream & t_count_spectra::write (std::ostream & out,
 
     while (it.next_transaction()) {
         while (it.next_component())
-            out << get_count(it.get_component(), it.get_transaction()) << " ";
+            out << get_activations(it.get_component(), it.get_transaction()) << " ";
 
         out << " " << get_error(it.get_transaction()) << "\n";
     }
@@ -126,7 +126,7 @@ std::ostream & t_count_spectra::print (std::ostream & out,
         out << std::setw(3) << it.get_transaction() << "|";
 
         while (it.next_component())
-            out << std::setw(3) << get_count(it.get_component(), it.get_transaction()) << "|";
+            out << std::setw(3) << get_activations(it.get_component(), it.get_transaction()) << "|";
 
         out << "| " << is_error(it.get_transaction()) << "(" << get_error(it.get_transaction()) << ", " << get_confidence(it.get_transaction()) << ")\n";
     }
@@ -150,7 +150,7 @@ std::istream & t_count_spectra::read (std::istream & in,
         in.exceptions(std::istream::failbit | std::istream::badbit);
 
         in >> c_count >> tr_count;
-        spectra.set_element_count(c_count, tr_count);
+        spectra.set_count(c_count, tr_count);
 
         for (t_transaction_id tr = 1; tr <= tr_count; tr++) {
             for (t_component_id c = 1; c <= c_count; c++) {

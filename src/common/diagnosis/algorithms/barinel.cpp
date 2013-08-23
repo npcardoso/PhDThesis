@@ -35,8 +35,8 @@ t_barinel_model::t_barinel_model (const t_spectra & spectra,
         t_id symbol = 0;
 
         for (t_id comp = 0; it.next_component(); comp++) {
-            if (spectra.get_count(it.get_component(),
-                                  it.get_transaction()))
+            if (spectra.get_activations(it.get_component(),
+                                        it.get_transaction()))
                 symbol += 1 << comp;
         }
 

@@ -231,7 +231,7 @@ bool t_mhs::all_failed (t_component_id component,
         if (!spectra.is_error(transaction))
             continue;
 
-        bool activity = spectra.get_count(component, transaction);
+        bool activity = spectra.get_activations(component, transaction);
 
         if (!activity)
             return false;
@@ -254,7 +254,7 @@ void t_mhs::strip (t_candidate candidate,
         while (c_it != candidate.end()) {
             t_transaction_id transaction = it.get_transaction();
 
-            if (spectra.get_count(*(c_it++), transaction)) {
+            if (spectra.get_activations(*(c_it++), transaction)) {
                 filter.filter_transaction(transaction);
                 break;
             }
@@ -277,7 +277,7 @@ void t_mhs::strip (t_component_id component,
 
     while (it.next_transaction()) {
         t_transaction_id transaction = it.get_transaction();
-        bool activity = spectra.get_count(component, transaction);
+        bool activity = spectra.is_active(component, transaction);
 
         if (activity)
             filter.filter_transaction(transaction);

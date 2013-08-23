@@ -25,7 +25,7 @@ t_cmeans::t_cmeans (t_count_spectra & spectra) : points(spectra.get_transaction_
 
     for (t_id p = 1; p <= points; p++)
         for (t_id d = 1; d <= dimensions; d++) {
-            MATRIX_CELL(data_spectra, (p - 1), (d - 1), dimensions) = spectra.get_count(d, p);
+            MATRIX_CELL(data_spectra, (p - 1), (d - 1), dimensions) = spectra.get_activations(d, p);
         }
 
     this->data = data_spectra;
@@ -59,13 +59,13 @@ t_data_ptr t_cmeans::get_spectra_centroids (const t_count_spectra & spectra) con
         if (spectra.is_error(t)) {
             for (t_id c = 1; c <= components; c++) {
                 MATRIX_CELL(centroids, 0, (c - 1), components) +=
-                    t_data(spectra.get_count(c, t)) / faulty_transactions;
+                    t_data(spectra.get_activations(c, t)) / faulty_transactions;
             }
         }
         else {
             for (t_id c = 1; c <= components; c++) {
                 MATRIX_CELL(centroids, 1, (c - 1), components) +=
-                    t_data(spectra.get_count(c, t)) / normal_transactions;
+                    t_data(spectra.get_activations(c, t)) / normal_transactions;
             }
         }
     }

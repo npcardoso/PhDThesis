@@ -15,19 +15,20 @@ public:
 
     inline t_count_spectra (t_count component_count,
                             t_count transaction_count) {
-        set_element_count(component_count, transaction_count);
+        set_count(component_count, transaction_count);
     }
 
-    virtual t_count get_count (t_component_id component,
-                               t_transaction_id transaction) const;
+    virtual void set_count (t_count component_count,
+                            t_count transaction_count);
 
-    virtual void set_count (t_component_id component,
-                            t_transaction_id transaction,
-                            t_count count,
-                            bool ignore_unknown_components=false);
+    virtual t_count get_activations (t_component_id component,
+                                     t_transaction_id transaction) const;
 
-    virtual void set_element_count (t_count component_count,
-                                    t_count transaction_count);
+    virtual void set_activations (t_component_id component,
+                                  t_transaction_id transaction,
+                                  t_count count,
+                                  bool ignore_unknown_components=false);
+
 
     t_transaction_id new_transaction ();
 

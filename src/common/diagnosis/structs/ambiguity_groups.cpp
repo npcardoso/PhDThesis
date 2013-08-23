@@ -50,8 +50,8 @@ t_ambiguity_groups::t_ambiguity_groups (const t_spectra & spectra,
 
         // Calculate SHA1
         while (it.next_transaction()) {
-            t_count count = spectra.get_count(c_id,
-                                              it.get_transaction());
+            t_count count = spectra.get_activations(c_id,
+                                                    it.get_transaction());
             s.process_bytes(&count, sizeof(t_count));
         }
 

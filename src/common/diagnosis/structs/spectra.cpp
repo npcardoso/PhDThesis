@@ -14,13 +14,18 @@ t_probability t_spectra::get_activation_rate (const t_spectra_filter * filter) c
 
     while (it.next_transaction())
         while (it.next_component())
-            hit_count += get_count(it.get_component(), it.get_transaction()) ? 1 : 0;
+            hit_count += get_activations(it.get_component(), it.get_transaction()) ? 1 : 0;
 
     return hit_count / (get_component_count(filter) * get_transaction_count(filter));
 }
 
 t_probability t_spectra::get_error_rate (const t_spectra_filter * filter) const {
     return get_error_count(filter) / (t_probability) get_transaction_count(filter);
+}
+
+bool t_spectra::is_active (t_component_id component,
+                           t_transaction_id transaction) const {
+    return get_activations(component, transaction) > 0;
 }
 
 bool t_spectra::is_candidate (const t_candidate & candidate,
@@ -39,7 +44,7 @@ bool t_spectra::is_candidate (const t_candidate & candidate,
         t_candidate::iterator candidate_it = candidate.begin();
 
         while (candidate_it != candidate.end())
-            if (get_count(*(candidate_it++), it.get_transaction())) {
+            if (get_activations(*(candidate_it++), it.get_transaction())) {
                 hit = true;
                 break;
             }
@@ -51,7 +56,7 @@ bool t_spectra::is_candidate (const t_candidate & candidate,
     return true;
 }
 
-bool t_spectra::is_valid (const t_spectra_filter * filter) const {
+bool t_spectra::is_invalid (const t_spectra_filter * filter) const {
     t_spectra_iterator it(get_component_count(),
                           get_transaction_count(),
                           filter);
@@ -66,19 +71,23 @@ bool t_spectra::is_valid (const t_spectra_filter * filter) const {
         it.set_component(0);
 
         while (it.next_component())
-            if (get_count(it.get_component(), it.get_transaction())) {
+            if (get_activations(it.get_component(), it.get_transaction())) {
                 hit = true;
                 break;
             }
 
         if (!hit)
-            return false;
+            return true;
     }
 
-    return true;
+    return false;
 }
 
-bool t_spectra::check_valid (t_invalid_transactions & ret,
+t_confidence t_spectra::get_confidence (t_transaction_id transaction) const {
+    return 1;
+}
+
+bool t_spectra::get_invalid (t_invalid_transactions & ret,
                              const t_spectra_filter * filter) const {
     t_spectra_iterator it(get_component_count(),
                           get_transaction_count(),
@@ -96,7 +105,7 @@ bool t_spectra::check_valid (t_invalid_transactions & ret,
         it.set_component(0);
 
         while (it.next_component())
-            if (get_count(it.get_component(), it.get_transaction())) {
+            if (get_activations(it.get_component(), it.get_transaction())) {
                 hit = true;
                 break;
             }
@@ -105,8 +114,26 @@ bool t_spectra::check_valid (t_invalid_transactions & ret,
             ret.insert(it.get_transaction());
     }
 
-    assert((ret.size() == 0) == is_valid(filter));
+    assert((ret.size() == 0) == !is_invalid(filter));
     return ret.size() == 0;
+}
+
+void t_spectra::set_component_count (t_count component_count) {
+    set_count(component_count, get_transaction_count());
+}
+
+void t_spectra::set_transaction_count (t_count transaction_count) {
+    set_count(get_component_count(), transaction_count);
+}
+
+t_confidence t_spectra::set_confidence (t_transaction_id transaction,
+                                        t_confidence confidence) {
+    assert(transaction > 0);
+    assert(transaction <= get_transaction_count());
+    assert(confidence >= 0);
+    assert(confidence <= 1);
+
+    throw e_not_implemented();
 }
 
 std::ostream & t_spectra::print (std::ostream & out,
@@ -180,22 +207,14 @@ t_count t_basic_spectra::get_transaction_count (const t_spectra_filter * filter)
     return transaction_count;
 }
 
-void t_basic_spectra::set_element_count (t_count component_count,
-                                         t_count transaction_count) {
+void t_basic_spectra::set_count (t_count component_count,
+                                 t_count transaction_count) {
     this->component_count = component_count;
 
     this->transaction_count = transaction_count;
 
     errors.resize(transaction_count, 0);
     confidences.resize(transaction_count, 1);
-}
-
-void t_basic_spectra::set_component_count (t_count component_count) {
-    set_element_count(component_count, get_transaction_count());
-}
-
-void t_basic_spectra::set_transaction_count (t_count transaction_count) {
-    set_element_count(get_component_count(), transaction_count);
 }
 
 t_error t_basic_spectra::get_error (t_transaction_id transaction) const {

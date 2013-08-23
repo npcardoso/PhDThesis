@@ -12,11 +12,11 @@ using namespace diagnosis::structs;
 using namespace diagnosis::heuristics;
 
 void matrix_to_spectra (NumericMatrix A, NumericVector e, t_count_spectra & spectra) {
-    spectra.set_element_count(A.ncol(), A.nrow());
+    spectra.set_count(A.ncol(), A.nrow());
 
     for (t_transaction_id t = 0; t < A.nrow(); t++) {
         for (t_component_id c = 0; c < A.ncol(); c++)
-            spectra.set_count(c + 1, t + 1, A.column(c)[t]);
+            spectra.set_activations(c + 1, t + 1, A.column(c)[t]);
 
         spectra.set_error(t + 1, e[t]);
     }
@@ -83,7 +83,7 @@ RcppExport SEXP fuzzinel (SEXP AA, SEXP ee, SEXP DD) {
         t_candidate tmp_d(d.begin(), d.end());
         t_goodness_mp tmp;
 
-        barinel.calculate(spectra, tmp_d, tmp);
+        barinel(spectra, tmp_d, tmp);
         ret_tmp.push_back(tmp);
         total_ret += tmp;
         it++;

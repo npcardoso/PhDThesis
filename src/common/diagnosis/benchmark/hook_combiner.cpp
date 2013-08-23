@@ -4,6 +4,12 @@
 
 namespace diagnosis {
 namespace benchmark {
+void t_hook_combiner::init_randomizer (const randomizers::t_spectra_randomizer & randomizer) {
+    BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
+        hook->init_randomizer(randomizer);
+    }
+}
+
 void t_hook_combiner::init (const structs::t_spectra & spectra,
                             const structs::t_candidate & correct) {
     BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {

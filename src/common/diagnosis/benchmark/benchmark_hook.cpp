@@ -11,6 +11,12 @@ t_basic_benchmark_hook::t_basic_benchmark_hook () {
     ranker_id = 0;
 }
 
+void t_basic_benchmark_hook::init_randomizer (const randomizers::t_spectra_randomizer & randomizer) {
+    assert(get_generator_id() == 0);
+    assert(get_ranker_id() == 0);
+    _init_randomizer(randomizer);
+}
+
 void t_basic_benchmark_hook::init (const structs::t_spectra & spectra,
                                    const structs::t_candidate & correct) {
     assert(get_generator_id() == 0);

@@ -56,10 +56,10 @@ t_topology_based & t_topology_based::set_until_nerrors (t_count nerrors) {
     return (*this);
 }
 
-const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_count_spectra & spectra,
-                                                                     t_candidate & correct_candidate,
-                                                                     boost::random::mt19937 & gen,
-                                                                     t_transaction_id tran) const {
+const t_topology_based & t_topology_based::operator () (structs::t_count_spectra & spectra,
+                                                        t_candidate & correct_candidate,
+                                                        boost::random::mt19937 & gen,
+                                                        t_transaction_id tran) const {
     typedef std::pair<t_topology::t_interface::const_iterator, t_topology::t_interface::const_iterator> t_stack_element;
 
     std::stack<t_stack_element> stack;
@@ -110,13 +110,12 @@ const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_
     return *this;
 }
 
-const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_count_spectra & spectra,
-                                                                     t_candidate & correct_candidate,
-                                                                     boost::random::mt19937 & gen) const {
+structs::t_spectra * t_topology_based::operator () (boost::random::mt19937 & gen,
+                                                    structs::t_candidate & correct_candidate) const {
     assert(entry_points.size());
     assert(until_nerrors || max_transactions);
 
-    spectra.set_count(*topology->get_components().rbegin(), 0);
+    t_count_spectra & spectra = *(new t_count_spectra(*topology->get_components().rbegin(), 0));
 
     while (true) {
         spectra.new_transaction();
@@ -129,7 +128,7 @@ const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_
             break;
     }
 
-    return *this;
+    return &spectra;
 }
 }
 }

@@ -17,24 +17,22 @@ using namespace boost::random;
 BOOST_AUTO_TEST_SUITE(MHS2)
 
 BOOST_AUTO_TEST_CASE(stop_flags) {
-    t_count_spectra spectra;
+    t_spectra * spectra;
     t_candidate correct;
-    t_bernoulli randomizer(0.25, 1);
+    t_bernoulli randomizer(0.25, 1, 100, 100);
     mt19937 gen;
     t_heuristic heuristic;
     t_trie D;
 
 
-    randomizer.n_comp = 100;
-    randomizer.n_tran = 100;
-    randomizer(spectra, correct, gen);
+    spectra = randomizer(gen, correct);
 
     heuristic.push(new heuristics::t_ochiai());
     heuristic.push(new heuristics::t_sort());
 
     t_mhs mhs(heuristic);
     mhs.max_candidate_size = 2;
-    mhs(spectra, D);
+    mhs(*spectra, D);
 
     // Max Candidate Size
     t_trie::iterator it = D.begin();
@@ -46,8 +44,10 @@ BOOST_AUTO_TEST_CASE(stop_flags) {
     mhs = t_mhs(heuristic);
     mhs.max_candidates = 4000;
     D.clear();
-    mhs(spectra, D);
+    mhs(*spectra, D);
     BOOST_CHECK(D.size() <= mhs.max_candidates);
+
+    delete spectra;
 }
 
 BOOST_AUTO_TEST_CASE(mhs) {
@@ -91,16 +91,14 @@ BOOST_AUTO_TEST_CASE(mhs) {
 }
 
 BOOST_AUTO_TEST_CASE(parallelization) {
-    t_count_spectra spectra;
+    t_spectra * spectra;
     t_candidate correct;
-    t_bernoulli randomizer(0.25, 1);
+    t_bernoulli randomizer(0.25, 1, 25, 22);
     mt19937 gen;
     t_trie reference;
 
 
-    randomizer.n_comp = 25;
-    randomizer.n_tran = 25;
-    randomizer(spectra, correct, gen);
+    spectra = randomizer(gen, correct);
 
     {
         t_heuristic heuristic;
@@ -109,7 +107,7 @@ BOOST_AUTO_TEST_CASE(parallelization) {
 
         t_mhs mhs(heuristic);
         reference.clear();
-        mhs(spectra, reference);
+        mhs(*spectra, reference);
     }
 
     t_count level = 2;
@@ -141,7 +139,7 @@ BOOST_AUTO_TEST_CASE(parallelization) {
                 BOOST_CHECK(mhs.get_heuristic(level + 1) != mhs.get_heuristic(level));
                 // std::cout << mhs.get_heuristic(level - 1) << mhs.get_heuristic(level) << mhs.get_heuristic(level + 1) << std::endl;
 
-                mhs(spectra, D);
+                mhs(*spectra, D);
             }
 
             BOOST_CHECK_MESSAGE(D == reference, "Failed for stride = " << stride << " ntasks = " << ntasks <<

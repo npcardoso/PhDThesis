@@ -8,19 +8,13 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_topology_based : public t_spectra_randomizer<structs::t_count_spectra> {
+class t_topology_based : public t_spectra_randomizer {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_topology_based);
     t_topology_based (structs::t_topology::t_ptr & topology);
 
-    virtual const t_self_type & operator () (structs::t_count_spectra & spectra,
-                                             structs::t_candidate & correct_candidate,
-                                             boost::random::mt19937 & gen,
-                                             t_transaction_id tran) const;
-
-    virtual const t_self_type & operator () (structs::t_count_spectra & spectra,
-                                             structs::t_candidate & correct_candidate,
-                                             boost::random::mt19937 & gen) const;
+    virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
+                                              structs::t_candidate & correct_candidate) const;
 
     t_topology_based & add_entry_point (t_component_id comp,
                                         t_probability prob);
@@ -30,6 +24,11 @@ public:
     t_topology_based & set_until_nerrors (t_count nerrors);
 
 protected:
+    virtual const t_topology_based & operator () (structs::t_count_spectra & spectra,
+                                                  structs::t_candidate & correct_candidate,
+                                                  boost::random::mt19937 & gen,
+                                                  t_transaction_id tran) const;
+
     t_component_id gen_entry_point (boost::random::mt19937 & gen) const;
 
 

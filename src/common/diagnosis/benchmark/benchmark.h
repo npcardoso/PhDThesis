@@ -15,30 +15,30 @@
 
 namespace diagnosis {
 namespace benchmark {
-template <class S>
 class t_benchmark {
 public:
-    typedef S t_spectra_type;
-    typedef typename randomizers::t_spectra_randomizer<t_spectra_type> t_randomizer_type;
     typedef std::pair<t_id, t_id> t_connection;
 
 
-    const t_benchmark<S> & operator () (const t_randomizer_type & randomizer,
-                                        boost::random::mt19937 & gen,
-                                        t_benchmark_hook & hook) const {
-        t_spectra_type spectra;
-        structs::t_candidate correct;
+    const t_benchmark & operator () (const randomizers::t_spectra_randomizer & randomizer,
+                                     boost::random::mt19937 & gen,
+                                     t_benchmark_hook & hook,
+                                     t_count iterations) const {
+        hook.init_randomizer(randomizer);
 
-
-        randomizer(spectra, correct, gen);
-        (* this)(spectra, correct, hook);
+        while (iterations--) {
+            structs::t_candidate correct;
+            structs::t_spectra * spectra = randomizer(gen, correct);
+            (* this)(* spectra, correct, hook);
+            delete spectra;
+        }
 
         return *this;
     }
 
-    const t_benchmark<S> & operator () (const t_spectra_type & spectra,
-                                        const structs::t_candidate & correct,
-                                        t_benchmark_hook & hook) const {
+    const t_benchmark & operator () (const structs::t_spectra & spectra,
+                                     const structs::t_candidate & correct,
+                                     t_benchmark_hook & hook) const {
         t_candidate_generator::t_ret_type D;
 
         t_id last_gen_id = generators.size();
@@ -97,8 +97,6 @@ public:
         connections.insert(t_connection(generator_id - 1, ranker_id - 1));
         return (*this);
     }
-
-    std::ostream & operator << (std::ostream & out) const {}
 
 protected:
     std::set<t_connection> connections;

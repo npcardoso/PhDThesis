@@ -77,7 +77,7 @@ int main (int argc, char ** argv) {
     barinel_ptr->use_confidence = false;
     barinel_ptr->use_fuzzy_error = false;
 
-    t_benchmark<t_count_spectra> benchmark;
+    t_benchmark benchmark;
     benchmark.add_generator(mhs);
     benchmark.add_generator(single_fault);
 
@@ -95,17 +95,7 @@ int main (int argc, char ** argv) {
     (*metrics_hook) << new t_Cd() << new t_wasted_effort() << new t_entropy();
     hook << new t_verbose_hook() << new t_save_hook(dest) << new t_statistics_hook(dest) << metrics_hook;
 
-    for (t_id i = 0; i < 10; i++) {
-        t_count_spectra spectra;
-        t_candidate correct;
-
-        benchmark(topology_randomizer, gen, hook);
-        // BOOST_FOREACH(t_benchmark_result & r, res) {
-        // std::cout << "Setup G:" << r.generator << " R:" << r.ranker << " Cd: " << r.cost << " | ";
-        // }
-        std::cout << std::endl;
-    }
-
+    benchmark(topology_randomizer, gen, hook, 10);
 
     return 0;
 }

@@ -7,20 +7,14 @@ using namespace diagnosis::structs;
 
 namespace diagnosis {
 namespace randomizers {
-t_fuzzy_bernoulli::t_fuzzy_bernoulli  (float activation_rate, t_count error_count) : activation_rate(activation_rate), error_count(error_count), component_count(0) {}
+t_fuzzy_bernoulli::t_fuzzy_bernoulli  (t_count component_count, float activation_rate, t_count error_count) : component_count(component_count), activation_rate(activation_rate), error_count(error_count) {}
 
-const t_fuzzy_bernoulli::t_self_type & t_fuzzy_bernoulli::operator () (structs::t_count_spectra & spectra,
-                                                                       t_candidate & correct_candidate,
-                                                                       boost::random::mt19937 & gen) const {
+structs::t_spectra * t_fuzzy_bernoulli::operator () (boost::random::mt19937 & gen,
+                                                     structs::t_candidate & correct_candidate) const {
     assert(!(error_count > 0 && faulty_components.size() == 0));
 
-
     bernoulli_distribution<> activation(activation_rate);
-
-    if (component_count)
-        spectra.set_component_count(component_count);
-
-    spectra.set_transaction_count(0);
+    t_count_spectra & spectra = *(new t_count_spectra(component_count, 0));
 
 
     correct_candidate.clear();
@@ -48,11 +42,12 @@ const t_fuzzy_bernoulli::t_self_type & t_fuzzy_bernoulli::operator () (structs::
             errors++;
     }
 
-    return *this;
+    return &spectra;
 }
 
 t_fuzzy_bernoulli & t_fuzzy_bernoulli::operator << (const structs::t_fault & comp) {
     faulty_components.push_back(comp);
+    component_count++;
     return *this;
 }
 }

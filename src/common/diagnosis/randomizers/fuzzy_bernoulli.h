@@ -7,16 +7,17 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_fuzzy_bernoulli : public t_spectra_randomizer<structs::t_count_spectra> {
+class t_fuzzy_bernoulli : public t_spectra_randomizer {
 public:
     typedef std::vector<structs::t_fault> t_faults;
     DEFINE_BOOST_SHARED_PTRS(t_fuzzy_bernoulli);
 
-    t_fuzzy_bernoulli (float activation_rate, t_count error_count);
+    t_fuzzy_bernoulli  (t_count component_count,
+                        float activation_rate,
+                        t_count error_count);
 
-    virtual const t_self_type & operator () (structs::t_count_spectra & spectra,
-                                             structs::t_candidate & correct_candidate,
-                                             boost::random::mt19937 & gen) const;
+    virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
+                                              structs::t_candidate & correct_candidate) const;
 
     t_fuzzy_bernoulli & operator << (const structs::t_fault & comp);
 

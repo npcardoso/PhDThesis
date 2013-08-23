@@ -30,6 +30,7 @@ public:
                       bool use_confidence=true,
                       bool use_fuzzy_error=true) const;
 
+    inline virtual ~t_spectra () {}
     // Gets
 
     virtual t_count get_error_count (const t_spectra_filter * filter=NULL) const = 0;
@@ -87,6 +88,14 @@ public:
 
     virtual t_probability get_activation_rate (const t_spectra_filter * filter=NULL) const;
     virtual t_probability get_error_rate (const t_spectra_filter * filter=NULL) const;
+
+    // Cast
+
+    template <class T>
+    T & requires ();
+
+    template <class T>
+    const T & requires () const;
 };
 
 std::istream & operator >> (std::istream & in, t_spectra & spectra);
@@ -181,6 +190,28 @@ void t_spectra::probability (const structs::t_candidate & candidate,
 
     assert(ret >= 0);
     assert(ret <= 1);
+}
+
+template <class T>
+T & t_spectra::requires () {
+    T * tmp = dynamic_cast<T *> (this);
+
+
+    if (tmp)
+        return *tmp;
+
+    throw e_not_supported();
+}
+
+template <class T>
+const T & t_spectra::requires () const {
+    T * tmp = dynamic_cast<T *> (this);
+
+
+    if (tmp)
+        return *tmp;
+
+    throw e_not_supported();
 }
 }
 }

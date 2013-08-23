@@ -1,30 +1,31 @@
 #include "bernoulli.h"
 #include <boost/random/bernoulli_distribution.hpp>
 #include <boost/random/mersenne_twister.hpp>
+
 using boost::bernoulli_distribution;
+using namespace diagnosis::structs;
 
 namespace diagnosis {
 namespace randomizers {
 using namespace structs;
 
-t_bernoulli::t_bernoulli (float activation_rate, float error_rate) {
+t_bernoulli::t_bernoulli (float activation_rate,
+                          float error_rate,
+                          t_count n_tran,
+                          t_count n_comp) {
     this->activation_rate = activation_rate;
     this->error_rate = error_rate;
-    this->n_comp = 0;
-    this->n_tran = 0;
+    this->n_comp = n_comp;
+    this->n_tran = n_tran;
 }
 
-const t_bernoulli::t_self_type & t_bernoulli::operator () (structs::t_count_spectra & spectra,
-                                                           t_candidate & correct_candidate,
-                                                           boost::random::mt19937 & gen) const {
+t_spectra * t_bernoulli::operator () (boost::random::mt19937 & gen,
+                                      structs::t_candidate & correct_candidate) const {
+    t_count_spectra & spectra = *(new t_count_spectra(n_comp, n_tran));
+
+
     bernoulli_distribution<> activation(activation_rate);
     bernoulli_distribution<> error(error_rate);
-
-    if (n_comp)
-        spectra.set_component_count(n_comp);
-
-    if (n_tran)
-        spectra.set_transaction_count(n_tran);
 
     correct_candidate.clear();
 
@@ -36,7 +37,7 @@ const t_bernoulli::t_self_type & t_bernoulli::operator () (structs::t_count_spec
         }
     }
 
-    return (*this);
+    return &spectra;
 }
 }
 }

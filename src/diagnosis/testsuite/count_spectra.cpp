@@ -27,36 +27,38 @@ BOOST_AUTO_TEST_CASE(size) {
     int n_comp = 10 + rand() % 20;
     int n_tran = 10 + rand() % 20;
 
-    t_count_spectra spectra;
+    t_count_spectra * spectra = new t_count_spectra();
     t_candidate correct;
     mt19937 gen;
 
 
-    BOOST_CHECK(spectra.get_component_count() == 0);
-    BOOST_CHECK(spectra.get_transaction_count() == 0);
-    BOOST_CHECK(spectra.get_error_count() == 0);
+    BOOST_CHECK(spectra->get_component_count() == 0);
+    BOOST_CHECK(spectra->get_transaction_count() == 0);
+    BOOST_CHECK(spectra->get_error_count() == 0);
 
-    t_bernoulli randomizer(0.5, 0.5);
-    randomizer.n_comp = n_comp;
-    randomizer.n_tran = n_tran;
-    randomizer(spectra, correct, gen);
+    delete spectra;
 
-    t_count_spectra spectra_half = spectra;
+
+    t_bernoulli randomizer(0.5, 0.5, n_tran, n_comp);
+    spectra = dynamic_cast<t_count_spectra *> (randomizer(gen, correct));
+
+    t_count_spectra spectra_half = *spectra;
     spectra_half.set_count(n_comp / 2, n_tran / 2);
 
-    BOOST_CHECK(spectra.get_component_count() == n_comp);
-    BOOST_CHECK(spectra.get_transaction_count() == n_tran);
-    BOOST_CHECK(spectra.get_error_count() >= spectra_half.get_error_count());
+    BOOST_CHECK_MESSAGE(spectra->get_component_count() == n_comp, "get_component_count() == " << spectra->get_component_count() << ", n_comp: " << n_comp);
+    BOOST_CHECK_MESSAGE(spectra->get_transaction_count() == n_tran, "get_transaction_count() == " << spectra->get_transaction_count() << ", n_tran: " << n_tran);
+    BOOST_CHECK(spectra->get_error_count() >= spectra_half.get_error_count());
     BOOST_CHECK(spectra_half.get_component_count() == n_comp / 2);
     BOOST_CHECK(spectra_half.get_transaction_count() == n_tran / 2);
 
-    check_equal(spectra, spectra_half, n_comp / 2, n_tran / 2);
+    check_equal(*spectra, spectra_half, n_comp / 2, n_tran / 2);
 
     spectra_half.set_count(n_comp, n_tran);
-    check_equal(spectra, spectra_half, n_comp / 2, n_tran / 2);
+    check_equal(*spectra, spectra_half, n_comp / 2, n_tran / 2);
 
-    spectra_half.set_activations(1, 1, spectra.get_activations(1, 1) - 1);
-    BOOST_CHECK(spectra.get_activations(1, 1) - 1 == spectra_half.get_activations(1, 1));
+    spectra_half.set_activations(1, 1, spectra->get_activations(1, 1) - 1);
+    BOOST_CHECK(spectra->get_activations(1, 1) - 1 == spectra_half.get_activations(1, 1));
+    delete spectra;
 }
 
 BOOST_AUTO_TEST_CASE(error) {

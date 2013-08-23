@@ -2,6 +2,7 @@
 #define __BENCHMARK_HOOK_H__0734b6b340e40970218b6c20df0194edd574e1c1__
 
 #include "diagnosis/diagnosis_system.h"
+#include "diagnosis/randomizers/randomizer.h"
 #include "diagnosis/structs/spectra.h"
 #include "utils/time.h"
 
@@ -11,6 +12,8 @@ namespace benchmark {
 class t_benchmark_hook {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_benchmark_hook);
+
+    virtual void init_randomizer (const randomizers::t_spectra_randomizer & randomizer) = 0;
 
     virtual void init (const structs::t_spectra & spectra,
                        const structs::t_candidate & correct) = 0;
@@ -29,6 +32,8 @@ class t_basic_benchmark_hook : public t_benchmark_hook {
 public:
     t_basic_benchmark_hook ();
 
+    virtual void init_randomizer (const randomizers::t_spectra_randomizer & randomizer);
+
     virtual void init (const structs::t_spectra & spectra,
                        const structs::t_candidate & correct);
     virtual void cleanup ();
@@ -42,18 +47,21 @@ public:
                             t_time_interval duration);
 
 protected:
-    virtual void _init (const structs::t_spectra & spectra,
-                        const structs::t_candidate & correct) = 0;
 
-    virtual void _cleanup () = 0;
+    inline virtual void _init_randomizer (const randomizers::t_spectra_randomizer & randomizer) {}
 
-    virtual void _pre_gen () = 0;
-    virtual void _post_gen (t_candidate_generator::t_ret_type & D,
-                            t_time_interval duration) = 0;
+    inline virtual void _init (const structs::t_spectra & spectra,
+                               const structs::t_candidate & correct) {}
 
-    virtual void _pre_rank () = 0;
-    virtual void _post_rank (const t_candidate_ranker::t_ret_type & probs,
-                             t_time_interval duration) = 0;
+    inline virtual void _cleanup () {}
+
+    inline virtual void _pre_gen () {}
+    inline virtual void _post_gen (t_candidate_generator::t_ret_type & D,
+                                   t_time_interval duration) {}
+
+    inline virtual void _pre_rank () {}
+    inline virtual void _post_rank (const t_candidate_ranker::t_ret_type & probs,
+                                    t_time_interval duration) {}
 
     t_id get_generator_id () const;
     t_id get_ranker_id () const;

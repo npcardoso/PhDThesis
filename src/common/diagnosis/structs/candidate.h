@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_STRUCTS_CANDIDATE_H__
-#define __DIAGNOSIS_STRUCTS_CANDIDATE_H__
+#ifndef __CANDIDATE_H_edf867e97cb99b12f0025a979426b18b2db6b361__
+#define __CANDIDATE_H_edf867e97cb99b12f0025a979426b18b2db6b361__
 
 #include "types.h"
 
@@ -30,4 +30,5 @@ inline std::ostream & operator << (std::ostream & out, const diagnosis::structs:
     return candidate.print(out);
 }
 }
+
 #endif

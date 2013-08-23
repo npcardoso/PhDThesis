@@ -53,4 +53,5 @@ private:
 namespace std {
 std::ostream & operator << (std::ostream & out, const diagnosis::structs::t_diagnosis_report & dr);
 }
+
 #endif

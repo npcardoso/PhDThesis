@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_STRUCTS_TRIE_H__
-#define __DIAGNOSIS_STRUCTS_TRIE_H__
+#ifndef __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
+#define __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
 
 #include "types.h"
 #include "diagnosis/structs/candidate.h"
@@ -97,4 +97,5 @@ public:
 };
 }
 }
+
 #endif

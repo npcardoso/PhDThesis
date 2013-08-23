@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_HEURISTICS_HEURISTIC_H__
-#define __DIAGNOSIS_HEURISTICS_HEURISTIC_H__
+#ifndef __HEURISTIC_H_8de70ac6c5818c96d1805646e0bfa46dd7650ed3__
+#define __HEURISTIC_H_8de70ac6c5818c96d1805646e0bfa46dd7650ed3__
 
 #include "diagnosis/rank_element.h"
 #include "diagnosis/structs/spectra.h"

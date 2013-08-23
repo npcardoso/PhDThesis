@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_RANDOMIZER_QOS_H__
-#define __DIAGNOSIS_RANDOMIZER_QOS_H__
+#ifndef __FUZZY_BERNOULLI_H_a53881ae3d9ecc98bea674a957037d2b0c5e7dcd__
+#define __FUZZY_BERNOULLI_H_a53881ae3d9ecc98bea674a957037d2b0c5e7dcd__
 
 #include "bernoulli.h"
 #include "diagnosis/structs/count_spectra.h"

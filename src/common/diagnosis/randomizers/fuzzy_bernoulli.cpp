@@ -1,4 +1,4 @@
-#include "qos.h"
+#include "fuzzy_bernoulli.h"
 #include <boost/random/bernoulli_distribution.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/random/uniform_real_distribution.hpp>

@@ -113,18 +113,20 @@ public:
     virtual t_count get_error_count (const t_spectra_filter * filter=NULL) const;
     virtual t_count get_component_count (const t_spectra_filter * filter=NULL) const;
     virtual t_count get_transaction_count (const t_spectra_filter * filter=NULL) const;
+    virtual t_error get_error (t_transaction_id transaction) const;
+    virtual t_confidence get_confidence (t_transaction_id transaction) const;
+
+    // Sets
 
     virtual void set_count (t_count component_count,
                             t_count transaction_count);
-
-    virtual t_error get_error (t_transaction_id transaction) const;
-    virtual bool is_error (t_transaction_id transaction) const;
     virtual void set_error (t_transaction_id transaction,
                             t_error error);
-
-    virtual t_confidence get_confidence (t_transaction_id transaction) const;
     virtual t_confidence set_confidence (t_transaction_id transaction,
                                          t_confidence confidence);
+    // Checks
+
+    virtual bool is_error (t_transaction_id transaction) const;
 };
 
 template <class G>

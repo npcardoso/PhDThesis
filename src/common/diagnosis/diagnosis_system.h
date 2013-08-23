@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_DIAGNOSIS_SYSYEM_H__
-#define __DIAGNOSIS_DIAGNOSIS_SYSYEM_H__
+#ifndef __DIAGNOSIS_SYSTEM_H_2d027fe833f058443bd53e5b08fdd5e63b74e055__
+#define __DIAGNOSIS_SYSTEM_H_2d027fe833f058443bd53e5b08fdd5e63b74e055__
 
 #include "types.h"
 #include "diagnosis/structs/spectra.h"

@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_STRUCTS_SPECTRA_FILTER_H__
-#define __DIAGNOSIS_STRUCTS_SPECTRA_FILTER_H__
+#ifndef __SPECTRA_FILTER_H_e9a80d3bebd598ce4b69b89f95213e4cf28b497e__
+#define __SPECTRA_FILTER_H_e9a80d3bebd598ce4b69b89f95213e4cf28b497e__
 
 #include "types.h"
 #include "diagnosis/structs/candidate.h"
@@ -48,4 +48,5 @@ public:
 };
 }
 }
+
 #endif

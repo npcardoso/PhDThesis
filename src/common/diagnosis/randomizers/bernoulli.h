@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_RANDOMIZER_BERNOULLI_H__
-#define __DIAGNOSIS_RANDOMIZER_BERNOULLI_H__
+#ifndef __BERNOULLI_H_a6d1be206c8818d13562fb163cc8b337ff1a0f31__
+#define __BERNOULLI_H_a6d1be206c8818d13562fb163cc8b337ff1a0f31__
 
 #include "randomizer.h"
 #include "diagnosis/structs/count_spectra.h"

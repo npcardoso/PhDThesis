@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_ALGORITHMS_SINGLE_FAULT_H__
-#define __DIAGNOSIS_ALGORITHMS_SINGLE_FAULT_H__
+#ifndef __SINGLE_FAULT_H_7fc4474ddd10cf6152746ce230d2e4124ccbed4d__
+#define __SINGLE_FAULT_H_7fc4474ddd10cf6152746ce230d2e4124ccbed4d__
 
 #include "diagnosis/diagnosis_system.h"
 

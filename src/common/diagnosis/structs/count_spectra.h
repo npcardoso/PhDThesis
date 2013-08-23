@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
-#define __DIAGNOSIS_SPECTRA_COUNT_SPECTRA_H__
+#ifndef __COUNT_SPECTRA_H_06d5fd34e1ffdf10f1925f830cad5b1473cdad22__
+#define __COUNT_SPECTRA_H_06d5fd34e1ffdf10f1925f830cad5b1473cdad22__
 
 #include "types.h"
 #include "diagnosis/structs/spectra_iterator.h"
@@ -59,4 +59,5 @@ private:
 };
 }
 }
+
 #endif

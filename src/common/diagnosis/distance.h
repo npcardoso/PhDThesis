@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_DISTANCE_H__
-#define __DIAGNOSIS_DISTANCE_H__
+#ifndef __DISTANCE_H_93d36406c34ef902f5a78fb3aea981d5eafafb22__
+#define __DISTANCE_H_93d36406c34ef902f5a78fb3aea981d5eafafb22__
 
 #include "types.h"
 #include "utils/boost.h"

@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_STRUCTS_MEMBERSHIP_H__
-#define __DIAGNOSIS_STRUCTS_MEMBERSHIP_H__
+#ifndef __MEMBERSHIP_H_91121da4e84757e5b9b76386fdfa674fe072ea87__
+#define __MEMBERSHIP_H_91121da4e84757e5b9b76386fdfa674fe072ea87__
 
 #include "types.h"
 #include "utils/boost.h"
@@ -30,7 +30,7 @@ public:
 
     t_count get_hard_cluster_count (t_id cluster, t_id offset=1) const;
 
-    std::ostream& print (std::ostream & out) const;
+    std::ostream & print (std::ostream & out) const;
 
     t_count get_point_count () const;
 

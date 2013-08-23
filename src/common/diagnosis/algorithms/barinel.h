@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_ALGORITHMS_BARINEL_H__
-#define __DIAGNOSIS_ALGORITHMS_BARINEL_H__
+#ifndef __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
+#define __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
 
 #include "diagnosis/diagnosis_system.h"
 #include "diagnosis/types.h"

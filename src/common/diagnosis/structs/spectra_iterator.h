@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_STRUCTS_SPECTRA_ITERATOR_H__
-#define __DIAGNOSIS_STRUCTS_SPECTRA_ITERATOR_H__
+#ifndef __SPECTRA_ITERATOR_H_98ba46a077f9ffe96964f4d39a96b1042d80379c__
+#define __SPECTRA_ITERATOR_H_98ba46a077f9ffe96964f4d39a96b1042d80379c__
 
 #include "diagnosis/structs/spectra_filter.h"
 #include "types.h"
@@ -46,4 +46,5 @@ public:
 };
 }
 }
+
 #endif

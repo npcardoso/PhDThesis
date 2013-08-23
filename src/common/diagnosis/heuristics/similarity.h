@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_HEURISTICS_SIMILARITY_H__
-#define __DIAGNOSIS_HEURISTICS_SIMILARITY_H__
+#ifndef __SIMILARITY_H_27e4e0896bfbccd7a33427829094c592613344e8__
+#define __SIMILARITY_H_27e4e0896bfbccd7a33427829094c592613344e8__
 
 #include "diagnosis/heuristics/heuristic.h"
 #include "diagnosis/diagnosis_system.h"

@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_SPECTRA_RANDOMIZER_RANDOMIZER_H__
-#define __DIAGNOSIS_SPECTRA_RANDOMIZER_RANDOMIZER_H__
+#ifndef __RANDOMIZER_H_3875d8f146b1216dc5c63dcd0eae0eb3ead6b977__
+#define __RANDOMIZER_H_3875d8f146b1216dc5c63dcd0eae0eb3ead6b977__
 
 #include <boost/random/mersenne_twister.hpp>
 #include "diagnosis/structs/candidate.h"

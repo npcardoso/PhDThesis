@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_ALGORITHMS_MHS_H__
-#define __DIAGNOSIS_ALGORITHMS_MHS_H__
+#ifndef __MHS_H_957e289b8923d6c40fa69c8aa7a53a6ed1da023b__
+#define __MHS_H_957e289b8923d6c40fa69c8aa7a53a6ed1da023b__
 
 #include "diagnosis/heuristics/heuristic.h"
 #include "diagnosis/diagnosis_system.h"

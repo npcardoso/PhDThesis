@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_TYPES_H__
-#define __DIAGNOSIS_TYPES_H__
+#ifndef __TYPES_H_64acb0307b5bdd05ed4e770872708d1501275a32__
+#define __TYPES_H_64acb0307b5bdd05ed4e770872708d1501275a32__
 
 #include "../types.h"
 

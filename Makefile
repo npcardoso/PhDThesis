@@ -1,2 +1,2 @@
 all:
-	scons -j 8
+	scons -j 8 --random -k

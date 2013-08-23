@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_ALGORITHMS_CMEANS_H__
-#define __DIAGNOSIS_ALGORITHMS_CMEANS_H__
+#ifndef __CMEANS_H_69f502b5efb288f4dda2ca17fca7697062ebca88__
+#define __CMEANS_H_69f502b5efb288f4dda2ca17fca7697062ebca88__
 
 #include "types.h"
 #include "utils/boost.h"

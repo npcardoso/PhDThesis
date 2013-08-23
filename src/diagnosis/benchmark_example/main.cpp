@@ -1,3 +1,5 @@
+#include "topologies.h"
+
 #include "types.h"
 #include "utils/iostream.h"
 #include "diagnosis/benchmark/hook_combiner.h"
@@ -17,9 +19,6 @@
 #include "diagnosis/randomizers/topology_based.h"
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/trie.h"
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
 #include <list>
 
 using namespace std;
@@ -29,53 +28,9 @@ using namespace diagnosis::heuristics;
 using namespace diagnosis::benchmark;
 using namespace diagnosis::randomizers;
 using namespace diagnosis::structs;
-using namespace boost::random;
-
-typedef diagnosis::t_rank_element<const t_candidate *, t_probability_mp> t_rank_element_tmp;
-typedef std::vector<t_rank_element_tmp> t_rank;
-
-void generate_topology (mt19937 & gen,
-                        t_topology::t_ptr & topology,
-                        const t_fault & fault,
-                        t_count ncomp,
-                        t_count nfaults,
-                        t_count nout,
-                        t_count nparallel) {
-    t_count c = ncomp;
-
-
-    uniform_int_distribution<> int_dist(nfaults + nparallel + 1, ncomp);
-    uniform_real_distribution<> real_dist(0, 2.0 / ncomp);
-
-    while (c > nfaults + nparallel) {
-        (* topology)(ncomp + 2, t_link().add_sink(c, 0.2).add_sink(0, 0.8));
-
-        t_link tmp_link;
-
-        for (t_count i = 0; i < nout; i++) {
-            tmp_link.add_sink(int_dist(gen), real_dist(gen));
-        }
-
-        (* topology)(c, tmp_link);
-
-        c--;
-    }
-
-    t_link tmp_link;
-
-    while (c > nfaults) {
-        tmp_link.add_sink(c, 1);
-        c--;
-    }
-
-    while (c) {
-        (* topology)(c, fault);
-        tmp_link.add_sink(c, 1);
-        c--;
-    }
-
-    (* topology) (ncomp + 1, tmp_link) (ncomp + 1, t_link().add_sink(ncomp + 2, 1));
-}
+#define LEVELS 20
+#define PER_LEVEL 10
+#define NFAULTS 3
 
 int main (int argc, char ** argv) {
     time_t seed = time(NULL);
@@ -83,18 +38,25 @@ int main (int argc, char ** argv) {
     t_topology::t_ptr topology(new t_topology());
 
 
-#define NCOMPS 30
-#define NFAULTS 10
-    generate_topology(gen, topology, t_fault(0, 0, 1, 1), NCOMPS, NFAULTS, 3, 10);
+    // generate_topology(gen, topology, , NCOMPS, NFAULTS, 3, 10);
+    forwarding_network_topology(gen,
+                                topology,
+                                t_fault(0, 0.9, 0.1, 0), // fault
+                                LEVELS, // n_levels
+                                PER_LEVEL, // per_level
+                                NFAULTS); // n_faults
 
-    topology->graphviz(std::cout);
+    if (argc > 1) {
+        topology->graphviz(std::cout);
+        return 0;
+    }
 
     t_topology_based topology_randomizer(topology);
 
     topology_randomizer
-    .set_until_nerrors(1)
-    .set_max_activations(15)
-    .add_entry_point(NCOMPS + 1, 0.5);
+    .set_until_nerrors(2)
+    .set_max_activations(20)
+    .add_entry_point(LEVELS * PER_LEVEL + 2, 0.5);
 
 
     heuristics::t_heuristic heuristic;
@@ -130,7 +92,7 @@ int main (int argc, char ** argv) {
     t_hook_combiner hook;
     std::string dest("foooo");
     t_metrics_hook * metrics_hook = new t_metrics_hook(dest);
-    (*metrics_hook) << new t_Cd();
+    (*metrics_hook) << new t_Cd() << new t_wasted_effort() << new t_entropy();
     hook << new t_verbose_hook() << new t_save_hook(dest) << new t_statistics_hook(dest) << metrics_hook;
 
     for (t_id i = 0; i < 10; i++) {

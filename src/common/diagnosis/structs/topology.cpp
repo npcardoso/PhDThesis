@@ -4,78 +4,77 @@
 
 #include <boost/foreach.hpp>
 #include <boost/random/bernoulli_distribution.hpp>
+#include <boost/random/discrete_distribution.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/random/uniform_real_distribution.hpp>
+
 using namespace boost::random;
 
 namespace diagnosis {
 namespace structs {
 t_fault::t_fault () {
-    this->goodness = 0;
-    this->failure = 1;
-    this->e_min = 1;
-    this->e_max = 1;
+    this->pass_prob = 0.5;
+    this->soft_prob = 0;
+    this->hard_prob = 0.5;
+    this->fail_prob = 0;
 }
 
 t_fault::t_fault (t_goodness goodness,
-                  t_probability failure) {
+                  t_probability fail_prob) {
     assert(goodness >= 0);
     assert(goodness <= 1);
 
-    this->goodness = goodness;
-    this->failure = failure;
-
-    this->e_min = goodness ? 0 : 0.5;
-    this->e_max = 1;
+    this->pass_prob = goodness;
+    this->soft_prob = 0;
+    this->hard_prob = 1 - goodness;
+    this->fail_prob = fail_prob;
 }
 
-t_fault::t_fault (t_goodness goodness,
-                  t_probability failure,
-                  t_error e_min,
-                  t_error e_max) {
-    assert(!(e_min >= 0.5 && goodness > 0));
-    assert(!(e_min < 0.5 && goodness == 0));
-    assert(failure >= 0);
-    assert(failure <= 1);
-    assert(goodness >= 0);
-    assert(goodness <= 1);
-    assert(e_min >= 0);
-    assert(e_max >= 0.5);
-    assert(e_min <= e_max);
-    assert(e_max <= 1);
+t_fault::t_fault (t_probability pass_prob,
+                  t_probability soft_prob,
+                  t_probability hard_prob,
+                  t_probability fail_prob) {
+    assert(pass_prob >= 0);
+    assert(pass_prob <= 1);
+    assert(soft_prob >= 0);
+    assert(soft_prob <= 1);
+    assert(hard_prob >= 0);
+    assert(hard_prob <= 1);
+    assert(fail_prob >= 0);
+    assert(fail_prob <= 1);
 
-    this->goodness = goodness;
-    this->failure = failure;
-    this->e_min = e_min;
-    this->e_max = e_max;
+    t_probability total = pass_prob + soft_prob + hard_prob;
+
+    assert(total > 0);
+
+    this->pass_prob = pass_prob / total;
+    this->soft_prob = soft_prob / total;
+    this->hard_prob = hard_prob / total;
+    this->fail_prob = fail_prob;
 }
 
-t_error t_fault::gen_pass_value (boost::random::mt19937 & gen) const {
-    assert(can_pass());
+t_error t_fault::gen_error (boost::random::mt19937 & gen) const {
+    double probabilities[] = {pass_prob, soft_prob, hard_prob};
+    boost::random::discrete_distribution<> dist(probabilities);
 
-    if (e_min == 0.5)
-        return 0.5;
 
-    return uniform_real_distribution<t_error> (e_min, 0.5) (gen);
-}
+    switch (dist(gen)) {
+    case 0:
+        return 0;
 
-t_error t_fault::gen_error_value (boost::random::mt19937 & gen) const {
-    if (e_max - e_min <= 0.00001)
-        return e_max;
+    case 1:
+        return uniform_real_distribution<t_error> (0, 1) (gen);
 
-    return uniform_real_distribution<t_error> ((e_min > 0.5) ? e_min : 0.5, e_max) (gen);
+    case 2:
+        return 1;
+    }
+
+    assert(false);
+    return 0;
 }
 
 bool t_fault::gen_failure (boost::random::mt19937 & gen) const {
-    return bernoulli_distribution<> (failure) (gen);
-}
-
-bool t_fault::gen_error (boost::random::mt19937 & gen) const {
-    return bernoulli_distribution<> (1 - goodness) (gen);
-}
-
-bool t_fault::can_pass () const {
-    return e_min < 0.5 && goodness > 0;
+    return bernoulli_distribution<> (fail_prob) (gen);
 }
 
 t_link & t_link::add_sink (t_component_id comp, t_probability prob) {
@@ -186,17 +185,17 @@ std::ostream & t_topology::graphviz_component (std::ostream & out, t_component_i
     out << "shape=record,\n";
 
     if (f)
-        out << "color=\"#" << t_rgb(1 - f->get_goodness(), f->get_goodness(), 0) << "\",\n";
+        out << "color=\"#" << t_rgb(f->get_hard_prob(), 1 - f->get_hard_prob(), 0) << "\",\n";
     else
         out << "color=\"#" << t_rgb(0, 1, 0) << "\",\n";
 
     out << "label=\"{<name> C" << comp;
 
     if (f) {
-        out << "| {<goodness> " << f->get_goodness();
-        out << "| <failure> " << f->get_failure();
-        out << "} | {<emin> " << f->get_emin();
-        out << "| <emax> " << f->get_emax() << "}";
+        out << "| {<pass> p:" << f->get_pass_prob();
+        out << "| <soft> s:" << f->get_soft_prob();
+        out << "| <hard> h:" << f->get_hard_prob();
+        out << "| <fail> f:" << f->get_fail_prob() << "}";
     }
 
     if (iface) {

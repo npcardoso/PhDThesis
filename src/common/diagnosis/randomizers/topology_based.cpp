@@ -79,23 +79,11 @@ const t_topology_based::t_self_type & t_topology_based::operator () (structs::t_
         activations++;
 
         if (fault) {
-            bool err = fault->gen_error(gen);
-            t_error tmp_err_value = spectra.get_error(tran);
+            t_error e = fault->gen_error(gen);
+            spectra.set_error(tran, std::max(e, spectra.get_error(tran)));
 
-            if (err) {
-                fail = fault->gen_failure(gen);
+            if (e == 1)
                 correct_candidate.insert(comp);
-
-                if (fail)
-                    tmp_err_value = 1;
-                else
-                    tmp_err_value += fault->gen_error_value(gen);
-            }
-            else {
-                tmp_err_value += fault->gen_pass_value(gen);
-            }
-
-            spectra.set_error(tran, tmp_err_value > 1 ? 1 : tmp_err_value);
         }
 
         // Max activations check

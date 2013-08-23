@@ -33,20 +33,16 @@ const t_fuzzy_bernoulli::t_self_type & t_fuzzy_bernoulli::operator () (structs::
             spectra.set_count(c, t, activation(gen));
         }
 
-        t_error e = 0;
-
         for (t_component_id c = 1; c <= faulty_components.size(); c++) {
             if (!spectra.get_count(c, t))
                 continue;
 
-            if (!faulty_components[c].gen_error(gen))
-                continue;
+            t_error e = faulty_components[c].gen_error(gen);
+            spectra.set_error(t, std::max(e, spectra.get_error(t)));
 
-            e += faulty_components[c].gen_error_value(gen);
-            correct_candidate.insert(c + 1);
+            if (e == 1)
+                correct_candidate.insert(c + 1);
         }
-
-        spectra.set_error(t, (e > 1) ? 1 : e);
 
         if (spectra.is_error(t))
             errors++;

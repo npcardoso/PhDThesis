@@ -15,24 +15,24 @@ class t_fault {
 public:
     t_fault ();
     t_fault (t_goodness goodness, t_probability failure);
-    t_fault (t_goodness goodness, t_probability failure, t_error e_min, t_error e_max);
+    t_fault (t_probability pass_prob,
+             t_probability soft_prob,
+             t_probability hard_prob,
+             t_probability fail_prob);
 
-    bool gen_error (boost::random::mt19937 & gen) const;
+    t_error gen_error (boost::random::mt19937 & gen) const;
     bool gen_failure (boost::random::mt19937 & gen) const;
 
-    t_error gen_pass_value (boost::random::mt19937 & gen) const;
-    t_error gen_error_value (boost::random::mt19937 & gen) const;
-    bool can_pass () const;
-
-    inline t_error get_emin () const {return e_min;}
-    inline t_error get_emax () const {return e_max;}
-    inline t_probability get_failure () const {return failure;}
-    inline t_goodness get_goodness () const {return goodness;}
+    inline t_probability get_pass_prob () const {return pass_prob;}
+    inline t_probability get_soft_prob () const {return soft_prob;}
+    inline t_probability get_hard_prob () const {return hard_prob;}
+    inline t_probability get_fail_prob () const {return fail_prob;}
 
 private:
-    t_error e_min, e_max;
-    t_probability failure;
-    t_goodness goodness;
+    t_probability pass_prob;
+    t_probability soft_prob;
+    t_probability hard_prob;
+    t_probability fail_prob;
 };
 
 class t_link {

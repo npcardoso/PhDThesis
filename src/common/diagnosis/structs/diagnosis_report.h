@@ -11,6 +11,7 @@ class t_diagnosis_report {
 public:
     typedef t_candidate_generator::t_ret_type t_D;
     typedef t_candidate_ranker::t_ret_type t_probs;
+    typedef t_probs::value_type t_entropy;
 
     t_diagnosis_report ();
     t_diagnosis_report (const t_D & D,
@@ -21,7 +22,7 @@ public:
 
     const t_D::value_type & get_candidate (t_id i) const;
     const t_probs::value_type & get_probability (t_id i) const;
-    const t_probs::value_type & get_probability () const;
+    const t_probs::value_type get_probability_normalized (t_id i) const;
 
     t_count size () const;
 
@@ -29,6 +30,8 @@ public:
               const t_probs::value_type & prob);
     void add (const t_D & D,
               const t_probs & probs);
+
+    t_entropy get_entropy () const;
 
 protected:
     typedef diagnosis::t_rank_element<t_D::value_type *,

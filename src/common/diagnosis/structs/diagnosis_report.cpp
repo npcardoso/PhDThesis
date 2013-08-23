@@ -50,8 +50,10 @@ const t_diagnosis_report::t_probs::value_type & t_diagnosis_report::get_probabil
     return *rank[i - 1].get_score();
 }
 
-const t_diagnosis_report::t_probs::value_type & t_diagnosis_report::get_probability () const {
-    return total_prob;
+const t_diagnosis_report::t_probs::value_type t_diagnosis_report::get_probability_normalized (t_id i) const {
+    assert(i > 0);
+    assert(i <= probs.size());
+    return *rank[i - 1].get_score() / total_prob;
 }
 
 t_count t_diagnosis_report::size () const {
@@ -87,6 +89,16 @@ void t_diagnosis_report::add (const t_D & candidates,
     sort(rank.begin(), rank.end(), t_diagnosis_report::compare);
 }
 
+t_diagnosis_report::t_entropy t_diagnosis_report::get_entropy () const {
+    t_entropy ret = 0;
+
+
+    for (t_id i = 1; i <= size(); i++)
+        ret -= (get_probability_normalized(i)) * log(get_probability_normalized(i));
+
+    return ret;
+}
+
 bool t_diagnosis_report::compare (const t_rank_element & r1, const t_rank_element & r2) {
     return *r1.get_score() > *r2.get_score(); // Larger first
 }
@@ -96,7 +108,7 @@ bool t_diagnosis_report::compare (const t_rank_element & r1, const t_rank_elemen
 namespace std {
 std::ostream & operator << (std::ostream & out, const diagnosis::structs::t_diagnosis_report & dr) {
     for (t_id i = 1; i <= dr.size(); i++)
-        out << (dr.get_probability(i) / dr.get_probability()) << ": " << dr.get_candidate(i) << std::endl;
+        out << (dr.get_probability_normalized(i)) << ": " << dr.get_candidate(i) << std::endl;
 
     return out;
 }

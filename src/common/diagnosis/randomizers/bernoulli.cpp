@@ -39,5 +39,11 @@ t_spectra * t_bernoulli::operator () (boost::random::mt19937 & gen,
 
     return &spectra;
 }
+
+std::ostream & t_bernoulli::write (std::ostream & out) const {
+    out << "t_bernoulli(" << activation_rate << ", ";
+    out << error_rate << ", " << n_tran << ", " << n_comp << ")";
+    return out;
+}
 }
 }

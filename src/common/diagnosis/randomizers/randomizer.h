@@ -13,8 +13,15 @@ public:
 
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
                                               structs::t_candidate & correct_candidate) const = 0;
+
+    virtual std::ostream & write (std::ostream & out) const = 0;
+
+    inline virtual ~t_spectra_randomizer () {}
 };
 }
 }
 
+namespace std {
+ostream & operator << (ostream & out, const diagnosis::randomizers::t_spectra_randomizer & randomizer);
+}
 #endif

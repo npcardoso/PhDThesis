@@ -130,5 +130,9 @@ structs::t_spectra * t_topology_based::operator () (boost::random::mt19937 & gen
 
     return &spectra;
 }
+
+std::ostream & t_topology_based::write (std::ostream & out) const {
+    return topology->graphviz(out); // TODO: replace with serialization format
+}
 }
 }

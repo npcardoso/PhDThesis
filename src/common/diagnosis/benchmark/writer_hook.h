@@ -21,11 +21,17 @@ protected:
 
     t_count get_iterations () const;
     t_count get_randomizers () const;
-    const t_path & get_root_dir () const;
 
-private:
+    // IO
+
+    bool open_file (const t_path & rel_path, std::ofstream & f, bool append=false) const; // Returns true if file is new
+    bool open_randomizer_file (const t_path & rel_path, std::ofstream & f, bool append=false) const; // Returns true if file is new
+    bool open_iteration_file (const t_path & rel_path, std::ofstream & f, bool append=false) const; // Returns true if file is new
     void write_counter (const t_path & rel_path, t_count iterations) const;
     t_count read_counter (const t_path & rel_path) const;
+
+private:
+    const t_path & get_root_dir () const;
 
 private:
     t_path root_dir;

@@ -50,5 +50,11 @@ t_fuzzy_bernoulli & t_fuzzy_bernoulli::operator << (const structs::t_fault & com
     component_count++;
     return *this;
 }
+
+std::ostream & t_fuzzy_bernoulli::write (std::ostream & out) const {
+    out << "t_fuzzy_bernoulli(" << activation_rate << ", ";
+    out << error_count << ", " << error_count << ", " << faulty_components.size() << ")";
+    return out;
+}
 }
 }

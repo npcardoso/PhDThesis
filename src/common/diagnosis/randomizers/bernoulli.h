@@ -16,6 +16,7 @@ public:
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
                                               structs::t_candidate & correct_candidate) const;
 
+    virtual std::ostream & write (std::ostream & out) const;
 
 public:
     t_count n_comp;

@@ -55,20 +55,19 @@ void t_metrics_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
         (* metric)(* spectra, * correct, * D, probs, dr, ret);
     }
 
-    t_path fname(get_root_dir());
+    std::ofstream f;
 
-    fname /= "metrics.csv";
-
-    bool new_file = !boost::filesystem::exists(fname);
-    std::ofstream f(fname.c_str(), std::ios_base::app);
-    f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-    if (new_file)
-        f << "generator, ranker, run, metric_name, value" << std::endl;
+    if (open_file("metrics.csv", f, true))
+        f << "randomizer, iteration, generator, ranker, metric_name, value" << std::endl;
 
     BOOST_FOREACH(t_metric::t_ret_type::value_type & metric,
                   ret) {
-        f << get_generator_id() << ", " << get_ranker_id() << ", " << get_iterations() << ", \"" << metric.first << "\", " << metric.second << std::endl;
+        f << get_randomizers() << ", ";
+        f << get_iterations() << ", ";
+        f << get_generator_id() << ", ";
+        f << get_ranker_id() << ", ";
+        f << "\"" << metric.first << "\", ";
+        f << metric.second << std::endl;
     }
     f.close();
 }

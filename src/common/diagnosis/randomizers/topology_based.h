@@ -23,6 +23,8 @@ public:
     t_topology_based & set_max_activations (t_count max_activations);
     t_topology_based & set_until_nerrors (t_count nerrors);
 
+    virtual std::ostream & write (std::ostream & out) const;
+
 protected:
     virtual const t_topology_based & operator () (structs::t_count_spectra & spectra,
                                                   structs::t_candidate & correct_candidate,

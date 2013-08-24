@@ -12,27 +12,27 @@ t_save_hook::t_save_hook (std::string d) : t_writer_hook(d) {
     D = NULL;
 }
 
+void t_save_hook::_init_randomizer (const randomizers::t_spectra_randomizer & randomizer) {
+    std::ofstream f;
+
+
+    open_file(boost::lexical_cast<std::string> (get_randomizers()) + ".randomizer.txt", f);
+    f << randomizer;
+    f.close();
+}
+
 void t_save_hook::_init (const structs::t_spectra & spectra,
                          const structs::t_candidate & correct) {
-    t_path base_file(get_root_dir());
+    std::ofstream f;
 
 
-    base_file /= boost::lexical_cast<std::string> (get_iterations());
-    base_file += ".spectra.txt";
+    open_iteration_file("spectra.txt", f);
+    f << spectra;
+    f.close();
 
-    std::ofstream f_spectra(base_file.c_str());
-    f_spectra.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    f_spectra << spectra;
-    f_spectra.close();
-
-    base_file = get_root_dir();
-    base_file /= boost::lexical_cast<std::string> (get_iterations());
-    base_file += ".correct.txt";
-
-    std::ofstream f_correct(base_file.c_str());
-    f_correct.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    f_correct << correct;
-    f_correct.close();
+    open_iteration_file("correct.txt", f);
+    f << correct;
+    f.close();
 }
 
 void t_save_hook::_cleanup () {}
@@ -41,18 +41,12 @@ void t_save_hook::_pre_gen () {}
 
 void t_save_hook::_post_gen (t_candidate_generator::t_ret_type & D,
                              t_time_interval duration) {
-    t_path base_file(get_root_dir());
+    std::ofstream f;
 
 
-    base_file /= boost::lexical_cast<std::string> (get_iterations());
-    base_file += ".";
-    base_file += boost::lexical_cast<std::string> (get_generator_id());
-    base_file += ".D.txt";
-
-    std::ofstream f_D(base_file.c_str());
-    f_D.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    f_D << D;
-    f_D.close();
+    open_iteration_file(boost::lexical_cast<std::string> (get_generator_id()) + ".D.txt", f);
+    f << D;
+    f.close();
 
     this->D = &D;
 }
@@ -61,35 +55,17 @@ void t_save_hook::_pre_rank () {}
 
 void t_save_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
                               t_time_interval duration) {
-    t_path base_file(get_root_dir());
+    std::ofstream f;
 
 
-    base_file /= boost::lexical_cast<std::string> (get_iterations());
-    base_file += ".";
-    base_file += boost::lexical_cast<std::string> (get_generator_id());
-    base_file += ".";
-    base_file += boost::lexical_cast<std::string> (get_ranker_id());
-    base_file += ".probs.txt";
-
-    std::ofstream f(base_file.c_str());
-    f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    open_iteration_file(boost::lexical_cast<std::string> (get_generator_id()) + "." +
+                        boost::lexical_cast<std::string> (get_ranker_id()) + ".probs.txt", f);
     f << probs;
     f.close();
 
-
     structs::t_diagnosis_report diagnosis_rep(*D, probs);
-    base_file = get_root_dir();
-
-
-    base_file /= boost::lexical_cast<std::string> (get_iterations());
-    base_file += ".";
-    base_file += boost::lexical_cast<std::string> (get_generator_id());
-    base_file += ".";
-    base_file += boost::lexical_cast<std::string> (get_ranker_id());
-    base_file += ".report.txt";
-
-    f.open(base_file.c_str());
-    f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    open_iteration_file(boost::lexical_cast<std::string> (get_generator_id()) + "." +
+                        boost::lexical_cast<std::string> (get_ranker_id()) + ".report.txt", f);
     f << diagnosis_rep;
     f.close();
 }

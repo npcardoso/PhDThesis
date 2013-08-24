@@ -21,6 +21,8 @@ public:
 
     t_fuzzy_bernoulli & operator << (const structs::t_fault & comp);
 
+    virtual std::ostream & write (std::ostream & out) const;
+
 public:
     float activation_rate;
     t_count component_count;

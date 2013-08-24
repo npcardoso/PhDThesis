@@ -18,6 +18,16 @@ public:
 
     inline virtual ~t_spectra_randomizer () {}
 };
+
+class t_spectra_meta_randomizer {
+public:
+    DEFINE_BOOST_SHARED_PTRS(t_spectra_meta_randomizer);
+
+    virtual t_spectra_randomizer * operator () (boost::random::mt19937 & gen) const = 0;
+
+
+    inline virtual ~t_spectra_meta_randomizer () {}
+};
 }
 }
 

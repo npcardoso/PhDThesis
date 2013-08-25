@@ -79,6 +79,14 @@ bool t_spectra_filter::is_transaction (t_transaction_id transaction) const {
     return f_transaction[transaction - 1] != transaction;
 }
 
+void t_spectra_filter::filter_all_components (const structs::t_candidate & candidate) {
+    structs::t_candidate::const_reverse_iterator it = candidate.rbegin();
+
+
+    while (it != candidate.rend())
+        filter_component(*(it++));
+}
+
 void t_spectra_filter::filter_all_components_but (const t_candidate & candidate) {
     if (candidate.size() > 0 &&
         *candidate.rbegin() >= f_component.size())
@@ -116,9 +124,9 @@ void t_spectra_filter::filter_component (t_component_id component) {
     t_component_id next = f_component[component];
     t_component_id i = component;
 
-    while (i--)
-        if (f_component[i] == component)
-            f_component[i] = next;
+    while (i-- && f_component[i] == component) // Not really sure if this is correct
+        // if (f_component[i] == component)
+        f_component[i] = next;
 }
 
 void t_spectra_filter::filter_transaction (t_transaction_id transaction) {
@@ -135,9 +143,9 @@ void t_spectra_filter::filter_transaction (t_transaction_id transaction) {
     t_transaction_id next = f_transaction[transaction];
     t_transaction_id i = transaction;
 
-    while (i--)
-        if (f_transaction[i] == transaction)
-            f_transaction[i] = next;
+    while (i-- && f_transaction[i] == transaction) // Not really sure if this is correct
+        // if (f_transaction[i] == transaction)
+        f_transaction[i] = next;
 }
 
 void t_spectra_filter::resize_components (t_component_id size) {

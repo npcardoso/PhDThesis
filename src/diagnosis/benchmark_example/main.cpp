@@ -51,7 +51,7 @@ int main (int argc, char ** argv) {
     fn->fault = t_fault(0, 0.9, 0.1, 0);
     fn->set_levels(3, 10);
     fn->set_per_level(3, 10);
-    fn->set_n_faults(3, 10);
+    fn->set_n_faults(2, 2);
 
 
     // Spectra Meta Randomizer
@@ -82,7 +82,11 @@ int main (int argc, char ** argv) {
 
     // Metrics
     t_metrics_hook * metrics_hook = new t_metrics_hook(dest);
-    (*metrics_hook) << new t_Cd() << new t_wasted_effort() << new t_entropy();
+    (*metrics_hook) << new t_Cd();
+    (*metrics_hook) << new t_wasted_effort();
+    (*metrics_hook) << new t_entropy();
+    (*metrics_hook) << new t_quality(t_wasted_effort().key());
+    (*metrics_hook) << new t_quality_fair(t_wasted_effort().key());
 
     // Benchmark Hooks
     t_hook_combiner hook;
@@ -103,7 +107,7 @@ int main (int argc, char ** argv) {
 
 
     // Launch
-    benchmark(meta_randomizer, gen, hook, 10, 10);
+    benchmark(meta_randomizer, gen, hook, 1000, 10);
 
     return 0;
 }

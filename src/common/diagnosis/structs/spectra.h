@@ -89,6 +89,12 @@ public:
     virtual t_probability get_activation_rate (const t_spectra_filter * filter=NULL) const;
     virtual t_probability get_error_rate (const t_spectra_filter * filter=NULL) const;
 
+
+    virtual t_count get_suspicious_components_count (const t_spectra_filter * filter=NULL) const; // Number of components involved in failing transactions
+
+    virtual t_count get_suspicious_components_count (t_candidate & suspicious,
+                                                     const t_spectra_filter * filter=NULL) const;
+
     // Cast
 
     template <class T>

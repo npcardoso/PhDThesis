@@ -94,7 +94,8 @@ t_diagnosis_report::t_entropy t_diagnosis_report::get_entropy () const {
 
 
     for (t_id i = 1; i <= size(); i++)
-        ret -= (get_probability_normalized(i)) * log(get_probability_normalized(i));
+        if (get_probability_normalized(i) > 0)
+            ret -= (get_probability_normalized(i)) * log(get_probability_normalized(i));
 
     return ret;
 }

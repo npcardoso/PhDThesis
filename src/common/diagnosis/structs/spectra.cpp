@@ -23,6 +23,42 @@ t_probability t_spectra::get_error_rate (const t_spectra_filter * filter) const 
     return get_error_count(filter) / (t_probability) get_transaction_count(filter);
 }
 
+t_count t_spectra::get_suspicious_components_count (const t_spectra_filter * filter) const {
+    t_candidate tmp;
+
+
+    return get_suspicious_components_count(tmp, filter);
+}
+
+t_count t_spectra::get_suspicious_components_count (t_candidate & suspicious,
+                                                    const t_spectra_filter * filter) const {
+    t_spectra_filter tmp;
+
+
+    if (filter)
+        tmp = *filter;
+
+    tmp.filter_all_components(suspicious);
+
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          &tmp);
+
+    while (it.next_transaction()) {
+        if (!is_error(it.get_transaction()))
+            continue;
+
+        while (it.next_component()) {
+            if (is_active(it.get_component(), it.get_transaction())) {
+                tmp.filter_component(it.get_component());
+                suspicious.insert(it.get_component());
+            }
+        }
+    }
+
+    return suspicious.size();
+}
+
 bool t_spectra::is_active (t_component_id component,
                            t_transaction_id transaction) const {
     return get_activations(component, transaction) > 0;

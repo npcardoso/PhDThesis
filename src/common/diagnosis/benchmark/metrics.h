@@ -17,44 +17,105 @@ namespace benchmark {
 class t_metric {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_metric);
-    typedef std::map<std::string, std::string> t_ret_type;
+    typedef std::map<std::string, std::string> t_arguments;
 
-    virtual void operator () (const structs::t_spectra & spectra,
-                              const structs::t_candidate & correct,
-                              const t_candidate_generator::t_ret_type & D,
-                              const t_candidate_ranker::t_ret_type & probs,
-                              const structs::t_diagnosis_report & dr,
-                              t_ret_type & ret) = 0;
+    virtual const std::string & key () const = 0;
+
+    virtual std::string operator () (const structs::t_spectra & spectra,
+                                     const structs::t_candidate & correct,
+                                     const t_candidate_generator::t_ret_type & D,
+                                     const t_candidate_ranker::t_ret_type & probs,
+                                     const structs::t_diagnosis_report & dr,
+                                     const t_arguments & arguments) = 0;
+    template <class T>
+    T get_argument (std::string name, const t_arguments & arguments) {
+        t_arguments::const_iterator it = arguments.find(name);
+
+
+        assert(it != arguments.end());
+
+        return boost::lexical_cast<T> (it->second);
+    }
+
+    inline virtual ~t_metric () {}
 };
 
 class t_Cd : public t_metric {
 public:
-    virtual void operator () (const structs::t_spectra & spectra,
-                              const structs::t_candidate & correct,
-                              const t_candidate_generator::t_ret_type & D,
-                              const t_candidate_ranker::t_ret_type & probs,
-                              const structs::t_diagnosis_report & dr,
-                              t_ret_type & ret);
+    virtual const std::string & key () const;
+
+    virtual std::string operator () (const structs::t_spectra & spectra,
+                                     const structs::t_candidate & correct,
+                                     const t_candidate_generator::t_ret_type & D,
+                                     const t_candidate_ranker::t_ret_type & probs,
+                                     const structs::t_diagnosis_report & dr,
+                                     const t_arguments & ret);
+private:
+    static std::string __KEY__;
 };
 
 class t_wasted_effort : public t_metric {
 public:
-    virtual void operator () (const structs::t_spectra & spectra,
-                              const structs::t_candidate & correct,
-                              const t_candidate_generator::t_ret_type & D,
-                              const t_candidate_ranker::t_ret_type & probs,
-                              const structs::t_diagnosis_report & dr,
-                              t_ret_type & ret);
+    virtual const std::string & key () const;
+
+    virtual std::string operator () (const structs::t_spectra & spectra,
+                                     const structs::t_candidate & correct,
+                                     const t_candidate_generator::t_ret_type & D,
+                                     const t_candidate_ranker::t_ret_type & probs,
+                                     const structs::t_diagnosis_report & dr,
+                                     const t_arguments & ret);
+private:
+    static std::string __KEY__;
 };
 
 class t_entropy : public t_metric {
 public:
-    virtual void operator () (const structs::t_spectra & spectra,
-                              const structs::t_candidate & correct,
-                              const t_candidate_generator::t_ret_type & D,
-                              const t_candidate_ranker::t_ret_type & probs,
-                              const structs::t_diagnosis_report & dr,
-                              t_ret_type & ret);
+    virtual const std::string & key () const;
+
+    virtual std::string operator () (const structs::t_spectra & spectra,
+                                     const structs::t_candidate & correct,
+                                     const t_candidate_generator::t_ret_type & D,
+                                     const t_candidate_ranker::t_ret_type & probs,
+                                     const structs::t_diagnosis_report & dr,
+                                     const t_arguments & ret);
+private:
+    static std::string __KEY__;
+};
+
+class t_quality : public t_metric {
+public:
+    t_quality (std::string target_metric);
+
+    virtual const std::string & key () const;
+
+    virtual std::string operator () (const structs::t_spectra & spectra,
+                                     const structs::t_candidate & correct,
+                                     const t_candidate_generator::t_ret_type & D,
+                                     const t_candidate_ranker::t_ret_type & probs,
+                                     const structs::t_diagnosis_report & dr,
+                                     const t_arguments & ret);
+private:
+    std::string target_metric;
+    std::string result_metric;
+    static std::string __KEY__;
+};
+
+class t_quality_fair : public t_metric {
+public:
+    t_quality_fair (std::string target_metric);
+
+    virtual const std::string & key () const;
+
+    virtual std::string operator () (const structs::t_spectra & spectra,
+                                     const structs::t_candidate & correct,
+                                     const t_candidate_generator::t_ret_type & D,
+                                     const t_candidate_ranker::t_ret_type & probs,
+                                     const structs::t_diagnosis_report & dr,
+                                     const t_arguments & ret);
+private:
+    std::string target_metric;
+    std::string result_metric;
+    static std::string __KEY__;
 };
 }
 }

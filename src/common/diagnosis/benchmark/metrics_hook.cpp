@@ -48,11 +48,15 @@ void t_metrics_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
     assert(D != NULL);
     structs::t_diagnosis_report dr(*D, probs);
 
-    t_metric::t_ret_type ret;
+    t_metric::t_arguments args;
 
     BOOST_FOREACH(t_metrics_list::value_type & metric,
                   metrics_list) {
-        (* metric)(* spectra, * correct, * D, probs, dr, ret);
+        std::string ret = (* metric)(* spectra, * correct, * D, probs, dr, args);
+
+
+        assert(args.count(metric->key()) == 0);
+        args[metric->key()] = ret;
     }
 
     std::ofstream f;
@@ -60,8 +64,8 @@ void t_metrics_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
     if (open_file("metrics.csv", f, true))
         f << "randomizer, iteration, generator, ranker, metric_name, value" << std::endl;
 
-    BOOST_FOREACH(t_metric::t_ret_type::value_type & metric,
-                  ret) {
+    BOOST_FOREACH(t_metric::t_arguments::value_type & metric,
+                  args) {
         f << get_randomizers() << ", ";
         f << get_iterations() << ", ";
         f << get_generator_id() << ", ";

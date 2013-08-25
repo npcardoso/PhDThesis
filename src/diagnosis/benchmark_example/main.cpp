@@ -16,7 +16,6 @@
 #include "diagnosis/algorithms/barinel.h"
 #include "diagnosis/heuristics/sort.h"
 #include "diagnosis/heuristics/similarity.h"
-#include "diagnosis/randomizers/topology_based.h"
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/trie.h"
 #include <list>
@@ -33,50 +32,63 @@ using namespace diagnosis::structs;
 #define NFAULTS 3
 
 int main (int argc, char ** argv) {
+    std::string dest("benchmark_results");
     time_t seed = time(NULL);
     mt19937 gen(seed);
-    t_topology::t_ptr topology(new t_topology());
 
 
-    // generate_topology(gen, topology, , NCOMPS, NFAULTS, 3, 10);
-    forwarding_network_topology(gen,
-                                topology,
-                                t_fault(0, 0.9, 0.1, 0), // fault
-                                LEVELS, // n_levels
-                                PER_LEVEL, // per_level
-                                NFAULTS); // n_faults
-
-    if (argc > 1) {
-        topology->graphviz(std::cout);
-        return 0;
-    }
-
-    t_topology_based topology_randomizer(topology);
-
-    topology_randomizer
-    .set_until_nerrors(2)
-    .set_max_activations(20)
-    .add_entry_point(LEVELS * PER_LEVEL + 2, 0.5);
+    // Spectra Randomizer
+    t_topology_based::t_ptr topology_randomizer(new t_topology_based());
 
 
+    topology_randomizer->set_until_nerrors(2);
+    topology_randomizer->set_max_activations(20);
+
+    // Topology Randomizer
+    t_forwarding_network::t_ptr fn(new t_forwarding_network());
+
+
+    fn->fault = t_fault(0, 0.9, 0.1, 0);
+    fn->set_levels(3, 10);
+    fn->set_per_level(3, 10);
+    fn->set_n_faults(3, 10);
+
+
+    // Spectra Meta Randomizer
+    t_topology_based_meta_randomizer meta_randomizer(topology_randomizer, fn);
+
+
+    // Candidate Generators
     heuristics::t_heuristic heuristic;
     heuristic.push(new heuristics::t_ochiai());
     heuristic.push(new heuristics::t_sort());
 
-    t_mhs * mhs_ptr;
-    t_candidate_generator::t_ptr mhs(mhs_ptr = new t_mhs(heuristic));
+    t_mhs * mhs_ptr = new t_mhs(heuristic);
+    t_candidate_generator::t_ptr mhs(mhs_ptr);
     t_candidate_generator::t_ptr single_fault(new t_single_fault());
-    t_barinel * barinel_ptr;
-    t_candidate_ranker::t_ptr barinel(barinel_ptr = new t_barinel());
+
+    mhs_ptr->max_time = 1e6;
+
+
+    // Candidate Rankers
+    t_barinel * barinel_ptr = new t_barinel();
+    t_candidate_ranker::t_ptr barinel(barinel_ptr);
     t_candidate_ranker::t_ptr fuzzinel(new t_barinel());
     t_candidate_ranker::t_ptr ochiai(new t_ochiai());
 
 
-    mhs_ptr->max_time = 1e6;
-
     barinel_ptr->use_confidence = false;
     barinel_ptr->use_fuzzy_error = false;
 
+    // Metrics
+    t_metrics_hook * metrics_hook = new t_metrics_hook(dest);
+    (*metrics_hook) << new t_Cd() << new t_wasted_effort() << new t_entropy();
+
+    // Benchmark Hooks
+    t_hook_combiner hook;
+    hook << new t_verbose_hook() << new t_save_hook(dest) << new t_statistics_hook(dest) << metrics_hook;
+
+    // Benchmark
     t_benchmark benchmark;
     benchmark.add_generator(mhs);
     benchmark.add_generator(single_fault);
@@ -89,13 +101,9 @@ int main (int argc, char ** argv) {
     benchmark.add_connection(1, 2);
     benchmark.add_connection(2, 3);
 
-    t_hook_combiner hook;
-    std::string dest("foooo");
-    t_metrics_hook * metrics_hook = new t_metrics_hook(dest);
-    (*metrics_hook) << new t_Cd() << new t_wasted_effort() << new t_entropy();
-    hook << new t_verbose_hook() << new t_save_hook(dest) << new t_statistics_hook(dest) << metrics_hook;
 
-    benchmark(topology_randomizer, gen, hook, 10);
+    // Launch
+    benchmark(meta_randomizer, gen, hook, 10, 10);
 
     return 0;
 }

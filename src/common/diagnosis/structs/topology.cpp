@@ -83,10 +83,21 @@ t_link & t_link::add_sink (t_component_id comp, t_probability prob) {
 
     total += prob;
     sinks.push_back(t_sink(comp, prob));
+    std::sort(sinks.begin(), sinks.end()); // TODO: Can be optimized
     return *this;
 }
 
-t_component_id t_link::operator () (boost::random::mt19937 & gen) const {
+t_probability t_link::get_probability (t_component_id comp) const {
+    t_sinks::const_iterator it = std::lower_bound(sinks.begin(), sinks.end(), t_sink(comp, 0));
+
+
+    if (it == sinks.end()) // Not found
+        return 0;
+
+    return it->second / get_normalization_value();
+}
+
+t_component_id t_link::gen_destination (boost::random::mt19937 & gen) const {
     if (sinks.size() == 0)
         return 0;
 
@@ -102,7 +113,7 @@ t_component_id t_link::operator () (boost::random::mt19937 & gen) const {
     return 0;
 }
 
-t_topology & t_topology::operator () (t_component_id comp, const t_fault & f) {
+t_topology & t_topology::add_fault (t_component_id comp, const t_fault & f) {
     assert(comp != 0);
     t_fault_bind::iterator it = fault_bind.find(comp);
 
@@ -116,7 +127,7 @@ t_topology & t_topology::operator () (t_component_id comp, const t_fault & f) {
     return *this;
 }
 
-t_topology & t_topology::operator () (t_component_id comp, const t_link & l) {
+t_topology & t_topology::add_link (t_component_id comp, const t_link & l) {
     assert(comp != 0);
     t_interface_bind::iterator it = interface_bind.find(comp);
 
@@ -133,6 +144,13 @@ t_topology & t_topology::operator () (t_component_id comp, const t_link & l) {
 
     interface_bind[comp]->push_back(l);
 
+    return *this;
+}
+
+t_topology & t_topology::add_entry_point (t_component_id comp, t_probability prob) {
+    assert(comp != 0);
+    components.insert(comp);
+    entry_points.add_sink(comp, prob);
     return *this;
 }
 
@@ -190,6 +208,10 @@ std::ostream & t_topology::graphviz_component (std::ostream & out, t_component_i
         out << "color=\"#" << t_rgb(0, 1, 0) << "\",\n";
 
     out << "label=\"{<name> C" << comp;
+    t_probability prob = entry_points.get_probability(comp);
+
+    if (prob > 0)
+        out << " - Entry: " << prob << " ";
 
     if (f) {
         out << "| {<pass> p:" << f->get_pass_prob();
@@ -238,6 +260,10 @@ std::ostream & t_topology::graphviz_links (std::ostream & out, t_component_id co
     }
 
     return out;
+}
+
+t_component_id t_topology::gen_entry_point (boost::random::mt19937 & gen) const {
+    return entry_points.gen_destination(gen);
 }
 }
 }

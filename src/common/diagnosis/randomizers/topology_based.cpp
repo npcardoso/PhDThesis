@@ -10,62 +10,60 @@ using namespace diagnosis::structs;
 
 namespace diagnosis {
 namespace randomizers {
+t_topology_based::t_topology_based () {
+    stack_size = 0;
+    max_transactions = 0;
+    until_nerrors = 0;
+}
+
 t_topology_based::t_topology_based (structs::t_topology::t_ptr & topology) : topology(topology) {
     stack_size = 0;
     max_transactions = 0;
     until_nerrors = 0;
 }
 
-t_component_id t_topology_based::gen_entry_point (boost::random::mt19937 & gen) const {
-    assert(entry_points.size());
-    uniform_int_distribution<> comp_selector(0, entry_points.size() - 1);
-
-    while (true) {
-        t_component_id selected = comp_selector(gen);
-
-        if (bernoulli_distribution<> (entry_points[selected].second) (gen))
-            return entry_points[selected].first;
-    }
-
-    return 0;
+t_topology_based & t_topology_based::set_topology (structs::t_topology::t_ptr & topology) {
+    this->topology = topology;
+    return *this;
 }
 
-t_topology_based & t_topology_based::add_entry_point (t_component_id comp,
-                                                      t_probability prob) {
-    entry_points.push_back(t_entry_point(comp, prob));
+t_topology_based & t_topology_based::set_topology (structs::t_topology * topology) {
+    this->topology = structs::t_topology::t_ptr(topology);
     return *this;
 }
 
 t_topology_based & t_topology_based::set_stack_size (t_count size) {
     stack_size = size;
-    return (*this);
+    return *this;
 }
 
 t_topology_based & t_topology_based::set_max_transactions (t_count max_transactions) {
     this->max_transactions = max_transactions;
-    return (*this);
+    return *this;
 }
 
 t_topology_based & t_topology_based::set_max_activations (t_count max_activations) {
     this->max_activations = max_activations;
-    return (*this);
+    return *this;
 }
 
 t_topology_based & t_topology_based::set_until_nerrors (t_count nerrors) {
     until_nerrors = nerrors;
-    return (*this);
+    return *this;
 }
 
 const t_topology_based & t_topology_based::operator () (structs::t_count_spectra & spectra,
                                                         t_candidate & correct_candidate,
                                                         boost::random::mt19937 & gen,
                                                         t_transaction_id tran) const {
+    assert(topology);
     typedef std::pair<t_topology::t_interface::const_iterator, t_topology::t_interface::const_iterator> t_stack_element;
 
     std::stack<t_stack_element> stack;
 
-    t_component_id comp = gen_entry_point(gen);
     t_count activations = 0;
+    t_component_id comp = topology->gen_entry_point(gen);
+    assert(comp);
 
     bool fail = false;
     spectra.set_error(tran, 0);
@@ -101,7 +99,7 @@ const t_topology_based & t_topology_based::operator () (structs::t_count_spectra
             if (stack.top().first == stack.top().second)
                 stack.pop();
             else {
-                comp = (*stack.top().first)(gen);
+                comp = stack.top().first->gen_destination(gen);
                 stack.top().first++;
             }
         }
@@ -112,7 +110,7 @@ const t_topology_based & t_topology_based::operator () (structs::t_count_spectra
 
 structs::t_spectra * t_topology_based::operator () (boost::random::mt19937 & gen,
                                                     structs::t_candidate & correct_candidate) const {
-    assert(entry_points.size());
+    assert(topology);
     assert(until_nerrors || max_transactions);
 
     t_count_spectra & spectra = *(new t_count_spectra(*topology->get_components().rbegin(), 0));

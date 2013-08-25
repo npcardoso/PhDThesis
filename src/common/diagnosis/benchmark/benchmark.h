@@ -15,7 +15,7 @@ class t_benchmark {
 public:
     typedef std::pair<t_id, t_id> t_connection;
 
-    const t_benchmark & operator () (const randomizers::t_spectra_meta_randomizer & meta_randomizer,
+    const t_benchmark & operator () (randomizers::t_randomizer<randomizers::t_spectra_randomizer> & meta_randomizer,
                                      boost::random::mt19937 & gen,
                                      t_benchmark_hook & hook,
                                      t_count systems,

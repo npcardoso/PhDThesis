@@ -9,7 +9,7 @@ using namespace diagnosis::randomizers;
 
 namespace diagnosis {
 namespace benchmark {
-const t_benchmark & t_benchmark::operator () (const t_spectra_meta_randomizer & meta_randomizer,
+const t_benchmark & t_benchmark::operator () (randomizers::t_randomizer<randomizers::t_spectra_randomizer> & meta_randomizer,
                                               boost::random::mt19937 & gen,
                                               t_benchmark_hook & hook,
                                               t_count systems,

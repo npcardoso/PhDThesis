@@ -7,6 +7,20 @@
 
 namespace diagnosis {
 namespace randomizers {
+template <class T>
+class t_randomizer {
+public:
+    DEFINE_BOOST_SHARED_PTRS(t_randomizer<T> );
+
+    virtual T * operator () (boost::random::mt19937 & gen) = 0;
+
+    inline virtual std::ostream & write (std::ostream & out) const {
+        throw e_not_implemented();
+    }
+
+    inline virtual ~t_randomizer () {}
+};
+
 class t_spectra_randomizer {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_spectra_randomizer);

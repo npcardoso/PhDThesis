@@ -11,13 +11,15 @@ namespace randomizers {
 class t_topology_based : public t_spectra_randomizer {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_topology_based);
+    t_topology_based ();
     t_topology_based (structs::t_topology::t_ptr & topology);
 
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
                                               structs::t_candidate & correct_candidate) const;
 
-    t_topology_based & add_entry_point (t_component_id comp,
-                                        t_probability prob);
+    t_topology_based & set_topology (structs::t_topology::t_ptr & topology);
+    t_topology_based & set_topology (structs::t_topology * topology);
+
     t_topology_based & set_stack_size (t_count size);
     t_topology_based & set_max_transactions (t_count max_transactions);
     t_topology_based & set_max_activations (t_count max_activations);
@@ -31,16 +33,12 @@ protected:
                                                   boost::random::mt19937 & gen,
                                                   t_transaction_id tran) const;
 
-    t_component_id gen_entry_point (boost::random::mt19937 & gen) const;
-
 
 private:
-    typedef std::pair<t_component_id, t_probability> t_entry_point;
 
 
-    structs::t_topology::t_ptr & topology;
+    structs::t_topology::t_ptr topology;
 
-    std::vector<t_entry_point> entry_points;
     t_count stack_size;
     t_count max_activations;
     t_count max_transactions;

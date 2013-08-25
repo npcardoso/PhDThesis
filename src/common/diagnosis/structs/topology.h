@@ -42,12 +42,15 @@ public:
 
     inline t_link () {total = 0;}
 
-    t_component_id operator () (boost::random::mt19937 & gen) const;
 
     t_link & add_sink (t_component_id comp, t_probability prob);
 
     inline const t_sinks & get_sinks () const {return sinks;}
+
+    t_probability get_probability (t_component_id comp) const;
     inline t_probability get_normalization_value () const {return total;}
+
+    t_component_id gen_destination (boost::random::mt19937 & gen) const;
 
 private:
     std::vector<t_sink> sinks;
@@ -62,14 +65,17 @@ public:
     typedef std::set<t_component_id> t_components;
 
 
-    t_topology & operator () (t_component_id comp, const t_fault & f);
-    t_topology & operator () (t_component_id comp, const t_link & l);
+    t_topology & add_fault (t_component_id comp, const t_fault & f);
+    t_topology & add_link (t_component_id comp, const t_link & l);
+    t_topology & add_entry_point (t_component_id comp, t_probability prob);
 
     const t_interface * get_interface (t_component_id comp) const;
     const t_fault * get_fault (t_component_id comp) const;
     const t_components & get_components () const;
 
     std::ostream & graphviz (std::ostream & out) const;
+
+    t_component_id gen_entry_point (boost::random::mt19937 & gen) const;
 
 private:
     std::ostream & graphviz_component (std::ostream & out, t_component_id comp) const;
@@ -87,6 +93,8 @@ private:
     t_faults faults;
     t_interface_bind interface_bind;
     t_fault_bind fault_bind;
+
+    t_link entry_points;
 };
 }
 }

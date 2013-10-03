@@ -3,6 +3,47 @@
 namespace diagnosis {
 namespace structs {
 using namespace diagnosis::structs;
+// FIXME: !!!!Experimental!!!!
+t_probability t_spectra::get_entropy (const t_spectra_filter * filter) const {
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          filter);
+
+    t_count total_components = get_component_count() - (filter ? filter->get_filtered_component_count() : 0);
+    std::vector<t_count> col_ones(total_components, 0);
+
+    t_count total_transactions = get_transaction_count() - (filter ? filter->get_filtered_transaction_count() : 0);
+    std::vector<t_count> row_ones(total_transactions, 0);
+
+
+    // Count activations
+    for (int i = 0; it.next_component(); i++)
+        for (int j = 0; it.next_transaction(); j++)
+            if (get_activations(it.get_component(), it.get_transaction())) {
+                col_ones[i]++;
+                row_ones[j]++;
+            }
+
+
+    // Calculate entropy
+    t_probability entropy = 0;
+
+    for (int i = 0; it.next_component(); i++)
+        for (int j = 0; it.next_transaction(); j++) {
+            t_probability tmp;
+
+            if (get_activations(it.get_component(), it.get_transaction()))
+                tmp = col_ones[i] * row_ones[j];
+            else
+                tmp = (total_transactions - col_ones[i]) * (total_components - row_ones[j]);
+
+            tmp /= (t_probability) (total_components * total_transactions);
+            entropy -= tmp * log(tmp);
+        }
+
+
+    return entropy;
+}
 
 t_probability t_spectra::get_activation_rate (const t_spectra_filter * filter) const {
     t_spectra_iterator it(get_component_count(),
@@ -150,8 +191,8 @@ bool t_spectra::get_invalid (t_invalid_transactions & ret,
             ret.insert(it.get_transaction());
     }
 
-    assert((ret.size() == 0) == !is_invalid(filter));
-    return ret.size() == 0;
+    assert(ret.size() == is_invalid(filter));
+    return ret.size();
 }
 
 void t_spectra::set_component_count (t_count component_count) {

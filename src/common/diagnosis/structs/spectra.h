@@ -86,6 +86,7 @@ public:
 
     // Metrics
 
+    virtual t_probability get_entropy (const t_spectra_filter * filter=NULL) const;
     virtual t_probability get_activation_rate (const t_spectra_filter * filter=NULL) const;
     virtual t_probability get_error_rate (const t_spectra_filter * filter=NULL) const;
 

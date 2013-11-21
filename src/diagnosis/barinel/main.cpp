@@ -42,7 +42,7 @@ int main (int argc, char ** argv) {
 
     spectra.read(options.input(), options.has_confidence);
 
-    if (!options.input().good()) {
+    if (options.input().fail() || options.input().bad()) {
         std::cerr << "Problem reading spectra" << std::endl;
         return 1;
     }

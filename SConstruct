@@ -74,6 +74,8 @@ else:
     env['CCFLAGS'] = "-O3 -DNDEBUG"
 
 env['ENV']['TERM'] = os.environ['TERM']
+env['ENV']['PATH'] = env['PATH']
+env['ENV']['PATH'].extend(['/usr/local/bin', '/bin', '/usr/bin'])
 
 
 Export('env')

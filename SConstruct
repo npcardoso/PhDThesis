@@ -59,8 +59,9 @@ for i in ['include', 'lib', 'bin']:
     env['%s_dir' % i] = join(env['prefix'], i)
 
 for i in ['PATH', 'LIBPATH', 'CPPPATH']:
-    if env[i] and not isinstance(env[i], list):
+    if not isinstance(env[i], list):
       env[i] = [env[i]]
+env['PATH'].extend(['/usr/local/bin', '/bin', '/usr/bin'])
 
 env['common_dir'] = join(root, "src", "common")
 
@@ -75,7 +76,6 @@ else:
 
 env['ENV']['TERM'] = os.environ['TERM']
 env['ENV']['PATH'] = env['PATH']
-env['ENV']['PATH'].extend(['/usr/local/bin', '/bin', '/usr/bin'])
 
 
 Export('env')

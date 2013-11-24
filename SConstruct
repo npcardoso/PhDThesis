@@ -36,8 +36,8 @@ vars.Add('LLI', '', 'lli')
 vars.Add('CXX', '', 'clang++')
 
 
-vars.Add('mpi_include', '', check_output(['mpic++', '--showme:compile']).strip())
-vars.Add('mpi_link', '', check_output(['mpic++', '--showme:link']).strip())
+vars.Add('mpi_include', '', '`mpic++ --showme:compile`')
+vars.Add('mpi_link', '', '`mpic++ --showme:link`')
 
 vars.Add('mpfr_link', '', '-lgmp -lmpfr')
 

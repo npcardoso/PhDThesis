@@ -1,7 +1,9 @@
 import os
 from os.path import join
-from subprocess import check_output
+import subprocess
 
+def check_output(command):
+    return subprocess.Popen(command, stdout=subprocess.PIPE).communicate()[0]
 
 root = '#'
 

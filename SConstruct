@@ -1,5 +1,6 @@
 import os
 from os.path import join
+from subprocess import check_output
 
 
 root = '#'
@@ -7,7 +8,11 @@ root = '#'
 
 vars = Variables('.scons.conf')
 
-vars.Add('prefix', '', '/usr/local')
+vars.Add('PATH', '', '')
+vars.Add('LIBPATH', '', '')
+vars.Add('CPPPATH', '', '')
+
+vars.Add('prefix', '', join(root, 'obj', 'install'))
 vars.Add('build_dir', '', join(root, 'obj'))
 vars.Add('libext', '', 'so')
 
@@ -17,19 +22,22 @@ vars.Add('llvminstrument', '', 'llvminstrument')
 
 vars.Add('debug', '', False)
 
-vars.Add('boost_lib', '', None)
-vars.Add('boost_include', '', None)
-
 vars.Add('R_include', '', '/usr/include/R')
 
 vars.Add('llvm_passes', '', '-instrument_function -instrument_prepare')
-vars.Add('clang', '', 'clang')
-vars.Add('clangpp', '', 'clang++')
+vars.Add('CLANG', '', 'clang')
+vars.Add('CLANGPP', '', 'clang++')
 vars.Add('llvmconfig', '', 'llvm-config')
 vars.Add('OPT', '', 'opt')
 vars.Add('LLC', '', 'llc')
 vars.Add('LLI', '', 'lli')
 vars.Add('CXX', '', 'clang++')
+
+
+vars.Add('mpi_include', '', check_output(['mpic++', '--showme:compile']).strip())
+vars.Add('mpi_link', '', check_output(['mpic++', '--showme:link']).strip())
+
+vars.Add('mpfr_link', '', '-lgmp -lmpfr')
 
 ### Defaults ###
 vars.Add('default_instrumentation_examples', '', True)
@@ -39,41 +47,32 @@ vars.Add('default_libRdiag', '', True)
 env = Environment()
 
 vars.Update(env)
-
 env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=0
 
-env['prefix']  = env.Dir(env['prefix']).abspath
-env['build_dir']  = env.Dir(env['build_dir']).abspath
+#Install/Build Dirs
+for i in ['prefix', 'build_dir']:
+    env[i]  = env.Dir(env[i]).abspath
+
+for i in ['include', 'lib', 'bin']:
+    env['%s_dir' % i] = join(env['prefix'], i)
+
+for i in ['PATH', 'LIBPATH', 'CPPPATH']:
+    if env[i] and not isinstance(env[i], list):
+      env[i] = [env[i]]
 
 env['common_dir'] = join(root, "src", "common")
 
-env['include_dir'] = join(env['prefix'], "include")
-env['lib_dir'] = join(env['prefix'], "lib")
-env['bin_dir'] = join(env['prefix'], "bin")
 
-### Link Flags ###
-if 'boost_include' in env:
-    env.Append(CPPPATH = [env['boost_include']])
 
-if 'boost_lib' in env:
-    env.Append(LIBPATH = [env['boost_lib']])
-
-env['mpi_include'] = '`mpic++ --showme:compile`'
-env['mpi_link'] = '`mpic++ --showme:link`'
-env['mpfr_link'] = '-lgmp -lmpfr '
-
+#Build Flags
 
 if(env['debug']):
-  env['CCFLAGS'] = "-g -O0"
+    env['CCFLAGS'] = "-g -O0"
 else:
-  env['CCFLAGS'] = "-O3 -DNDEBUG"
+    env['CCFLAGS'] = "-O3 -DNDEBUG"
 
-env['CLANG'] = env['clang']
-env['CLANGPP'] = env['clangpp']
-env['CXX'] = env['clangpp']
 env['ENV']['TERM'] = os.environ['TERM']
 
-#vars.Save('.scons.conf', env)
 
 Export('env')
 SConscript('SConscript', variant_dir=env['build_dir'])

@@ -5,6 +5,7 @@
 #include "types.h"
 
 #include <map>
+#include <string>
 
 namespace diagnosis {
 namespace component {

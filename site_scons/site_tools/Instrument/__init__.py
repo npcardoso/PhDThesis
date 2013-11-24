@@ -55,7 +55,7 @@ _instrument_asm_builder = SCons.Builder.Builder(
     single_source = 1)
 
 _instrument_linker_builder = SCons.Builder.Builder(
-    action = SCons.Action.Action('$CLANGPP $LINK_PATH $LINKFLAGS -o $TARGET $SOURCES'),
+    action = SCons.Action.Action('$CLANGPP $LINK_PATH $_LIBDIRFLAGS $LINKFLAGS -o $TARGET $SOURCES'),
     src_suffix = '$INSTR_ASM_SUFFIX')
 
 def RecursiveScanner(scanner, file):

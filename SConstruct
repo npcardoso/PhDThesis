@@ -42,9 +42,9 @@ vars.Add('mpi_link', '', '`mpic++ --showme:link`')
 vars.Add('mpfr_link', '', '-lgmp -lmpfr')
 
 ### Defaults ###
-vars.Add('default_instrumentation_examples', '', True)
+vars.Add('default_instrumentation_examples', '', False)
 vars.Add('default_instrumentation', '', True)
-vars.Add('default_libRdiag', '', True)
+vars.Add('default_libRdiag', '', False)
 
 env = Environment()
 
@@ -76,6 +76,7 @@ else:
 
 env['ENV']['TERM'] = os.environ['TERM']
 env['ENV']['PATH'] = env['PATH']
+env['ENV']['LD_LIBRARY_PATH'] = env['LIBPATH']
 
 
 Export('env')

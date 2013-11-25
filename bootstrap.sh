@@ -4,15 +4,17 @@ CLANG_SRC=http://llvm.org/releases/3.3/cfe-3.3.src.tar.gz
 RT_SRC=http://llvm.org/releases/3.3/compiler-rt-3.3.src.tar.gz
 BOOST_SRC=http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
 OPENMPI_SRC=http://www.open-mpi.org/software/ompi/v1.6/downloads/openmpi-1.6.5.tar.gz
+GMP_SRC=http://ftp.gmplib.org/gmp/gmp-5.1.3.tar.bz2
 MPFR_SRC=http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.gz
 
 LLVM_EXTRA_OPTS=--with-python=/usr/bin/python2
 BOOST_EXTRA_OPTS=--with-python=/usr/bin/python2
 
+
 BUILD_JOBS=16
 
 
-DEPS=("$LLVM_SRC $CLANG_SRC $RT_SRC $BOOST_SRC $SCONS_SRC $OPENMPI_SRC $MPFR_SRC")
+DEPS=("$LLVM_SRC $CLANG_SRC $RT_SRC $BOOST_SRC $SCONS_SRC $OPENMPI_SRC $GMP_SRC $MPFR_SRC")
 
 echo "Creating .deps dir"
 
@@ -22,11 +24,13 @@ fi
 cd deps
 
 PREFIX=$PWD/build
+export LDFLAGS=-L$PREFIX/lib
+export LD_LIBRARY_PATH=$LDFLAGS
 
 echo "Downloading stuff"
 for d in $DEPS; do
     BASENAME=`basename $d`
-    DIRNAME=`echo $BASENAME | sed 's/\.tar\.gz//'`
+    DIRNAME=`echo $BASENAME | sed 's/\.tar\..*$//'`
     DEP_NAME=`echo $DIRNAME | sed 's/\([a-zA-Z_-]*\)[-_].*$/\1/'`
     echo $BASENAME $DIRNAME $DEP_NAME
 
@@ -37,7 +41,7 @@ for d in $DEPS; do
     fi
 
     if [[ ! -e $DEP_NAME ]]; then
-        tar -zxf $BASENAME
+        tar -xf $BASENAME
         mv $DIRNAME $DEP_NAME
     fi
 done
@@ -117,6 +121,29 @@ if [[ ! -e openmpi/ready ]]; then
 else
     echo "Not building OpenMPI"
 fi
+
+if [[ ! -e gmp/ready ]]; then
+    cd gmp
+
+    echo "Configuring GMP"
+    configure \
+        --prefix=$PREFIX \
+        $GMP_EXTRA_OPTS
+
+    echo "Building GMP"
+    make -j $BUILD_JOBS
+
+    echo "Installing GMP"
+    make install
+
+    touch ready
+    echo "Finished GMP"
+    cd ..
+else
+    echo "Not building GMP"
+fi
+
+
 
 if [[ ! -e mpfr/ready ]]; then
     cd mpfr

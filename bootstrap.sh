@@ -26,7 +26,9 @@ cd deps
 PREFIX=$PWD/build
 export LDFLAGS=-L$PREFIX/lib
 export LD_LIBRARY_PATH=$LDFLAGS
-
+export CPPFLAGS=-I$PREFIX/include
+export CC=`which gcc`
+export CXX=`which g++`
 echo "Downloading stuff"
 for d in $DEPS; do
     BASENAME=`basename $d`
@@ -103,7 +105,7 @@ if [[ ! -e openmpi/ready ]]; then
     cd openmpi
 
     echo "Configuring OpenMPI"
-    configure \
+    ./configure \
         --prefix=$PREFIX \
         --enable-mpi-f77 \
         --enable-mpi-f90 \
@@ -126,7 +128,7 @@ if [[ ! -e gmp/ready ]]; then
     cd gmp
 
     echo "Configuring GMP"
-    configure \
+    ./configure \
         --prefix=$PREFIX \
         $GMP_EXTRA_OPTS
 
@@ -149,7 +151,7 @@ if [[ ! -e mpfr/ready ]]; then
     cd mpfr
 
     echo "Configuring MPFR"
-    configure \
+    ./configure \
         --prefix=$PREFIX \
         $MPFR_EXTRA_OPTS
 

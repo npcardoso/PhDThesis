@@ -1,5 +1,7 @@
 library('gdata')
-library('reshape')
+library('reshape2')
+library('gdata')
+
 read.data = function(path, generator.rename=NULL, ranker.rename=NULL) {
   data = read.csv(path)
 
@@ -42,7 +44,8 @@ boom.selectah = function(data, randomizers=NULL){
     data = data[elements,]
   }
 
-  data = data
+
+  data = data[!is.nan(data$value),]
 
   casted_data = cast(data, generator + ranker ~metric_name, mean, rm.na=T)
   return (casted_data)

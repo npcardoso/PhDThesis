@@ -51,7 +51,7 @@ int main (int argc, char ** argv) {
     fn->fault = t_fault(0, 0.9, 0.1, 0);
     fn->set_levels(3, 10);
     fn->set_per_level(3, 10);
-    fn->set_n_faults(2, 2);
+    fn->set_n_faults(2, 6);
 
 
     // Spectra Meta Randomizer
@@ -94,20 +94,20 @@ int main (int argc, char ** argv) {
 
     // Benchmark
     t_benchmark benchmark;
-    benchmark.add_generator(mhs);
-    benchmark.add_generator(single_fault);
+    benchmark.add_generator(mhs, "mhs");
+    benchmark.add_generator(single_fault, "single_fault");
 
-    benchmark.add_ranker(barinel);
-    benchmark.add_ranker(fuzzinel);
-    benchmark.add_ranker(ochiai);
+    benchmark.add_ranker(barinel, "barinel");
+    benchmark.add_ranker(fuzzinel, "fuzzinel");
+    benchmark.add_ranker(ochiai, "ochiai");
 
-    benchmark.add_connection(1, 1);
-    benchmark.add_connection(1, 2);
-    benchmark.add_connection(2, 3);
+    benchmark.add_connection("mhs", "barinel");
+    benchmark.add_connection("mhs", "fuzzinel");
+    benchmark.add_connection("single_fault", "ochiai");
 
 
     // Launch
-    benchmark(meta_randomizer, gen, hook, 1000, 10);
+    benchmark(meta_randomizer, gen, hook, 1, 1);
 
     return 0;
 }

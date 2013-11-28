@@ -12,7 +12,7 @@ void t_verbose_hook::_cleanup () {
 }
 
 void t_verbose_hook::_pre_gen () {
-    std::cerr << "Pre_gen Hook, generator_id: " << get_generator_id() << std::endl;
+    std::cerr << "Pre_gen Hook, generator_name: '" << get_generator_name() << "' generator_id: " << get_generator_id() << std::endl;
 }
 
 void t_verbose_hook::_post_gen (t_candidate_generator::t_ret_type & D,
@@ -21,7 +21,9 @@ void t_verbose_hook::_post_gen (t_candidate_generator::t_ret_type & D,
 }
 
 void t_verbose_hook::_pre_rank () {
-    std::cerr << "Pre_rank Hook, generator_id: " << get_generator_id() << " ranker_id: " << get_ranker_id() << std::endl;
+    std::cerr << "Pre_rank Hook ";
+    std::cerr << "generator_name: '" << get_generator_name() << "' generator_id: " << get_generator_id() << " ";
+    std::cerr << "ranker_name: '" << get_ranker_name() << "' ranker_id: " << get_ranker_id() << " ";
 }
 
 void t_verbose_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,

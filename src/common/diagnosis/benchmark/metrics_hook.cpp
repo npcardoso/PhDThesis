@@ -68,8 +68,8 @@ void t_metrics_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
                   args) {
         f << get_randomizers() << ", ";
         f << get_iterations() << ", ";
-        f << get_generator_id() << ", ";
-        f << get_ranker_id() << ", ";
+        f << get_generator_name() << ", ";
+        f << get_ranker_name() << ", ";
         f << "\"" << metric.first << "\", ";
         f << metric.second << std::endl;
     }

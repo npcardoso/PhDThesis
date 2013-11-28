@@ -63,7 +63,7 @@ const t_benchmark & t_benchmark::operator () (const t_spectra & spectra,
             D.clear();
 
             // Hook: Pre-gen
-            hook.pre_gen(c.first + 1);
+            hook.pre_gen(c.first + 1, get_generator_name(c.first + 1));
 
             t_time_interval last_time = time_interval();
             (*generators[c.first])(spectra, D);
@@ -75,7 +75,7 @@ const t_benchmark & t_benchmark::operator () (const t_spectra & spectra,
         }
 
         // Hook: Pre-rank
-        hook.pre_rank(c.second + 1);
+        hook.pre_rank(c.second + 1, get_ranker_name(c.second + 1));
 
         t_time_interval last_time = time_interval();
         (*rankers[c.second])(spectra, D, probs);
@@ -95,7 +95,10 @@ t_benchmark & t_benchmark::add_generator (t_candidate_generator::t_ptr & generat
 
 t_benchmark & t_benchmark::add_generator (t_candidate_generator::t_ptr & generator,
                                           const std::string & name) {
+    assert(get_generator_id(name) == 0);
+
     generators.push_back(generator);
+    generator_names.push_back(name);
     generator_ids[name] = generators.size();
     return (*this);
 }
@@ -107,7 +110,10 @@ t_benchmark & t_benchmark::add_ranker (t_candidate_ranker::t_ptr & ranker) {
 
 t_benchmark & t_benchmark::add_ranker (t_candidate_ranker::t_ptr & ranker,
                                        const std::string & name) {
+    assert(get_ranker_id(name) == 0);
+
     rankers.push_back(ranker);
+    ranker_names.push_back(name);
     ranker_ids[name] = rankers.size();
     return (*this);
 }
@@ -122,6 +128,13 @@ t_id t_benchmark::get_generator_id (const std::string & name) const {
     return pos->second;
 }
 
+const std::string & t_benchmark::get_generator_name (t_id id) const {
+    assert(id > 0);
+    assert(id <= generator_names.size());
+
+    return generator_names[id - 1];
+}
+
 t_id t_benchmark::get_ranker_id (const std::string & name) const {
     t_id_map::const_iterator pos = ranker_ids.find(name);
 
@@ -132,9 +145,19 @@ t_id t_benchmark::get_ranker_id (const std::string & name) const {
     return pos->second;
 }
 
+const std::string & t_benchmark::get_ranker_name (t_id id) const {
+    assert(id > 0);
+    assert(id <= ranker_names.size());
+
+    return ranker_names[id - 1];
+}
+
 t_benchmark & t_benchmark::add_connection (t_id generator_id, t_id ranker_id) {
     assert(generator_id > 0);
+    assert(generator_id <= generators.size());
     assert(ranker_id > 0);
+    assert(rankers_id <= rankers.size());
+
     connections.insert(t_connection(generator_id - 1, ranker_id - 1));
     return (*this);
 }

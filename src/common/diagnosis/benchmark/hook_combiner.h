@@ -17,11 +17,13 @@ protected:
                        const structs::t_candidate & correct);
     virtual void cleanup ();
 
-    virtual void pre_gen (t_id generator_id);
+    virtual void pre_gen (t_id generator_id,
+                          const std::string & name);
     virtual void post_gen (t_candidate_generator::t_ret_type & D,
                            t_time_interval duration);
 
-    virtual void pre_rank (t_id ranker_id);
+    virtual void pre_rank (t_id ranker_id,
+                           const std::string & name);
     virtual void post_rank (const t_candidate_ranker::t_ret_type & probs,
                             t_time_interval duration);
 private:

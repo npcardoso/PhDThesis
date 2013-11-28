@@ -46,7 +46,7 @@ void t_statistics_hook::_post_gen (t_candidate_generator::t_ret_type & D,
     f << "\"" << to_simple_string(second_clock::local_time()) << "\", ";
     f << get_randomizers() << ", ";
     f << get_iterations() << ", ";
-    f << get_generator_id() << ", ";
+    f << get_generator_name() << ", ";
     f << duration << std::endl;
 
     f.close();
@@ -66,8 +66,8 @@ void t_statistics_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs
     f << "\"" << to_simple_string(second_clock::local_time()) << "\", ";
     f << get_randomizers() << ", ";
     f << get_iterations() << ", ";
-    f << get_generator_id() << ", ";
-    f << get_ranker_id() << ", ";
+    f << get_generator_name() << ", ";
+    f << get_ranker_name() << ", ";
     f << duration << std::endl;
 
     f.close();

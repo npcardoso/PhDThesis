@@ -23,9 +23,10 @@ void t_hook_combiner::cleanup () {
     }
 }
 
-void t_hook_combiner::pre_gen (t_id generator_id) {
+void t_hook_combiner::pre_gen (t_id generator_id,
+                               const std::string & name) {
     BOOST_FOREACH(t_benchmark_hook::t_ptr & hook, hook_list) {
-        hook->pre_gen(generator_id);
+        hook->pre_gen(generator_id, name);
     }
 }
 
@@ -36,9 +37,10 @@ void t_hook_combiner::post_gen (t_candidate_generator::t_ret_type & D,
     }
 }
 
-void t_hook_combiner::pre_rank (t_id ranker_id) {
+void t_hook_combiner::pre_rank (t_id ranker_id,
+                                const std::string & name) {
     BOOST_FOREACH(t_benchmark_hook::t_ptr & hook, hook_list) {
-        hook->pre_rank(ranker_id);
+        hook->pre_rank(ranker_id, name);
     }
 }
 

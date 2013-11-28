@@ -44,7 +44,7 @@ void t_save_hook::_post_gen (t_candidate_generator::t_ret_type & D,
     std::ofstream f;
 
 
-    open_iteration_file(boost::lexical_cast<std::string> (get_generator_id()) + ".D.txt", f);
+    open_iteration_file(boost::lexical_cast<std::string> (get_generator_name()) + ".D.txt", f);
     f << D;
     f.close();
 
@@ -58,14 +58,14 @@ void t_save_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
     std::ofstream f;
 
 
-    open_iteration_file(boost::lexical_cast<std::string> (get_generator_id()) + "." +
-                        boost::lexical_cast<std::string> (get_ranker_id()) + ".probs.txt", f);
+    open_iteration_file(boost::lexical_cast<std::string> (get_generator_name()) + "+" +
+                        boost::lexical_cast<std::string> (get_ranker_name()) + ".probs.txt", f);
     f << probs;
     f.close();
 
     structs::t_diagnosis_report diagnosis_rep(*D, probs);
-    open_iteration_file(boost::lexical_cast<std::string> (get_generator_id()) + "." +
-                        boost::lexical_cast<std::string> (get_ranker_id()) + ".report.txt", f);
+    open_iteration_file(boost::lexical_cast<std::string> (get_generator_name()) + "+" +
+                        boost::lexical_cast<std::string> (get_ranker_name()) + ".report.txt", f);
     f << diagnosis_rep;
     f.close();
 }

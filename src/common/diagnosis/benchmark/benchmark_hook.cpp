@@ -30,8 +30,10 @@ void t_basic_benchmark_hook::cleanup () {
     _cleanup();
 }
 
-void t_basic_benchmark_hook::pre_gen (t_id generator_id) {
+void t_basic_benchmark_hook::pre_gen (t_id generator_id,
+                                      const std::string & name) {
     assert(get_ranker_id() == 0);
+    this->generator_name = name;
     this->generator_id = generator_id;
     _pre_gen();
 }
@@ -42,9 +44,11 @@ void t_basic_benchmark_hook::post_gen (t_candidate_generator::t_ret_type & D,
     _post_gen(D, duration);
 }
 
-void t_basic_benchmark_hook::pre_rank (t_id ranker_id) {
+void t_basic_benchmark_hook::pre_rank (t_id ranker_id,
+                                       const std::string & name) {
     assert(get_generator_id() != 0);
     assert(get_ranker_id() == 0);
+    this->ranker_name = name;
     this->ranker_id = ranker_id;
     _pre_rank();
 }
@@ -63,6 +67,14 @@ t_id t_basic_benchmark_hook::get_generator_id () const {
 
 t_id t_basic_benchmark_hook::get_ranker_id () const {
     return ranker_id;
+}
+
+const std::string & t_basic_benchmark_hook::get_generator_name () const {
+    return generator_name;
+}
+
+const std::string & t_basic_benchmark_hook::get_ranker_name () const {
+    return ranker_name;
 }
 }
 }

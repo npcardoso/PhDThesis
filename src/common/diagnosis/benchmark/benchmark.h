@@ -38,7 +38,10 @@ public:
                               const std::string & name);
 
     t_id get_generator_id (const std::string & name) const;
+    const std::string & get_generator_name (t_id generator_id) const;
+
     t_id get_ranker_id (const std::string & name) const;
+    const std::string & get_ranker_name (t_id ranker_id) const;
 
     t_benchmark & add_connection (t_id generator_id,
                                   t_id ranker_id);
@@ -52,6 +55,10 @@ protected:
     typedef std::map<std::string, t_id> t_id_map;
     t_id_map generator_ids;
     t_id_map ranker_ids;
+
+    typedef std::vector<std::string> t_name_vector;
+    t_name_vector generator_names;
+    t_name_vector ranker_names;
 
     std::vector<t_candidate_generator::t_ptr> generators;
     std::vector<t_candidate_ranker::t_ptr> rankers;

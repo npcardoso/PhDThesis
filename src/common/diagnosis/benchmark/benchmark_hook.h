@@ -19,11 +19,13 @@ public:
                        const structs::t_candidate & correct) = 0;
     virtual void cleanup () = 0;
 
-    virtual void pre_gen (t_id generator_id) = 0;
+    virtual void pre_gen (t_id generator_id,
+                          const std::string & name) = 0;
     virtual void post_gen (t_candidate_generator::t_ret_type & D,
                            t_time_interval duration) = 0;
 
-    virtual void pre_rank (t_id ranker_id) = 0;
+    virtual void pre_rank (t_id ranker_id,
+                           const std::string & name) = 0;
     virtual void post_rank (const t_candidate_ranker::t_ret_type & probs,
                             t_time_interval duration) = 0;
 };
@@ -38,11 +40,13 @@ public:
                        const structs::t_candidate & correct);
     virtual void cleanup ();
 
-    virtual void pre_gen (t_id generator_id);
+    virtual void pre_gen (t_id generator_id,
+                          const std::string & name);
     virtual void post_gen (t_candidate_generator::t_ret_type & D,
                            t_time_interval duration);
 
-    virtual void pre_rank (t_id ranker_id);
+    virtual void pre_rank (t_id ranker_id,
+                           const std::string & name);
     virtual void post_rank (const t_candidate_ranker::t_ret_type & probs,
                             t_time_interval duration);
 
@@ -66,9 +70,14 @@ protected:
     t_id get_generator_id () const;
     t_id get_ranker_id () const;
 
+    const std::string & get_generator_name () const;
+    const std::string & get_ranker_name () const;
+
 private:
     t_id generator_id;
+    std::string generator_name;
     t_id ranker_id;
+    std::string ranker_name;
 };
 }
 }

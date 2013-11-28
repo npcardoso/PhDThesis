@@ -21,7 +21,7 @@ public:
         runtime = 0;
     }
 
-    std::ostream& print (std::ostream & out, int rank, bool print_runtime=false) const {
+    std::ostream & print (std::ostream & out, int rank, bool print_runtime=false) const {
         out << "P" << rank << " Calculation Time: " << total_calc << std::endl;
         out << "P" << rank << " Communication Time: " << total_comm << std::endl;
         out << "P" << rank << " Merge Time: " << total_merge << std::endl;

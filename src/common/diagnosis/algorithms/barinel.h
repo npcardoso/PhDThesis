@@ -60,7 +60,7 @@ private:
                              const structs::t_candidate & candidate,
                              const t_barinel_goodnesses & goodnesses,
                              t_probability_mp & ret,
-                             const structs::t_spectra_filter * filter=NULL) const {spectra.probability(candidate, goodnesses, ret, filter, use_confidence, use_fuzzy_error);}
+                             const structs::t_spectra_filter * filter=NULL) const {spectra.probability(candidate, goodnesses, ret, filter, use_confidence, use_fuzzy_error, false);}
 
 public:
     t_goodness_mp g_j;

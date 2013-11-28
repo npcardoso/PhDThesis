@@ -18,20 +18,22 @@ public:
     virtual std::ostream & print (std::ostream & out) const;
 
 public:
+    bool has_confidence;
+    bool print_spectra;
+
     t_count mpi_level;
     t_count mpi_stride;
     t_count mpi_buffer;
 
     bool mpi_hierarchical;
 
-    bool fuzzinel;
+    bool do_ranking;
+    bool do_generation;
+
     bool use_confidence;
-    bool fuzzy_error;
+    bool use_fuzzy_error;
 
-    bool has_confidence;
     bool ambiguity_groups;
-
-    bool print_spectra;
 
     algorithms::t_mhs mhs;
 };

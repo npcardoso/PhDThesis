@@ -21,14 +21,15 @@ class t_spectra {
 public:
     typedef std::set<t_transaction_id> t_invalid_transactions;
 
-
+    // TODO: Move this method a sepate class
     template <class G>
     void probability (const structs::t_candidate & candidate,
                       const G & goodnesses,
                       t_probability_mp & ret,
                       const t_spectra_filter * filter=NULL,
                       bool use_confidence=true,
-                      bool use_fuzzy_error=true) const;
+                      bool use_fuzzy_error=true,
+                      bool use_count=false) const;
 
     inline virtual ~t_spectra () {}
     // Gets
@@ -151,7 +152,8 @@ void t_spectra::probability (const structs::t_candidate & candidate,
                              t_probability_mp & ret,
                              const t_spectra_filter * filter,
                              bool use_confidence,
-                             bool use_fuzzy_error) const {
+                             bool use_fuzzy_error,
+                             bool use_count) const {
     assert(candidate.size() > 0);
 
     t_goodness_mp tmp(goodnesses[0]);
@@ -173,8 +175,12 @@ void t_spectra::probability (const structs::t_candidate & candidate,
             assert(goodnesses[comp] >= 0);
             assert(goodnesses[comp] <= 1);
 
-            if (count)
-                tmp *= pow(goodnesses[comp], count);
+            if (count) {
+                if (use_count)
+                    tmp *= pow(goodnesses[comp], count);
+                else
+                    tmp *= goodnesses[comp];
+            }
 
             c_it++;
             comp++;

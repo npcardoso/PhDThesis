@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e # Stop on error
+
 LLVM_SRC=http://llvm.org/releases/3.3/llvm-3.3.src.tar.gz
 CLANG_SRC=http://llvm.org/releases/3.3/cfe-3.3.src.tar.gz
 RT_SRC=http://llvm.org/releases/3.3/compiler-rt-3.3.src.tar.gz
@@ -16,9 +19,9 @@ BUILD_JOBS=16
 
 DEPS=("$LLVM_SRC $CLANG_SRC $RT_SRC $BOOST_SRC $SCONS_SRC $OPENMPI_SRC $GMP_SRC $MPFR_SRC")
 
-echo "Creating .deps dir"
 
 if [[ ! -e deps ]]; then
+    echo "Creating .deps dir"
     mkdir deps
 fi
 cd deps
@@ -29,7 +32,10 @@ export LD_LIBRARY_PATH=$LDFLAGS
 export CPPFLAGS=-I$PREFIX/include
 export CC=`which gcc`
 export CXX=`which g++`
+
+
 echo "Downloading stuff"
+
 for d in $DEPS; do
     BASENAME=`basename $d`
     DIRNAME=`echo $BASENAME | sed 's/\.tar\..*$//'`
@@ -167,3 +173,10 @@ if [[ ! -e mpfr/ready ]]; then
 else
     echo "Not building MPFR"
 fi
+
+echo "Writing settings to .scons.conf"
+echo "PATH=$PREFIX/bin" >> .scons.conf
+echo "LIBPATH=$PREFIX/lib" >> .scons.conf
+echo "CPPPATH=$PREFIX/include" >> .scons.conf
+
+echo "Done"

@@ -11,7 +11,7 @@ public:
     t_hook_combiner & operator << (t_benchmark_hook::t_ptr & hook);
 
 protected:
-    virtual void init_randomizer (const randomizers::t_spectra_randomizer & randomizer);
+    virtual void init_system (const randomizers::t_system & system);
 
     virtual void init (const structs::t_spectra & spectra,
                        const structs::t_candidate & correct);

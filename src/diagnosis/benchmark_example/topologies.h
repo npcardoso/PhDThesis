@@ -40,12 +40,12 @@ public:
     diagnosis::t_probability sink_prob_min, sink_prob_max;
 };
 
-class t_topology_based_meta_randomizer : public t_randomizer<t_spectra_randomizer> {
+class t_topology_based_architecture : public t_architecture {
 public:
-    inline t_topology_based_meta_randomizer (t_topology_based::t_ptr settings,
-                                             t_randomizer<t_topology>::t_ptr topology_randomizer) : settings(settings), topology_randomizer(topology_randomizer) {}
+    inline t_topology_based_architecture (t_topology_based::t_ptr settings,
+                                          t_randomizer<t_topology>::t_ptr topology_randomizer) : settings(settings), topology_randomizer(topology_randomizer) {}
 
-    virtual t_spectra_randomizer * operator () (boost::random::mt19937 & gen) {
+    virtual t_system * operator () (boost::random::mt19937 & gen) {
         t_topology_based * tmp = new t_topology_based(*settings);
 
 

@@ -6,7 +6,7 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_bernoulli : public t_spectra_randomizer {
+class t_bernoulli : public t_system {
 public:
     t_bernoulli (float activation_rate,
                  float error_rate,
@@ -14,7 +14,7 @@ public:
                  t_count n_comp);
 
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate) const;
+                                              structs::t_candidate & correct_candidate);
 
     virtual std::ostream & write (std::ostream & out) const;
 

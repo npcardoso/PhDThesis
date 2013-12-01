@@ -20,7 +20,7 @@ t_bernoulli::t_bernoulli (float activation_rate,
 }
 
 t_spectra * t_bernoulli::operator () (boost::random::mt19937 & gen,
-                                      structs::t_candidate & correct_candidate) const {
+                                      structs::t_candidate & correct_candidate) {
     t_count_spectra & spectra = *(new t_count_spectra(n_comp, n_tran));
 
 

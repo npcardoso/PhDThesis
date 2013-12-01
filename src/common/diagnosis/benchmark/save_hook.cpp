@@ -12,12 +12,12 @@ t_save_hook::t_save_hook (std::string d) : t_writer_hook(d) {
     D = NULL;
 }
 
-void t_save_hook::_init_randomizer (const randomizers::t_spectra_randomizer & randomizer) {
+void t_save_hook::_init_system (const randomizers::t_system & system) {
     std::ofstream f;
 
 
-    open_file(boost::lexical_cast<std::string> (get_randomizers()) + ".randomizer.txt", f);
-    f << randomizer;
+    open_file(boost::lexical_cast<std::string> (get_system_count()) + ".system.txt", f);
+    f << system;
     f.close();
 }
 

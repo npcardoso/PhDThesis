@@ -8,14 +8,14 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_topology_based : public t_spectra_randomizer {
+class t_topology_based : public t_system {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_topology_based);
     t_topology_based ();
     t_topology_based (structs::t_topology::t_ptr & topology);
 
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate) const;
+                                              structs::t_candidate & correct_candidate);
 
     t_topology_based & set_topology (structs::t_topology::t_ptr & topology);
     t_topology_based & set_topology (structs::t_topology * topology);

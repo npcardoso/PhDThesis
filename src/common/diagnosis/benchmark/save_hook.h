@@ -11,7 +11,7 @@ public:
     t_save_hook (std::string d);
 
 protected:
-    virtual void _init_randomizer (const randomizers::t_spectra_randomizer & randomizer);
+    virtual void _init_system (const randomizers::t_system & system);
 
     virtual void _init (const structs::t_spectra & spectra,
                         const structs::t_candidate & correct);

@@ -20,7 +20,7 @@ const t_benchmark & t_benchmark::operator () (randomizers::t_architecture & arch
     return *this;
 }
 
-const t_benchmark & t_benchmark::operator () (const t_system & system,
+const t_benchmark & t_benchmark::operator () (t_system & system,
                                               boost::random::mt19937 & gen,
                                               t_benchmark_hook & hook) const {
     t_candidate correct;

@@ -109,7 +109,7 @@ const t_topology_based & t_topology_based::operator () (structs::t_count_spectra
 }
 
 structs::t_spectra * t_topology_based::operator () (boost::random::mt19937 & gen,
-                                                    structs::t_candidate & correct_candidate) const {
+                                                    structs::t_candidate & correct_candidate) {
     assert(topology);
     assert(until_nerrors || max_transactions);
 

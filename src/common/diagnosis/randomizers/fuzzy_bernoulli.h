@@ -17,7 +17,7 @@ public:
                         t_count error_count);
 
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate) const;
+                                              structs::t_candidate & correct_candidate);
 
     t_fuzzy_bernoulli & operator << (const structs::t_fault & comp);
 

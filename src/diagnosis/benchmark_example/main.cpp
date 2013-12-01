@@ -16,6 +16,7 @@
 #include "diagnosis/algorithms/barinel.h"
 #include "diagnosis/heuristics/sort.h"
 #include "diagnosis/heuristics/similarity.h"
+#include "diagnosis/randomizers/repeater.h"
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/trie.h"
 #include <list>
@@ -54,9 +55,9 @@ int main (int argc, char ** argv) {
     fn->set_n_faults(2, 6);
 
 
-    // Spectra Meta Randomizer
-    t_topology_based_meta_randomizer meta_randomizer(topology_randomizer, fn);
-
+    // Architecture
+    t_architecture::t_ptr architecture(new t_topology_based_architecture(topology_randomizer, fn));
+    architecture = t_architecture::t_ptr(new t_architecture_repeater(architecture, 3, 5));
 
     // Candidate Generators
     heuristics::t_heuristic heuristic;
@@ -107,7 +108,8 @@ int main (int argc, char ** argv) {
 
 
     // Launch
-    benchmark(meta_randomizer, gen, hook);
+
+    benchmark(*architecture, gen, hook);
 
     return 0;
 }

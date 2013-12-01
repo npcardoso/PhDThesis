@@ -15,7 +15,7 @@ public:
     t_topology_based (structs::t_topology::t_ptr & topology);
 
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate) const;
+                                              structs::t_candidate & correct_candidate);
 
     t_topology_based & set_topology (structs::t_topology::t_ptr & topology);
     t_topology_based & set_topology (structs::t_topology * topology);

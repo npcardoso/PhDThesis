@@ -10,7 +10,7 @@ namespace randomizers {
 t_fuzzy_bernoulli::t_fuzzy_bernoulli  (t_count component_count, float activation_rate, t_count error_count) : component_count(component_count), activation_rate(activation_rate), error_count(error_count) {}
 
 structs::t_spectra * t_fuzzy_bernoulli::operator () (boost::random::mt19937 & gen,
-                                                     structs::t_candidate & correct_candidate) const {
+                                                     structs::t_candidate & correct_candidate) {
     assert(!(error_count > 0 && faulty_components.size() == 0));
 
     bernoulli_distribution<> activation(activation_rate);

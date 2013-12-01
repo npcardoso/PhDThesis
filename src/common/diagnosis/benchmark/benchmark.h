@@ -19,7 +19,7 @@ public:
                                      boost::random::mt19937 & gen,
                                      t_benchmark_hook & hook) const;
 
-    const t_benchmark & operator () (const randomizers::t_system & randomizer,
+    const t_benchmark & operator () (randomizers::t_system & randomizer,
                                      boost::random::mt19937 & gen,
                                      t_benchmark_hook & hook) const;
 

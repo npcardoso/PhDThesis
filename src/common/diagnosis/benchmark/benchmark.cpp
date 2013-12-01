@@ -9,35 +9,29 @@ using namespace diagnosis::randomizers;
 
 namespace diagnosis {
 namespace benchmark {
-const t_benchmark & t_benchmark::operator () (randomizers::t_randomizer<randomizers::t_spectra_randomizer> & meta_randomizer,
+const t_benchmark & t_benchmark::operator () (randomizers::t_architecture & arch,
                                               boost::random::mt19937 & gen,
-                                              t_benchmark_hook & hook,
-                                              t_count systems,
-                                              t_count iterations) const {
-    while (systems--) {
-        t_spectra_randomizer * r = meta_randomizer(gen);
-
-        if (!r)
-            break;
-
-        (* this) (* r, gen, hook, iterations);
-        delete r;
+                                              t_benchmark_hook & hook) const {
+    while (t_system * system = arch(gen)) {
+        (* this) (* system, gen, hook);
+        delete system;
     }
 
     return *this;
 }
 
-const t_benchmark & t_benchmark::operator () (const t_spectra_randomizer & randomizer,
+const t_benchmark & t_benchmark::operator () (const t_system & system,
                                               boost::random::mt19937 & gen,
-                                              t_benchmark_hook & hook,
-                                              t_count iterations) const {
-    hook.init_randomizer(randomizer);
+                                              t_benchmark_hook & hook) const {
+    t_candidate correct;
 
-    while (iterations--) {
-        t_candidate correct;
-        t_spectra * spectra = randomizer(gen, correct);
+
+    hook.init_system(system);
+
+    while (t_spectra * spectra = system(gen, correct)) {
         (* this)(* spectra, correct, hook);
         delete spectra;
+        correct.clear();
     }
 
     return *this;

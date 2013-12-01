@@ -6,7 +6,7 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_bernoulli : public t_spectra_randomizer {
+class t_bernoulli : public t_system {
 public:
     t_bernoulli (float activation_rate,
                  float error_rate,

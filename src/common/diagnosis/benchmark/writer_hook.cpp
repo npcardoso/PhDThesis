@@ -4,7 +4,7 @@
 #include <fstream>
 
 #define FILE_ITERATIONS ".num_iterations.txt"
-#define FILE_RANDOMIZERS "num_randomizers.txt"
+#define FILE_SYSTEMS "num_systems.txt"
 
 namespace diagnosis {
 namespace benchmark {
@@ -13,17 +13,17 @@ t_writer_hook::t_writer_hook (std::string d) : root_dir(d) {
 
 
     iterations = 0;
-    randomizers = 0;
+    systems = 0;
 }
 
-void t_writer_hook::init_randomizer (const randomizers::t_spectra_randomizer & randomizer) {
-    randomizers = read_counter(FILE_RANDOMIZERS) + 1;
-    t_basic_benchmark_hook::init_randomizer(randomizer);
+void t_writer_hook::init_system (const randomizers::t_system & system) {
+    systems = read_counter(FILE_SYSTEMS) + 1;
+    t_basic_benchmark_hook::init_system(system);
 }
 
 void t_writer_hook::init (const structs::t_spectra & spectra,
                           const structs::t_candidate & correct) {
-    t_path iteration_counter = boost::lexical_cast<std::string> (get_randomizers()) + FILE_ITERATIONS;
+    t_path iteration_counter = boost::lexical_cast<std::string> (get_system_count()) + FILE_ITERATIONS;
 
 
     iterations = read_counter(iteration_counter) + 1;
@@ -31,23 +31,23 @@ void t_writer_hook::init (const structs::t_spectra & spectra,
 }
 
 void t_writer_hook::cleanup () {
-    t_path iteration_counter = boost::lexical_cast<std::string> (get_randomizers()) + FILE_ITERATIONS;
+    t_path iteration_counter = boost::lexical_cast<std::string> (get_system_count()) + FILE_ITERATIONS;
 
 
-    assert(get_iterations() > 0);
-    assert(get_iterations() - read_counter(iteration_counter) <= 1);
-    assert(get_randomizers() - read_counter(FILE_RANDOMIZERS) <= 1);
+    assert(get_iteration_count() > 0);
+    assert(get_iteration_count() - read_counter(iteration_counter) <= 1);
+    assert(get_system_count() - read_counter(FILE_SYSTEMS) <= 1);
 
-    write_counter(iteration_counter, get_iterations());
-    write_counter(FILE_RANDOMIZERS, get_randomizers());
+    write_counter(iteration_counter, get_iteration_count());
+    write_counter(FILE_SYSTEMS, get_system_count());
     t_basic_benchmark_hook::cleanup();
 }
 
-bool t_writer_hook::open_randomizer_file (const t_path & rel_path, std::ofstream & f, bool append) const {
+bool t_writer_hook::open_system_file (const t_path & rel_path, std::ofstream & f, bool append) const {
     t_path fname;
 
 
-    fname += boost::lexical_cast<std::string> (get_randomizers()) + ".";
+    fname += boost::lexical_cast<std::string> (get_system_count()) + ".";
     fname += rel_path;
 
     return open_file(fname, f, append);
@@ -57,8 +57,8 @@ bool t_writer_hook::open_iteration_file (const t_path & rel_path, std::ofstream 
     t_path fname;
 
 
-    fname += boost::lexical_cast<std::string> (get_randomizers()) + ".";
-    fname += boost::lexical_cast<std::string> (get_iterations()) + ".";
+    fname += boost::lexical_cast<std::string> (get_system_count()) + ".";
+    fname += boost::lexical_cast<std::string> (get_iteration_count()) + ".";
     fname += rel_path;
 
     return open_file(fname, f, append);
@@ -111,12 +111,12 @@ const t_writer_hook::t_path & t_writer_hook::get_root_dir () const {
     return root_dir;
 }
 
-t_count t_writer_hook::get_iterations () const {
+t_count t_writer_hook::get_iteration_count () const {
     return iterations;
 }
 
-t_count t_writer_hook::get_randomizers () const {
-    return randomizers;
+t_count t_writer_hook::get_system_count () const {
+    return systems;
 }
 }
 }

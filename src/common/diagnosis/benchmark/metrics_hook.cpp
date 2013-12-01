@@ -62,12 +62,12 @@ void t_metrics_hook::_post_rank (const t_candidate_ranker::t_ret_type & probs,
     std::ofstream f;
 
     if (open_file("metrics.csv", f, true))
-        f << "randomizer, iteration, generator, ranker, metric_name, value" << std::endl;
+        f << "system, iteration, generator, ranker, metric_name, value" << std::endl;
 
     BOOST_FOREACH(t_metric::t_arguments::value_type & metric,
                   args) {
-        f << get_randomizers() << ", ";
-        f << get_iterations() << ", ";
+        f << get_system_count() << ", ";
+        f << get_iteration_count() << ", ";
         f << get_generator_name() << ", ";
         f << get_ranker_name() << ", ";
         f << "\"" << metric.first << "\", ";

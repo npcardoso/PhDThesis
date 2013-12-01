@@ -8,7 +8,7 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_topology_based : public t_spectra_randomizer {
+class t_topology_based : public t_system {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_topology_based);
     t_topology_based ();

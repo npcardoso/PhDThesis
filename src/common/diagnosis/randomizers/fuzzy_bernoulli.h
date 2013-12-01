@@ -7,7 +7,7 @@
 
 namespace diagnosis {
 namespace randomizers {
-class t_fuzzy_bernoulli : public t_spectra_randomizer {
+class t_fuzzy_bernoulli : public t_system {
 public:
     typedef std::vector<structs::t_fault> t_faults;
     DEFINE_BOOST_SHARED_PTRS(t_fuzzy_bernoulli);

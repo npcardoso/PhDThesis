@@ -10,7 +10,7 @@ class t_writer_hook : public t_basic_benchmark_hook {
 public:
     typedef boost::filesystem::path t_path;
 
-    virtual void init_randomizer (const randomizers::t_spectra_randomizer & randomizer);
+    virtual void init_system (const randomizers::t_system & system);
     virtual void init (const structs::t_spectra & spectra,
                        const structs::t_candidate & correct);
     virtual void cleanup ();
@@ -19,13 +19,13 @@ public:
 protected:
     t_writer_hook (std::string d);
 
-    t_count get_iterations () const;
-    t_count get_randomizers () const;
+    t_count get_iteration_count () const;
+    t_count get_system_count () const;
 
     // IO
 
     bool open_file (const t_path & rel_path, std::ofstream & f, bool append=false) const; // Returns true if file is new
-    bool open_randomizer_file (const t_path & rel_path, std::ofstream & f, bool append=false) const; // Returns true if file is new
+    bool open_system_file (const t_path & rel_path, std::ofstream & f, bool append=false) const; // Returns true if file is new
     bool open_iteration_file (const t_path & rel_path, std::ofstream & f, bool append=false) const; // Returns true if file is new
     void write_counter (const t_path & rel_path, t_count iterations) const;
     t_count read_counter (const t_path & rel_path) const;
@@ -36,7 +36,7 @@ private:
 private:
     t_path root_dir;
     t_count iterations;
-    t_count randomizers;
+    t_count systems;
 };
 }
 }

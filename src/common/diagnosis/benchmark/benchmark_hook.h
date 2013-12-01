@@ -13,7 +13,7 @@ class t_benchmark_hook {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_benchmark_hook);
 
-    virtual void init_randomizer (const randomizers::t_spectra_randomizer & randomizer) = 0;
+    virtual void init_system (const randomizers::t_system & system) = 0;
 
     virtual void init (const structs::t_spectra & spectra,
                        const structs::t_candidate & correct) = 0;
@@ -34,7 +34,7 @@ class t_basic_benchmark_hook : public t_benchmark_hook {
 public:
     t_basic_benchmark_hook ();
 
-    virtual void init_randomizer (const randomizers::t_spectra_randomizer & randomizer);
+    virtual void init_system (const randomizers::t_system & system);
 
     virtual void init (const structs::t_spectra & spectra,
                        const structs::t_candidate & correct);
@@ -52,7 +52,7 @@ public:
 
 protected:
 
-    inline virtual void _init_randomizer (const randomizers::t_spectra_randomizer & randomizer) {}
+    inline virtual void _init_system (const randomizers::t_system & system) {}
 
     inline virtual void _init (const structs::t_spectra & spectra,
                                const structs::t_candidate & correct) {}

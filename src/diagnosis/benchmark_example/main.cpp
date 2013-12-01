@@ -107,7 +107,7 @@ int main (int argc, char ** argv) {
 
 
     // Launch
-    benchmark(meta_randomizer, gen, hook, 1, 1);
+    benchmark(meta_randomizer, gen, hook);
 
     return 0;
 }

@@ -21,31 +21,31 @@ public:
     inline virtual ~t_randomizer () {}
 };
 
-class t_spectra_randomizer {
+class t_system {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_spectra_randomizer);
+    DEFINE_BOOST_SHARED_PTRS(t_system);
 
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
                                               structs::t_candidate & correct_candidate) const = 0;
 
     virtual std::ostream & write (std::ostream & out) const = 0;
 
-    inline virtual ~t_spectra_randomizer () {}
+    inline virtual ~t_system () {}
 };
 
-class t_spectra_meta_randomizer {
+class t_architecture {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_spectra_meta_randomizer);
+    DEFINE_BOOST_SHARED_PTRS(t_architecture);
 
-    virtual t_spectra_randomizer * operator () (boost::random::mt19937 & gen) const = 0;
+    virtual t_system * operator () (boost::random::mt19937 & gen) const = 0;
 
 
-    inline virtual ~t_spectra_meta_randomizer () {}
+    inline virtual ~t_architecture () {}
 };
 }
 }
 
 namespace std {
-ostream & operator << (ostream & out, const diagnosis::randomizers::t_spectra_randomizer & randomizer);
+ostream & operator << (ostream & out, const diagnosis::randomizers::t_system & system);
 }
 #endif

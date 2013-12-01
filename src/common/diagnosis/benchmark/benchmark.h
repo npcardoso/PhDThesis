@@ -15,20 +15,18 @@ class t_benchmark {
 public:
     typedef std::pair<t_id, t_id> t_connection;
 
-    const t_benchmark & operator () (randomizers::t_randomizer<randomizers::t_spectra_randomizer> & meta_randomizer,
+    const t_benchmark & operator () (randomizers::t_architecture & arch,
                                      boost::random::mt19937 & gen,
-                                     t_benchmark_hook & hook,
-                                     t_count systems,
-                                     t_count iterations) const;
+                                     t_benchmark_hook & hook) const;
 
-    const t_benchmark & operator () (const randomizers::t_spectra_randomizer & randomizer,
+    const t_benchmark & operator () (const randomizers::t_system & randomizer,
                                      boost::random::mt19937 & gen,
-                                     t_benchmark_hook & hook,
-                                     t_count iterations) const;
+                                     t_benchmark_hook & hook) const;
 
     const t_benchmark & operator () (const structs::t_spectra & spectra,
                                      const structs::t_candidate & correct,
                                      t_benchmark_hook & hook) const;
+
     t_benchmark & add_generator (t_candidate_generator::t_ptr & generator);
     t_benchmark & add_generator (t_candidate_generator::t_ptr & generator,
                                  const std::string & name);

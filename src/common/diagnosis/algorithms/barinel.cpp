@@ -48,7 +48,7 @@ t_barinel_model::t_barinel_model (const t_spectra & spectra,
         }
     }
 
-    std::cout << "Symbols p:" << pass << " f:" << fail << std::endl;
+    // std::cout << "Symbols p:" << pass << " f:" << fail << std::endl;
 }
 
 void t_barinel_model::gradient (const t_barinel_goodnesses & goodnesses,
@@ -140,7 +140,7 @@ void t_barinel::operator () (const t_spectra & spectra,
                              const t_candidate & candidate,
                              t_probability_mp & ret,
                              const t_spectra_filter * filter) const {
-    std::cerr << "Barinel candidate " << candidate << std::endl;
+    // std::cerr << "Barinel candidate " << candidate << std::endl;
     t_barinel_model m(spectra,
                       candidate,
                       use_fuzzy_error,
@@ -183,7 +183,7 @@ void t_barinel::operator () (const t_spectra & spectra,
                 lambda /= 8;
                 m.update(g_old, grad, g, lambda);
 
-                std::cerr << "it: " << it << " Overshooting... Pr_old: " << pr_old << " Pr: " << pr << " g_old: " << g_old << " g: " << g << " updating lambda = " << lambda << std::endl;
+                // std::cerr << "it: " << it << " Overshooting... Pr_old: " << pr_old << " Pr: " << pr << " g_old: " << g_old << " g: " << g << " updating lambda = " << lambda << std::endl;
                 // Calculate probability
                 probability(spectra, candidate, g, pr, filter);
             }
@@ -201,7 +201,7 @@ void t_barinel::operator () (const t_spectra & spectra,
                     pr = pr_tmp;
                     g = g_tmp;
                     lambda *= 2;
-                    std::cerr << "it: " << it << " Undershooting... Pr: " << pr << " Pr_tmp: " << pr_tmp << " updating lambda = " << lambda << std::endl;
+                    // std::cerr << "it: " << it << " Undershooting... Pr: " << pr << " Pr_tmp: " << pr_tmp << " updating lambda = " << lambda << std::endl;
                 }
                 else break;
             }
@@ -215,7 +215,7 @@ void t_barinel::operator () (const t_spectra & spectra,
         if (2 * (pr - pr_old) / abs(pr + pr_old) < epsilon)
             break;
 
-        std::cerr << "Old Probability: " << pr_old << " Probability: " << pr << std::endl;
+        // std::cerr << "Old Probability: " << pr_old << " Probability: " << pr << std::endl;
     }
 
     t_probability_mp prior_pr;

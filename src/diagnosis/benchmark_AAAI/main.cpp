@@ -100,7 +100,7 @@ int main (int argc, char ** argv) {
 
     // Benchmark Hooks
     t_hook_combiner hook;
-    hook << new t_verbose_hook();
+    // hook << new t_verbose_hook();
     // hook << new t_save_hook(dest);
     hook << new t_statistics_hook(dest);
     hook << metrics_hook;

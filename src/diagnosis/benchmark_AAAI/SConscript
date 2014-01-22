@@ -7,6 +7,6 @@ env.Append(
 
 sources = Glob("*cpp")
 
-obj = env.Program(target = "benchmark_example", source = sources)
+obj = env.Program(target = "benchmark_AAAI", source = sources)
 env.Depends(obj, env['libdiag_shared'])
 env.Default(env.Install(env['bin_dir'], obj))

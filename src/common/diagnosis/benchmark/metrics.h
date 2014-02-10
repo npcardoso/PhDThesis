@@ -26,9 +26,9 @@ public:
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
                                      const structs::t_diagnosis_report & dr,
-                                     const t_arguments & arguments) = 0;
+                                     const t_arguments & arguments) const = 0;
     template <class T>
-    T get_argument (std::string name, const t_arguments & arguments) {
+    T get_argument (std::string name, const t_arguments & arguments) const {
         t_arguments::const_iterator it = arguments.find(name);
 
 
@@ -49,7 +49,7 @@ public:
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
                                      const structs::t_diagnosis_report & dr,
-                                     const t_arguments & ret);
+                                     const t_arguments & ret) const;
 private:
     static std::string __KEY__;
 };
@@ -63,7 +63,7 @@ public:
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
                                      const structs::t_diagnosis_report & dr,
-                                     const t_arguments & ret);
+                                     const t_arguments & ret) const;
 private:
     static std::string __KEY__;
 };
@@ -77,7 +77,7 @@ public:
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
                                      const structs::t_diagnosis_report & dr,
-                                     const t_arguments & ret);
+                                     const t_arguments & ret) const;
 private:
     static std::string __KEY__;
 };
@@ -93,7 +93,7 @@ public:
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
                                      const structs::t_diagnosis_report & dr,
-                                     const t_arguments & ret);
+                                     const t_arguments & ret) const;
 private:
     std::string target_metric;
     std::string result_metric;
@@ -111,7 +111,7 @@ public:
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
                                      const structs::t_diagnosis_report & dr,
-                                     const t_arguments & ret);
+                                     const t_arguments & ret) const;
 private:
     std::string target_metric;
     std::string result_metric;

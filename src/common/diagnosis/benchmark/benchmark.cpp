@@ -25,8 +25,10 @@ const t_benchmark & t_benchmark::operator () (t_system & system,
                                               t_benchmark_hook & hook) const {
     t_candidate correct;
 
+    t_collector collector(t_path_generator::t_const_ptr(new t_path_single_dir("fooodir"))); // TODO:
 
-    hook.init_system(system);
+
+    // hook.init_system(collector, system);
 
     while (t_spectra * spectra = system(gen, correct)) {
         (* this)(* spectra, correct, hook);
@@ -40,14 +42,20 @@ const t_benchmark & t_benchmark::operator () (t_system & system,
 const t_benchmark & t_benchmark::operator () (const t_spectra & spectra,
                                               const t_candidate & correct,
                                               t_benchmark_hook & hook) const {
-    t_candidate_generator::t_ret_type D;
-
     t_id last_gen_id = generators.size();
 
+    t_collector collector(t_path_generator::t_const_ptr(new t_path_single_dir("fooodir"))); // TODO:
+    t_status_system_init sys_status(0);
 
     // Hook: Init
-    hook.init(spectra,
-              correct);
+    t_status_iteration_init it_status(sys_status, 0, spectra, correct);
+
+
+    hook.init(collector,
+              it_status);
+
+    t_candidate_generator::t_ret_type D;
+    t_status_post_gen gen_status(it_status, "", 0, D);
 
     BOOST_FOREACH(const t_connection &c, connections) {
         t_candidate_ranker::t_ret_type probs;
@@ -56,29 +64,31 @@ const t_benchmark & t_benchmark::operator () (const t_spectra & spectra,
         if (last_gen_id != c.first) {
             D.clear();
 
-            // Hook: Pre-gen
-            hook.pre_gen(c.first + 1, get_generator_name(c.first + 1));
-
             t_time_interval last_time = time_interval();
             (*generators[c.first])(spectra, D);
 
             // Hook: Post-gen
-            hook.post_gen(D, time_interval() - last_time);
+            gen_status = t_status_post_gen(it_status,
+                                           get_generator_name(c.first + 1),
+                                           time_interval() - last_time,
+                                           D);
+            hook.post_gen(collector,
+                          gen_status);
 
             last_gen_id = c.first;
         }
-
-        // Hook: Pre-rank
-        hook.pre_rank(c.second + 1, get_ranker_name(c.second + 1));
 
         t_time_interval last_time = time_interval();
         (*rankers[c.second])(spectra, D, probs);
 
         // Hook: Post-rank
-        hook.post_rank(probs, time_interval() - last_time);
+        t_status_post_rank rank_status(gen_status,
+                                       get_ranker_name(c.second + 1),
+                                       time_interval() - last_time,
+                                       probs);
+        hook.post_rank(collector,
+                       rank_status);
     }
-    // Hook: Cleanup
-    hook.cleanup();
     return *this;
 }
 
@@ -150,7 +160,7 @@ t_benchmark & t_benchmark::add_connection (t_id generator_id, t_id ranker_id) {
     assert(generator_id > 0);
     assert(generator_id <= generators.size());
     assert(ranker_id > 0);
-    assert(rankers_id <= rankers.size());
+    assert(ranker_id <= rankers.size());
 
     connections.insert(t_connection(generator_id - 1, ranker_id - 1));
     return (*this);

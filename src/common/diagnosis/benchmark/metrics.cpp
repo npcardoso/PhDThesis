@@ -35,7 +35,7 @@ std::string t_Cd::operator () (const structs::t_spectra & spectra,
                                const t_candidate_generator::t_ret_type & D,
                                const t_candidate_ranker::t_ret_type & probs,
                                const structs::t_diagnosis_report & dr,
-                               const t_metric::t_arguments & arguments) {
+                               const t_metric::t_arguments & arguments) const {
     t_candidate_ranker::t_ret_type::value_type current = NAN;
     t_count total_elements = 0, elements = 0;
     bool quit = false;
@@ -70,7 +70,7 @@ std::string t_wasted_effort::operator () (const structs::t_spectra & spectra,
                                           const t_candidate_generator::t_ret_type & D,
                                           const t_candidate_ranker::t_ret_type & probs,
                                           const structs::t_diagnosis_report & dr,
-                                          const t_metric::t_arguments & arguments) {
+                                          const t_metric::t_arguments & arguments) const {
     t_count elements = 0;
     t_candidate_ranker::t_ret_type::value_type current = NAN;
     structs::t_candidate remaining(correct), healthy_components;
@@ -110,7 +110,7 @@ std::string t_entropy::operator () (const structs::t_spectra & spectra,
                                     const t_candidate_generator::t_ret_type & D,
                                     const t_candidate_ranker::t_ret_type & probs,
                                     const structs::t_diagnosis_report & dr,
-                                    const t_metric::t_arguments & arguments) {
+                                    const t_metric::t_arguments & arguments) const {
     return dr.get_entropy().toString();
 }
 
@@ -121,7 +121,7 @@ std::string t_quality::operator () (const structs::t_spectra & spectra,
                                     const t_candidate_generator::t_ret_type & D,
                                     const t_candidate_ranker::t_ret_type & probs,
                                     const structs::t_diagnosis_report & dr,
-                                    const t_metric::t_arguments & arguments) {
+                                    const t_metric::t_arguments & arguments) const {
     double metric_value = get_argument<double> (target_metric, arguments);
     t_count remaining_components = (spectra.get_component_count() - correct.size());
 
@@ -139,7 +139,7 @@ std::string t_quality_fair::operator () (const structs::t_spectra & spectra,
                                          const t_candidate_generator::t_ret_type & D,
                                          const t_candidate_ranker::t_ret_type & probs,
                                          const structs::t_diagnosis_report & dr,
-                                         const t_metric::t_arguments & arguments) {
+                                         const t_metric::t_arguments & arguments) const {
     double metric_value = get_argument<double> (target_metric, arguments);
     t_count remaining_components = (spectra.get_suspicious_components_count() - correct.size());
 

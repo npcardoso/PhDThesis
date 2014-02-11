@@ -2,6 +2,7 @@
 
 #include "types.h"
 #include "utils/iostream.h"
+#include "diagnosis/benchmark/path_generator.h"
 #include "diagnosis/benchmark/hooks/hook_combiner.h"
 #include "diagnosis/benchmark/hooks/metrics_hook.h"
 #include "diagnosis/benchmark/hooks/verbose_hook.h"
@@ -41,17 +42,17 @@ int main (int argc, char ** argv) {
     t_topology_based::t_ptr topology_randomizer(new t_topology_based());
 
 
-    topology_randomizer->set_until_nerrors(2);
+    topology_randomizer->set_until_nerrors(7);
     topology_randomizer->set_max_activations(20);
 
     // Topology Randomizer
     t_forwarding_network::t_ptr fn(new t_forwarding_network());
 
 
-    fn->fault = t_fault(0, 0.9, 0.1, 0);
+    fn->fault = t_fault(0.5, 0, 0.5, 0);
     fn->set_levels(3, 10);
     fn->set_per_level(3, 10);
-    fn->set_n_faults(2, 6);
+    fn->set_n_faults(5, 6);
 
 
     // Architecture
@@ -64,17 +65,17 @@ int main (int argc, char ** argv) {
     heuristic.push(new heuristics::t_sort());
 
     t_mhs * mhs_ptr = new t_mhs(heuristic);
-    t_candidate_generator::t_ptr mhs(mhs_ptr);
-    t_candidate_generator::t_ptr single_fault(new t_single_fault());
+    t_candidate_generator::t_const_ptr mhs(mhs_ptr);
+    t_candidate_generator::t_const_ptr single_fault(new t_single_fault());
 
     mhs_ptr->max_time = 1e6;
 
 
     // Candidate Rankers
     t_barinel * barinel_ptr = new t_barinel();
-    t_candidate_ranker::t_ptr barinel(barinel_ptr);
-    t_candidate_ranker::t_ptr fuzzinel(new t_barinel());
-    t_candidate_ranker::t_ptr ochiai(new t_ochiai());
+    t_candidate_ranker::t_const_ptr barinel(barinel_ptr);
+    t_candidate_ranker::t_const_ptr fuzzinel(new t_barinel());
+    t_candidate_ranker::t_const_ptr ochiai(new t_ochiai());
 
 
     barinel_ptr->use_confidence = false;
@@ -89,26 +90,31 @@ int main (int argc, char ** argv) {
     (*metrics_hook) << new t_quality_fair(t_wasted_effort().key());
 
     // Benchmark Hooks
-    t_hook_combiner hook;
-    hook << new t_verbose_hook() << new t_save_hook() << new t_statistics_hook() << metrics_hook;
+    t_hook_combiner * hook_ptr = new t_hook_combiner();
+    (*hook_ptr) << new t_verbose_hook() << new t_save_hook() << new t_statistics_hook() << metrics_hook;
+
+    t_benchmark_hook::t_const_ptr hook(hook_ptr);
+
+    t_path_generator::t_const_ptr path_generator(new t_path_single_dir(dest));
+    t_collector::t_ptr collector(new t_collector(path_generator));
 
     // Benchmark
-    t_benchmark benchmark;
-    benchmark.add_generator(mhs, "mhs");
-    benchmark.add_generator(single_fault, "single_fault");
+    t_benchmark_settings settings(collector, hook);
+    settings.add_generator(mhs, "mhs");
+    settings.add_generator(single_fault, "single_fault");
 
-    benchmark.add_ranker(barinel, "barinel");
-    benchmark.add_ranker(fuzzinel, "fuzzinel");
-    benchmark.add_ranker(ochiai, "ochiai");
+    settings.add_ranker(barinel, "barinel");
+    settings.add_ranker(fuzzinel, "fuzzinel");
+    settings.add_ranker(ochiai, "ochiai");
 
-    benchmark.add_connection("mhs", "barinel");
-    benchmark.add_connection("mhs", "fuzzinel");
-    benchmark.add_connection("single_fault", "ochiai");
+    settings.add_connection("mhs", "barinel");
+    settings.add_connection("mhs", "fuzzinel");
+    settings.add_connection("single_fault", "ochiai");
 
 
     // Launch
-
-    benchmark(*architecture, gen, hook);
+    t_benchmark benchmark;
+    benchmark(*architecture, gen, settings);
 
     return 0;
 }

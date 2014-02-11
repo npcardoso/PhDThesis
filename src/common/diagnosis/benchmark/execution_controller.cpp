@@ -2,17 +2,46 @@
 #include "diagnosis/benchmark/status.h"
 
 #include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace diagnosis {
 namespace benchmark {
+void t_report_csv::thread_init (t_id thread_id, std::string type) {
+    t_element e;
+
+
+    e.start = time_interval();
+    e.desc = type;
+    e.end = 0;
+    threads[thread_id] = e;
+}
+
+void t_report_csv::thread_end (t_id thread_id) {
+    threads[thread_id].end = time_interval();
+}
+
+std::ostream & t_report_csv::print (std::ostream & out) const {
+    out << "id, start, end, type\n";
+
+    BOOST_FOREACH(t_threads::value_type e,
+                  threads) {
+        out << e.first << ", ";
+        out << boost::lexical_cast<std::string> (e.second.start) << ", ";
+        out << boost::lexical_cast<std::string> (e.second.end) << ", \"";
+        out << e.second.desc << "\"\n";
+    }
+    return out;
+}
+
 class t_generator_job : public t_job {
 public:
-    t_generator_job (t_execution_controller & controller,
-                     t_id generator_id,
+    t_generator_job (t_id generator_id,
                      const t_benchmark_settings & settings,
                      const t_status_iteration_init::t_const_ptr & status);
 
-    virtual void operator () () const;
+    virtual void operator () (t_execution_controller & controller) const;
+    virtual std::string get_description () const;
+
 private:
     t_id generator_id;
     const t_benchmark_settings & settings;
@@ -21,12 +50,13 @@ private:
 
 class t_ranker_job : public t_job {
 public:
-    t_ranker_job (t_execution_controller & controller,
-                  t_id ranker_id,
+    t_ranker_job (t_id ranker_id,
                   const t_benchmark_settings & settings,
                   const t_status_post_gen::t_const_ptr & status);
 
-    virtual void operator () () const;
+    virtual void operator () (t_execution_controller & controller) const;
+    virtual std::string get_description () const;
+
 private:
     t_id ranker_id;
     const t_benchmark_settings & settings;
@@ -34,17 +64,12 @@ private:
 };
 
 
-t_execution_controller & t_job::get_controller () const {
-    return controller;
-}
-
-t_generator_job::t_generator_job (t_execution_controller & controller,
-                                  t_id generator_id,
+t_generator_job::t_generator_job (t_id generator_id,
                                   const t_benchmark_settings & settings,
-                                  const t_status_iteration_init::t_const_ptr & status) : t_job(controller), generator_id(generator_id), settings(settings), status(status) {}
+                                  const t_status_iteration_init::t_const_ptr & status) : generator_id(generator_id), settings(settings), status(status) {}
 
 
-void t_generator_job::operator () () const {
+void t_generator_job::operator () (t_execution_controller & controller) const {
     const t_candidate_generator::t_const_ptr & generator = settings.get_generator(generator_id);
     const t_benchmark_hook & hook = settings.get_hook();
     t_collector & collector = settings.get_collector();
@@ -73,19 +98,22 @@ void t_generator_job::operator () () const {
 
 
     BOOST_FOREACH(t_id ranker_id, connections) {
-        get_controller().add_ranker_job(ranker_id,
-                                        settings,
-                                        gen_status);
+        controller.add_ranker_job(ranker_id,
+                                  settings,
+                                  gen_status);
     }
 }
 
-t_ranker_job::t_ranker_job (t_execution_controller & controller,
-                            t_id ranker_id,
+std::string t_generator_job::get_description () const {
+    return "generator";
+}
+
+t_ranker_job::t_ranker_job (t_id ranker_id,
                             const t_benchmark_settings & settings,
-                            const t_status_post_gen::t_const_ptr & status) : t_job(controller), ranker_id(ranker_id), settings(settings), status(status) {}
+                            const t_status_post_gen::t_const_ptr & status) : ranker_id(ranker_id), settings(settings), status(status) {}
 
 
-void t_ranker_job::operator () () const {
+void t_ranker_job::operator () (t_execution_controller & controller) const {
     const t_candidate_ranker::t_const_ptr & ranker = settings.get_ranker(ranker_id);
     const t_benchmark_hook & hook = settings.get_hook();
     t_collector & collector = settings.get_collector();
@@ -110,23 +138,74 @@ void t_ranker_job::operator () () const {
                    rank_status);
 }
 
-bool t_execution_controller::launch_job () {
-    if (jobs.size() == 0)
-        return false;
+std::string t_ranker_job::get_description () const {
+    return "ranker";
+}
 
-    t_priority_job j = jobs.top();
-    jobs.pop();
-    (*j.second)();
-    return true;
+t_execution_controller::t_execution_controller (t_count max_threads,
+                                                const t_execution_report::t_ptr & execution_report) : report(execution_report) {
+    this->max_threads = max_threads;
+    active_threads = 0;
+    total_threads = 0;
+}
+
+void t_execution_controller::launch_job_fun (t_id thread_id,
+                                             t_execution_controller * controller,
+                                             t_job::t_const_ptr & job) {
+    controller->report->thread_init(thread_id, job->get_description());
+    (* job)(* controller);
+    controller->report->thread_end(thread_id);
+    controller->signal();
+}
+
+bool t_execution_controller::launch_job () {
+    boost::mutex::scoped_lock lock(mutex);
+    std::cerr << "active_threads: " << active_threads;
+    std::cerr << " max_threads: " << max_threads << std::endl;
+
+
+    if (active_threads >= max_threads) {
+        std::cerr << "Waiting..." << std::endl;
+        free_slot.wait(lock);
+        std::cerr << "Got condition!!!" << std::endl;
+    }
+
+    if (jobs.size() > 0) {
+        t_priority_job j = jobs.top();
+        jobs.pop();
+        active_threads++;
+        boost::thread t(t_execution_controller::launch_job_fun, total_threads++, this, j.second);
+        t.detach();
+        return true;
+    }
+
+    return false;
+}
+
+void t_execution_controller::signal () {
+    boost::mutex::scoped_lock lock(mutex);
+
+
+    assert(active_threads > 0);
+    active_threads--;
+    free_slot.notify_one();
+}
+
+t_count t_execution_controller::get_job_count () {
+    boost::mutex::scoped_lock lock(mutex);
+
+
+    return jobs.size();
 }
 
 void t_execution_controller::add_generator_job (t_id generator_id,
                                                 const t_benchmark_settings & settings,
                                                 const t_status_iteration_init::t_const_ptr & status) {
-    t_job::t_const_ptr job(new t_generator_job(*this,
-                                               generator_id,
+    t_job::t_const_ptr job(new t_generator_job(generator_id,
                                                settings,
                                                status));
+
+    boost::mutex::scoped_lock lock(mutex);
 
 
     jobs.push(t_priority_job(1, job));
@@ -135,10 +214,11 @@ void t_execution_controller::add_generator_job (t_id generator_id,
 void t_execution_controller::add_ranker_job (t_id & ranker_id,
                                              const t_benchmark_settings & settings,
                                              const t_status_post_gen::t_const_ptr & status) {
-    t_job::t_const_ptr job(new t_ranker_job(*this,
-                                            ranker_id,
+    t_job::t_const_ptr job(new t_ranker_job(ranker_id,
                                             settings,
                                             status));
+
+    boost::mutex::scoped_lock lock(mutex);
 
 
     jobs.push(t_priority_job(2, job)); // The priority values influence the order in which jobs are executed

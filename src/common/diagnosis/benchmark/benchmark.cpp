@@ -20,7 +20,9 @@ const t_benchmark & t_benchmark::operator () (randomizers::t_architecture & arch
 
     t_id sys_id = 1;
 
-    t_execution_controller controller;
+    t_report_csv * report_ptr = new t_report_csv();
+    t_execution_report::t_ptr report(report_ptr);
+    t_execution_controller controller(3, report);
 
 
     while (true) {
@@ -55,12 +57,13 @@ const t_benchmark & t_benchmark::operator () (randomizers::t_architecture & arch
                                              it_status);
             }
 
-            while (controller.launch_job()) ;
+            while (controller.launch_job()) ; // Dispatch jobs
         }
 
         delete system;
     }
 
+    report_ptr->print(std::cerr);
     return *this;
 }
 

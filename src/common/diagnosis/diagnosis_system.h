@@ -21,6 +21,7 @@ public:
                               const structs::t_spectra_filter * filter=NULL) const = 0;
 };
 
+
 class t_candidate_ranker {
 public:
     class t_ret_type : public std::list<t_probability_mp> {
@@ -35,6 +36,7 @@ public:
                               t_ret_type & probs,
                               const structs::t_spectra_filter * filter=NULL) const = 0;
 };
+
 
 class t_diagnosis_system {
 public:

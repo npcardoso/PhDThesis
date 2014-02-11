@@ -15,6 +15,8 @@ namespace diagnosis {
 namespace benchmark {
 class t_status {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_status);
+
     virtual void prepare_entry (t_entry & entry) const = 0;
     inline ~t_status () {}
 protected:
@@ -23,6 +25,8 @@ protected:
 
 class t_status_system_init : public t_status {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_status_system_init);
+
     t_status_system_init (t_id system_id);
     virtual t_id get_system_id () const;
 
@@ -33,6 +37,8 @@ private:
 
 class t_status_iteration_init : public t_status_system_init {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_status_iteration_init);
+
     t_status_iteration_init (const t_status_system_init & status,
                              t_id iteration_id,
                              const structs::t_spectra::t_const_ptr & spectra,
@@ -52,6 +58,8 @@ private:
 
 class t_status_post_gen : public t_status_iteration_init {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_status_post_gen);
+
     t_status_post_gen (const t_status_iteration_init & status,
                        std::string name,
                        t_time_interval duration,
@@ -71,6 +79,7 @@ private:
 
 class t_status_post_rank : public t_status_post_gen {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_status_post_rank);
     t_status_post_rank (const t_status_post_gen & status,
                         std::string name,
                         t_time_interval duration,

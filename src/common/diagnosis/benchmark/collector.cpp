@@ -11,6 +11,8 @@ t_collector::t_collector (t_path_generator::t_const_ptr path_generator) : path_g
 
 void t_collector::add_entry (const t_path & file,
                              const t_entry & entry) {
+    return;
+
     std::cerr << "Adding entry to \"";
     std::cerr << file << "\":" << std::endl;
     std::cerr << entry << std::endl;
@@ -18,6 +20,8 @@ void t_collector::add_entry (const t_path & file,
 
 void t_collector::save_file (const t_path & file,
                              const std::string & data) {
+    return;
+
     std::cerr << "Saving File \"";
     std::cerr << file << "\":" << std::endl;
     std::cerr << data << std::endl;

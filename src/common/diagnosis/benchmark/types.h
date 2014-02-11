@@ -2,6 +2,7 @@
 #define __TYPES_H_31ac11d42bdee89ffbb12d344b9e13ba12593f63__
 
 #include <boost/filesystem/path.hpp>
+#include <list>
 #include <string>
 #include <map>
 

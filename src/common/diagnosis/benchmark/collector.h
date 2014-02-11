@@ -8,7 +8,7 @@ namespace diagnosis {
 namespace benchmark {
 class t_collector {
 public:
-
+    DEFINE_BOOST_SHARED_PTRS(t_collector);
     t_collector (t_path_generator::t_const_ptr path_generator);
 
     void add_entry (const t_path & file,

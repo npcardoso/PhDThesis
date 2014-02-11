@@ -2,13 +2,12 @@
 
 #include "types.h"
 #include "utils/iostream.h"
-#include "diagnosis/benchmark/hook_combiner.h"
-#include "diagnosis/benchmark/metrics_hook.h"
-#include "diagnosis/benchmark/verbose_hook.h"
-#include "diagnosis/benchmark/statistics_hook.h"
-#include "diagnosis/benchmark/save_hook.h"
-#include "diagnosis/benchmark/statistics_hook.h"
-#include "diagnosis/benchmark/benchmark.h"
+#include "diagnosis/benchmark/hooks/hook_combiner.h"
+#include "diagnosis/benchmark/hooks/metrics_hook.h"
+#include "diagnosis/benchmark/hooks/verbose_hook.h"
+#include "diagnosis/benchmark/hooks/statistics_hook.h"
+#include "diagnosis/benchmark/hooks/save_hook.h"
+#include "diagnosis/benchmark/hooks/statistics_hook.h"
 #include "diagnosis/benchmark/metrics.h"
 #include "diagnosis/benchmark/benchmark.h"
 #include "diagnosis/algorithms/single_fault.h"
@@ -91,7 +90,7 @@ int main (int argc, char ** argv) {
     barinel_ptr->use_fuzzy_error = false;
 
     // Metrics
-    t_metrics_hook * metrics_hook = new t_metrics_hook(dest);
+    t_metrics_hook * metrics_hook = new t_metrics_hook();
     (*metrics_hook) << new t_Cd();
     (*metrics_hook) << new t_wasted_effort();
     (*metrics_hook) << new t_entropy();
@@ -102,7 +101,7 @@ int main (int argc, char ** argv) {
     t_hook_combiner hook;
     // hook << new t_verbose_hook();
     // hook << new t_save_hook(dest);
-    hook << new t_statistics_hook(dest);
+    hook << new t_statistics_hook();
     hook << metrics_hook;
 
     // Benchmark

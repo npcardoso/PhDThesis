@@ -2,6 +2,7 @@
 #define __CANDIDATE_H_edf867e97cb99b12f0025a979426b18b2db6b361__
 
 #include "types.h"
+#include "utils/boost.h"
 
 #include <iostream>
 #include <set>
@@ -10,6 +11,7 @@ namespace diagnosis {
 namespace structs {
 class t_candidate : public std::set<t_component_id> {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_candidate);
     inline t_candidate () {}
     template <class InputIterator>
     t_candidate (InputIterator first, InputIterator last,

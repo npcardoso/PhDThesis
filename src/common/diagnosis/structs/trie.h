@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "diagnosis/structs/candidate.h"
+#include "utils/boost.h"
 
 #include <map>
 #include <boost/lexical_cast.hpp>
@@ -13,6 +14,8 @@ class t_trie_iterator;
 
 class t_trie {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_trie);
+
     typedef t_candidate t_value_type;
     typedef t_value_type value_type; // Compatibility with stl
     typedef t_trie_iterator t_iterator;

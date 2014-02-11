@@ -35,8 +35,8 @@ class t_status_iteration_init : public t_status_system_init {
 public:
     t_status_iteration_init (const t_status_system_init & status,
                              t_id iteration_id,
-                             const structs::t_spectra & spectra,
-                             const structs::t_candidate & correct);
+                             const structs::t_spectra::t_const_ptr & spectra,
+                             const structs::t_candidate::t_const_ptr & correct);
 
     virtual t_id get_iteration_id () const;
     virtual const structs::t_spectra & get_spectra () const;
@@ -46,8 +46,8 @@ public:
 
 private:
     t_id iteration_id;
-    const structs::t_spectra * spectra;
-    const structs::t_candidate * correct;
+    structs::t_spectra::t_const_ptr spectra;
+    structs::t_candidate::t_const_ptr correct;
 };
 
 class t_status_post_gen : public t_status_iteration_init {
@@ -55,7 +55,7 @@ public:
     t_status_post_gen (const t_status_iteration_init & status,
                        std::string name,
                        t_time_interval duration,
-                       const t_candidate_generator::t_ret_type & candidates);
+                       const t_candidate_generator::t_ret_type::t_const_ptr & candidates);
 
     virtual const std::string & get_gen_name () const;
     virtual t_time_interval get_gen_duration () const;
@@ -66,7 +66,7 @@ public:
 private:
     std::string name;
     t_time_interval duration;
-    const t_candidate_generator::t_ret_type * candidates;
+    t_candidate_generator::t_ret_type::t_const_ptr candidates;
 };
 
 class t_status_post_rank : public t_status_post_gen {
@@ -74,7 +74,7 @@ public:
     t_status_post_rank (const t_status_post_gen & status,
                         std::string name,
                         t_time_interval duration,
-                        const t_candidate_ranker::t_ret_type & probs);
+                        const t_candidate_ranker::t_ret_type::t_const_ptr & probs);
 
     virtual const std::string & get_rank_name () const;
     virtual t_time_interval get_rank_duration () const;
@@ -85,7 +85,7 @@ public:
 private:
     std::string name;
     t_time_interval duration;
-    const t_candidate_ranker::t_ret_type * probs;
+    t_candidate_ranker::t_ret_type::t_const_ptr probs;
 };
 }
 }

@@ -22,11 +22,14 @@ void t_status_system_init::prepare_entry (t_entry & entry) const {
 
 t_status_iteration_init::t_status_iteration_init (const t_status_system_init & status,
                                                   t_id iteration_id,
-                                                  const structs::t_spectra & spectra,
-                                                  const structs::t_candidate & correct) : t_status_system_init(status) {
+                                                  const structs::t_spectra::t_const_ptr & spectra,
+                                                  const structs::t_candidate::t_const_ptr & correct) : t_status_system_init(status) {
+    assert(spectra.get() != NULL);
+    assert(correct.get() != NULL);
+
     this->iteration_id = iteration_id;
-    this->spectra = &spectra;
-    this->correct = &correct;
+    this->spectra = spectra;
+    this->correct = correct;
 }
 
 t_id t_status_iteration_init::get_iteration_id () const {
@@ -51,10 +54,11 @@ void t_status_iteration_init::prepare_entry (t_entry & entry) const {
 t_status_post_gen::t_status_post_gen (const t_status_iteration_init & status,
                                       std::string name,
                                       t_time_interval duration,
-                                      const t_candidate_generator::t_ret_type & candidates) : t_status_iteration_init(status) {
+                                      const t_candidate_generator::t_ret_type::t_const_ptr & candidates) : t_status_iteration_init(status) {
+    assert(candidates.get() != NULL);
     this->name = name;
     this->duration = duration;
-    this->candidates = &candidates;
+    this->candidates = candidates;
 }
 
 const std::string & t_status_post_gen::get_gen_name () const {
@@ -79,10 +83,11 @@ void t_status_post_gen::prepare_entry (t_entry & entry) const {
 t_status_post_rank::t_status_post_rank (const t_status_post_gen & status,
                                         std::string name,
                                         t_time_interval duration,
-                                        const t_candidate_ranker::t_ret_type & probs) : t_status_post_gen(status) {
+                                        const t_candidate_ranker::t_ret_type::t_const_ptr & probs) : t_status_post_gen(status) {
+    assert(probs.get() != NULL);
     this->name = name;
     this->duration = duration;
-    this->probs = &probs;
+    this->probs = probs;
 }
 
 const std::string & t_status_post_rank::get_rank_name () const {

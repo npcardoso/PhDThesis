@@ -24,6 +24,7 @@ boost::filesystem::path t_path_single_dir::operator () (const t_entry & entry,
     bool first = true;
 
 
+    // FIXME: Fix element ordering
     BOOST_FOREACH(t_entry::value_type s, entry) {
         if (first)
             p /= s.second + ".";

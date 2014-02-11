@@ -23,26 +23,31 @@ const t_benchmark & t_benchmark::operator () (randomizers::t_architecture & arch
 const t_benchmark & t_benchmark::operator () (t_system & system,
                                               boost::random::mt19937 & gen,
                                               t_benchmark_hook & hook) const {
-    t_candidate correct;
-
     t_collector collector(t_path_generator::t_const_ptr(new t_path_single_dir("fooodir"))); // TODO:
 
 
     // hook.init_system(collector, system);
 
-    while (t_spectra * spectra = system(gen, correct)) {
-        (* this)(* spectra, correct, hook);
-        delete spectra;
-        correct.clear();
+    while (true) {
+        t_candidate * correct_tmp = new t_candidate();
+        t_spectra::t_const_ptr spectra(system(gen, *correct_tmp));
+        t_candidate::t_const_ptr correct(correct_tmp);
+
+        if (spectra.get() == NULL)
+            break;
+
+        (* this)(spectra, correct, hook);
     }
 
     return *this;
 }
 
-const t_benchmark & t_benchmark::operator () (const t_spectra & spectra,
-                                              const t_candidate & correct,
+const t_benchmark & t_benchmark::operator () (const t_spectra::t_const_ptr & spectra,
+                                              const t_candidate::t_const_ptr & correct,
                                               t_benchmark_hook & hook) const {
-    t_id last_gen_id = generators.size();
+    assert(spectra.get() != NULL);
+    assert(correct.get() != NULL);
+
 
     t_collector collector(t_path_generator::t_const_ptr(new t_path_single_dir("fooodir"))); // TODO:
     t_status_system_init sys_status(0);
@@ -54,41 +59,46 @@ const t_benchmark & t_benchmark::operator () (const t_spectra & spectra,
     hook.init(collector,
               it_status);
 
-    t_candidate_generator::t_ret_type D;
-    t_status_post_gen gen_status(it_status, "", 0, D);
 
-    BOOST_FOREACH(const t_connection &c, connections) {
-        t_candidate_ranker::t_ret_type probs;
+    t_connections::const_iterator c = connections.begin();
 
+    while (c != connections.end()) {
+        t_id last_gen_id = c->first;
+        t_candidate_generator::t_ret_type * candidates_tmp(new t_candidate_generator::t_ret_type());
+        ;
+        t_candidate_generator::t_ret_type::t_const_ptr candidates(candidates_tmp);
 
-        if (last_gen_id != c.first) {
-            D.clear();
-
-            t_time_interval last_time = time_interval();
-            (*generators[c.first])(spectra, D);
-
-            // Hook: Post-gen
-            gen_status = t_status_post_gen(it_status,
-                                           get_generator_name(c.first + 1),
-                                           time_interval() - last_time,
-                                           D);
-            hook.post_gen(collector,
-                          gen_status);
-
-            last_gen_id = c.first;
-        }
 
         t_time_interval last_time = time_interval();
-        (*rankers[c.second])(spectra, D, probs);
+        (*generators[c->first])(*spectra, *candidates_tmp);
 
-        // Hook: Post-rank
-        t_status_post_rank rank_status(gen_status,
-                                       get_ranker_name(c.second + 1),
-                                       time_interval() - last_time,
-                                       probs);
-        hook.post_rank(collector,
-                       rank_status);
+        // Hook: Post-gen
+        t_status_post_gen gen_status(it_status,
+                                     get_generator_name(c->first + 1),
+                                     time_interval() - last_time,
+                                     candidates);
+        hook.post_gen(collector,
+                      gen_status);
+
+        // Rankers
+        while (c != connections.end() && c->first == last_gen_id) {
+            t_candidate_ranker::t_ret_type * probs_tmp(new t_candidate_ranker::t_ret_type());
+            t_candidate_ranker::t_ret_type::t_const_ptr probs(probs_tmp);
+
+            t_time_interval last_time = time_interval();
+            (*rankers[c->second])(*spectra, *candidates, *probs_tmp);
+
+            // Hook: Post-rank
+            t_status_post_rank rank_status(gen_status,
+                                           get_ranker_name(c->second + 1),
+                                           time_interval() - last_time,
+                                           probs);
+            hook.post_rank(collector,
+                           rank_status);
+            c++;
+        }
     }
+
     return *this;
 }
 

@@ -23,7 +23,11 @@ public:
 
 class t_candidate_ranker {
 public:
-    typedef std::list<t_probability_mp> t_ret_type;
+    class t_ret_type : public std::list<t_probability_mp> {
+public:
+        DEFINE_BOOST_SHARED_PTRS(t_ret_type);
+    };
+
     DEFINE_BOOST_SHARED_PTRS(t_candidate_ranker);
 
     virtual void operator () (const structs::t_spectra & spectra,

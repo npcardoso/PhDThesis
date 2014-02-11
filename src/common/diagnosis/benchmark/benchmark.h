@@ -24,8 +24,8 @@ public:
                                      boost::random::mt19937 & gen,
                                      t_benchmark_hook & hook) const;
 
-    const t_benchmark & operator () (const structs::t_spectra & spectra,
-                                     const structs::t_candidate & correct,
+    const t_benchmark & operator () (const structs::t_spectra::t_const_ptr & spectra,
+                                     const structs::t_candidate::t_const_ptr & correct,
                                      t_benchmark_hook & hook) const;
 
     t_benchmark & add_generator (t_candidate_generator::t_ptr & generator);
@@ -49,7 +49,8 @@ public:
 
 
 protected:
-    std::set<t_connection> connections;
+    typedef std::set<t_connection> t_connections;
+    t_connections connections;
 
     typedef std::map<std::string, t_id> t_id_map;
     t_id_map generator_ids;

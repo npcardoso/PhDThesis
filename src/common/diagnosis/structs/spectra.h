@@ -6,6 +6,7 @@
 #include "diagnosis/structs/candidate.h"
 #include "diagnosis/structs/spectra_filter.h"
 #include "diagnosis/structs/spectra_iterator.h"
+#include "utils/boost.h"
 
 
 #include "exceptions.h"
@@ -19,6 +20,7 @@ namespace diagnosis {
 namespace structs {
 class t_spectra {
 public:
+    DEFINE_BOOST_SHARED_PTRS(t_spectra);
     typedef std::set<t_transaction_id> t_invalid_transactions;
 
     // TODO: Move this method a sepate class

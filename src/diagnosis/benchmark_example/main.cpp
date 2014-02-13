@@ -95,10 +95,11 @@ int main (int argc, char ** argv) {
 
     t_benchmark_hook::t_const_ptr hook(hook_ptr);
 
+    // Collector
     t_path_generator::t_const_ptr path_generator(new t_path_single_dir(dest));
     t_collector::t_ptr collector(new t_collector(path_generator));
 
-    // Benchmark
+    // Benchmark Settings
     t_benchmark_settings settings(collector, hook);
     settings.add_generator(mhs, "mhs");
     settings.add_generator(single_fault, "single_fault");
@@ -111,10 +112,20 @@ int main (int argc, char ** argv) {
     settings.add_connection("mhs", "fuzzinel");
     settings.add_connection("single_fault", "ochiai");
 
+    // Execution Controller
+
+    t_report_csv * report_ptr = new t_report_csv();
+    t_execution_report::t_ptr report(report_ptr);
+    t_execution_controller controller(3, report);
 
     // Launch
-    t_benchmark benchmark;
-    benchmark(*architecture, gen, settings);
+    run_benchmark(*architecture,
+                  gen,
+                  settings,
+                  controller);
+
+    report_ptr->print(std::cout) << std::endl;
+
 
     return 0;
 }

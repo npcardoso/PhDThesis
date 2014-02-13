@@ -69,6 +69,7 @@ public:
     void add_job (const t_job::t_const_ptr & job);
     t_count get_job_count ();
     bool launch_job ();
+    void join_all ();
 
 private:
     class t_queued_job {

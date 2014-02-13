@@ -101,13 +101,16 @@ int main (int argc, char ** argv) {
 
     // Benchmark Hooks
     t_hook_combiner * hook_ptr = new t_hook_combiner();
-    // hook_ptr << new t_verbose_hook();
+    (*hook_ptr) << new t_verbose_hook();
     // hook_ptr << new t_save_hook(dest);
     (*hook_ptr) << new t_statistics_hook();
     (*hook_ptr) << metrics_hook;
 
 
     t_benchmark_hook::t_const_ptr hook(hook_ptr);
+
+
+    // Collector
 
     t_path_generator::t_const_ptr path_generator(new t_path_single_dir(dest));
     t_collector::t_ptr collector(new t_collector(path_generator));
@@ -127,9 +130,18 @@ int main (int argc, char ** argv) {
     // benchmark.add_connection("single_fault", "ochiai");
 
 
-    // Launch
-    t_benchmark benchmark;
-    benchmark(*architecture, gen, settings);
+    // Execution Controller
+    t_report_csv * report_ptr = new t_report_csv();
+    t_execution_report::t_ptr report(report_ptr);
+    t_execution_controller controller(3, report);
 
+    // Launch
+    run_benchmark(*architecture,
+                  gen,
+                  settings,
+                  controller);
+
+
+    report_ptr->print(std::cout) << std::endl;
     return 0;
 }

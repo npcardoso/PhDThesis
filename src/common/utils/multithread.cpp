@@ -89,6 +89,14 @@ bool t_execution_controller::launch_job () {
     return false;
 }
 
+void t_execution_controller::join_all () {
+    boost::mutex::scoped_lock lock(mutex);
+
+
+    while (active_threads > 0)
+        free_slot.wait(lock);
+}
+
 void t_execution_controller::launch_job_fun (t_execution_controller * controller,
                                              t_queued_job queued_job) {
     (*queued_job.get_job())(*controller);

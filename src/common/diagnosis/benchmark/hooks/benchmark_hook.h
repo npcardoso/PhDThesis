@@ -15,17 +15,17 @@ class t_benchmark_hook {
 public:
     DEFINE_BOOST_SHARED_PTRS(t_benchmark_hook);
 
-    inline virtual void init_system (t_collector & collector,
-                                     const randomizers::t_system & system) const {}
+    inline virtual void trigger_event (t_collector & collector,
+                                       const randomizers::t_system & system) const {}
 
-    inline virtual void init (t_collector & collector,
-                              const t_status_iteration_init & status) const {}
+    inline virtual void trigger_event (t_collector & collector,
+                                       const t_status_iteration_init & status) const {}
 
-    inline virtual void post_gen (t_collector & collector,
-                                  const t_status_post_gen & status) const {}
+    inline virtual void trigger_event (t_collector & collector,
+                                       const t_status_post_gen & status) const {}
 
-    inline virtual void post_rank (t_collector & collector,
-                                   const t_status_post_rank & status) const {}
+    inline virtual void trigger_event (t_collector & collector,
+                                       const t_status_post_rank & status) const {}
 
     inline virtual ~t_benchmark_hook () {}
 };

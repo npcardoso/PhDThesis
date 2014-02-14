@@ -4,31 +4,31 @@
 
 namespace diagnosis {
 namespace benchmark {
-void t_hook_combiner::init_system (t_collector & collector,
-                                   const randomizers::t_system & system) const {
+void t_hook_combiner::trigger_event (t_collector & collector,
+                                     const randomizers::t_system & system) const {
     BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
-        hook->init_system(collector, system);
+        hook->trigger_event(collector, system);
     }
 }
 
-void t_hook_combiner::init (t_collector & collector,
-                            const t_status_iteration_init & status) const {
+void t_hook_combiner::trigger_event (t_collector & collector,
+                                     const t_status_iteration_init & status) const {
     BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
-        hook->init(collector, status);
+        hook->trigger_event(collector, status);
     }
 }
 
-void t_hook_combiner::post_gen (t_collector & collector,
-                                const t_status_post_gen & status) const {
+void t_hook_combiner::trigger_event (t_collector & collector,
+                                     const t_status_post_gen & status) const {
     BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
-        hook->post_gen(collector, status);
+        hook->trigger_event(collector, status);
     }
 }
 
-void t_hook_combiner::post_rank (t_collector & collector,
-                                 const t_status_post_rank & status) const {
+void t_hook_combiner::trigger_event (t_collector & collector,
+                                     const t_status_post_rank & status) const {
     BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
-        hook->post_rank(collector, status);
+        hook->trigger_event(collector, status);
     }
 }
 

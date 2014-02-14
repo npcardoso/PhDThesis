@@ -9,11 +9,11 @@ namespace diagnosis {
 namespace benchmark {
 class t_job_tracker_hook : public t_benchmark_hook {
 public:
-    virtual void post_gen (t_collector & collector,
-                           const t_status_post_gen & status) const;
+    virtual void trigger_event (t_collector & collector,
+                                const t_status_post_gen & status) const;
 
-    virtual void post_rank (t_collector & collector,
-                            const t_status_post_rank & status) const;
+    virtual void trigger_event (t_collector & collector,
+                                const t_status_post_rank & status) const;
 };
 }
 }

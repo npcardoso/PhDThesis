@@ -12,8 +12,8 @@ public:
     t_metrics_hook & operator << (t_metric::t_ptr & metric);
     t_metrics_hook & operator << (t_metric * metric);
 
-    virtual void post_rank (t_collector & collector,
-                            const t_status_post_rank & status) const;
+    virtual void trigger_event (t_collector & collector,
+                                const t_status_post_rank & status) const;
 
 private:
     typedef std::list<t_metric::t_ptr> t_metrics_list;

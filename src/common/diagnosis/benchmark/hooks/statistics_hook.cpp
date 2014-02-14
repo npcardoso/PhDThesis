@@ -7,8 +7,8 @@ using namespace boost::posix_time;
 
 namespace diagnosis {
 namespace benchmark {
-void t_statistics_hook::init (t_collector & collector,
-                              const t_status_iteration_init & status) const {
+void t_statistics_hook::trigger_event (t_collector & collector,
+                                       const t_status_iteration_init & status) const {
     t_path file = collector.global_path("stats.spectra.csv");
     t_entry entry;
 
@@ -26,8 +26,8 @@ void t_statistics_hook::init (t_collector & collector,
     collector.add_entry(file, entry);
 }
 
-void t_statistics_hook::post_gen (t_collector & collector,
-                                  const t_status_post_gen & status) const {
+void t_statistics_hook::trigger_event (t_collector & collector,
+                                       const t_status_post_gen & status) const {
     t_path file = collector.global_path("stats.D.csv");
     t_entry entry;
 
@@ -42,8 +42,8 @@ void t_statistics_hook::post_gen (t_collector & collector,
     collector.add_entry(file, entry);
 }
 
-void t_statistics_hook::post_rank (t_collector & collector,
-                                   const t_status_post_rank & status) const {
+void t_statistics_hook::trigger_event (t_collector & collector,
+                                       const t_status_post_rank & status) const {
     t_path file = collector.global_path("stats.probs.csv");
     t_entry entry;
 

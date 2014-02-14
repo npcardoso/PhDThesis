@@ -69,8 +69,8 @@ void t_generator_job::operator () () const {
                                start_time,
                                time_interval(),
                                candidates));
-    settings.get_hook().post_gen(settings.get_collector(),
-                                 *gen_status);
+    settings.get_hook().trigger_event(settings.get_collector(),
+                                      *gen_status);
 
 
     BOOST_FOREACH(t_id ranker_id, connections) {
@@ -121,8 +121,8 @@ void t_ranker_job::operator () () const {
                                    start_time,
                                    time_interval(),
                                    probs);
-    settings.get_hook().post_rank(settings.get_collector(),
-                                  rank_status);
+    settings.get_hook().trigger_event(settings.get_collector(),
+                                      rank_status);
 }
 
 std::string t_ranker_job::get_type () const {
@@ -149,8 +149,8 @@ void run_benchmark (randomizers::t_architecture & arch,
 
         // Hook: System Init
         t_status_system_init sys_status(sys_id++);
-        settings.get_hook().init_system(settings.get_collector(),
-                                        *system);
+        settings.get_hook().trigger_event(settings.get_collector(),
+                                          *system);
 
         while (true) {
             t_candidate * correct_tmp = new t_candidate();
@@ -167,8 +167,8 @@ void run_benchmark (randomizers::t_architecture & arch,
                                              time_interval(),
                                              spectra,
                                              correct));
-            settings.get_hook().init(settings.get_collector(),
-                                     *it_status);
+            settings.get_hook().trigger_event(settings.get_collector(),
+                                              *it_status);
 
             for (t_id gen_id = 1;
                  gen_id <= settings.get_generator_count();

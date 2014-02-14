@@ -15,8 +15,8 @@ t_metrics_hook & t_metrics_hook::operator << (t_metric * metric) {
     return *this;
 }
 
-void t_metrics_hook::post_rank (t_collector & collector,
-                                const t_status_post_rank & status) const {
+void t_metrics_hook::trigger_event (t_collector & collector,
+                                    const t_status_post_rank & status) const {
     structs::t_diagnosis_report dr(status.get_candidates(),
                                    status.get_probs());
 

@@ -24,17 +24,24 @@ public:
         open_file(in);
         csv.read(in);
         in.close();
+
+        need_flush = false;
     }
 
     virtual void flush () {
         boost::mutex::scoped_lock lock(mutex);
-        ofstream out;
 
 
-        open_file(out);
-        csv.write(out);
-        out.close();
-        std::cerr << "Flushing csv file: " << get_path() << std::endl;
+        if (need_flush) {
+            ofstream out;
+
+
+            open_file(out);
+            csv.write(out);
+            out.close();
+            std::cerr << "Flushing csv file: " << get_path() << std::endl;
+            need_flush = false;
+        }
     }
 
     void add_row (const t_entry & entry) {
@@ -42,10 +49,29 @@ public:
 
 
         csv.add_row(entry);
+        need_flush = true;
     }
 
 private:
+    bool need_flush;
     t_csv csv;
+};
+
+class t_normal_file : public t_file {
+public:
+    t_normal_file (const t_path & path) : t_file(path) {}
+
+    void save (const std::string & data) {
+        boost::mutex::scoped_lock lock(mutex);
+        ofstream out;
+
+
+        open_file(out);
+        out << data;
+        out.close();
+    }
+
+    void flush () {}
 };
 
 
@@ -61,17 +87,19 @@ void t_collector::add_entry (const t_path & path,
         file->add_row(entry);
 }
 
-void t_collector::save_file (const t_path & file,
+void t_collector::save_file (const t_path & path,
                              const std::string & data) {
-    return;
+    t_normal_file * file = get_file<t_normal_file> (path.string());
 
-    std::cerr << "Saving File \"";
-    std::cerr << file << "\":" << std::endl;
-    std::cerr << data << std::endl;
+
+    // TODO: Handle cases where file == NULL
+    if (file)
+        file->save(data);
 }
 
 void t_collector::debug (const t_status & status,
                          const std::string & data) {
+    boost::mutex::scoped_lock lock(mutex);
     t_entry entry;
 
 
@@ -102,8 +130,8 @@ void t_collector::flush_all () {
     BOOST_FOREACH(t_files::value_type file, files) {
         file->flush();
     }
-    files.clear();
-    paths.clear();
+    // files.clear();
+    // paths.clear();
 }
 
 t_collector::~t_collector () {

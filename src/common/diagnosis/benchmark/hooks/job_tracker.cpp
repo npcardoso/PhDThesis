@@ -15,7 +15,7 @@ void t_job_tracker_hook::trigger_event (t_collector & collector,
 
 
     entry["type"] = status.get_gen_name();
-    entry["trigger_event"] = lexical_cast<std::string> (status.get_iteration_start());
+    entry["init"] = lexical_cast<std::string> (status.get_iteration_start());
     entry["start"] = lexical_cast<std::string> (status.get_gen_start());
     entry["end"] = lexical_cast<std::string> (status.get_gen_end());
     collector.add_entry(file, entry);
@@ -28,7 +28,7 @@ void t_job_tracker_hook::trigger_event (t_collector & collector,
 
 
     entry["type"] = status.get_rank_name();
-    entry["trigger_event"] = lexical_cast<std::string> (status.get_gen_end());
+    entry["init"] = lexical_cast<std::string> (status.get_gen_end());
     entry["start"] = lexical_cast<std::string> (status.get_rank_start());
     entry["end"] = lexical_cast<std::string> (status.get_rank_end());
     collector.add_entry(file, entry);

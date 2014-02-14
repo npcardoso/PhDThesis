@@ -15,8 +15,6 @@ namespace diagnosis {
 namespace benchmark {
 class t_status {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_status);
-
     virtual void prepare_entry (t_entry & entry) const = 0;
     inline ~t_status () {}
 protected:
@@ -25,8 +23,6 @@ protected:
 
 class t_status_system_init : public t_status {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_status_system_init);
-
     t_status_system_init (t_id system_id);
     virtual t_id get_system_id () const;
 
@@ -37,13 +33,11 @@ private:
 
 class t_status_iteration_init : public t_status_system_init {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_status_iteration_init);
-
     t_status_iteration_init (const t_status_system_init & status,
                              t_id iteration_id,
                              t_time_interval start,
-                             const structs::t_spectra::t_const_ptr & spectra,
-                             const structs::t_candidate::t_const_ptr & correct);
+                             const t_const_ptr<structs::t_spectra> & spectra,
+                             const t_const_ptr<structs::t_candidate> & correct);
 
     t_id get_iteration_id () const;
 
@@ -57,19 +51,17 @@ public:
 private:
     t_id iteration_id;
     t_time_interval start;
-    structs::t_spectra::t_const_ptr spectra;
-    structs::t_candidate::t_const_ptr correct;
+    t_const_ptr<structs::t_spectra> spectra;
+    t_const_ptr<structs::t_candidate> correct;
 };
 
 class t_status_post_gen : public t_status_iteration_init {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_status_post_gen);
-
     t_status_post_gen (const t_status_iteration_init & status,
                        std::string name,
                        t_time_interval start,
                        t_time_interval end,
-                       const t_candidate_generator::t_ret_type::t_const_ptr & candidates);
+                       const t_const_ptr<t_candidate_generator::t_ret_type> & candidates);
 
     virtual const std::string & get_gen_name () const;
 
@@ -86,17 +78,16 @@ private:
     t_time_interval start;
     t_time_interval end;
 
-    t_candidate_generator::t_ret_type::t_const_ptr candidates;
+    t_const_ptr<t_candidate_generator::t_ret_type> candidates;
 };
 
 class t_status_post_rank : public t_status_post_gen {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_status_post_rank);
     t_status_post_rank (const t_status_post_gen & status,
                         std::string name,
                         t_time_interval start,
                         t_time_interval end,
-                        const t_candidate_ranker::t_ret_type::t_const_ptr & probs);
+                        const t_const_ptr<t_candidate_ranker::t_ret_type> & probs);
 
     virtual const std::string & get_rank_name () const;
 
@@ -113,7 +104,7 @@ private:
     t_time_interval start;
     t_time_interval end;
 
-    t_candidate_ranker::t_ret_type::t_const_ptr probs;
+    t_const_ptr<t_candidate_ranker::t_ret_type> probs;
 };
 }
 }

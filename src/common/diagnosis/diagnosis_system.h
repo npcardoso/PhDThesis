@@ -14,7 +14,6 @@ namespace diagnosis {
 class t_candidate_generator {
 public:
     typedef structs::t_trie t_ret_type;
-    DEFINE_BOOST_SHARED_PTRS(t_candidate_generator);
 
     virtual void operator () (const structs::t_spectra & spectra,
                               t_ret_type & D,
@@ -26,10 +25,7 @@ class t_candidate_ranker {
 public:
     class t_ret_type : public std::list<t_probability_mp> {
 public:
-        DEFINE_BOOST_SHARED_PTRS(t_ret_type);
     };
-
-    DEFINE_BOOST_SHARED_PTRS(t_candidate_ranker);
 
     virtual void operator () (const structs::t_spectra & spectra,
                               const structs::t_trie & D,
@@ -40,10 +36,8 @@ public:
 
 class t_diagnosis_system {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_diagnosis_system);
-
-    inline t_diagnosis_system (const t_candidate_generator::t_ptr & gen,
-                               const t_candidate_ranker::t_ptr & rank) : generator(gen), ranker(rank) {}
+    inline t_diagnosis_system (const t_ptr<t_candidate_generator> & gen,
+                               const t_ptr<t_candidate_ranker> & rank) : generator(gen), ranker(rank) {}
 
     virtual void operator () (const structs::t_spectra & spectra,
                               t_candidate_generator::t_ret_type & D,
@@ -51,8 +45,8 @@ public:
                               const structs::t_spectra_filter * filter=NULL) const;
 
 protected:
-    t_candidate_generator::t_ptr generator;
-    t_candidate_ranker::t_ptr ranker;
+    t_ptr<t_candidate_generator> generator;
+    t_ptr<t_candidate_ranker> ranker;
 };
 }
 

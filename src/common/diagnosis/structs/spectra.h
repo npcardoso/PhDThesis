@@ -20,7 +20,6 @@ namespace diagnosis {
 namespace structs {
 class t_spectra {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_spectra);
     typedef std::set<t_transaction_id> t_invalid_transactions;
 
     // TODO: Move this method a sepate class

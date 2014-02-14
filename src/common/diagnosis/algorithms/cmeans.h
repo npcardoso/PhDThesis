@@ -19,7 +19,7 @@ public:
 
     t_count num_iterations, locked_centroids;
     t_data m, epsilon;
-    t_distance_function::t_ptr dist_function;
+    t_ptr<t_distance_function> dist_function;
 };
 
 class t_cmeans {

@@ -14,8 +14,6 @@ typedef float t_weight;
 
 class t_density_model {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_density_model);
-
     t_density_model ();
 
     t_weight weight () const;
@@ -40,10 +38,10 @@ class t_density_mixture : public t_density_model {
 public:
     virtual t_density operator () (const t_state & obs) const;
 
-    t_density_mixture & operator << (const t_density_model::t_ptr & density_model);
+    t_density_mixture & operator << (const t_ptr<t_density_model> & density_model);
 
 private:
-    std::list<t_density_model::t_ptr> densities;
+    std::list < t_ptr < t_density_model >> densities;
 };
 }
 }

@@ -13,8 +13,6 @@ namespace diagnosis {
 namespace benchmark {
 class t_benchmark_hook {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_benchmark_hook);
-
     inline virtual void trigger_event (t_collector & collector,
                                        const randomizers::t_system & system) const {}
 

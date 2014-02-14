@@ -4,8 +4,6 @@
 
 #include <boost/foreach.hpp>
 
-using namespace boost::filesystem;
-
 namespace diagnosis {
 namespace benchmark {
 t_path_generator::t_path_generator (std::string root_dir) : root_dir(root_dir) {
@@ -17,8 +15,8 @@ t_path_generator::t_path_generator (std::string root_dir) : root_dir(root_dir) {
 
 t_path_single_dir::t_path_single_dir (std::string root_dir) : t_path_generator(root_dir) {}
 
-boost::filesystem::path t_path_single_dir::operator () (std::string filename) const {
-    path p(root_dir);
+t_path t_path_single_dir::operator () (std::string filename) const {
+    t_path p(root_dir);
 
 
     p /= filename;
@@ -26,9 +24,9 @@ boost::filesystem::path t_path_single_dir::operator () (std::string filename) co
     return p;
 }
 
-boost::filesystem::path t_path_single_dir::operator () (const t_entry & entry,
-                                                        std::string filename) const {
-    path p(root_dir);
+t_path t_path_single_dir::operator () (const t_entry & entry,
+                                       std::string filename) const {
+    t_path p(root_dir);
 
     bool first = true;
 

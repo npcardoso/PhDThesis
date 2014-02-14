@@ -7,21 +7,21 @@
 namespace diagnosis {
 namespace component {
 void t_goodness_model::label (t_label_id lbl,
-                              t_density_model::t_ptr model,
+                              t_ptr<t_density_model> model,
                               bool good) {
     assert(lbl < labels.size());
     this->labels[lbl] = model;
     this->good[lbl] = good;
 }
 
-t_label_id t_goodness_model::label (t_density_model::t_ptr model,
+t_label_id t_goodness_model::label (t_ptr<t_density_model> model,
                                     bool good) {
     this->labels.push_back(model);
     this->good.push_back(good);
     return labels.size() - 1;
 }
 
-const t_density_model::t_ptr & t_goodness_model::label (t_label_id lbl) const {
+const t_ptr<t_density_model> & t_goodness_model::label (t_label_id lbl) const {
     assert(lbl < labels.size());
     return labels[lbl];
 }
@@ -36,7 +36,7 @@ t_probability t_goodness_model::operator () (const t_state & obs, t_label_id lbl
     t_density total = 0;
     t_density good_total = (*labels[lbl])(obs) * labels[lbl]->weight();
 
-    BOOST_FOREACH(const t_density_model::t_ptr & l,
+    BOOST_FOREACH(const t_ptr<t_density_model> &l,
                   labels)
     total += (* l)(obs) * l->weight();
     return good_total / total;
@@ -49,7 +49,7 @@ t_probability t_goodness_model::operator () (const t_state & obs) const {
     t_id i = 0;
 
 
-    BOOST_FOREACH(const t_density_model::t_ptr & l,
+    BOOST_FOREACH(const t_ptr<t_density_model> &l,
                   labels) {
         t_probability tmp = (* l)(obs) * l->weight();
 

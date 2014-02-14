@@ -58,7 +58,7 @@ t_topology * t_forwarding_network::operator () (mt19937 & gen) {
 }
 
 void generate_topology (mt19937 & gen,
-                        t_topology::t_ptr & topology,
+                        t_ptr<t_topology> & topology,
                         const t_fault & fault,
                         t_count ncomp,
                         t_count nfaults,

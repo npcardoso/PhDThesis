@@ -27,14 +27,14 @@ t_density t_density_mixture::operator () (const t_state & obs) const {
     t_weight total_weight = 0;
 
 
-    BOOST_FOREACH(const t_density_model::t_ptr & d, densities) {
+    BOOST_FOREACH(const t_ptr<t_density_model> &d, densities) {
         density += (* d)(obs);
         total_weight += d->weight();
     }
     return density / total_weight;
 }
 
-t_density_mixture & t_density_mixture::operator << (const t_density_model::t_ptr & density_model) {
+t_density_mixture & t_density_mixture::operator << (const t_ptr<t_density_model> & density_model) {
     densities.push_back(density_model);
     return *this;
 }

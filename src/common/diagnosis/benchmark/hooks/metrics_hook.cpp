@@ -5,13 +5,13 @@
 
 namespace diagnosis {
 namespace benchmark {
-t_metrics_hook & t_metrics_hook::operator << (t_metric::t_ptr & metric) {
+t_metrics_hook & t_metrics_hook::operator << (t_ptr<t_metric> & metric) {
     metrics_list.push_back(metric);
     return *this;
 }
 
 t_metrics_hook & t_metrics_hook::operator << (t_metric * metric) {
-    metrics_list.push_back(t_metric::t_ptr(metric));
+    metrics_list.push_back(t_ptr<t_metric> (metric));
     return *this;
 }
 

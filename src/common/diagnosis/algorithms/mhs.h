@@ -12,8 +12,6 @@ namespace diagnosis {
 namespace algorithms {
 class t_mhs : public t_candidate_generator {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_mhs);
-
     t_count max_candidate_size, max_candidates;
     t_time_interval max_time;
 

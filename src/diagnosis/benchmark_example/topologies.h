@@ -42,8 +42,8 @@ public:
 
 class t_topology_based_architecture : public t_architecture {
 public:
-    inline t_topology_based_architecture (t_topology_based::t_ptr settings,
-                                          t_randomizer<t_topology>::t_ptr topology_randomizer) : settings(settings), topology_randomizer(topology_randomizer) {}
+    inline t_topology_based_architecture (t_ptr<t_topology_based> settings,
+                                          t_ptr<t_randomizer<t_topology> > topology_randomizer) : settings(settings), topology_randomizer(topology_randomizer) {}
 
     virtual t_system * operator () (boost::random::mt19937 & gen) {
         t_topology_based * tmp = new t_topology_based(*settings);
@@ -54,8 +54,8 @@ public:
     }
 
 private:
-    t_topology_based::t_ptr settings;
-    t_randomizer<t_topology>::t_ptr topology_randomizer;
+    t_ptr<t_topology_based> settings;
+    t_ptr<t_randomizer<t_topology> > topology_randomizer;
 };
 }
 #endif

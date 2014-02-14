@@ -75,7 +75,7 @@ public:
 };
 
 
-t_collector::t_collector (t_path_generator::t_const_ptr path_generator) : path_generator(path_generator) {}
+t_collector::t_collector (t_const_ptr<t_path_generator> path_generator) : path_generator(path_generator) {}
 
 void t_collector::add_entry (const t_path & path,
                              const t_entry & entry) {

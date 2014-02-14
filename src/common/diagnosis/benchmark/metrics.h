@@ -16,7 +16,6 @@ namespace diagnosis {
 namespace benchmark {
 class t_metric {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_metric);
     typedef std::map<std::string, std::string> t_arguments;
 
     virtual const std::string & key () const = 0;

@@ -20,10 +20,10 @@ public:
                                 const t_status_post_rank & status) const;
 
     t_hook_combiner & operator << (t_benchmark_hook * hook);
-    t_hook_combiner & operator << (t_benchmark_hook::t_ptr & hook);
+    t_hook_combiner & operator << (t_ptr<t_benchmark_hook> & hook);
 
 private:
-    typedef std::list<t_benchmark_hook::t_ptr> t_hook_list;
+    typedef std::list<t_ptr<t_benchmark_hook> > t_hook_list;
     t_hook_list hook_list;
 };
 }

@@ -2,7 +2,7 @@
 
 namespace diagnosis {
 namespace component {
-t_component::t_component (t_probability_model::t_ptr g_model) : g_model(g_model) {}
+t_component::t_component (t_ptr<t_probability_model> g_model) : g_model(g_model) {}
 
 void t_component::metadata (std::string key, std::string value) {
     mdata[key] = value;

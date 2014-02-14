@@ -3,6 +3,7 @@
 
 #include "goodness.h"
 #include "types.h"
+#include "utils/boost.h"
 
 #include <map>
 #include <string>
@@ -11,7 +12,7 @@ namespace diagnosis {
 namespace component {
 class t_component {
 public:
-    t_component (t_probability_model::t_ptr g_model);
+    t_component (t_ptr<t_probability_model> g_model);
 
     const t_goodness_model & goodness_model () const;
 
@@ -19,7 +20,7 @@ public:
     void metadata (std::string key, std::string value);
 
 private:
-    t_probability_model::t_ptr g_model;
+    t_ptr<t_probability_model> g_model;
 
     typedef std::map<std::string, std::string> t_metadata;
     t_metadata mdata;

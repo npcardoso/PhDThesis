@@ -18,7 +18,7 @@ void t_hook_combiner::trigger_event (t_collector & collector,
     entry["type"] = "system_init";
     entry["start"] = lexical_cast<std::string> (time_interval());
 
-    BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
+    BOOST_FOREACH(t_ptr<t_benchmark_hook> hook, hook_list) {
         hook->trigger_event(collector, system);
     }
 
@@ -35,7 +35,7 @@ void t_hook_combiner::trigger_event (t_collector & collector,
     entry["type"] = "iteration_init";
     entry["start"] = lexical_cast<std::string> (time_interval());
 
-    BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
+    BOOST_FOREACH(t_ptr<t_benchmark_hook> hook, hook_list) {
         hook->trigger_event(collector, status);
     }
 
@@ -51,7 +51,7 @@ void t_hook_combiner::trigger_event (t_collector & collector,
 
     entry["type"] = "post_gen";
     entry["start"] = lexical_cast<std::string> (time_interval());
-    BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
+    BOOST_FOREACH(t_ptr<t_benchmark_hook> hook, hook_list) {
         hook->trigger_event(collector, status);
     }
 
@@ -67,7 +67,7 @@ void t_hook_combiner::trigger_event (t_collector & collector,
 
     entry["type"] = "post_rank";
     entry["start"] = lexical_cast<std::string> (time_interval());
-    BOOST_FOREACH(t_benchmark_hook::t_ptr hook, hook_list) {
+    BOOST_FOREACH(t_ptr<t_benchmark_hook> hook, hook_list) {
         hook->trigger_event(collector, status);
     }
 
@@ -76,11 +76,11 @@ void t_hook_combiner::trigger_event (t_collector & collector,
 }
 
 t_hook_combiner & t_hook_combiner::operator << (t_benchmark_hook * hook) {
-    hook_list.push_back(t_benchmark_hook::t_ptr(hook));
+    hook_list.push_back(t_ptr<t_benchmark_hook> (hook));
     return *this;
 }
 
-t_hook_combiner & t_hook_combiner::operator << (t_benchmark_hook::t_ptr & hook) {
+t_hook_combiner & t_hook_combiner::operator << (t_ptr<t_benchmark_hook> & hook) {
     hook_list.push_back(hook);
     return *this;
 }

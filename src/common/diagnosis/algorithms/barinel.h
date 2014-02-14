@@ -36,8 +36,6 @@ private:
 
 class t_barinel : public t_candidate_ranker {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_barinel);
-
     t_barinel ();
     t_barinel (size_t precision);
 

@@ -60,7 +60,6 @@ private:
 
 class t_topology {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_topology);
     typedef std::list<t_link> t_interface;
     typedef std::set<t_component_id> t_components;
 

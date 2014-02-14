@@ -11,7 +11,6 @@ namespace diagnosis {
 namespace structs {
 class t_candidate : public std::set<t_component_id> {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_candidate);
     inline t_candidate () {}
     template <class InputIterator>
     t_candidate (InputIterator first, InputIterator last,

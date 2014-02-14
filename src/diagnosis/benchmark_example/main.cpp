@@ -40,14 +40,14 @@ int main (int argc, char ** argv) {
 
 
     // Spectra Randomizer
-    t_topology_based::t_ptr topology_randomizer(new t_topology_based());
+    t_ptr<t_topology_based> topology_randomizer(new t_topology_based());
 
 
     topology_randomizer->set_until_nerrors(7);
     topology_randomizer->set_max_activations(20);
 
     // Topology Randomizer
-    t_forwarding_network::t_ptr fn(new t_forwarding_network());
+    t_ptr<t_forwarding_network> fn(new t_forwarding_network());
 
 
     fn->fault = t_fault(0.5, 0, 0.5, 0);
@@ -57,8 +57,8 @@ int main (int argc, char ** argv) {
 
 
     // Architecture
-    t_architecture::t_ptr architecture(new t_topology_based_architecture(topology_randomizer, fn));
-    architecture = t_architecture::t_ptr(new t_architecture_repeater(architecture, 3, 5));
+    t_ptr<t_architecture> architecture(new t_topology_based_architecture(topology_randomizer, fn));
+    architecture = t_ptr<t_architecture> (new t_architecture_repeater(architecture, 3, 5));
 
     // Candidate Generators
     heuristics::t_heuristic heuristic;
@@ -66,17 +66,17 @@ int main (int argc, char ** argv) {
     heuristic.push(new heuristics::t_sort());
 
     t_mhs * mhs_ptr = new t_mhs(heuristic);
-    t_candidate_generator::t_const_ptr mhs(mhs_ptr);
-    t_candidate_generator::t_const_ptr single_fault(new t_single_fault());
+    t_const_ptr<t_candidate_generator> mhs(mhs_ptr);
+    t_const_ptr<t_candidate_generator> single_fault(new t_single_fault());
 
     mhs_ptr->max_time = 1e6;
 
 
     // Candidate Rankers
     t_barinel * barinel_ptr = new t_barinel();
-    t_candidate_ranker::t_const_ptr barinel(barinel_ptr);
-    t_candidate_ranker::t_const_ptr fuzzinel(new t_barinel());
-    t_candidate_ranker::t_const_ptr ochiai(new t_ochiai());
+    t_const_ptr<t_candidate_ranker> barinel(barinel_ptr);
+    t_const_ptr<t_candidate_ranker> fuzzinel(new t_barinel());
+    t_const_ptr<t_candidate_ranker> ochiai(new t_ochiai());
 
 
     barinel_ptr->use_confidence = false;
@@ -99,12 +99,12 @@ int main (int argc, char ** argv) {
     (*hook_ptr) << metrics_hook;
     (*hook_ptr) << new t_flusher_hook();
 
-    t_benchmark_hook::t_const_ptr hook(hook_ptr);
+    t_const_ptr<t_benchmark_hook> hook(hook_ptr);
 
     // Collector
     std::string dest("benchmark_results");
-    t_path_generator::t_const_ptr path_generator(new t_path_single_dir(dest));
-    t_collector::t_ptr collector(new t_collector(path_generator));
+    t_const_ptr<t_path_generator> path_generator(new t_path_single_dir(dest));
+    t_ptr<t_collector> collector(new t_collector(path_generator));
 
     // Job Queue
 

@@ -10,8 +10,6 @@ namespace randomizers {
 template <class T>
 class t_randomizer {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_randomizer<T> );
-
     virtual T * operator () (boost::random::mt19937 & gen) = 0;
 
     inline virtual std::ostream & write (std::ostream & out) const {
@@ -23,8 +21,6 @@ public:
 
 class t_system {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_system);
-
     virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
                                               structs::t_candidate & correct_candidate) = 0;
 
@@ -35,10 +31,7 @@ public:
     inline virtual ~t_system () {}
 };
 
-class t_architecture : public t_randomizer<t_system> {
-public:
-    DEFINE_BOOST_SHARED_PTRS(t_architecture);
-};
+typedef t_randomizer<t_system> t_architecture;
 }
 }
 

@@ -11,8 +11,7 @@ namespace diagnosis {
 namespace benchmark {
 class t_collector {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_collector);
-    t_collector (t_path_generator::t_const_ptr path_generator);
+    t_collector (t_const_ptr<t_path_generator> path_generator);
 
     void add_entry (const t_path & path,
                     const t_entry & entry);
@@ -38,12 +37,12 @@ private:
     typedef std::map<std::string, t_id> t_paths;
     t_paths paths;
 
-    typedef std::vector<t_file::t_ptr> t_files;
+    typedef std::vector < t_ptr < t_file >> t_files;
     t_files files;
 
     boost::mutex mutex;
 
-    t_path_generator::t_const_ptr path_generator;
+    t_const_ptr<t_path_generator> path_generator;
 
     template <class T>
     T * get_file (const std::string & path) {
@@ -54,7 +53,7 @@ private:
 
         if (it == paths.end()) {
             T * file = new T(path);
-            files.push_back(t_file::t_ptr(file));
+            files.push_back(t_ptr<t_file> (file));
             paths[path] = files.size() - 1;
             return file;
         }

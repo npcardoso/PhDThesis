@@ -23,10 +23,10 @@ private:
     bool handle_distance (std::string distance) {
         if (distance == "euclidean")
             configs.dist_function =
-                t_distance_function::t_ptr(new diagnosis::t_euclidean_distance());
+                t_ptr<t_distance_function> (new diagnosis::t_euclidean_distance());
         else if (distance == "manhattan")
             configs.dist_function =
-                t_distance_function::t_ptr(new diagnosis::t_manhattan_distance());
+                t_ptr<t_distance_function> (new diagnosis::t_manhattan_distance());
 
         return false;
     }

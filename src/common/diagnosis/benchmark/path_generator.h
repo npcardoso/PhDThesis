@@ -9,8 +9,6 @@ namespace diagnosis {
 namespace benchmark {
 class t_path_generator {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_path_generator);
-
     virtual t_path operator () (std::string filename) const = 0;
 
     virtual t_path operator () (const t_entry & entry,

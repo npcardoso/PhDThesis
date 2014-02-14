@@ -9,8 +9,6 @@ namespace diagnosis {
 namespace heuristics {
 class t_similarity : public t_heuristic_filter, public t_candidate_ranker {
 public:
-    DEFINE_BOOST_SHARED_PTRS(t_similarity);
-
     // From t_candidate_ranker
     virtual void operator () (const structs::t_spectra & spectra,
                               const structs::t_trie & D,

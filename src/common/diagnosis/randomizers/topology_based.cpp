@@ -16,19 +16,19 @@ t_topology_based::t_topology_based () {
     until_nerrors = 0;
 }
 
-t_topology_based::t_topology_based (structs::t_topology::t_ptr & topology) : topology(topology) {
+t_topology_based::t_topology_based (t_ptr<structs::t_topology> & topology) : topology(topology) {
     stack_size = 0;
     max_transactions = 0;
     until_nerrors = 0;
 }
 
-t_topology_based & t_topology_based::set_topology (structs::t_topology::t_ptr & topology) {
+t_topology_based & t_topology_based::set_topology (t_ptr<structs::t_topology> & topology) {
     this->topology = topology;
     return *this;
 }
 
 t_topology_based & t_topology_based::set_topology (structs::t_topology * topology) {
-    this->topology = structs::t_topology::t_ptr(topology);
+    this->topology = t_ptr<structs::t_topology> (topology);
     return *this;
 }
 

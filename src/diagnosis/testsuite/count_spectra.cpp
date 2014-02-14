@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(size) {
 
     t_count_spectra * spectra = new t_count_spectra();
     t_candidate correct;
-    mt19937 gen;
+    boost::mt19937 gen;
 
 
     BOOST_CHECK(spectra->get_component_count() == 0);

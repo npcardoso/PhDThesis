@@ -41,17 +41,22 @@ public:
 
     t_status_iteration_init (const t_status_system_init & status,
                              t_id iteration_id,
+                             t_time_interval start,
                              const structs::t_spectra::t_const_ptr & spectra,
                              const structs::t_candidate::t_const_ptr & correct);
 
-    virtual t_id get_iteration_id () const;
-    virtual const structs::t_spectra & get_spectra () const;
-    virtual const structs::t_candidate & get_correct () const;
+    t_id get_iteration_id () const;
+
+    t_time_interval get_iteration_start () const;
+
+    const structs::t_spectra & get_spectra () const;
+    const structs::t_candidate & get_correct () const;
 
     virtual void prepare_entry (t_entry & entry) const;
 
 private:
     t_id iteration_id;
+    t_time_interval start;
     structs::t_spectra::t_const_ptr spectra;
     structs::t_candidate::t_const_ptr correct;
 };
@@ -62,18 +67,25 @@ public:
 
     t_status_post_gen (const t_status_iteration_init & status,
                        std::string name,
-                       t_time_interval duration,
+                       t_time_interval start,
+                       t_time_interval end,
                        const t_candidate_generator::t_ret_type::t_const_ptr & candidates);
 
     virtual const std::string & get_gen_name () const;
+
     virtual t_time_interval get_gen_duration () const;
+    virtual t_time_interval get_gen_start () const;
+    virtual t_time_interval get_gen_end () const;
+
     virtual const t_candidate_generator::t_ret_type & get_candidates () const;
 
     virtual void prepare_entry (t_entry & entry) const;
 
 private:
     std::string name;
-    t_time_interval duration;
+    t_time_interval start;
+    t_time_interval end;
+
     t_candidate_generator::t_ret_type::t_const_ptr candidates;
 };
 
@@ -82,18 +94,25 @@ public:
     DEFINE_BOOST_SHARED_PTRS(t_status_post_rank);
     t_status_post_rank (const t_status_post_gen & status,
                         std::string name,
-                        t_time_interval duration,
+                        t_time_interval start,
+                        t_time_interval end,
                         const t_candidate_ranker::t_ret_type::t_const_ptr & probs);
 
     virtual const std::string & get_rank_name () const;
+
     virtual t_time_interval get_rank_duration () const;
+    virtual t_time_interval get_rank_start () const;
+    virtual t_time_interval get_rank_end () const;
+
     virtual const t_candidate_ranker::t_ret_type & get_probs () const;
 
     virtual void prepare_entry (t_entry & entry) const;
 
 private:
     std::string name;
-    t_time_interval duration;
+    t_time_interval start;
+    t_time_interval end;
+
     t_candidate_ranker::t_ret_type::t_const_ptr probs;
 };
 }

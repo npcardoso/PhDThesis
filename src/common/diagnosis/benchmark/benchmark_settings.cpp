@@ -2,16 +2,17 @@
 
 namespace diagnosis {
 namespace benchmark {
-t_benchmark_settings::t_benchmark_settings (const t_collector::t_ptr & collector,
-                                            const t_benchmark_hook::t_const_ptr & hook) : collector(collector), hook(hook) {}
+t_benchmark_settings::t_benchmark_settings (const t_ptr<t_collector> & collector,
+                                            const t_const_ptr<t_benchmark_hook> & hook,
+                                            const t_ptr<t_job_queue> & job_queue) : collector(collector), hook(hook), job_queue(job_queue) {}
 
 
-void t_benchmark_settings::add_generator (t_candidate_generator::t_const_ptr & generator) {
+void t_benchmark_settings::add_generator (const t_const_ptr<t_candidate_generator> & generator) {
     return add_generator(generator,
                          boost::lexical_cast<std::string> (generators.size() + 1));
 }
 
-void t_benchmark_settings::add_generator (t_candidate_generator::t_const_ptr & generator,
+void t_benchmark_settings::add_generator (const t_const_ptr<t_candidate_generator> & generator,
                                           const std::string & name) {
     assert(get_generator_id(name) == 0);
 
@@ -24,12 +25,12 @@ void t_benchmark_settings::add_generator (t_candidate_generator::t_const_ptr & g
     assert(generators.size() == connections.size());
 }
 
-void t_benchmark_settings::add_ranker (t_candidate_ranker::t_const_ptr & ranker) {
+void t_benchmark_settings::add_ranker (const t_const_ptr<t_candidate_ranker> & ranker) {
     return add_ranker(ranker,
                       boost::lexical_cast<std::string> (rankers.size() + 1));
 }
 
-void t_benchmark_settings::add_ranker (t_candidate_ranker::t_const_ptr & ranker,
+void t_benchmark_settings::add_ranker (const t_const_ptr<t_candidate_ranker> & ranker,
                                        const std::string & name) {
     assert(get_ranker_id(name) == 0);
 
@@ -38,7 +39,7 @@ void t_benchmark_settings::add_ranker (t_candidate_ranker::t_const_ptr & ranker,
     ranker_ids[name] = rankers.size();
 }
 
-const t_candidate_generator::t_const_ptr & t_benchmark_settings::get_generator (t_id generator_id) const {
+const t_const_ptr<t_candidate_generator> & t_benchmark_settings::get_generator (t_id generator_id) const {
     assert(generator_id > 0);
     assert(generator_id <= generators.size());
     return generators[generator_id - 1];
@@ -72,7 +73,7 @@ const t_benchmark_settings::t_ranker_list & t_benchmark_settings::get_connection
     return connections[generator_id - 1];
 }
 
-const t_candidate_ranker::t_const_ptr & t_benchmark_settings::get_ranker (t_id ranker_id) const {
+const t_const_ptr<t_candidate_ranker> & t_benchmark_settings::get_ranker (t_id ranker_id) const {
     assert(ranker_id > 0);
     assert(ranker_id <= rankers.size());
 
@@ -119,6 +120,10 @@ t_collector & t_benchmark_settings::get_collector () const {
 
 const t_benchmark_hook & t_benchmark_settings::get_hook () const {
     return *hook;
+}
+
+t_job_queue & t_benchmark_settings::get_job_queue () const {
+    return *job_queue;
 }
 }
 }

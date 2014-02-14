@@ -41,6 +41,10 @@ vars.Add('mpi_link', '', '`mpic++ --showme:link`')
 
 vars.Add('mpfr_link', '', '-lgmp -lmpfr')
 
+vars.Add('default_libRdiag', '', False)
+vars.Add('default_instrumentation', '', False)
+
+
 ### Defaults ###
 vars.Add('default_instrumentation_examples', '', False)
 vars.Add('default_instrumentation', '', True)
@@ -70,9 +74,9 @@ env['common_dir'] = join(root, "src", "common")
 #Build Flags
 
 if(env['debug']):
-    env['CCFLAGS'] = "-g -O0"
+    env['CCFLAGS'] = "-std=c++11 -g -O0"
 else:
-    env['CCFLAGS'] = "-O3 -DNDEBUG"
+    env['CCFLAGS'] = "-std=c++11 -O3 -DNDEBUG"
 
 env['ENV']['TERM'] = os.environ['TERM']
 env['ENV']['PATH'] = env['PATH']

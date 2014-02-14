@@ -45,7 +45,7 @@ int main (int argc, char ** argv) {
     int n_faults = atoi(argv[3]);
 
     time_t seed = time(NULL);
-    mt19937 gen(seed);
+    boost::mt19937 gen(seed);
 
 
     // Spectra Randomizer
@@ -115,8 +115,12 @@ int main (int argc, char ** argv) {
     t_path_generator::t_const_ptr path_generator(new t_path_single_dir(dest));
     t_collector::t_ptr collector(new t_collector(path_generator));
 
+    // Job Queue
+
+    t_ptr<t_job_queue> job_queue(new t_job_queue());
+
     // Benchmark
-    t_benchmark_settings settings(collector, hook);
+    t_benchmark_settings settings(collector, hook, job_queue);
 
     settings.add_generator(mhs, "mhs");
     // settings.add_generator(single_fault, "single_fault");
@@ -131,9 +135,7 @@ int main (int argc, char ** argv) {
 
 
     // Execution Controller
-    t_report_csv * report_ptr = new t_report_csv();
-    t_execution_report::t_ptr report(report_ptr);
-    t_execution_controller controller(3, report);
+    t_execution_controller controller(3);
 
     // Launch
     run_benchmark(*architecture,
@@ -142,6 +144,5 @@ int main (int argc, char ** argv) {
                   controller);
 
 
-    report_ptr->print(std::cout) << std::endl;
     return 0;
 }

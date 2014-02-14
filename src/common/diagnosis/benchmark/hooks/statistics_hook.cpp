@@ -2,8 +2,6 @@
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "boost/lexical_cast.hpp"
 
-#include <fstream>
-
 using namespace boost;
 using namespace boost::posix_time;
 

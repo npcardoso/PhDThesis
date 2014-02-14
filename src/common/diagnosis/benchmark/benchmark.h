@@ -3,12 +3,12 @@
 
 #include "diagnosis/benchmark/benchmark_settings.h"
 #include "diagnosis/randomizers/randomizer.h"
-#include "utils/multithread.h"
 
 
 #include <boost/random/mersenne_twister.hpp>
 namespace diagnosis {
 namespace benchmark {
+// TODO: change name
 void run_benchmark (randomizers::t_architecture & arch,
                     boost::random::mt19937 & gen,
                     t_benchmark_settings & settings,

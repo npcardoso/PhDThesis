@@ -3,6 +3,7 @@
 #include "types.h"
 #include "utils/iostream.h"
 #include "diagnosis/benchmark/path_generator.h"
+#include "diagnosis/benchmark/hooks/job_tracker.h"
 #include "diagnosis/benchmark/hooks/hook_combiner.h"
 #include "diagnosis/benchmark/hooks/metrics_hook.h"
 #include "diagnosis/benchmark/hooks/verbose_hook.h"
@@ -33,9 +34,8 @@ using namespace diagnosis::structs;
 #define NFAULTS 3
 
 int main (int argc, char ** argv) {
-    std::string dest("benchmark_results");
     time_t seed = time(NULL);
-    mt19937 gen(seed);
+    boost::mt19937 gen(seed);
 
 
     // Spectra Randomizer
@@ -91,16 +91,27 @@ int main (int argc, char ** argv) {
 
     // Benchmark Hooks
     t_hook_combiner * hook_ptr = new t_hook_combiner();
-    (*hook_ptr) << new t_verbose_hook() << new t_save_hook() << new t_statistics_hook() << metrics_hook;
+    (*hook_ptr) << new t_job_tracker_hook();
+    (*hook_ptr) << new t_verbose_hook();
+    (*hook_ptr) << new t_save_hook();
+    (*hook_ptr) << new t_statistics_hook();
+    // (*hook_ptr) << metrics_hook;
 
     t_benchmark_hook::t_const_ptr hook(hook_ptr);
 
     // Collector
+    std::string dest("benchmark_results");
     t_path_generator::t_const_ptr path_generator(new t_path_single_dir(dest));
     t_collector::t_ptr collector(new t_collector(path_generator));
 
+    // Job Queue
+
+    t_ptr<t_job_queue> job_queue(new t_job_queue());
+
+
     // Benchmark Settings
-    t_benchmark_settings settings(collector, hook);
+    t_benchmark_settings settings(collector, hook, job_queue);
+
     settings.add_generator(mhs, "mhs");
     settings.add_generator(single_fault, "single_fault");
 
@@ -113,18 +124,13 @@ int main (int argc, char ** argv) {
     settings.add_connection("single_fault", "ochiai");
 
     // Execution Controller
-
-    t_report_csv * report_ptr = new t_report_csv();
-    t_execution_report::t_ptr report(report_ptr);
-    t_execution_controller controller(3, report);
+    t_execution_controller controller(2);
 
     // Launch
     run_benchmark(*architecture,
                   gen,
                   settings,
                   controller);
-
-    report_ptr->print(std::cout) << std::endl;
 
 
     return 0;

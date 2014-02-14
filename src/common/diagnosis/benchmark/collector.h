@@ -3,6 +3,9 @@
 
 #include "diagnosis/benchmark/status.h"
 #include "diagnosis/benchmark/path_generator.h"
+#include "utils/file.h"
+
+#include <boost/thread.hpp>
 
 namespace diagnosis {
 namespace benchmark {
@@ -11,10 +14,10 @@ public:
     DEFINE_BOOST_SHARED_PTRS(t_collector);
     t_collector (t_path_generator::t_const_ptr path_generator);
 
-    void add_entry (const t_path & file,
+    void add_entry (const t_path & path,
                     const t_entry & entry);
 
-    void save_file (const t_path & file,
+    void save_file (const t_path & path,
                     const std::string & data);
 
     void debug (const t_status & status,
@@ -24,10 +27,40 @@ public:
                        const std::string & filename) const;
     t_path global_path (const std::string & filename) const;
 
-protected:
-    const t_path_generator & get_path_generator () const;
+    void flush_all ();
+
+
+    ~t_collector ();
 private:
+    const t_path_generator & get_path_generator () const;
+
+
+    typedef std::map<std::string, t_id> t_paths;
+    t_paths paths;
+
+    typedef std::vector<t_file::t_ptr> t_files;
+    t_files files;
+
+    boost::mutex mutex;
+
     t_path_generator::t_const_ptr path_generator;
+
+    template <class T>
+    T * get_file (const std::string & path) {
+        boost::mutex::scoped_lock lock(mutex);
+
+        t_paths::iterator it = paths.find(path);
+
+
+        if (it == paths.end()) {
+            T * file = new T(path);
+            files.push_back(t_file::t_ptr(file));
+            paths[path] = files.size() - 1;
+            return file;
+        }
+
+        return dynamic_cast<T *> (files[it->second].get());
+    }
 };
 }
 }

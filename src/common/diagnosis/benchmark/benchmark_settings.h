@@ -3,6 +3,7 @@
 
 #include "diagnosis/benchmark/hooks/benchmark_hook.h"
 #include "diagnosis/benchmark/collector.h"
+#include "utils/multithread/job_queue.h"
 
 #include <vector>
 #include <map>
@@ -15,24 +16,25 @@ class t_benchmark_settings {
 public:
     typedef std::list<t_id> t_ranker_list;
 
-    t_benchmark_settings (const t_collector::t_ptr & collector,
-                          const t_benchmark_hook::t_const_ptr & hook);
+    t_benchmark_settings (const t_ptr<t_collector> & collector,
+                          const t_const_ptr<t_benchmark_hook> & hook,
+                          const t_ptr<t_job_queue> & job_queue);
 
-    void add_generator (t_candidate_generator::t_const_ptr & generator);
-    void add_generator (t_candidate_generator::t_const_ptr & generator,
+    void add_generator (const t_const_ptr<t_candidate_generator> & generator);
+    void add_generator (const t_const_ptr<t_candidate_generator> & generator,
                         const std::string & name);
 
-    void add_ranker (t_candidate_ranker::t_const_ptr & ranker);
-    void add_ranker (t_candidate_ranker::t_const_ptr & ranker,
+    void add_ranker (const t_const_ptr<t_candidate_ranker> & ranker);
+    void add_ranker (const t_const_ptr<t_candidate_ranker> & ranker,
                      const std::string & name);
 
-    const t_candidate_generator::t_const_ptr & get_generator (t_id generator_id) const;
+    const t_const_ptr<t_candidate_generator> & get_generator (t_id generator_id) const;
     t_id get_generator_id (const std::string & name) const;
     const std::string & get_generator_name (t_id generator_id) const;
     t_count get_generator_count () const;
     const t_ranker_list & get_connections (t_id generator_id) const;
 
-    const t_candidate_ranker::t_const_ptr & get_ranker (t_id ranker_id) const;
+    const t_const_ptr<t_candidate_ranker> & get_ranker (t_id ranker_id) const;
     t_id get_ranker_id (const std::string & name) const;
     const std::string & get_ranker_name (t_id ranker_id) const;
 
@@ -44,6 +46,7 @@ public:
 
     t_collector & get_collector () const;
     const t_benchmark_hook & get_hook () const;
+    t_job_queue & get_job_queue () const;
 
 
 protected:
@@ -58,11 +61,12 @@ protected:
     t_name_vector generator_names;
     t_name_vector ranker_names;
 
-    std::vector<t_candidate_generator::t_const_ptr> generators;
-    std::vector<t_candidate_ranker::t_const_ptr> rankers;
+    std::vector < t_const_ptr < t_candidate_generator >> generators;
+    std::vector < t_const_ptr < t_candidate_ranker >> rankers;
 
-    t_collector::t_ptr collector;
-    t_benchmark_hook::t_const_ptr hook;
+    t_ptr<t_collector> collector;
+    t_const_ptr<t_benchmark_hook> hook;
+    t_ptr<t_job_queue> job_queue;
 };
 }
 }

@@ -3,6 +3,7 @@
 #include "types.h"
 #include "utils/iostream.h"
 #include "diagnosis/benchmark/path_generator.h"
+#include "diagnosis/benchmark/hooks/flusher.h"
 #include "diagnosis/benchmark/hooks/job_tracker.h"
 #include "diagnosis/benchmark/hooks/hook_combiner.h"
 #include "diagnosis/benchmark/hooks/metrics_hook.h"
@@ -95,7 +96,8 @@ int main (int argc, char ** argv) {
     (*hook_ptr) << new t_verbose_hook();
     (*hook_ptr) << new t_save_hook();
     (*hook_ptr) << new t_statistics_hook();
-    // (*hook_ptr) << metrics_hook;
+    (*hook_ptr) << metrics_hook;
+    (*hook_ptr) << new t_flusher_hook();
 
     t_benchmark_hook::t_const_ptr hook(hook_ptr);
 

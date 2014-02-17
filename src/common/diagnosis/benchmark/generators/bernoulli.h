@@ -2,7 +2,6 @@
 #define __BERNOULLI_H_a6d1be206c8818d13562fb163cc8b337ff1a0f31__
 
 #include "generator.h"
-#include "diagnosis/structs/count_spectra.h"
 
 namespace diagnosis {
 namespace benchmark {

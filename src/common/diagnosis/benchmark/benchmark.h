@@ -6,11 +6,10 @@
 
 namespace diagnosis {
 namespace benchmark {
-// TODO: change name
-void run_benchmark (t_spectra_generator & generator,
-                    std::mt19937 & gen,
-                    t_benchmark_settings & settings,
-                    t_execution_controller & controller);
+void run_benchmark (t_benchmark_settings & settings,
+                    t_spectra_generator & generator,
+                    t_execution_controller & controller,
+                    std::mt19937 & gen);
 }
 }
 #endif

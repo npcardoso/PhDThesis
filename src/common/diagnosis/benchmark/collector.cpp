@@ -39,7 +39,6 @@ public:
             open_file(out);
             csv.write(out);
             out.close();
-            std::cerr << "Flushing csv file: " << get_path() << std::endl;
             need_flush = false;
         }
     }

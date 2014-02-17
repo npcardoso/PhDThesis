@@ -1,6 +1,5 @@
 #include "generator.h"
 
-// using namespace boost::random;
 using namespace diagnosis::structs;
 using namespace std;
 

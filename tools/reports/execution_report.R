@@ -12,10 +12,6 @@ plot_execution_report = function(data, nbreaks=20) {
     data$value = (data$value - min(data$value)) / 1e6
                                         # Get init and end points
 
-    x_breaks = data$value[data$variable=="start"]
-
-    print(data)
-
     tmp = data[-which(data$variable == "start"),]
     tmp$variable = factor(tmp$variable)
                                         # Relabel
@@ -32,7 +28,7 @@ plot_execution_report = function(data, nbreaks=20) {
 
 
     max_x = max(tmp$value)
-#    x_breaks = round((0:(nbreaks+1))/nbreaks * max_x, 1)
+    x_breaks = round((0:(nbreaks+1))/nbreaks * max_x, 1)
 
     p = ggplot(tmp, aes(value, factor(id),color=type,linetype=variable))
     p = p + geom_line(size = 2)

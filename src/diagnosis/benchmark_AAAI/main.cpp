@@ -4,6 +4,7 @@
 #include "utils/iostream.h"
 #include "diagnosis/benchmark/path_generator.h"
 #include "diagnosis/benchmark/generators/generator.h"
+#include "diagnosis/benchmark/generators/replay.h"
 #include "diagnosis/benchmark/hooks/job_tracker.h"
 #include "diagnosis/benchmark/hooks/flusher.h"
 #include "diagnosis/benchmark/hooks/hook_combiner.h"
@@ -22,7 +23,9 @@
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/trie.h"
+
 #include <list>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 using namespace diagnosis;
@@ -31,20 +34,9 @@ using namespace diagnosis::heuristics;
 using namespace diagnosis::benchmark;
 using namespace diagnosis::structs;
 
-int main (int argc, char ** argv) {
-    if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <folder> <until_nerrors> <n_faults>" << std::endl;
-        return 1;
-    }
-
-    std::string dest(argv[1]);
-    int n_errors = atoi(argv[2]);
-    int n_faults = atoi(argv[3]);
-
-    time_t seed = time(NULL);
-    std::mt19937 gen(seed);
-
-
+t_ptr<t_spectra_generator> create_n_tier_generator (t_count n_errors,
+                                                    t_count n_faults,
+                                                    std::mt19937 & gen) {
     // Generation settings
     t_ptr<t_topology_based_generator> gen_settings(new t_topology_based_generator());
     gen_settings->set_until_nerrors(n_errors);
@@ -59,11 +51,14 @@ int main (int argc, char ** argv) {
 
     // Create spectra generators
 
-    t_ptr<t_spectra_generator> spectra_generator;
-    spectra_generator = generate_generators(5, 4, n_tier, gen);
+    return generate_generators(5, 4, n_tier, gen);
+}
 
+t_ptr<t_benchmark_settings> create_benchmark_settings (std::string dest) {
     // Candidate Generators
     heuristics::t_heuristic heuristic;
+
+
     heuristic.push(new heuristics::t_ochiai());
     heuristic.push(new heuristics::t_sort());
 
@@ -71,7 +66,7 @@ int main (int argc, char ** argv) {
     t_const_ptr<t_candidate_generator> mhs(mhs_ptr);
     t_const_ptr<t_candidate_generator> single_fault(new t_single_fault());
 
-    mhs_ptr->max_time = 1e6;
+    mhs_ptr->max_time = 3e7;
 
 
     // Candidate Rankers
@@ -98,7 +93,7 @@ int main (int argc, char ** argv) {
 
     (*hook_ptr) << new t_job_tracker_hook();
     (*hook_ptr) << new t_verbose_hook();
-    // hook_ptr << new t_save_hook(dest);
+    (*hook_ptr) << new t_save_hook();
     (*hook_ptr) << new t_statistics_hook();
     (*hook_ptr) << metrics_hook;
     (*hook_ptr) << new t_flusher_hook();
@@ -112,28 +107,74 @@ int main (int argc, char ** argv) {
     t_ptr<t_job_queue> job_queue(new t_job_queue());
 
     // Benchmark
-    t_benchmark_settings settings(collector, hook, job_queue);
+    t_ptr<t_benchmark_settings> settings(
+        new t_benchmark_settings(collector, hook, job_queue));
 
-    settings.add_generator(mhs, "mhs");
-    // settings.add_generator(single_fault, "single_fault");
+    settings->add_generator(mhs, "mhs");
+    // settings->add_generator(single_fault, "single_fault");
 
-    settings.add_ranker(barinel, "barinel");
-    settings.add_ranker(fuzzinel, "fuzzinel");
-    // settings.add_ranker(ochiai, "ochiai");
+    settings->add_ranker(barinel, "barinel");
+    settings->add_ranker(fuzzinel, "fuzzinel");
+    // settings->add_ranker(ochiai, "ochiai");
 
-    settings.add_connection("mhs", "barinel");
-    settings.add_connection("mhs", "fuzzinel");
-    // benchmark.add_connection("single_fault", "ochiai");
+    settings->add_connection("mhs", "barinel");
+    settings->add_connection("mhs", "fuzzinel");
+    // benchmark->add_connection("single_fault", "ochiai");
 
+    return settings;
+}
+
+t_ptr<t_spectra_generator> create_replay_generator (const t_path_generator & path_generator,
+                                                    t_count iterations) {
+    t_replay * spectra_generator = new t_replay();
+    t_entry entry;
+
+
+    for (t_count i = 1; i <= iterations; i++) {
+        entry[STATUS_KEY_ITERATION] = boost::lexical_cast<std::string> (i);
+        string spectra = path_generator(entry, "spectra.txt").string();
+        string correct = path_generator(entry, "correct.txt").string();
+
+        t_replay::value_type test_case(spectra, correct);
+        spectra_generator->push_back(test_case);
+    }
+
+    return t_ptr<t_spectra_generator> (spectra_generator);
+}
+
+int main (int argc, char ** argv) {
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " <folder> <until_nerrors> <n_faults>" << std::endl;
+        return 1;
+    }
+
+    std::string dest(argv[1]);
+    int n_errors = atoi(argv[2]);
+    int n_faults = atoi(argv[3]);
+
+    time_t seed = time(NULL);
+    std::mt19937 gen(seed);
+
+
+    t_ptr<t_spectra_generator> spectra_generator(
+        create_n_tier_generator(n_errors, n_faults, gen));
+
+
+    ////Example: How to replay something
+    // t_ptr<t_spectra_generator> spectra_generator(
+    // create_replay_generator(t_path_single_dir("test"), 20));
+
+    t_ptr<t_benchmark_settings> benchmark_settings(
+        create_benchmark_settings(dest));
 
     // Execution Controller
     t_execution_controller controller(3);
 
     // Launch
-    run_benchmark(*spectra_generator,
-                  gen,
-                  settings,
-                  controller);
+    run_benchmark(*benchmark_settings,
+                  *spectra_generator,
+                  controller,
+                  gen);
 
 
     return 0;

@@ -1,12 +1,11 @@
 #include "bernoulli.h"
 #include <boost/random/bernoulli_distribution.hpp>
-#include <boost/random/mersenne_twister.hpp>
 
 using boost::bernoulli_distribution;
 using namespace diagnosis::structs;
 
 namespace diagnosis {
-namespace randomizers {
+namespace benchmark {
 using namespace structs;
 
 t_bernoulli::t_bernoulli (float activation_rate,
@@ -19,7 +18,7 @@ t_bernoulli::t_bernoulli (float activation_rate,
     this->n_tran = n_tran;
 }
 
-t_spectra * t_bernoulli::operator () (boost::random::mt19937 & gen,
+t_spectra * t_bernoulli::operator () (std::mt19937 & gen,
                                       structs::t_candidate & correct_candidate) {
     t_count_spectra & spectra = *(new t_count_spectra(n_comp, n_tran));
 

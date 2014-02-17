@@ -8,23 +8,10 @@ using namespace boost::assign;
 
 namespace diagnosis {
 namespace benchmark {
-t_status_system_init::t_status_system_init (t_id system_id) {
-    this->system_id = system_id;
-}
-
-t_id t_status_system_init::get_system_id () const {
-    return system_id;
-}
-
-void t_status_system_init::prepare_entry (t_entry & entry) const {
-    entry[STATUS_KEY_SYSTEM] = lexical_cast<std::string> (system_id);
-}
-
-t_status_iteration_init::t_status_iteration_init (const t_status_system_init & status,
-                                                  t_id iteration_id,
+t_status_iteration_init::t_status_iteration_init (t_id iteration_id,
                                                   t_time_interval start,
                                                   const t_const_ptr<structs::t_spectra> & spectra,
-                                                  const t_const_ptr<structs::t_candidate> & correct) : t_status_system_init(status) {
+                                                  const t_const_ptr<structs::t_candidate> & correct) {
     assert(spectra.get() != NULL);
     assert(correct.get() != NULL);
 
@@ -51,9 +38,6 @@ const structs::t_candidate & t_status_iteration_init::get_correct () const {
 }
 
 void t_status_iteration_init::prepare_entry (t_entry & entry) const {
-    t_status_system_init::prepare_entry(entry);
-
-
     entry[STATUS_KEY_ITERATION] = lexical_cast<std::string> (iteration_id);
 }
 

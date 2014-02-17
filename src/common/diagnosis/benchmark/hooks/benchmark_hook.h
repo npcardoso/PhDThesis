@@ -3,19 +3,12 @@
 
 #include "diagnosis/benchmark/status.h"
 #include "diagnosis/benchmark/collector.h"
-#include "diagnosis/randomizers/randomizer.h"
-#include "diagnosis/diagnosis_system.h"
-#include "diagnosis/structs/spectra.h"
-#include "utils/time.h"
 
 
 namespace diagnosis {
 namespace benchmark {
 class t_benchmark_hook {
 public:
-    inline virtual void trigger_event (t_collector & collector,
-                                       const randomizers::t_system & system) const {}
-
     inline virtual void trigger_event (t_collector & collector,
                                        const t_status_iteration_init & status) const {}
 

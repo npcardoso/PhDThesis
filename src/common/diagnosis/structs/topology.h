@@ -20,8 +20,8 @@ public:
              t_probability hard_prob,
              t_probability fail_prob);
 
-    t_error gen_error (boost::random::mt19937 & gen) const;
-    bool gen_failure (boost::random::mt19937 & gen) const;
+    t_error gen_error (std::mt19937 & gen) const;
+    bool gen_failure (std::mt19937 & gen) const;
 
     inline t_probability get_pass_prob () const {return pass_prob;}
     inline t_probability get_soft_prob () const {return soft_prob;}
@@ -50,7 +50,7 @@ public:
     t_probability get_probability (t_component_id comp) const;
     inline t_probability get_normalization_value () const {return total;}
 
-    t_component_id gen_destination (boost::random::mt19937 & gen) const;
+    t_component_id gen_destination (std::mt19937 & gen) const;
 
 private:
     std::vector<t_sink> sinks;
@@ -74,7 +74,7 @@ public:
 
     std::ostream & graphviz (std::ostream & out) const;
 
-    t_component_id gen_entry_point (boost::random::mt19937 & gen) const;
+    t_component_id gen_entry_point (std::mt19937 & gen) const;
 
 private:
     std::ostream & graphviz_component (std::ostream & out, t_component_id comp) const;

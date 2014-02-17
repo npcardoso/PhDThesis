@@ -1,15 +1,14 @@
 #include <boost/test/unit_test.hpp>
 
 #include "diagnosis/structs/count_spectra.h"
-#include "diagnosis/randomizers/bernoulli.h"
+#include "diagnosis/benchmark/generators/bernoulli.h"
 
 #include <sstream>
 
 using namespace std;
 using namespace diagnosis;
 using namespace diagnosis::structs;
-using namespace diagnosis::randomizers;
-using namespace boost::random;
+using namespace diagnosis::benchmark;
 
 void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, int n_comp, int n_tran) {
     for (t_transaction_id t = 1; t <= n_tran; t++) {
@@ -29,7 +28,7 @@ BOOST_AUTO_TEST_CASE(size) {
 
     t_count_spectra * spectra = new t_count_spectra();
     t_candidate correct;
-    boost::mt19937 gen;
+    std::mt19937 gen;
 
 
     BOOST_CHECK(spectra->get_component_count() == 0);

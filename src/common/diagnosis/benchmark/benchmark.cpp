@@ -6,7 +6,6 @@
 #include <boost/foreach.hpp>
 
 using namespace diagnosis::structs;
-using namespace diagnosis::randomizers;
 
 namespace diagnosis {
 namespace benchmark {
@@ -133,58 +132,42 @@ bool t_ranker_job::operator < (const t_job & job) const {
     return false;
 }
 
-void run_benchmark (randomizers::t_architecture & arch,
-                    boost::random::mt19937 & gen,
+void run_benchmark (t_spectra_generator & generator,
+                    std::mt19937 & gen,
                     t_benchmark_settings & settings,
                     t_execution_controller & controller) {
-    t_id sys_id = 1;
+    t_id iteration_id = 1;
 
 
     while (true) {
-        t_system * system = arch(gen);
-        t_id iteration_id = 1;
+        t_candidate * correct_tmp = new t_candidate();
+        t_const_ptr<t_candidate> correct(correct_tmp);
+        t_const_ptr<t_spectra> spectra(generator(gen, *correct_tmp));
 
-        if (system == NULL)
+        if (spectra.get() == NULL)
             break;
 
-        // Hook: System Init
-        t_status_system_init sys_status(sys_id++);
+        // Hook: Iteration Init
+        t_const_ptr<t_status_iteration_init> it_status
+            (new t_status_iteration_init(iteration_id++,
+                                         time_interval(),
+                                         spectra,
+                                         correct));
         settings.get_hook().trigger_event(settings.get_collector(),
-                                          *system);
+                                          *it_status);
 
-        while (true) {
-            t_candidate * correct_tmp = new t_candidate();
-            t_const_ptr<t_candidate> correct(correct_tmp);
-            t_const_ptr<t_spectra> spectra((* system)(gen, * correct_tmp));
+        for (t_id gen_id = 1;
+             gen_id <= settings.get_generator_count();
+             gen_id++) {
+            t_const_ptr<t_job> job(new t_generator_job(gen_id,
+                                                       settings,
+                                                       it_status));
 
-            if (spectra.get() == NULL)
-                break;
-
-            // Hook: Iteration Init
-            t_const_ptr<t_status_iteration_init> it_status
-                (new t_status_iteration_init(sys_status,
-                                             iteration_id++,
-                                             time_interval(),
-                                             spectra,
-                                             correct));
-            settings.get_hook().trigger_event(settings.get_collector(),
-                                              *it_status);
-
-            for (t_id gen_id = 1;
-                 gen_id <= settings.get_generator_count();
-                 gen_id++) {
-                t_const_ptr<t_job> job(new t_generator_job(gen_id,
-                                                           settings,
-                                                           it_status));
-
-                settings.get_job_queue().add_job(job);
-            }
-
-            settings.get_job_queue().execute(controller,
-                                             true);
+            settings.get_job_queue().add_job(job);
         }
 
-        delete system;
+        settings.get_job_queue().execute(controller,
+                                         true);
     }
 
     settings.get_job_queue().execute(controller,

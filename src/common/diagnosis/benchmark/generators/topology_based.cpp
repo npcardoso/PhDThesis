@@ -9,53 +9,47 @@ using namespace boost::random;
 using namespace diagnosis::structs;
 
 namespace diagnosis {
-namespace randomizers {
-t_topology_based::t_topology_based () {
+namespace benchmark {
+t_topology_based_generator::t_topology_based_generator () {
     stack_size = 0;
     max_transactions = 0;
     until_nerrors = 0;
 }
 
-t_topology_based::t_topology_based (t_ptr<structs::t_topology> & topology) : topology(topology) {
+t_topology_based_generator::t_topology_based_generator (const t_const_ptr<structs::t_topology> & topology) : topology(topology) {
     stack_size = 0;
     max_transactions = 0;
     until_nerrors = 0;
 }
 
-t_topology_based & t_topology_based::set_topology (t_ptr<structs::t_topology> & topology) {
+void t_topology_based_generator::set_topology (const t_const_ptr<structs::t_topology> & topology) {
     this->topology = topology;
-    return *this;
 }
 
-t_topology_based & t_topology_based::set_topology (structs::t_topology * topology) {
-    this->topology = t_ptr<structs::t_topology> (topology);
-    return *this;
+void t_topology_based_generator::set_topology (const structs::t_topology * topology) {
+    this->topology = t_const_ptr<structs::t_topology> (topology);
 }
 
-t_topology_based & t_topology_based::set_stack_size (t_count size) {
+void t_topology_based_generator::set_stack_size (t_count size) {
     stack_size = size;
-    return *this;
 }
 
-t_topology_based & t_topology_based::set_max_transactions (t_count max_transactions) {
+void t_topology_based_generator::set_max_transactions (t_count max_transactions) {
     this->max_transactions = max_transactions;
-    return *this;
 }
 
-t_topology_based & t_topology_based::set_max_activations (t_count max_activations) {
+void t_topology_based_generator::set_max_activations (t_count max_activations) {
     this->max_activations = max_activations;
-    return *this;
 }
 
-t_topology_based & t_topology_based::set_until_nerrors (t_count nerrors) {
+void t_topology_based_generator::set_until_nerrors (t_count nerrors) {
     until_nerrors = nerrors;
-    return *this;
 }
 
-const t_topology_based & t_topology_based::operator () (structs::t_count_spectra & spectra,
-                                                        t_candidate & correct_candidate,
-                                                        boost::random::mt19937 & gen,
-                                                        t_transaction_id tran) const {
+void t_topology_based_generator::operator () (structs::t_count_spectra & spectra,
+                                              t_candidate & correct_candidate,
+                                              std::mt19937 & gen,
+                                              t_transaction_id tran) const {
     assert(topology);
     typedef std::pair<t_topology::t_interface::const_iterator, t_topology::t_interface::const_iterator> t_stack_element;
 
@@ -104,12 +98,10 @@ const t_topology_based & t_topology_based::operator () (structs::t_count_spectra
             }
         }
     } while (!fail && stack.size());
-
-    return *this;
 }
 
-structs::t_spectra * t_topology_based::operator () (boost::random::mt19937 & gen,
-                                                    structs::t_candidate & correct_candidate) {
+structs::t_spectra * t_topology_based_generator::operator () (std::mt19937 & gen,
+                                                              structs::t_candidate & correct_candidate) {
     assert(topology);
     assert(until_nerrors || max_transactions);
 
@@ -129,7 +121,7 @@ structs::t_spectra * t_topology_based::operator () (boost::random::mt19937 & gen
     return &spectra;
 }
 
-std::ostream & t_topology_based::write (std::ostream & out) const {
+std::ostream & t_topology_based_generator::write (std::ostream & out) const {
     return topology->graphviz(out); // TODO: replace with serialization format
 }
 }

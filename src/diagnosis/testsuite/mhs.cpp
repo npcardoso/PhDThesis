@@ -4,15 +4,14 @@
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/heuristics/parallelization.h"
 #include "diagnosis/structs/count_spectra.h"
-#include "diagnosis/randomizers/bernoulli.h"
+#include "diagnosis/benchmark/generators/bernoulli.h"
 
 #include <fstream>
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
 using namespace diagnosis::heuristics;
 using namespace diagnosis::structs;
-using namespace diagnosis::randomizers;
-using namespace boost::random;
+using namespace diagnosis::benchmark;
 
 BOOST_AUTO_TEST_SUITE(MHS2)
 
@@ -20,7 +19,7 @@ BOOST_AUTO_TEST_CASE(stop_flags) {
     t_spectra * spectra;
     t_candidate correct;
     t_bernoulli randomizer(0.25, 1, 100, 100);
-    mt19937 gen;
+    std::mt19937 gen;
     t_heuristic heuristic;
     t_trie D;
 
@@ -94,7 +93,7 @@ BOOST_AUTO_TEST_CASE(parallelization) {
     t_spectra * spectra;
     t_candidate correct;
     t_bernoulli randomizer(0.25, 1, 25, 22);
-    mt19937 gen;
+    std::mt19937 gen;
     t_trie reference;
 
 

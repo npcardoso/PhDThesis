@@ -53,7 +53,7 @@ t_fault::t_fault (t_probability pass_prob,
     this->fail_prob = fail_prob;
 }
 
-t_error t_fault::gen_error (boost::random::mt19937 & gen) const {
+t_error t_fault::gen_error (std::mt19937 & gen) const {
     double probabilities[] = {pass_prob, soft_prob, hard_prob};
     boost::random::discrete_distribution<> dist(probabilities);
 
@@ -73,7 +73,7 @@ t_error t_fault::gen_error (boost::random::mt19937 & gen) const {
     return 0;
 }
 
-bool t_fault::gen_failure (boost::random::mt19937 & gen) const {
+bool t_fault::gen_failure (std::mt19937 & gen) const {
     return bernoulli_distribution<> (fail_prob) (gen);
 }
 
@@ -97,7 +97,7 @@ t_probability t_link::get_probability (t_component_id comp) const {
     return it->second / get_normalization_value();
 }
 
-t_component_id t_link::gen_destination (boost::random::mt19937 & gen) const {
+t_component_id t_link::gen_destination (std::mt19937 & gen) const {
     if (sinks.size() == 0)
         return 0;
 
@@ -262,7 +262,7 @@ std::ostream & t_topology::graphviz_links (std::ostream & out, t_component_id co
     return out;
 }
 
-t_component_id t_topology::gen_entry_point (boost::random::mt19937 & gen) const {
+t_component_id t_topology::gen_entry_point (std::mt19937 & gen) const {
     return entry_points.gen_destination(gen);
 }
 }

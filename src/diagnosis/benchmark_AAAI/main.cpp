@@ -3,6 +3,9 @@
 #include "types.h"
 #include "utils/iostream.h"
 #include "diagnosis/benchmark/path_generator.h"
+#include "diagnosis/benchmark/generators/generator.h"
+#include "diagnosis/benchmark/hooks/job_tracker.h"
+#include "diagnosis/benchmark/hooks/flusher.h"
 #include "diagnosis/benchmark/hooks/hook_combiner.h"
 #include "diagnosis/benchmark/hooks/metrics_hook.h"
 #include "diagnosis/benchmark/hooks/verbose_hook.h"
@@ -17,7 +20,6 @@
 #include "diagnosis/algorithms/barinel.h"
 #include "diagnosis/heuristics/sort.h"
 #include "diagnosis/heuristics/similarity.h"
-#include "diagnosis/randomizers/repeater.h"
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/trie.h"
 #include <list>
@@ -27,12 +29,7 @@ using namespace diagnosis;
 using namespace diagnosis::algorithms;
 using namespace diagnosis::heuristics;
 using namespace diagnosis::benchmark;
-using namespace diagnosis::randomizers;
 using namespace diagnosis::structs;
-#define LEVELS 20
-#define PER_LEVEL 10
-#define NFAULTS 3
-
 
 int main (int argc, char ** argv) {
     if (argc != 4) {
@@ -45,29 +42,25 @@ int main (int argc, char ** argv) {
     int n_faults = atoi(argv[3]);
 
     time_t seed = time(NULL);
-    boost::mt19937 gen(seed);
+    std::mt19937 gen(seed);
 
 
-    // Spectra Randomizer
-    t_ptr<t_topology_based> topology_randomizer(new t_topology_based());
-
-
-    topology_randomizer->set_until_nerrors(n_errors);
-    topology_randomizer->set_max_activations(20);
+    // Generation settings
+    t_ptr<t_topology_based_generator> gen_settings(new t_topology_based_generator());
+    gen_settings->set_until_nerrors(n_errors);
+    gen_settings->set_max_activations(20);
 
     // Topology Randomizer
-    t_ptr<t_forwarding_network> fn(new t_forwarding_network());
+    t_n_tier_setup n_tier(gen_settings);
+    n_tier.set_fault_type(t_fault(0, 0.9, 0.1, 0));
+    n_tier.set_levels(3, 10);
+    n_tier.set_per_level(3, 10);
+    n_tier.set_n_faults(n_faults, n_faults);
 
+    // Create spectra generators
 
-    fn->fault = t_fault(0, 0.9, 0.1, 0);
-    fn->set_levels(3, 10);
-    fn->set_per_level(3, 10);
-    fn->set_n_faults(n_faults, n_faults);
-
-
-    // Architecture
-    t_ptr<t_architecture> architecture(new t_topology_based_architecture(topology_randomizer, fn));
-    architecture = t_ptr<t_architecture> (new t_architecture_repeater(architecture, 1, 10));
+    t_ptr<t_spectra_generator> spectra_generator;
+    spectra_generator = generate_generators(5, 4, n_tier, gen);
 
     // Candidate Generators
     heuristics::t_heuristic heuristic;
@@ -101,22 +94,21 @@ int main (int argc, char ** argv) {
 
     // Benchmark Hooks
     t_hook_combiner * hook_ptr = new t_hook_combiner();
+    t_const_ptr<t_benchmark_hook> hook(hook_ptr);
+
+    (*hook_ptr) << new t_job_tracker_hook();
     (*hook_ptr) << new t_verbose_hook();
     // hook_ptr << new t_save_hook(dest);
     (*hook_ptr) << new t_statistics_hook();
     (*hook_ptr) << metrics_hook;
-
-
-    t_const_ptr<t_benchmark_hook> hook(hook_ptr);
+    (*hook_ptr) << new t_flusher_hook();
 
 
     // Collector
-
     t_const_ptr<t_path_generator> path_generator(new t_path_single_dir(dest));
     t_ptr<t_collector> collector(new t_collector(path_generator));
 
     // Job Queue
-
     t_ptr<t_job_queue> job_queue(new t_job_queue());
 
     // Benchmark
@@ -138,7 +130,7 @@ int main (int argc, char ** argv) {
     t_execution_controller controller(3);
 
     // Launch
-    run_benchmark(*architecture,
+    run_benchmark(*spectra_generator,
                   gen,
                   settings,
                   controller);

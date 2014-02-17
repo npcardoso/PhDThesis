@@ -6,8 +6,8 @@
 #include "diagnosis/structs/topology.h"
 
 namespace diagnosis {
-namespace randomizers {
-class t_fuzzy_bernoulli : public t_system {
+namespace benchmark {
+class t_fuzzy_bernoulli : public t_spectra_generator {
 public:
     typedef std::vector<structs::t_fault> t_faults;
 
@@ -15,7 +15,7 @@ public:
                         float activation_rate,
                         t_count error_count);
 
-    virtual structs::t_spectra * operator () (boost::random::mt19937 & gen,
+    virtual structs::t_spectra * operator () (std::mt19937 & gen,
                                               structs::t_candidate & correct_candidate);
 
     t_fuzzy_bernoulli & operator << (const structs::t_fault & comp);

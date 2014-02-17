@@ -2,8 +2,7 @@
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/random/uniform_real_distribution.hpp>
 
-namespace diagnosis {
-t_topology * t_forwarding_network::operator () (mt19937 & gen) {
+t_topology * t_n_tier_setup::generate_topology (std::mt19937 & gen) {
     t_topology * topology = new t_topology();
 
     boost::random::uniform_int_distribution<> per_level_dist(per_level_min, per_level_max);
@@ -55,49 +54,4 @@ t_topology * t_forwarding_network::operator () (mt19937 & gen) {
     // Entry point
     topology->add_entry_point(1, 1);
     return topology;
-}
-
-void generate_topology (mt19937 & gen,
-                        t_ptr<t_topology> & topology,
-                        const t_fault & fault,
-                        t_count ncomp,
-                        t_count nfaults,
-                        t_count nout,
-                        t_count nparallel) {
-    t_count c = ncomp;
-
-
-    uniform_int_distribution<> int_dist(nfaults + nparallel + 1, ncomp);
-    uniform_real_distribution<> real_dist(0, 2.0 / ncomp);
-
-    while (c > nfaults + nparallel) {
-        topology->add_link(ncomp + 2, t_link().add_sink(c, 0.2).add_sink(0, 0.8));
-
-        t_link tmp_link;
-
-        for (t_count i = 0; i < nout; i++) {
-            tmp_link.add_sink(int_dist(gen), real_dist(gen));
-        }
-
-        topology->add_link(c, tmp_link);
-
-        c--;
-    }
-
-    t_link tmp_link;
-
-    while (c > nfaults) {
-        tmp_link.add_sink(c, 1);
-        c--;
-    }
-
-    while (c) {
-        topology->add_fault(c, fault);
-        tmp_link.add_sink(c, 1);
-        c--;
-    }
-
-    topology->add_link(ncomp + 1, tmp_link);
-    topology->add_link(ncomp + 1, t_link().add_sink(ncomp + 2, 1));
-}
 }

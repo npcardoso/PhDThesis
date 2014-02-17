@@ -7,7 +7,6 @@
 namespace diagnosis {
 namespace benchmark {
 t_path_generator::t_path_generator (std::string root_dir) : root_dir(root_dir) {
-    relevant_keys.push_back(STATUS_KEY_SYSTEM);
     relevant_keys.push_back(STATUS_KEY_ITERATION);
     relevant_keys.push_back(STATUS_KEY_GENERATOR);
     relevant_keys.push_back(STATUS_KEY_RANKER);

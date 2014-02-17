@@ -7,10 +7,6 @@ namespace diagnosis {
 namespace benchmark {
 class t_save_hook : public t_benchmark_hook {
 public:
-
-    virtual void trigger_event (t_collector & collector,
-                                const randomizers::t_system & system) const;
-
     virtual void trigger_event (t_collector & collector,
                                 const t_status_iteration_init & status) const;
 

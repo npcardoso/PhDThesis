@@ -6,7 +6,6 @@
 #include "utils/time.h"
 
 
-#define STATUS_KEY_SYSTEM "system"
 #define STATUS_KEY_ITERATION "iteration"
 #define STATUS_KEY_GENERATOR "generator"
 #define STATUS_KEY_RANKER "ranker"
@@ -21,20 +20,9 @@ protected:
     inline t_status () {}
 };
 
-class t_status_system_init : public t_status {
+class t_status_iteration_init : public t_status {
 public:
-    t_status_system_init (t_id system_id);
-    virtual t_id get_system_id () const;
-
-    virtual void prepare_entry (t_entry & entry) const;
-private:
-    t_id system_id;
-};
-
-class t_status_iteration_init : public t_status_system_init {
-public:
-    t_status_iteration_init (const t_status_system_init & status,
-                             t_id iteration_id,
+    t_status_iteration_init (t_id iteration_id,
                              t_time_interval start,
                              const t_const_ptr<structs::t_spectra> & spectra,
                              const t_const_ptr<structs::t_candidate> & correct);

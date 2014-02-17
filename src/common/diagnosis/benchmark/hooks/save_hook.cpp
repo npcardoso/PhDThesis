@@ -9,17 +9,6 @@
 namespace diagnosis {
 namespace benchmark {
 void t_save_hook::trigger_event (t_collector & collector,
-                                 const randomizers::t_system & system) const {
-    /*    std::ofstream f;
-     *
-     *
-     *  open_file(boost::lexical_cast<std::string> (get_system_count()) + ".system.txt", f);
-     *  f << system;
-     *  f.close();
-     */
-}
-
-void t_save_hook::trigger_event (t_collector & collector,
                                  const t_status_iteration_init & status) const {
     std::stringstream ss;
     t_entry entry;

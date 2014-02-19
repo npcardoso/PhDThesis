@@ -1,5 +1,6 @@
 #include "mhs.h"
 
+#include <boost/foreach.hpp>
 #include <list>
 
 namespace diagnosis {
@@ -139,32 +140,25 @@ void t_mhs::calculate (const t_spectra & spectra,
 
 void t_mhs::update (const t_spectra & spectra,
                     t_trie & D,
-                    t_trie & old_D,
+                    const t_trie & old_D,
                     const t_spectra_filter & filter) const {
     std::list<t_candidate> candidates;
 
-    {
-        t_trie::iterator it = old_D.begin();
 
-        while (it != old_D.end()) {
-            if (spectra.is_candidate(*it, &filter))
-                D.add(*it, false, false);
-            else
-                candidates.push_back(*it);
-
-            it++;
-        }
+    BOOST_FOREACH(const t_candidate &candidate,
+                  old_D) {
+        if (spectra.is_candidate(candidate, &filter))
+            D.add(candidate, false, false);
+        else
+            candidates.push_back(candidate);
     }
-    {
-        std::list<t_candidate>::iterator it = candidates.begin();
+    BOOST_FOREACH(t_candidate & candidate,
+                  candidates) {
+        t_spectra_filter tmp_filter = filter;
 
-        while (it != candidates.end()) {
-            t_candidate candidate = *it;
-            t_spectra_filter tmp_filter = filter;
-            strip(candidate, spectra, tmp_filter);
-            calculate(spectra, D, &tmp_filter, candidate);
-            it++;
-        }
+
+        strip(candidate, spectra, tmp_filter);
+        calculate(spectra, D, &tmp_filter, candidate);
     }
 }
 

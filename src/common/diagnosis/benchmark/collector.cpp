@@ -126,7 +126,7 @@ void t_collector::flush_all () {
     boost::mutex::scoped_lock lock(mutex);
 
 
-    BOOST_FOREACH(t_files::value_type file, files) {
+    BOOST_FOREACH(t_files::value_type & file, files) {
         file->flush();
     }
     // files.clear();

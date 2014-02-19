@@ -32,7 +32,7 @@ public:
 
     void update (const structs::t_spectra & spectra,
                  structs::t_trie & D,
-                 structs::t_trie & old_D,
+                 const structs::t_trie & old_D,
                  const structs::t_spectra_filter & filter) const;
 
 

@@ -5,8 +5,9 @@
 #include "diagnosis/structs/candidate.h"
 #include "utils/boost.h"
 
-#include <map>
 #include <boost/lexical_cast.hpp>
+#include <iterator>
+#include <map>
 
 namespace diagnosis {
 namespace structs {
@@ -79,11 +80,9 @@ std::ostream & operator << (std::ostream & out, const t_trie & trie);
 std::istream & operator >> (std::istream & in, t_trie & trie);
 
 
-class t_trie_iterator {
-    t_trie::t_value_type current;
-    const t_trie * level;
+class t_trie_iterator : public std::iterator<std::forward_iterator_tag, // type of iterator
+                                             const t_trie::t_value_type> {
 public:
-
     t_trie_iterator (const t_trie * level);
     bool operator != (const t_trie_iterator & it) const;
     bool operator == (const t_trie_iterator & it) const;
@@ -95,6 +94,9 @@ public:
 
     const t_trie::t_value_type * operator -> () const;
     const t_trie::t_value_type & operator * () const;
+private:
+    t_trie::t_value_type current;
+    const t_trie * level;
 };
 }
 }

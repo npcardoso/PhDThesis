@@ -14,7 +14,7 @@ using namespace std;
 
 void t_csv::add_row (const t_entry & entry) {
     entries.push_back(entry);
-    BOOST_FOREACH(t_entry::value_type e,
+    BOOST_FOREACH(const t_entry::value_type & e,
                   entry) {
         columns.insert(e.first);
     }
@@ -25,7 +25,7 @@ ostream & t_csv::write (ostream & out) const {
     bool first = true;
 
 
-    BOOST_FOREACH(string key, columns) {
+    BOOST_FOREACH(const string &key, columns) {
         if (!first)
             out << ",";
         else
@@ -35,9 +35,9 @@ ostream & t_csv::write (ostream & out) const {
     }
     out << endl;
 
-    BOOST_FOREACH(t_entry e, entries) {
+    BOOST_FOREACH(const t_entry &e, entries) {
         first = true;
-        BOOST_FOREACH(std::string key, columns) {
+        BOOST_FOREACH(const std::string & key, columns) {
             t_entry::const_iterator it;
 
 

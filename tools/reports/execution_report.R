@@ -1,26 +1,49 @@
 library('reshape2')
 library('ggplot2')
 
+# Fix Time to start at 0 and to be in seconds
+fix_job_times = function(data) {
+    times = c(data$init, data$start, data$end)
+    min_time = min(times)
+    data$init = (data$init - min_time) / 1e6
+    data$start = (data$start - min_time) / 1e6
+    data$end = (data$end - min_time) / 1e6
+    return(data)
+}
+
+read_job_file = function(path) {
+    data = read.csv(path)
+    return (fix_job_times(data))
+}
+
+melt_jobs_matrix = function(data) {
+    data = data[order(data$init), ]
+    data$id = 1:nrow(data)
+
+    data = melt(data, measure.vars=c("init", "start", "end"), value.name="time")
+}
+
+determine_interval = function(data, interval=NULL) {
+    times = c(data$init, data$start, data$end)
+    if(is.null(interval))
+        return(c(min(times), max(times)))
+    return(interval)
+}
+
 slot_occupancy = function(data, interval=NULL) {
     count_active = function(data, time) {
         return (length(which(time >= data$start &
                              time <= data$end)))
     }
 
-    times = c(data$init, data$start, data$end)
-    min_time = min(times)
-    if(is.null(interval)) {
-        interval = c(min_time, max(times))
-    }
-    else {
-        interval = interval * 1e6 + min_time
-    }
+    interval = determine_interval(data, interval)
 
+    times = c(data$init, data$start, data$end)
     times = times[which(times >= interval[1] & times <= interval[2])]
     times = times[order(times)]
 
-    tmp = data.frame(time=interval[1], active=0)
     last_active = count_active(data, interval[1])
+    tmp = data.frame(time=interval[1], active=last_active)
     for(t in times) {
         active = count_active(data, t)
         if(active != last_active) {
@@ -33,9 +56,6 @@ slot_occupancy = function(data, interval=NULL) {
     tmp = rbind(tmp,
         data.frame(time=interval[2],
                    active=last_active))
-
-    tmp$time = (tmp$time - min_time) / 1e6
-
 
     return (tmp)
 }
@@ -58,23 +78,12 @@ wasted_time = function(occupancy,
 
 
 plot_execution_report = function(data, nbreaks=20, interval=NULL) {
-
+    interval = determine_interval(data, interval)
                                         #Reorder data points
-    data = data[order(data$init), ]
-    data$id = 1:nrow(data)
 
-    data = melt(data, measure.vars=c("init", "start", "end"))
-                                        # Fix Time to start at 0 and to be in seconds
-    data$value = (data$value - min(data$value)) / 1e6
-
-    if(is.null(interval))
-        interval = c(min(data$value), max(data$value))
-    else {
-        rows = which(data$value >=interval[1] & data$value <=interval[2])
-        data = data[rows,]
-    }
-
-
+    data = melt_jobs_matrix(data)
+    rows = which(data$time >=interval[1] & data$time <=interval[2])
+    data = data[rows,]
                                         # Get init and end points
 
     tmp = data[-which(data$variable == "start"),]
@@ -94,7 +103,7 @@ plot_execution_report = function(data, nbreaks=20, interval=NULL) {
     breaks = (0:nbreaks)/nbreaks
     x_breaks = round(interval[1] + breaks * (interval[2] - interval[1]), 1)
 
-    p = ggplot(tmp, aes(value, factor(id),color=type,linetype=variable))
+    p = ggplot(tmp, aes(time, factor(id),color=type,linetype=variable))
     p = p + geom_line(size = 2)
     p = p + xlab("Time")
     p = p + ylab("Job ID")
@@ -107,11 +116,17 @@ plot_execution_report = function(data, nbreaks=20, interval=NULL) {
 
 
 plot_slot_occupancy = function(data, interval=NULL) {
-    p = ggplot(slot_occupancy(data, interval), aes(time, active))
+    interval = determine_interval(data, interval)
+    times = c(data$init, data$start, data$end)
+    min_time = min(times)
+
+    tmp = slot_occupancy(data, interval)
+    p = ggplot(tmp, aes(time, active))
     p = p + geom_line()
     p = p + xlab("Time")
     p = p + ylab("Active Jobs")
-    p = p + scale_x_continuous(limits=(interval - min_time) / 1e6)
+    p = p + scale_x_continuous(limits=interval)
+    p = p + scale_y_continuous(limits=c(0, max(tmp$active)))
     p = p + theme_bw()
 
     return (p)
@@ -123,9 +138,9 @@ generate_execution_report = function(file, data, width=100) {
     pdf(file)
 
     times = c(data$init, data$start, data$end)
-    max_time = (max(times) - min(times)) / 1e6
+    max_time = max(times)
 
-    t = 0
+    t = min(times)
     while(t <= max_time) {
         print(plot_execution_report(data, interval=c(t, t + width)))
         print(plot_slot_occupancy(data, interval=c(t, t + width)))

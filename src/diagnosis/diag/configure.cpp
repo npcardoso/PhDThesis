@@ -1,9 +1,8 @@
 #include "configure.h"
 
-#include "diagnosis/heuristics/similarity.h"
-#include "diagnosis/heuristics/sort.h"
+#include <thread>
 
-t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, true) {
+t_diag_options::t_diag_options (std::string app_name) : t_options(app_name, true, true) {
     has_confidence = false;
     print_spectra = false;
     ambiguity_groups = false;
@@ -14,31 +13,29 @@ t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, 
 
 
     do_generation = false;
-    mpi_level = 0;
-    mpi_stride = 0;
-    mpi_buffer = MPI_BUFFER;
-    mpi_hierarchical = false;
+    fork_level = 0;
+    stride = 0;
+    threads = std::thread::hardware_concurrency();
 
     add(t_opt('g', "generate", false, false, "Enables candidate generation"));
     add(t_opt('t', "time", true, false, "Sets maximum candidate generation time"));
     add(t_opt('D', "candidates", true, false, "Sets maximum number of candidates"));
     add(t_opt('d', "cardinality", true, false, "Sets maximum candidate cardinality"));
-    add(t_opt('B', "mpi-buffer", true, false, "Sets the buffer size for reduce task"));
-    add(t_opt('L', "mpi-level", true, false, "Sets the forking level"));
-    add(t_opt('S', "mpi-stride", true, false, "Sets the stride factor"));
-    add(t_opt('H', "mpi-hierarchical", false, false, "Enables hierarchical reduce"));
+    add(t_opt('L', "fork-level", true, false, "Sets the forking level"));
+    add(t_opt('S', "stride", true, false, "Sets the stride factor"));
+    add(t_opt('T', "threads", true, false, "Sets the stride factor"));
 
 
     do_ranking = false;
-    use_confidence = false;
-    use_fuzzy_error = false;
+    barinel.use_confidence = false;
+    barinel.use_fuzzy_error = false;
 
     add(t_opt('r', "rank", false, false, "Enables ranking (implies -g)"));
     add(t_opt('f', "fuzzy", false, false, "Enables fuzzy errors"));
     add(t_opt('c', "confidence", false, false, "Enables assertion confidence"));
 }
 
-bool t_mhs_options::short_opt (int c, char * param) {
+bool t_diag_options::short_opt (int c, char * param) {
     switch (c) {
     // Spectra Stuff
     case 'p':
@@ -74,18 +71,16 @@ bool t_mhs_options::short_opt (int c, char * param) {
         return verb_strtoi(optarg, mhs.max_candidate_size, true);
 
 
-    // MPI Stuff
-    case 'B':
-        return verb_strtoi(optarg, mpi_buffer, true);
-
+    // Parallelization Stuff
     case 'L':
-        return verb_strtoi(optarg, mpi_level, true);
+        return verb_strtoi(optarg, fork_level, true);
 
     case 'S':
-        return verb_strtoi(optarg, mpi_stride, true);
+        return verb_strtoi(optarg, stride, true);
 
-    case 'H':
-        mpi_hierarchical = true;
+    case 'T':
+        return verb_strtoi(optarg, threads, true);
+
         break;
 
 
@@ -95,11 +90,11 @@ bool t_mhs_options::short_opt (int c, char * param) {
         break;
 
     case 'f':
-        use_fuzzy_error = true;
+        barinel.use_fuzzy_error = true;
         break;
 
     case 'c':
-        use_confidence = true;
+        barinel.use_confidence = true;
         break;
 
     default:
@@ -109,7 +104,7 @@ bool t_mhs_options::short_opt (int c, char * param) {
     return false;
 }
 
-std::ostream & t_mhs_options::print (std::ostream & out) const {
+std::ostream & t_diag_options::print (std::ostream & out) const {
     t_options::print(out);
 
 
@@ -123,17 +118,16 @@ std::ostream & t_mhs_options::print (std::ostream & out) const {
         out << ", time: " << mhs.max_time;
         out << ", candidates: " << mhs.max_candidates;
         out << ", cardinality: " << mhs.max_candidate_size;
-        out << ", mpi-buffer: " << mpi_buffer;
-        out << ", mpi-level: " << mpi_level;
-        out << ", mpi-stride: " << mpi_stride;
-        out << ", mpi-hierarchical: " << mpi_hierarchical;
+        out << ", fork-level: " << fork_level;
+        out << ", stride: " << stride;
+        out << ", threads: " << threads;
     }
 
     out << ", rank: " << do_ranking;
 
     if (do_ranking) {
-        out << ", fuzzy: " << use_fuzzy_error;
-        out << ", confidence: " << use_confidence;
+        out << ", fuzzy: " << barinel.use_fuzzy_error;
+        out << ", confidence: " << barinel.use_confidence;
     }
 
     return out;

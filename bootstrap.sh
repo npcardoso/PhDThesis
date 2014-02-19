@@ -6,7 +6,6 @@ LLVM_SRC=http://llvm.org/releases/3.3/llvm-3.3.src.tar.gz
 CLANG_SRC=http://llvm.org/releases/3.3/cfe-3.3.src.tar.gz
 RT_SRC=http://llvm.org/releases/3.3/compiler-rt-3.3.src.tar.gz
 BOOST_SRC=http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
-OPENMPI_SRC=http://www.open-mpi.org/software/ompi/v1.6/downloads/openmpi-1.6.5.tar.gz
 GMP_SRC=http://ftp.gmplib.org/gmp/gmp-5.1.3.tar.bz2
 MPFR_SRC=http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.gz
 
@@ -17,7 +16,7 @@ BOOST_EXTRA_OPTS=--with-python=/usr/bin/python2
 BUILD_JOBS=16
 
 
-DEPS=("$LLVM_SRC $CLANG_SRC $RT_SRC $BOOST_SRC $SCONS_SRC $OPENMPI_SRC $GMP_SRC $MPFR_SRC")
+DEPS=("$LLVM_SRC $CLANG_SRC $RT_SRC $BOOST_SRC $SCONS_SRC $GMP_SRC $MPFR_SRC")
 
 
 if [[ ! -e deps ]]; then
@@ -107,28 +106,6 @@ else
 fi
 
 
-if [[ ! -e openmpi/ready ]]; then
-    cd openmpi
-
-    echo "Configuring OpenMPI"
-    ./configure \
-        --prefix=$PREFIX \
-        --enable-mpi-f77 \
-        --enable-mpi-f90 \
-        $OPENMPI_EXTRA_OPTS
-
-    echo "Building OpenMPI"
-    make -j $BUILD_JOBS
-
-    echo "Installing OpenMPI"
-    make install
-
-    touch ready
-    echo "Finished OpenMPI"
-    cd ..
-else
-    echo "Not building OpenMPI"
-fi
 
 if [[ ! -e gmp/ready ]]; then
     cd gmp

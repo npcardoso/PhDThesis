@@ -36,9 +36,6 @@ vars.Add('LLI', '', 'lli')
 vars.Add('CXX', '', 'clang++')
 
 
-vars.Add('mpi_include', '', '`mpic++ --showme:compile`')
-vars.Add('mpi_link', '', '`mpic++ --showme:link`')
-
 vars.Add('mpfr_link', '', '-lgmp -lmpfr')
 
 vars.Add('default_libRdiag', '', False)

@@ -1,0 +1,82 @@
+#include "types.h"
+#include "diagnosis/metrics.h"
+#include "diagnosis/benchmark.h"
+#include "diagnosis/algorithms/mhs.h"
+#include "diagnosis/algorithms/barinel.h"
+#include "diagnosis/heuristics/sort.h"
+#include "diagnosis/heuristics/similarity.h"
+#include "diagnosis/randomizers/qos.h"
+#include "diagnosis/structs/count_spectra.h"
+#include "diagnosis/structs/trie.h"
+#include <boost/random/mersenne_twister.hpp>
+#include <list>
+
+using namespace std;
+using namespace diagnosis;
+using namespace diagnosis::algorithms;
+using namespace diagnosis::metrics;
+using namespace diagnosis::randomizers;
+using namespace diagnosis::structs;
+using namespace boost::random;
+
+typedef diagnosis::t_rank_element<const t_candidate *, t_probability_mp> t_rank_element_tmp;
+typedef std::vector<t_rank_element_tmp> t_rank;
+
+
+int main (int argc, char ** argv) {
+    t_ptr<t_fuzzy_bernoulli> fuzzy_bernoulli(new t_fuzzy_bernoulli(0.5, 10));
+
+
+    fuzzy_bernoulli->component_count = 40;
+
+    (*fuzzy_bernoulli) << t_fault(0, 1, 1);
+    (*fuzzy_bernoulli) << t_fault(0, 1, 1);
+
+    heuristics::t_heuristic heuristic;
+    heuristic.push(new heuristics::t_ochiai());
+    heuristic.push(new heuristics::t_sort());
+
+    t_ptr<t_mhs> mhs(new t_mhs(heuristic));
+    t_ptr<t_barinel> barinel(new t_barinel());
+    t_ptr<t_barinel> fuzzinel(new t_barinel());
+
+
+    barinel->use_confidence = false;
+    barinel->use_fuzzy_error = false;
+
+    t_benchmark<t_count_spectra> benchmark_barinel(mhs, barinel, fuzzy_bernoulli);
+    t_benchmark<t_count_spectra> benchmark_fuzzinel(mhs, fuzzinel, fuzzy_bernoulli);
+
+    t_diagnosis_cost cost_barinel = 0, cost_fuzzinel = 0;
+
+    time_t seed = time(NULL);
+    mt19937 gen_barinel(seed);
+    mt19937 gen_fuzzinel(seed);
+
+    stringstream ss("2 3 \
+1 1 1 1 \
+1 0 0 0.5 \
+0 1 0 1");
+    t_count_spectra spectra;
+    t_candidate correct;
+
+    spectra.read(ss, true);
+    std::cout << spectra;
+    correct.insert(1);
+
+    cost_barinel = benchmark_barinel(spectra, correct);
+    cost_fuzzinel = benchmark_fuzzinel(spectra, correct);
+
+    std::cout << "Barinel Cd: " << cost_barinel << " Fuzzinel Cd: " << cost_fuzzinel << std::endl;
+
+    for (t_id i = 1; i < 100; i++) {
+        mt19937 gen(seed);
+        cost_barinel += benchmark_barinel(gen_barinel);
+        cost_fuzzinel += benchmark_fuzzinel(gen_fuzzinel);
+
+        std::cout << "Completed " << i << " Barinel Cd: " << cost_barinel / i << " Fuzzinel Cd: " << cost_fuzzinel / i << std::endl;
+    }
+
+
+    return 0;
+}

@@ -5,7 +5,7 @@
 
 namespace diagnosis {
 namespace benchmark {
-class t_hook_combiner : public t_benchmark_hook {
+class t_hook_combiner : public t_benchmark_hook, public std::list<t_const_ptr<t_benchmark_hook> > {
 public:
     virtual void trigger_event (t_collector & collector,
                                 const t_status_iteration_init & status) const;
@@ -15,13 +15,6 @@ public:
 
     virtual void trigger_event (t_collector & collector,
                                 const t_status_post_rank & status) const;
-
-    t_hook_combiner & operator << (t_benchmark_hook * hook);
-    t_hook_combiner & operator << (t_ptr<t_benchmark_hook> & hook);
-
-private:
-    typedef std::list<t_ptr<t_benchmark_hook> > t_hook_list;
-    t_hook_list hook_list;
 };
 }
 }

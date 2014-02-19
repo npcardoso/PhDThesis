@@ -54,39 +54,25 @@ t_ptr<t_spectra_generator> create_n_tier_generator (t_count n_errors,
 }
 
 t_ptr<t_benchmark_settings> create_benchmark_settings (std::string dest) {
-    // Candidate Generators
-    t_ptr<t_mhs> mhs(new t_mhs());
-    t_ptr<t_single_fault> single_fault(new t_single_fault());
-
-    mhs->max_time = 3e7;
-
-
-    // Candidate Rankers
-    t_ptr<t_barinel> barinel(new t_barinel());
-    t_ptr<t_barinel> fuzzinel(new t_barinel());
-    t_ptr<t_ochiai> ochiai(new t_ochiai());
-
-
-    barinel->use_confidence = false;
-    barinel->use_fuzzy_error = false;
-
     // Metrics
     t_metrics_hook * metrics_hook = new t_metrics_hook();
-    (*metrics_hook) << new t_Cd();
-    (*metrics_hook) << new t_wasted_effort();
-    (*metrics_hook) << new t_entropy();
-    (*metrics_hook) << new t_quality(t_wasted_effort().key());
-    (*metrics_hook) << new t_quality_fair(t_wasted_effort().key());
+
+
+    metrics_hook->push_back(t_ptr<t_metric> (new t_Cd()));
+    metrics_hook->push_back(t_ptr<t_metric> (new t_wasted_effort()));
+    metrics_hook->push_back(t_ptr<t_metric> (new t_entropy()));
+    metrics_hook->push_back(t_ptr<t_metric> (new t_quality(t_wasted_effort().key())));
+    metrics_hook->push_back(t_ptr<t_metric> (new t_quality_fair(t_wasted_effort().key())));
 
     // Benchmark Hooks
     t_ptr<t_hook_combiner> hook(new t_hook_combiner());
 
-    (*hook) << new t_job_tracker_hook();
-    (*hook) << new t_verbose_hook();
-    (*hook) << new t_save_hook();
-    (*hook) << new t_statistics_hook();
-    (*hook) << metrics_hook;
-    (*hook) << new t_flusher_hook();
+    hook->push_back(t_ptr<t_benchmark_hook> (new t_job_tracker_hook()));
+    hook->push_back(t_ptr<t_benchmark_hook> (new t_verbose_hook()));
+    hook->push_back(t_ptr<t_benchmark_hook> (new t_save_hook()));
+    hook->push_back(t_ptr<t_benchmark_hook> (new t_statistics_hook()));
+    hook->push_back(t_ptr<t_benchmark_hook> (metrics_hook));
+    hook->push_back(t_ptr<t_benchmark_hook> (new t_flusher_hook()));
 
 
     // Collector
@@ -97,15 +83,31 @@ t_ptr<t_benchmark_settings> create_benchmark_settings (std::string dest) {
     t_ptr<t_benchmark_settings> settings(
         new t_benchmark_settings(collector, hook));
 
-    settings->add_generator(mhs, "mhs");
-    // settings->add_generator(single_fault, "single_fault");
 
+    // Candidate Generators
+    t_ptr<t_mhs> mhs(new t_mhs());
+    t_ptr<t_single_fault> single_fault(new t_single_fault());
+
+    mhs->max_time = 3e7;
+    settings->add_generator(mhs, "mhs");
+
+    // Candidate Rankers
+    t_ptr<t_barinel> barinel(new t_barinel());
+    t_ptr<t_barinel> fuzzinel(new t_barinel());
+    t_ptr<t_ochiai> ochiai(new t_ochiai());
+
+
+    barinel->use_confidence = false;
+    barinel->use_fuzzy_error = false;
     settings->add_ranker(barinel, "barinel");
     settings->add_ranker(fuzzinel, "fuzzinel");
-    // settings->add_ranker(ochiai, "ochiai");
+
 
     settings->add_connection("mhs", "barinel");
     settings->add_connection("mhs", "fuzzinel");
+
+    // settings->add_generator(single_fault, "single_fault");
+    // settings->add_ranker(ochiai, "ochiai");
     // benchmark->add_connection("single_fault", "ochiai");
 
     return settings;

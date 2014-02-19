@@ -5,16 +5,6 @@
 
 namespace diagnosis {
 namespace benchmark {
-t_metrics_hook & t_metrics_hook::operator << (t_ptr<t_metric> & metric) {
-    metrics_list.push_back(metric);
-    return *this;
-}
-
-t_metrics_hook & t_metrics_hook::operator << (t_metric * metric) {
-    metrics_list.push_back(t_ptr<t_metric> (metric));
-    return *this;
-}
-
 void t_metrics_hook::trigger_event (t_collector & collector,
                                     const t_status_post_rank & status) const {
     structs::t_diagnosis_report dr(status.get_candidates(),
@@ -24,8 +14,7 @@ void t_metrics_hook::trigger_event (t_collector & collector,
     std::string filename("metrics.csv");
 
 
-    BOOST_FOREACH(const t_metrics_list::value_type & metric,
-                  metrics_list) {
+    BOOST_FOREACH(auto & metric, *this) {
         std::string ret = (* metric)(status.get_spectra(),
                                      status.get_correct(),
                                      status.get_candidates(),

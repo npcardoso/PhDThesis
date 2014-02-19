@@ -7,17 +7,10 @@
 
 namespace diagnosis {
 namespace benchmark {
-class t_metrics_hook : public t_benchmark_hook {
+class t_metrics_hook : public t_benchmark_hook, public std::list<t_const_ptr<t_metric> > {
 public:
-    t_metrics_hook & operator << (t_ptr<t_metric> & metric);
-    t_metrics_hook & operator << (t_metric * metric);
-
     virtual void trigger_event (t_collector & collector,
                                 const t_status_post_rank & status) const;
-
-private:
-    typedef std::list < t_ptr < t_metric >> t_metrics_list;
-    t_metrics_list metrics_list;
 };
 }
 }

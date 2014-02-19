@@ -1,6 +1,62 @@
 library('reshape2')
 library('ggplot2')
 
+slot_occupancy = function(data, interval=NULL) {
+    count_active = function(data, time) {
+        return (length(which(time >= data$start &
+                             time <= data$end)))
+    }
+
+    times = c(data$init, data$start, data$end)
+    min_time = min(times)
+    if(is.null(interval)) {
+        interval = c(min_time, max(times))
+    }
+    else {
+        interval = interval * 1e6 + min_time
+    }
+
+    times = times[which(times >= interval[1] & times <= interval[2])]
+    times = times[order(times)]
+
+    tmp = data.frame(time=interval[1], active=0)
+    last_active = count_active(data, interval[1])
+    for(t in times) {
+        active = count_active(data, t)
+        if(active != last_active) {
+            tmp = rbind(tmp,
+                data.frame(time=c(t,t),
+                           active=c(last_active,active)))
+        }
+        last_active = active
+    }
+    tmp = rbind(tmp,
+        data.frame(time=interval[2],
+                   active=last_active))
+
+    tmp$time = (tmp$time - min_time) / 1e6
+
+
+    return (tmp)
+}
+
+total_time = function(occupancy) {
+    return (max(occupancy$time) - min(occupancy$time))
+}
+
+wasted_time = function(occupancy,
+    n_slots=max(occupancy$active)) {
+
+    occupancy = occupancy[order(occupancy$time), ]
+    waste = 0
+    for(i in 1:(nrow(occupancy) - 1)) {
+        delta = occupancy$time[i + 1] - occupancy$time[i]
+        waste = waste + delta * (n_slots - mean(occupancy$active[i:(i+1)]))
+    }
+    return (waste)
+}
+
+
 plot_execution_report = function(data, nbreaks=20, interval=NULL) {
 
                                         #Reorder data points
@@ -50,41 +106,8 @@ plot_execution_report = function(data, nbreaks=20, interval=NULL) {
 }
 
 
-plot_slot_occuppancy = function(data, interval=NULL) {
-    count_active = function(data, time) {
-        return (length(which(time >= data$start &
-                             time <= data$end)))
-    }
-
-    times = c(data$init, data$start, data$end)
-    min_time = min(times)
-    if(is.null(interval)) {
-        interval = c(min_time, max(times))
-    }
-    else {
-        interval = interval * 1e6 + min_time
-    }
-
-    times = times[which(times >= interval[1] & times <= interval[2])]
-    times = times[order(times)]
-
-    tmp = data.frame(time=interval[1], active=0)
-    last_active = 0
-    for(t in times) {
-        active = count_active(data, t)
-        if(active != last_active) {
-            tmp = rbind(tmp,
-                data.frame(time=c(t,t),
-                           active=c(last_active,active)))
-        }
-        last_active = active
-    }
-    tmp = rbind(tmp,
-        data.frame(time=interval[2],
-                   active=last_active))
-
-    tmp$time = (tmp$time - min_time) / 1e6
-    p = ggplot(tmp, aes(time, active))
+plot_slot_occupancy = function(data, interval=NULL) {
+    p = ggplot(slot_occupancy(data, interval), aes(time, active))
     p = p + geom_line()
     p = p + xlab("Time")
     p = p + ylab("Active Jobs")
@@ -105,7 +128,7 @@ generate_execution_report = function(file, data, width=100) {
     t = 0
     while(t <= max_time) {
         print(plot_execution_report(data, interval=c(t, t + width)))
-        print(plot_slot_occuppancy(data, interval=c(t, t + width)))
+        print(plot_slot_occupancy(data, interval=c(t, t + width)))
         t = t + width
     }
     dev.off()

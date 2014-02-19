@@ -15,10 +15,14 @@ public:
     t_count max_candidate_size, max_candidates;
     t_time_interval max_time;
 
-    t_mhs (const heuristics::t_heuristic & heuristic);
+    static const t_const_ptr<heuristics::t_heuristic> & get_default_heuristic ();
 
-    void set_heuristic (t_count start_level, const heuristics::t_heuristic & heuristic);
+    t_mhs (const t_const_ptr<heuristics::t_heuristic> & heuristic=get_default_heuristic());
+
+    void set_heuristic (t_count start_level,
+                        const t_const_ptr<heuristics::t_heuristic> & heuristic);
     const heuristics::t_heuristic & get_heuristic (t_count level) const;
+    const t_const_ptr<heuristics::t_heuristic> & get_heuristic_ptr (t_count level) const;
 
     virtual void operator () (const structs::t_spectra & spectra,
                               t_ret_type & D,
@@ -57,7 +61,7 @@ private:
                 const structs::t_spectra & spectra,
                 structs::t_spectra_filter & filter) const;
 private:
-    typedef std::map<t_count, heuristics::t_heuristic> t_heuristics;
+    typedef std::map<t_count, t_const_ptr<heuristics::t_heuristic> > t_heuristics;
 
     t_heuristics heuristics;
 };

@@ -20,16 +20,12 @@ BOOST_AUTO_TEST_CASE(stop_flags) {
     t_candidate correct;
     t_bernoulli randomizer(0.25, 1, 100, 100);
     std::mt19937 gen;
-    t_heuristic heuristic;
     t_trie D;
 
 
     spectra = randomizer(gen, correct);
 
-    heuristic.push(new heuristics::t_ochiai());
-    heuristic.push(new heuristics::t_sort());
-
-    t_mhs mhs(heuristic);
+    t_mhs mhs;
     mhs.max_candidate_size = 2;
     mhs(*spectra, D);
 
@@ -40,7 +36,7 @@ BOOST_AUTO_TEST_CASE(stop_flags) {
         BOOST_CHECK((it++)->size() <= mhs.max_candidate_size);
 
     // Max Candidate Size
-    mhs = t_mhs(heuristic);
+    mhs = t_mhs();
     mhs.max_candidates = 4000;
     D.clear();
     mhs(*spectra, D);
@@ -73,11 +69,7 @@ BOOST_AUTO_TEST_CASE(mhs) {
         BOOST_CHECK(f.good());
         f.close();
 
-        t_heuristic heuristic;
-        heuristic.push(new heuristics::t_ochiai());
-        heuristic.push(new heuristics::t_sort());
-
-        algorithms::t_mhs mhs(heuristic);
+        algorithms::t_mhs mhs;
 
         mhs(spectra, D);
         BOOST_CHECK(D == D_ref);
@@ -100,11 +92,7 @@ BOOST_AUTO_TEST_CASE(parallelization) {
     spectra = randomizer(gen, correct);
 
     {
-        t_heuristic heuristic;
-        heuristic.push(new heuristics::t_ochiai());
-        heuristic.push(new heuristics::t_sort());
-
-        t_mhs mhs(heuristic);
+        t_mhs mhs;
         reference.clear();
         mhs(*spectra, reference);
     }
@@ -117,19 +105,17 @@ BOOST_AUTO_TEST_CASE(parallelization) {
             D.clear();
 
             for (t_count rank = 0; rank < ntasks; rank++) {
-                t_heuristic heuristic;
-                heuristic.push(new heuristics::t_ochiai());
-                heuristic.push(new heuristics::t_sort());
+                t_mhs mhs;
 
-                t_mhs mhs(heuristic);
 
-                heuristic = mhs.get_heuristic(level);
-                mhs.set_heuristic(level + 1, heuristic);
+                mhs.set_heuristic(level + 1, mhs.get_heuristic_ptr(level));
+
+                t_ptr<t_heuristic> heuristic(new t_heuristic(mhs.get_heuristic(level)));
 
                 if (stride)
-                    heuristic.push(new heuristics::t_divide(rank, ntasks, stride));
+                    heuristic->push(new heuristics::t_divide(rank, ntasks, stride));
                 else
-                    heuristic.push(new heuristics::t_random_divide(rank, ntasks, 1234));
+                    heuristic->push(new heuristics::t_random_divide(rank, ntasks, 1234));
 
                 mhs.set_heuristic(level, heuristic);
 

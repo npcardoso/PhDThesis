@@ -1,30 +1,54 @@
 #include "mhs.h"
 
+#include "diagnosis/heuristics/sort.h"
+#include "diagnosis/heuristics/similarity.h"
+
 #include <boost/foreach.hpp>
 #include <list>
+
 
 namespace diagnosis {
 namespace algorithms {
 using namespace diagnosis::structs;
 using namespace diagnosis::heuristics;
 
-t_mhs::t_mhs (const t_heuristic & heuristic) {
+
+t_heuristic * gen_default_heuristic () {
+    heuristics::t_heuristic * heuristic = new t_heuristic();
+
+
+    heuristic->push(new heuristics::t_ochiai());
+    heuristic->push(new heuristics::t_sort());
+    return heuristic;
+}
+
+static t_const_ptr<t_heuristic> default_heuristic(gen_default_heuristic());
+
+const t_const_ptr<t_heuristic> & t_mhs::get_default_heuristic () {
+    return default_heuristic;
+}
+
+t_mhs::t_mhs (const t_const_ptr<t_heuristic> & heuristic) {
     max_candidate_size = 0;
     max_candidates = 0;
     max_time = 0;
     set_heuristic(0, heuristic);
 }
 
-void t_mhs::set_heuristic (t_count start_level, const t_heuristic & heuristic) {
+void t_mhs::set_heuristic (t_count start_level, const t_const_ptr<t_heuristic> & heuristic) {
     heuristics[start_level] = heuristic;
 }
 
-const t_heuristic & t_mhs::get_heuristic (t_count level) const {
+const t_const_ptr<t_heuristic> & t_mhs::get_heuristic_ptr (t_count level) const {
     t_heuristics::const_iterator it = heuristics.upper_bound(level);
 
 
     it--;
     return it->second;
+}
+
+const t_heuristic & t_mhs::get_heuristic (t_count level) const {
+    return *(get_heuristic_ptr(level));
 }
 
 void t_mhs::operator () (const t_spectra & spectra,

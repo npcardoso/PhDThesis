@@ -18,7 +18,7 @@ public:
 
     t_benchmark_settings (const t_ptr<t_collector> & collector,
                           const t_const_ptr<t_benchmark_hook> & hook,
-                          const t_ptr<t_job_queue> & job_queue);
+                          const t_ptr<t_job_queue> & job_queue=t_ptr<t_job_queue> (new t_job_queue()));
 
     void add_generator (const t_const_ptr<t_candidate_generator> & generator);
     void add_generator (const t_const_ptr<t_candidate_generator> & generator,

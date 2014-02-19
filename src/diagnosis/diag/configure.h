@@ -12,7 +12,6 @@ using namespace diagnosis::heuristics;
 
 class t_mhs_options : public t_options {
 public:
-    static t_heuristic default_heuristic ();
     t_mhs_options (std::string app_name);
     virtual bool short_opt (int c, char * param);
     virtual std::ostream & print (std::ostream & out) const;

@@ -16,7 +16,6 @@ public:
                      const t_const_ptr<t_status_iteration_init> & status);
 
     void operator () () const;
-    std::string get_type () const;
     virtual bool operator < (const t_job & job) const;
 
 private:
@@ -32,7 +31,6 @@ public:
                   const t_const_ptr<t_status_post_gen> & status);
 
     void operator () () const;
-    std::string get_type () const;
     virtual bool operator < (const t_job & job) const;
 
 private:
@@ -82,10 +80,6 @@ void t_generator_job::operator () () const {
     }
 }
 
-std::string t_generator_job::get_type () const {
-    return "generator: " + settings.get_generator_name(generator_id);
-}
-
 bool t_generator_job::operator < (const t_job & job) const {
     if (dynamic_cast<const t_ranker_job *> (&job))
         return true;
@@ -124,18 +118,14 @@ void t_ranker_job::operator () () const {
                                       rank_status);
 }
 
-std::string t_ranker_job::get_type () const {
-    return "ranker: " + settings.get_ranker_name(ranker_id);
-}
-
 bool t_ranker_job::operator < (const t_job & job) const {
     return false;
 }
 
 void run_benchmark (t_benchmark_settings & settings,
                     t_spectra_generator & generator,
-                    t_execution_controller & controller,
-                    std::mt19937 & gen) {
+                    std::mt19937 & gen,
+                    t_execution_controller & controller) {
     t_id iteration_id = 1;
 
 

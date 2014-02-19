@@ -248,15 +248,16 @@ void mhs2_heuristic_setup (t_mhs & mhs,
     if (!mpi_level)
         mpi_level = 1;
 
-    t_heuristic heuristic = mhs.get_heuristic(mpi_level);
-    mhs.set_heuristic(mpi_level + 1, heuristic);
+    mhs.set_heuristic(mpi_level + 1, mhs.get_heuristic_ptr(mpi_level));
+
+    t_ptr<t_heuristic> heuristic(new t_heuristic(mhs.get_heuristic(mpi_level)));
 
     if (mpi_stride)
-        heuristic.push(new heuristics::t_divide(rank, ntasks, mpi_stride));
+        heuristic->push(new heuristics::t_divide(rank, ntasks, mpi_stride));
     else {
         int seed = time(NULL);
         MPI_Bcast(&seed, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
-        heuristic.push(new heuristics::t_random_divide(rank, ntasks, seed));
+        heuristic->push(new heuristics::t_random_divide(rank, ntasks, seed));
     }
 
     mhs.set_heuristic(mpi_level, heuristic);

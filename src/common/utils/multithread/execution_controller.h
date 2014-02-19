@@ -5,13 +5,15 @@
 #include "utils/boost.h"
 #include "utils/multithread/job.h"
 
-#include <boost/thread.hpp>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 class t_execution_controller {
 public:
     typedef void (* t_callback)(t_id);
 
-    t_execution_controller (t_count max_threads);
+    t_execution_controller (t_count max_threads=std::thread::hardware_concurrency());
 
     t_id launch (const t_const_ptr<t_job> & job,
                  t_callback callback=NULL);
@@ -25,8 +27,8 @@ private:
                                 t_callback callback,
                                 t_id thread_id);
 
-    boost::mutex mutex;
-    boost::condition_variable free_slot;
+    std::mutex mutex;
+    std::condition_variable free_slot;
 
     t_count max_threads;
     t_count active_threads;

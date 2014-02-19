@@ -10,10 +10,6 @@ public:
         queue.notify();
     }
 
-    virtual std::string get_type () const {
-        return job->get_type();
-    }
-
     virtual bool operator < (const t_job & job) const {
         return (*(this->job)) < job;
     }
@@ -28,7 +24,7 @@ t_job_queue::t_job_queue () {
 }
 
 void t_job_queue::add_job (const t_const_ptr<t_job> & job) {
-    boost::mutex::scoped_lock lock(mutex);
+    std::lock_guard<std::mutex> lock(mutex);
 
 
     assert(job.get());
@@ -39,7 +35,7 @@ void t_job_queue::add_job (const t_const_ptr<t_job> & job) {
 
 void t_job_queue::execute (t_execution_controller & controller,
                            bool break_on_free_slot) {
-    boost::mutex::scoped_lock lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
 
     while (true) {
@@ -63,7 +59,7 @@ void t_job_queue::execute (t_execution_controller & controller,
 }
 
 void t_job_queue::notify () {
-    boost::mutex::scoped_lock lock(mutex);
+    std::lock_guard<std::mutex> lock(mutex);
 
 
     running_jobs--;

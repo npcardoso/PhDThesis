@@ -3,16 +3,7 @@
 #include "diagnosis/heuristics/similarity.h"
 #include "diagnosis/heuristics/sort.h"
 
-t_heuristic t_mhs_options::default_heuristic () {
-    t_heuristic heuristic;
-
-
-    heuristic.push(new heuristics::t_ochiai());
-    heuristic.push(new heuristics::t_sort());
-    return heuristic;
-}
-
-t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, true), mhs(default_heuristic()) {
+t_mhs_options::t_mhs_options (std::string app_name) : t_options(app_name, true, true) {
     has_confidence = false;
     print_spectra = false;
     ambiguity_groups = false;

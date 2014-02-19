@@ -8,8 +8,19 @@ namespace diagnosis {
 namespace benchmark {
 void run_benchmark (t_benchmark_settings & settings,
                     t_spectra_generator & generator,
-                    t_execution_controller & controller,
-                    std::mt19937 & gen);
+                    std::mt19937 & gen,
+                    t_execution_controller & controller);
+
+
+inline void run_benchmark (t_benchmark_settings & settings,
+                           t_spectra_generator & generator,
+                           std::mt19937 & gen) {
+    t_execution_controller * controller = new t_execution_controller(2);
+
+
+    run_benchmark(settings, generator, gen, *controller);
+    delete controller;
+}
 }
 }
 #endif

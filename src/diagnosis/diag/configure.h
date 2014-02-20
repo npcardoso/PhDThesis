@@ -4,7 +4,7 @@
 #include "diagnosis/algorithms/barinel.h"
 #include "diagnosis/algorithms/mhs.h"
 
-#include "opt.h"
+#include "utils/opt.h"
 #include "types.h"
 
 using namespace diagnosis;

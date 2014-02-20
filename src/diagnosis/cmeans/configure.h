@@ -1,7 +1,7 @@
 #ifndef __CONFIGURE_H__
 #define __CONFIGURE_H__
 
-#include "opt.h"
+#include "utils/opt.h"
 #include "types.h"
 #include "diagnosis/algorithms/cmeans.h"
 

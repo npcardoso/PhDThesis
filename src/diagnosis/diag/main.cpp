@@ -2,8 +2,6 @@
 #include "diagnosis/structs/ambiguity_groups.h"
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/structs/diagnosis_report.h"
-#include "opt.h"
-#include "utils/time.h"
 #include "utils/iostream.h"
 
 

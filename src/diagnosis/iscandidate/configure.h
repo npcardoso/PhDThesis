@@ -1,7 +1,7 @@
 #ifndef __CONFIGURE_iscandidate_H__
 #define __CONFIGURE_iscandidate_H__
 
-#include "opt.h"
+#include "utils/opt.h"
 
 class t_iscandidate_options : public t_options {
 public:
@@ -13,9 +13,9 @@ public:
 
     bool short_opt (int c, char * param);
 
-    virtual std::ostream& print (std::ostream & out) const;
+    virtual std::ostream & print (std::ostream & out) const;
 
-    inline std::istream& spectra_input () const {
+    inline std::istream & spectra_input () const {
         return *spectra_input_ptr;
     }
 };

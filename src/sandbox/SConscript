@@ -1,0 +1,14 @@
+Import('env')
+oldenv = env
+env = env.Clone()
+
+env.Append(LINKFLAGS = "-Wl,-rpath,'$$ORIGIN/../lib' %s " % env['mpfr_link'] )
+Export('env')
+
+sub_folders = Glob('*/SConscript')
+
+for f in sub_folders:
+  env.SConscript(f)
+
+env = oldenv
+Export('env')

@@ -2,6 +2,7 @@ Import('env')
 
 env.SConscript('src/common/SConscript')
 env.SConscript('src/diagnosis/SConscript')
+env.SConscript('src/sandbox/SConscript')
 
 #if env['default_instrumentation']:
 #  env.SConscript('src/instrumentation/SConscript')

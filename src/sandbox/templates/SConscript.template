@@ -1,5 +1,7 @@
 from os.path import join
-
+import os
+def SymLink(target, source, env):
+  os.symlink(os.path.abspath(str(source[0])), os.path.abspath(str(target[0])))
 
 Import('env')
 env = env.Clone()
@@ -7,7 +9,7 @@ LINKFLAGS = " ".join([
     "-lpthread",
     "-lboost_system",
     "-lboost_thread",
-    "-lboost_file_system",
+    "-lboost_filesystem",
     "-L%s" % env['lib_dir'],
     "-ldiag"
 ])
@@ -26,4 +28,6 @@ for i in range(4):
 
 obj = env.Program(target = target_name, source = sources)
 env.Depends(obj, env['libdiag_shared'])
-env.Default(env.Install(env['bin_dir'], obj))
+obj = env.Install(env['bin_dir'], obj)
+obj = env.Command(join(Dir(".").srcnode().abspath, target_name), obj, SymLink)
+env.Default(obj)

@@ -6,8 +6,10 @@ Implements:
 
  - Count Spectra
  - MHS2
- - Fuzzinel
+ - Barinel
+ - Fuzzinel (confidence/fuzzy error)
  - Ochiai
+ - Benchmark framework
 
 Tools:
 
@@ -15,8 +17,6 @@ Tools:
  - llvmInstrument: An instrumentation tool
  - libinstrument: An instrumentation colection framework
 
-TODO:
- - NFGE
 
 ##Building
 
@@ -26,3 +26,8 @@ TODO:
 ##Using Sandboxes
  - cd src/sandox
  - ./make_sandbox.sh <template> <sandbox_name>
+
+## TODO
+ - Check if barinel version from commit 6f4f2235259e63b99515bd3d66612a8a429c4071 (barinel_conservative) is worth the extra effort
+TODO:
+ - NFGE

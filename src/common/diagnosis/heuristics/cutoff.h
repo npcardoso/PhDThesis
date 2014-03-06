@@ -9,10 +9,10 @@ namespace diagnosis {
 namespace heuristics {
 class t_cutoff : public t_heuristic_filter {
 public:
-    t_rank_element::t_score value_cutoff;
+    t_rank_element::t_score cutoff;
     float lambda;
 
-    t_cutoff (t_rank_element::t_score value_cutoff=0,
+    t_cutoff (t_rank_element::t_score cutoff=0,
               float lambda=1);
 
     virtual void operator () (const structs::t_spectra & spectra,

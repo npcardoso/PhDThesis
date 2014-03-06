@@ -25,7 +25,9 @@ void t_divide::operator () (const t_spectra & spectra,
 
     for (t_id i = 0; i < component_count; i++)
         if ((i / stride) % division_count != (division_count - (self + 1)))
-            ret[i] = t_rank_element(ret[i].get_element(), -1);
+            ret[i] = t_rank_element(ret[i].get_component(),
+                                    ret[i].get_score(),
+                                    t_rank_element::SKIP);
 }
 
 std::ostream & t_divide::print (std::ostream & out) const {
@@ -54,7 +56,9 @@ void t_random_divide::operator () (const t_spectra & spectra,
         t_component_id owner = distribution(*gen);
 
         if (owner != self)
-            ret[i] = t_rank_element(ret[i].get_element(), -1);
+            ret[i] = t_rank_element(ret[i].get_component(),
+                                    ret[i].get_score(),
+                                    t_rank_element::SKIP);
     }
 }
 

@@ -124,7 +124,7 @@ void t_mhs::calculate (const t_spectra & spectra,
     get_heuristic(candidate.size()) (spectra, order_buffer.get(), &tmp_filter);
 
     for (t_id i = 0; i < remaining_components; i++) {
-        heuristics::t_rank_element::t_element component = order_buffer[i].get_element();
+        t_component_id component = order_buffer[i].get_component();
 
         /* Result Length cutoff */
         if (max_candidates && D.size() >= max_candidates)
@@ -135,11 +135,11 @@ void t_mhs::calculate (const t_spectra & spectra,
             return;
 
         /* Heuristic cutoff */
-        if (component == 0)
+        if (order_buffer[i].get_action() == t_rank_element::SKIP)
             break;
 
         /* Heuristic signalling skip */
-        if (order_buffer[i].get_score() <= 0) {
+        if (order_buffer[i].get_action() == t_rank_element::STOP) {
             tmp_filter.filter_component(component);
             continue;
         }

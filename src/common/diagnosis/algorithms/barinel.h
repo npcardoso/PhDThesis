@@ -3,8 +3,6 @@
 
 #include "diagnosis/diagnosis_system.h"
 #include "diagnosis/types.h"
-#include "diagnosis/structs/spectra_iterator.h"
-#include "diagnosis/structs/trie.h"
 
 #include <map>
 
@@ -36,8 +34,7 @@ private:
 
 class t_barinel : public t_candidate_ranker {
 public:
-    t_barinel ();
-    t_barinel (size_t precision);
+    t_barinel (size_t precision=128);
 
     virtual void operator () (const structs::t_spectra & spectra,
                               const structs::t_trie & D,

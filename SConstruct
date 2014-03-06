@@ -5,6 +5,22 @@ import subprocess
 def check_output(command):
     return subprocess.Popen(command, stdout=subprocess.PIPE).communicate()[0]
 
+env = Environment()
+
+## scons output colorizer
+try:
+    from colorizer import colorizer
+    scolorizer_available = True
+except ImportError:
+    scolorizer_available = False
+
+## Scons output colorizer
+## cf. http://code.google.com/p/scolorizer/wiki/GettingStarted
+if scolorizer_available:
+    col = colorizer()
+    col.colorize(env)
+
+
 root = '#'
 
 
@@ -47,7 +63,6 @@ vars.Add('default_instrumentation_examples', '', False)
 vars.Add('default_instrumentation', '', True)
 vars.Add('default_libRdiag', '', False)
 
-env = Environment()
 
 vars.Update(env)
 env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=0

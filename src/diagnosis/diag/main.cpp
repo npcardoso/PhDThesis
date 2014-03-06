@@ -10,29 +10,9 @@
 using namespace diagnosis;
 using namespace diagnosis::structs;
 
-
-int main (int argc, char ** argv) {
-    t_diag_options options(argv[0]);
+void do_stuff (const t_spectra & spectra, t_diag_options & options) {
     t_ambiguity_groups ambiguity_groups;
 
-
-    if (options.configure(argc, argv))
-        return 1;
-
-    t_count_spectra spectra;
-    structs::t_trie D;
-    algorithms::t_mhs mhs(options.mhs);
-
-    options.debug() << options << std::endl;
-
-
-    // Spectra IO
-    spectra.read(options.input(), options.has_confidence);
-
-    if (options.input().fail() || options.input().bad()) {
-        std::cerr << "Problem reading spectra" << std::endl;
-        return 1;
-    }
 
     if (options.print_spectra)
         spectra.print(options.output());
@@ -42,7 +22,7 @@ int main (int argc, char ** argv) {
 
     if (spectra.get_invalid(invalid_transactions)) {
         std::cerr << "Invalid spectra (some failing transactions do not activate any components: " << invalid_transactions << ")" << std::endl;
-        return 1;
+        return;
     }
 
     // Check ambiguity groups
@@ -68,8 +48,31 @@ int main (int argc, char ** argv) {
             options.output() << report;
         }
         else {
-            options.output() << D;
+            options.output() << D << "0 0\n";
         }
+    }
+}
+
+int main (int argc, char ** argv) {
+    t_diag_options options(argv[0]);
+
+
+    if (options.configure(argc, argv))
+        return 1;
+
+    options.debug() << options << std::endl;
+
+    while (options.input().good()) {
+        t_count_spectra spectra;
+        // Spectra IO
+        spectra.read(options.input(), options.has_confidence);
+
+        if (options.input().fail() || options.input().bad()) {
+            std::cerr << "Problem reading spectra" << std::endl;
+            return 1;
+        }
+
+        do_stuff(spectra, options);
     }
 
     return 0;

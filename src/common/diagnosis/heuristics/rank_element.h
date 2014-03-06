@@ -1,7 +1,7 @@
 #ifndef __RANK_ELEMENT_H_35f40c4aa871c5c9f111025d99c13629288805d7__
 #define __RANK_ELEMENT_H_35f40c4aa871c5c9f111025d99c13629288805d7__
 
-#include "types.h"
+#include <iostream>
 
 namespace diagnosis {
 template <class C, class S>
@@ -11,8 +11,8 @@ public:
     typedef C t_element;
 
     t_rank_element () {}
-
     t_rank_element (t_element element, t_score score) : element(element), score(score) {}
+
 
     const t_element & get_element () const {
         return element;

@@ -2,10 +2,8 @@
 #define __SPECTRA_H_14c9fb7ba96542f0d3780a3886d24ff0ff4ff469__
 
 #include "types.h"
-#include "diagnosis/types.h"
 #include "diagnosis/structs/candidate.h"
 #include "diagnosis/structs/spectra_filter.h"
-#include "diagnosis/structs/spectra_iterator.h"
 #include "utils/boost.h"
 
 
@@ -21,17 +19,6 @@ namespace structs {
 class t_spectra {
 public:
     typedef std::set<t_transaction_id> t_invalid_transactions;
-
-    // TODO: Move this method a sepate class
-    template <class G>
-    void probability (const structs::t_candidate & candidate,
-                      const G & goodnesses,
-                      t_probability_mp & ret,
-                      const t_spectra_filter * filter=NULL,
-                      bool use_confidence=true,
-                      bool use_fuzzy_error=true,
-                      bool use_count=false) const;
-
     inline virtual ~t_spectra () {}
     // Gets
 
@@ -76,6 +63,7 @@ public:
 
     virtual bool is_invalid (const t_spectra_filter * filter=NULL) const;
 
+    virtual bool is_all_pass (const t_spectra_filter * filter=NULL) const;
     // IO
 
     virtual std::ostream & print (std::ostream & out,
@@ -147,65 +135,6 @@ public:
     virtual bool is_error (t_transaction_id transaction) const;
 };
 
-template <class G>
-void t_spectra::probability (const structs::t_candidate & candidate,
-                             const G & goodnesses,
-                             t_probability_mp & ret,
-                             const t_spectra_filter * filter,
-                             bool use_confidence,
-                             bool use_fuzzy_error,
-                             bool use_count) const {
-    assert(candidate.size() > 0);
-
-    t_goodness_mp tmp(goodnesses[0]);
-
-    ret = 1;
-
-    t_spectra_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
-
-    while (it.next_transaction()) {
-        tmp = 1;
-        structs::t_candidate::const_iterator c_it = candidate.begin();
-        t_id comp = 0;
-
-        while (c_it != candidate.end()) {
-            t_count count = get_activations(*c_it, it.get_transaction());
-
-            assert(goodnesses[comp] >= 0);
-            assert(goodnesses[comp] <= 1);
-
-            if (count) {
-                if (use_count)
-                    tmp *= pow(goodnesses[comp], count);
-                else
-                    tmp *= goodnesses[comp];
-            }
-
-            c_it++;
-            comp++;
-        }
-
-        // Fuzzy health
-        t_error e = use_fuzzy_error ? get_error(it.get_transaction()) : is_error(it.get_transaction());
-
-
-        tmp = e * (1 - tmp) + (1 - e) * tmp;
-
-        // Confidence scaling
-        if (use_confidence) {
-            t_confidence c = get_confidence(it.get_transaction());
-            tmp = (1 - c) + (c * tmp);
-        }
-
-        ret *= tmp;
-    }
-
-    assert(ret >= 0);
-    assert(ret <= 1);
-}
-
 template <class T>
 T & t_spectra::requires () {
     T * tmp = dynamic_cast<T *> (this);
@@ -227,6 +156,12 @@ const T & t_spectra::requires () const {
 
     throw e_not_supported();
 }
+}
+}
+#else
+namespace diagnosis {
+namespace structs {
+class t_spectra;
 }
 }
 #endif

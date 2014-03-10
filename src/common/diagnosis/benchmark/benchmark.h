@@ -15,6 +15,7 @@ void run_benchmark (t_benchmark_settings & settings,
 inline void run_benchmark (t_benchmark_settings & settings,
                            t_spectra_generator & generator,
                            std::mt19937 & gen) {
+    // TODO: use boost function to determine number of processors
     t_execution_controller * controller = new t_execution_controller(2);
 
 

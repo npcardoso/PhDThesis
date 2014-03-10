@@ -1,5 +1,6 @@
 #include "count_spectra.h"
 
+#include <sstream>
 #include <cstring>
 #include <iomanip>
 

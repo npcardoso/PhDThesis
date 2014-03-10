@@ -57,18 +57,18 @@ bool t_diag_options::short_opt (int c, char * param) {
         break;
 
     case 't':
+        // TODO
+        // if (verb_strtof(optarg, mhs.max_time, true))
+        // return true;
 
-        if (verb_strtof(optarg, mhs.max_time, true))
-            return true;
-
-        mhs.max_time *= 1e6;
+        // mhs.max_time *= 1e6;
         return false;
 
     case 'D':
-        return verb_strtoi(optarg, mhs.max_candidates, true);
+    // return verb_strtoi(optarg, mhs.max_candidates, true);
 
     case 'd':
-        return verb_strtoi(optarg, mhs.max_candidate_size, true);
+    // return verb_strtoi(optarg, mhs.max_candidate_size, true);
 
 
     // Parallelization Stuff
@@ -115,9 +115,9 @@ std::ostream & t_diag_options::print (std::ostream & out) const {
     out << ", generate: " << do_generation;
 
     if (do_generation) {
-        out << ", time: " << mhs.max_time;
-        out << ", candidates: " << mhs.max_candidates;
-        out << ", cardinality: " << mhs.max_candidate_size;
+        // out << ", time: " << mhs.max_time;
+        // out << ", candidates: " << mhs.max_candidates;
+        // out << ", cardinality: " << mhs.max_candidate_size;
         out << ", fork-level: " << fork_level;
         out << ", stride: " << stride;
         out << ", threads: " << threads;

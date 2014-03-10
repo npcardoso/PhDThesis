@@ -1,4 +1,6 @@
 #include "single_fault.h"
+#include "diagnosis/structs/spectra_iterator.h"
+
 namespace diagnosis {
 namespace algorithms {
 void t_single_fault::operator () (const structs::t_spectra & spectra,

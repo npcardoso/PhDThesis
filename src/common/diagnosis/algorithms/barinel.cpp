@@ -1,4 +1,5 @@
 #include "barinel.h"
+#include "diagnosis/structs/spectra_iterator.h"
 #include "utils/iostream.h"
 
 #include <boost/foreach.hpp>
@@ -169,6 +170,65 @@ void t_barinel::operator () (const t_spectra & spectra,
     prior(candidate, prior_pr);
 
     ret = prior_pr * pr;
+}
+
+void t_barinel::probability (const structs::t_spectra & spectra,
+                             const structs::t_candidate & candidate,
+                             const t_barinel_goodnesses & goodnesses,
+                             t_probability_mp & ret,
+                             const t_spectra_filter * filter,
+                             bool use_confidence,
+                             bool use_fuzzy_error,
+                             bool use_count) const {
+    assert(candidate.size() > 0);
+
+    t_goodness_mp tmp(goodnesses[0]);
+
+    ret = 1;
+
+    t_spectra_iterator it(spectra.get_component_count(),
+                          spectra.get_transaction_count(),
+                          filter);
+
+    while (it.next_transaction()) {
+        tmp = 1;
+        structs::t_candidate::const_iterator c_it = candidate.begin();
+        t_id comp = 0;
+
+        while (c_it != candidate.end()) {
+            t_count count = spectra.get_activations(*c_it, it.get_transaction());
+
+            assert(goodnesses[comp] >= 0);
+            assert(goodnesses[comp] <= 1);
+
+            if (count) {
+                if (use_count)
+                    tmp *= pow(goodnesses[comp], count);
+                else
+                    tmp *= goodnesses[comp];
+            }
+
+            c_it++;
+            comp++;
+        }
+
+        // Fuzzy health
+        t_error e = use_fuzzy_error ? spectra.get_error(it.get_transaction()) : spectra.is_error(it.get_transaction());
+
+
+        tmp = e * (1 - tmp) + (1 - e) * tmp;
+
+        // Confidence scaling
+        if (use_confidence) {
+            t_confidence c = spectra.get_confidence(it.get_transaction());
+            tmp = (1 - c) + (c * tmp);
+        }
+
+        ret *= tmp;
+    }
+
+    assert(ret >= 0);
+    assert(ret <= 1);
 }
 
 void t_barinel::prior (const t_candidate & candidate,

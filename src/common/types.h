@@ -1,6 +1,8 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#define EPSILON 1e-10
+
 typedef double t_error;
 typedef double t_health;
 typedef double t_confidence;
@@ -24,7 +26,8 @@ typedef unsigned int t_count;
 typedef t_count t_ns_count;
 
 /* Statistics */
-
+typedef double t_score;
+typedef double t_probability;
 typedef double t_weight;
 typedef double t_density;
 #endif

@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "diagnosis/structs/candidate.h"
+#include "diagnosis/structs/spectra.h"
 
 #include <cassert>
 #include <iostream>
@@ -41,12 +42,25 @@ public:
     void filter_component (t_component_id component);
     void filter_transaction (t_transaction_id transaction);
 
+    /* Filters all components and transactions in which the components were active */
+    void strip (const t_candidate & candidate,
+                const t_spectra & spectra);
+    void strip (t_component_id component,
+                const t_spectra & spectra);
+
+
     void unfilter_component (t_component_id component);
     void unfilter_transaction (t_transaction_id transaction);
 
     void resize_components (t_component_id size);
     void resize_transactions (t_component_id size);
 };
+}
+}
+#else
+namespace diagnosis {
+namespace structs {
+class t_spectra_filter;
 }
 }
 

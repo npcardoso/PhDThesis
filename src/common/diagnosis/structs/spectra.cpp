@@ -1,5 +1,7 @@
 #include "spectra.h"
 
+#include "spectra_iterator.h"
+
 namespace diagnosis {
 namespace structs {
 using namespace diagnosis::structs;
@@ -160,6 +162,20 @@ bool t_spectra::is_invalid (const t_spectra_filter * filter) const {
     return false;
 }
 
+bool t_spectra::is_all_pass (const t_spectra_filter * filter) const {
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          filter);
+
+
+    // TODO: Improve performance by maintaining a filter of all failing transactions
+    while (it.next_transaction())
+        if (is_error(it.get_transaction()))
+            return false;
+
+    return true;
+}
+
 t_confidence t_spectra::get_confidence (t_transaction_id transaction) const {
     return 1;
 }
@@ -253,9 +269,14 @@ t_count t_basic_spectra::get_error_count (const t_spectra_filter * filter) const
 
 
     if (filter) {
-        for (t_id i = 1; i <= get_transaction_count(); i++)
-            if (is_error(i) && !filter->is_transaction(i))
+        t_id i = filter->next_transaction(0);
+
+        while (i < get_transaction_count()) {
+            if (is_error(i))
                 total_errors++;
+
+            i = filter->next_transaction(i);
+        }
     }
     else {
         for (t_id i = 1; i <= get_transaction_count(); i++)

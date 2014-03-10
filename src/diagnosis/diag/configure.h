@@ -8,7 +8,6 @@
 #include "types.h"
 
 using namespace diagnosis;
-using namespace diagnosis::heuristics;
 
 class t_diag_options : public t_options {
 public:

@@ -1,9 +1,13 @@
 #include "spectra_filter.h"
+#include "spectra_iterator.h"
+
 #include "utils/iostream.h"
 
-namespace diagnosis {
+#include <boost/foreach.hpp>
+
 using namespace diagnosis::structs;
 
+namespace diagnosis {
 t_spectra_filter::t_spectra_filter () {
     filtered_component_count = 0;
     filtered_transaction_count = 0;
@@ -171,5 +175,49 @@ void t_spectra_filter::resize_transactions (t_transaction_id size) {
 
     while (old_size++ < f_transaction.size())
         f_transaction[old_size - 1] = old_size;
+}
+
+void t_spectra_filter::strip (const t_candidate & candidate,
+                              const t_spectra & spectra) {
+    t_spectra_iterator it(spectra.get_component_count(),
+                          spectra.get_transaction_count(),
+                          this);
+
+
+    while (it.next_transaction()) {
+        BOOST_FOREACH(t_component_id c,
+                      candidate) {
+            t_transaction_id transaction = it.get_transaction();
+
+
+            if (spectra.is_active(c, transaction)) {
+                filter_transaction(transaction);
+                break;
+            }
+        }
+    }
+
+    BOOST_FOREACH(t_component_id c,
+                  candidate) {
+        filter_component(c);
+    }
+}
+
+void t_spectra_filter::strip (t_component_id component,
+                              const t_spectra & spectra) {
+    t_spectra_iterator it(spectra.get_component_count(),
+                          spectra.get_transaction_count(),
+                          this);
+
+
+    while (it.next_transaction()) {
+        t_transaction_id transaction = it.get_transaction();
+        bool activity = spectra.is_active(component, transaction);
+
+        if (activity)
+            filter_transaction(transaction);
+    }
+
+    filter_component(component);
 }
 }

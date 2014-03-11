@@ -11,6 +11,7 @@ namespace algorithms {
 using namespace diagnosis::structs;
 t_mhs::t_mhs (const t_const_ptr<t_similarity> similarity) {
     this->cutoff = t_const_ptr<t_basic_cutoff> (new t_basic_cutoff());
+    this->parallelization = t_const_ptr<t_parallelization> (new t_parallelization());
 
     if (similarity.get()) // if similarity ptr is not empty
         this->similarity = similarity;
@@ -20,6 +21,10 @@ t_mhs::t_mhs (const t_const_ptr<t_similarity> similarity) {
 
 void t_mhs::set_cutoff (const t_const_ptr<t_basic_cutoff> cutoff) {
     this->cutoff = cutoff;
+}
+
+void t_mhs::set_parallelization (const t_const_ptr<t_parallelization> parallelization) {
+    this->parallelization = parallelization;
 }
 
 void t_mhs::operator () (const t_spectra & spectra,
@@ -68,18 +73,15 @@ void t_mhs::calculate (const t_spectra & spectra,
         for (t_id i = 0; i < remaining_components; i++) {
             t_component_id component = rank->get_component(i);
 
-            /* Insert the component into the candidate */
-            auto tmp = candidate.insert(component);
-            assert(tmp.second);
-
             /* Cutoff */
-            if (cutoff->stop(*rank,
-                             i,
-                             D,
-                             candidate,
-                             time_interval() - start_time)) {
-                candidate.erase(tmp.first);
+            if (cutoff->stop(*rank, i, D,
+                             time_interval() - start_time))
                 break;
+
+            /* Filter */
+            if (parallelization->skip(i, candidate.size())) {
+                filter.filter_component(component);
+                continue;
             }
 
             /* Strip component from spectra */
@@ -87,6 +89,9 @@ void t_mhs::calculate (const t_spectra & spectra,
             filter.filter_component(component);
             strip_filter.strip(component, spectra);
 
+            /* Insert the component into the candidate */
+            auto tmp = candidate.insert(component);
+            assert(tmp.second);
 
             calculate(spectra,
                       D,

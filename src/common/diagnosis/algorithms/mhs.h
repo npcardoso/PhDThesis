@@ -7,9 +7,82 @@
 #include "utils/time.h"
 
 #include <map>
+#include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/mersenne_twister.hpp>
 
 namespace diagnosis {
 namespace algorithms {
+class t_parallelization {
+public:
+    inline virtual bool skip (t_id rank_pos,
+                              t_count depth) const {
+        return false;
+    }
+};
+
+class t_basic_parallelization : public t_parallelization {
+public:
+    t_basic_parallelization (t_count self,
+                             t_count division_count,
+                             t_count depth) {
+        assert(self < division_count);
+        assert(division_count > 0);
+        this->self = self;
+        this->division_count = division_count;
+        this->depth = depth;
+    }
+
+protected:
+    inline virtual bool skip (t_id rank_pos,
+                              t_count depth) {
+        if (check(depth))
+            return skip(rank_pos);
+
+        return false;
+    }
+
+    virtual bool skip (t_id rank_pos) const = 0;
+
+    bool check (t_count depth) const {
+        return depth == this->depth;
+    }
+
+    t_id self, division_count;
+
+private:
+    t_count depth;
+};
+
+class t_parallelization_random : public t_basic_parallelization {
+public:
+    t_parallelization_random (t_count self,
+                              t_count division_count,
+                              t_count depth,
+                              unsigned int seed) : t_basic_parallelization(self,
+                                                                           division_count,
+                                                                           depth), gen(new boost::mt19937(seed)) {}
+
+    inline virtual bool skip (t_id rank_pos) const {
+        boost::random::uniform_int_distribution<t_component_id> distribution(0, division_count - 1);
+        t_component_id owner = distribution(*gen);
+
+
+        return owner == self;
+    }
+
+private:
+    t_ptr<boost::mt19937> gen;
+};
+
+class t_parallelization_stride : public t_basic_parallelization {
+public:
+    using t_basic_parallelization::t_basic_parallelization;
+    inline virtual bool skip (t_id rank_pos) const {
+        return rank_pos % division_count == (division_count - (self + 1));
+    }
+};
+
+
 class t_basic_cutoff {
 public:
 
@@ -20,7 +93,6 @@ public:
     inline virtual bool stop (const t_rank & rank,
                               t_id pos,
                               const structs::t_trie & D,
-                              const structs::t_candidate & candidate,
                               t_time_interval time_elapsed) const {
         return false;
     }
@@ -46,7 +118,6 @@ public:
     inline virtual bool stop (const t_rank & rank,
                               t_id pos,
                               const structs::t_trie & D,
-                              const structs::t_candidate & candidate,
                               t_time_interval time_elapsed) const {
         if (max_candidates && D.size() >= max_candidates)
             return true;
@@ -77,16 +148,17 @@ public:
 
 
     void set_cutoff (t_const_ptr<t_basic_cutoff> cutoff);
+    void set_parallelization (t_const_ptr<t_parallelization> parallelization);
 
     virtual void operator () (const structs::t_spectra & spectra,
                               t_ret_type & D,
                               const structs::t_spectra_filter * filter=NULL) const;
 
-    void calculate (const structs::t_spectra & spectra,
-                    structs::t_trie & D,
-                    structs::t_spectra_filter & filter,
-                    structs::t_candidate & candidate,
-                    t_time_interval start_time=time_interval()) const;
+    virtual void calculate (const structs::t_spectra & spectra,
+                            structs::t_trie & D,
+                            structs::t_spectra_filter & filter,
+                            structs::t_candidate & candidate,
+                            t_time_interval start_time=time_interval()) const;
 
     void update (const structs::t_spectra & spectra,
                  structs::t_trie & D,
@@ -102,12 +174,9 @@ public:
                          const structs::t_spectra_filter & filter_second);
 
 private:
-    bool all_failed (t_component_id component,
-                     const structs::t_spectra & spectra,
-                     const structs::t_spectra_filter & filter) const;
-
     t_const_ptr<t_similarity> similarity;
     t_const_ptr<t_basic_cutoff> cutoff;
+    t_const_ptr<t_parallelization> parallelization;
 };
 }
 }

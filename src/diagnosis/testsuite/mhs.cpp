@@ -101,58 +101,76 @@ BOOST_AUTO_TEST_CASE(mhs) {
             BOOST_CHECK(spectra.is_candidate(*(it++)));
     }
 }
-/*
- * BOOST_AUTO_TEST_CASE(parallelization) {
- * t_spectra * spectra;
- * t_candidate correct;
- * t_bernoulli randomizer(0.25, 1, 25, 22);
- * std::mt19937 gen;
- * t_trie reference;
- *
- *
- * spectra = randomizer(gen, correct);
- *
- * {
- * t_mhs mhs;
- * reference.clear();
- * mhs(*spectra, reference);
- * }
- *
- * t_count level = 2;
- *
- * for (t_count stride = 0; stride < 4; stride++) {
- * for (t_count ntasks = 1; ntasks < 10; ntasks++) {
- * t_trie D;
- * D.clear();
- *
- * for (t_count rank = 0; rank < ntasks; rank++) {
- * t_mhs mhs;
- *
- *
- * mhs.set_heuristic(level + 1, mhs.get_heuristic_ptr(level));
- *
- * t_ptr<t_heuristic> heuristic(new t_heuristic(mhs.get_heuristic(level)));
- *
- * if (stride)
- * heuristic->push(new heuristics::t_divide(rank, ntasks, stride));
- * else
- * heuristic->push(new heuristics::t_random_divide(rank, ntasks, 1234));
- *
- * mhs.set_heuristic(level, heuristic);
- *
- * BOOST_CHECK(mhs.get_heuristic(level - 1) == mhs.get_heuristic(level + 1));
- * BOOST_CHECK(mhs.get_heuristic(level - 1) != mhs.get_heuristic(level));
- * BOOST_CHECK(mhs.get_heuristic(level + 1) != mhs.get_heuristic(level));
- * // std::cout << mhs.get_heuristic(level - 1) << mhs.get_heuristic(level) << mhs.get_heuristic(level + 1) << std::endl;
- *
- * mhs(*spectra, D);
- * }
- *
- * BOOST_CHECK_MESSAGE(D == reference, "Failed for stride = " << stride << " ntasks = " << ntasks <<
- * ". D.size() = " << D.size() <<
- * " reference.size() = " << reference.size());
- * }
- * }
- * }
- */
+
+BOOST_AUTO_TEST_CASE(parallelization_stride) {
+    t_spectra * spectra;
+    t_candidate correct;
+    t_bernoulli randomizer(0.25, 1, 25, 22);
+    std::mt19937 gen;
+    t_trie reference;
+
+
+    spectra = randomizer(gen, correct);
+
+    {
+        t_mhs mhs;
+        reference.clear();
+        mhs(*spectra, reference);
+    }
+
+    for (t_count depth = 1; depth < 10; depth++) {
+        for (t_count ntasks = 1; ntasks < 10; ntasks++) {
+            t_trie D;
+            D.clear();
+
+            for (t_count rank = 0; rank < ntasks; rank++) {
+                t_mhs mhs;
+                t_ptr<t_parallelization> parallelization(new t_parallelization_stride(rank, ntasks, depth));
+
+                mhs.set_parallelization(parallelization);
+                mhs(*spectra, D);
+            }
+
+            BOOST_CHECK_MESSAGE(D == reference, "Failed for depth = " << depth << " ntasks = " << ntasks <<
+                                ". D.size() = " << D.size() <<
+                                " reference.size() = " << reference.size());
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(parallelization_random) {
+    t_spectra * spectra;
+    t_candidate correct;
+    t_bernoulli randomizer(0.25, 1, 25, 22);
+    std::mt19937 gen;
+    t_trie reference;
+
+
+    spectra = randomizer(gen, correct);
+
+    {
+        t_mhs mhs;
+        reference.clear();
+        mhs(*spectra, reference);
+    }
+
+    for (t_count depth = 1; depth < 10; depth++) {
+        for (t_count ntasks = 1; ntasks < 10; ntasks++) {
+            t_trie D;
+            D.clear();
+
+            for (t_count rank = 0; rank < ntasks; rank++) {
+                t_mhs mhs;
+                t_ptr<t_parallelization> parallelization(new t_parallelization_random(rank, ntasks, depth, 1234));
+
+                mhs.set_parallelization(parallelization);
+                mhs(*spectra, D);
+            }
+
+            BOOST_CHECK_MESSAGE(D == reference, "Failed for depth = " << depth << " ntasks = " << ntasks <<
+                                ". D.size() = " << D.size() <<
+                                " reference.size() = " << reference.size());
+        }
+    }
+}
 BOOST_AUTO_TEST_SUITE_END()

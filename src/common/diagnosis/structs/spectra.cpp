@@ -2,6 +2,7 @@
 
 #include "spectra_iterator.h"
 
+#include <boost/foreach.hpp>
 namespace diagnosis {
 namespace structs {
 using namespace diagnosis::structs;
@@ -120,18 +121,35 @@ bool t_spectra::is_candidate (const t_candidate & candidate,
         if (!is_error(it.get_transaction()))
             continue;
 
-        t_candidate::iterator candidate_it = candidate.begin();
-
-        while (candidate_it != candidate.end())
-            if (get_activations(*(candidate_it++), it.get_transaction())) {
+        BOOST_FOREACH(t_component_id c, candidate) {
+            if (get_activations(c, it.get_transaction())) {
                 hit = true;
                 break;
             }
+        }
 
         if (!hit)
             return false;
     }
 
+    return true;
+}
+
+// FIXME: Not very efficient
+bool t_spectra::is_minimal_candidate (const t_candidate & candidate,
+                                      const t_spectra_filter * filter) const {
+    if (!is_candidate(candidate, filter))
+        return false;
+
+    t_candidate tmp = candidate;
+    BOOST_FOREACH(t_component_id c, candidate) {
+        tmp.erase(c);
+
+        if (is_candidate(tmp, filter))
+            return false;
+
+        tmp.insert(c);
+    }
     return true;
 }
 

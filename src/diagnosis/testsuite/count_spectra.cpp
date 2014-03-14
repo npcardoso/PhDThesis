@@ -3,6 +3,7 @@
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/benchmark/generators/bernoulli.h"
 
+#include <boost/foreach.hpp>
 #include <sstream>
 
 using namespace std;
@@ -21,6 +22,85 @@ void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, int n_c
 }
 
 BOOST_AUTO_TEST_SUITE(BasicSpectra)
+
+BOOST_AUTO_TEST_CASE(is_candidate) {
+    t_count_spectra spectra;
+    stringstream ss("3 2  1 1 0 x  1 0 1 x");
+
+
+    ss >> spectra;
+
+    list<std::string> ok_candidates;
+    list<std::string> not_ok_candidates;
+
+    ok_candidates.push_back("1 0");
+    ok_candidates.push_back("1 2 0");
+    ok_candidates.push_back("1 3 0");
+    ok_candidates.push_back("2 3 0");
+    ok_candidates.push_back("1 2 3 0");
+    not_ok_candidates.push_back("0");
+    not_ok_candidates.push_back("2 0");
+    not_ok_candidates.push_back("3 0");
+
+
+    BOOST_FOREACH(std::string s, ok_candidates) {
+        stringstream ss(s);
+        t_candidate candidate;
+
+
+        ss >> candidate;
+        BOOST_CHECK(spectra.is_candidate(candidate));
+    }
+
+    BOOST_FOREACH(std::string s, not_ok_candidates) {
+        stringstream ss(s);
+        t_candidate candidate;
+
+
+        ss >> candidate;
+        BOOST_CHECK(!spectra.is_candidate(candidate));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(is_minimal_candidate) {
+    t_count_spectra spectra;
+    stringstream ss("3 2  1 1 0 x  1 0 1 x");
+
+
+    ss >> spectra;
+
+    list<std::string> ok_candidates;
+    list<std::string> not_ok_candidates;
+
+    ok_candidates.push_back("1 0");
+    ok_candidates.push_back("2 3 0");
+    not_ok_candidates.push_back("1 2 0");
+    not_ok_candidates.push_back("1 3 0");
+    not_ok_candidates.push_back("1 2 3 0");
+    not_ok_candidates.push_back("0");
+    not_ok_candidates.push_back("2 0");
+    not_ok_candidates.push_back("3 0");
+
+
+    BOOST_FOREACH(std::string s, ok_candidates) {
+        stringstream ss(s);
+        t_candidate candidate;
+
+
+        ss >> candidate;
+        BOOST_CHECK(spectra.is_minimal_candidate(candidate));
+    }
+
+    BOOST_FOREACH(std::string s, not_ok_candidates) {
+        stringstream ss(s);
+        t_candidate candidate;
+
+
+        ss >> candidate;
+        BOOST_CHECK(!spectra.is_minimal_candidate(candidate));
+    }
+}
+
 
 BOOST_AUTO_TEST_CASE(size) {
     int n_comp = 10 + rand() % 20;

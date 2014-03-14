@@ -1,11 +1,12 @@
 #include "candidate.h"
+
+#include <boost/foreach.hpp>
+
 namespace diagnosis {
 namespace structs {
 std::istream & t_candidate::read (std::istream & in) {
-    t_component_id component = 0;
-
-
     while (true) {
+        t_component_id component = 0;
         in >> component;
 
         if (component == 0 || !in.good())
@@ -18,12 +19,10 @@ std::istream & t_candidate::read (std::istream & in) {
 }
 
 std::ostream & t_candidate::print (std::ostream & out) const {
-    iterator component = begin();
-
-
-    while (component != end())
-        out << *(component++) << " ";
-
+    BOOST_FOREACH(const value_type &c,
+                  *this) {
+        out << c << " ";
+    }
     return out << "0";
 }
 }

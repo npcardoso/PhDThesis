@@ -61,6 +61,10 @@ public:
     virtual bool is_candidate (const structs::t_candidate & candidate,
                                const t_spectra_filter * filter=NULL) const;
 
+    virtual bool is_minimal_candidate (const structs::t_candidate & candidate,
+                                       const t_spectra_filter * filter=NULL) const;
+
+
     virtual bool is_invalid (const t_spectra_filter * filter=NULL) const;
 
     virtual bool is_all_pass (const t_spectra_filter * filter=NULL) const;

@@ -89,7 +89,8 @@ t_count t_spectra::get_suspicious_components_count (t_candidate & suspicious,
                           &tmp);
 
     while (it.next_transaction()) {
-        if (!is_error(it.get_transaction()))
+        if (!is_error(it.get_transaction())) // TODO: Improve performance by maintaining a filter of all failing transactions
+
             continue;
 
         while (it.next_component()) {
@@ -118,7 +119,8 @@ bool t_spectra::is_candidate (const t_candidate & candidate,
     while (it.next_transaction()) {
         bool hit = false;
 
-        if (!is_error(it.get_transaction()))
+        if (!is_error(it.get_transaction())) // TODO: Improve performance by maintaining a filter of all failing transactions
+
             continue;
 
         BOOST_FOREACH(t_component_id c, candidate) {
@@ -162,7 +164,8 @@ bool t_spectra::is_invalid (const t_spectra_filter * filter) const {
     while (it.next_transaction()) {
         bool hit = false;
 
-        if (!is_error(it.get_transaction()))
+        if (!is_error(it.get_transaction())) // TODO: Improve performance by maintaining a filter of all failing transactions
+
             continue;
 
         it.set_component(0);
@@ -210,7 +213,8 @@ bool t_spectra::get_invalid (t_invalid_transactions & ret,
     while (it.next_transaction()) {
         bool hit = false;
 
-        if (!is_error(it.get_transaction()))
+        if (!is_error(it.get_transaction())) // TODO: Improve performance by maintaining a filter of all failing transactions
+
             continue;
 
         it.set_component(0);
@@ -298,7 +302,8 @@ t_count t_basic_spectra::get_error_count (const t_spectra_filter * filter) const
     }
     else {
         for (t_id i = 1; i <= get_transaction_count(); i++)
-            if (is_error(i))
+            if (is_error(i)) // TODO: Improve performance by maintaining a filter of all failing transactions
+
                 total_errors++;
     }
 

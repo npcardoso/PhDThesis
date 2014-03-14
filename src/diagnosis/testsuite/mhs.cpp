@@ -1,18 +1,64 @@
 #include <boost/test/unit_test.hpp>
 #include "diagnosis/algorithms/mhs.h"
-// #include "diagnosis/algorithms/mhs/sort.h"
-// #include "diagnosis/algorithms/mhs/similarity.h"
-// #include "diagnosis/algorithms/mhs/parallelization.h"
 #include "diagnosis/structs/count_spectra.h"
 #include "diagnosis/benchmark/generators/bernoulli.h"
 
+#include <boost/foreach.hpp>
 #include <fstream>
 using namespace diagnosis;
 using namespace diagnosis::algorithms;
 using namespace diagnosis::structs;
 using namespace diagnosis::benchmark;
 
-BOOST_AUTO_TEST_SUITE(MHS2)
+
+struct F {
+    F () {BOOST_TEST_MESSAGE("setup fixture");prepare_spectras();prepare_D_refs();}
+    ~F () {BOOST_TEST_MESSAGE("teardown fixture");}
+
+
+    void prepare_spectras () {
+        for (t_id i = 0; i < 30; i++) {
+            spectras.push_back(t_count_spectra());
+            t_count_spectra & spectra = *spectras.rbegin();
+
+            std::stringstream s;
+            std::ifstream f;
+
+            // Reading Input
+            s << "io/mhs/in." << i << ".txt";
+            f.open(s.str().c_str());
+
+            f >> spectra;
+            BOOST_CHECK(f.good());
+
+            f.close();
+        }
+    }
+
+    void prepare_D_refs () {
+        for (t_id i = 0; i < 30; i++) {
+            D_refs.push_back(t_trie());
+            t_trie & D_ref = *D_refs.rbegin();
+
+            std::stringstream s;
+            std::ifstream f;
+
+            // Reading Output
+            s << "io/mhs/out." << i << ".txt";
+            f.open(s.str().c_str());
+            f >> D_ref;
+            BOOST_CHECK(f.good());
+            f.close();
+        }
+    }
+
+    typedef std::list<t_count_spectra> t_spectras;
+    typedef std::list<t_trie> t_D_refs;
+    t_spectras spectras;
+    t_D_refs D_refs;
+};
+
+BOOST_FIXTURE_TEST_SUITE(MHS2, F)
 BOOST_AUTO_TEST_CASE(cutoff_depth) {
     t_spectra * spectra;
     t_candidate correct;
@@ -67,198 +113,52 @@ BOOST_AUTO_TEST_CASE(cutoff_max_candidates) {
 
 
 BOOST_AUTO_TEST_CASE(mhs) {
-    for (t_id i = 0; i < 30; i++) {
-        t_count_spectra spectra;
-        diagnosis::structs::t_trie D, D_ref;
+    t_D_refs::iterator D_ref = D_refs.begin();
 
-        std::stringstream s;
-        std::ifstream f;
 
-        // Reading Input
-        s << "io/mhs/in." << i << ".txt";
-        f.open(s.str().c_str());
-        f >> spectra;
-        BOOST_CHECK(f.good());
-
-        f.close();
-        s.str("");
-
-        // Reading Output
-        s << "io/mhs/out." << i << ".txt";
-        f.open(s.str().c_str());
-        f >> D_ref;
-        BOOST_CHECK(f.good());
-        f.close();
-
+    BOOST_FOREACH(const t_count_spectra &spectra, spectras) {
         algorithms::t_mhs mhs;
+        t_trie D;
+
 
         mhs(spectra, D);
-        BOOST_CHECK(D == D_ref);
+        BOOST_CHECK(D == *D_ref);
+        D_ref++;
+    }
+}
 
-        t_trie::iterator it = D.begin();
+template <class T>
+void test_parallelization (F::t_spectras & spectras,
+                           F::t_D_refs & D_refs,
+                           t_count max_depth,
+                           t_count max_threads) {
+    F::t_D_refs::iterator D_ref = D_refs.begin();
 
-        while (it != D.end())
-            BOOST_CHECK(spectra.is_candidate(*(it++)));
+
+    BOOST_FOREACH(const t_count_spectra &spectra, spectras) {
+        for (t_count depth = 1; depth < max_depth; depth++) {
+            for (t_count n_threads = 1; n_threads < max_threads; n_threads++) {
+                t_ptr<t_parallelization_factory> pf(new T(depth));
+                algorithms::t_mhs_parallel mhs(pf, n_threads);
+                diagnosis::structs::t_trie D;
+
+                mhs(spectra, D);
+                BOOST_CHECK_EQUAL(D.size(), D_ref->size());
+                BOOST_CHECK_MESSAGE(D == *D_ref, "Failed for depth = " << depth << " n_threads = " << n_threads);
+            }
+        }
+
+        D_ref++;
     }
 }
 
 BOOST_AUTO_TEST_CASE(mhs_parallel_random) {
-    for (t_id i = 0; i < 30; i++) {
-        t_count_spectra spectra;
-        diagnosis::structs::t_trie D_ref;
-
-        std::stringstream s;
-        std::ifstream f;
-
-        // Reading Input
-        s << "io/mhs/in." << i << ".txt";
-        f.open(s.str().c_str());
-        f >> spectra;
-        BOOST_CHECK(f.good());
-
-        f.close();
-        s.str("");
-
-        // Reading Output
-        s << "io/mhs/out." << i << ".txt";
-        f.open(s.str().c_str());
-        f >> D_ref;
-        BOOST_CHECK(f.good());
-        f.close();
-
-        for (t_count depth = 1; depth < 10; depth++) {
-            for (t_count n_threads = 2; n_threads < 10; n_threads++) {
-                diagnosis::structs::t_trie D;
-                t_ptr<t_parallelization_factory> pf(new t_parallelization_factory_random(depth, time_interval()));
-
-                algorithms::t_mhs_parallel mhs(pf, n_threads);
-
-                mhs(spectra, D);
-                BOOST_CHECK_EQUAL(D.size(), D_ref.size());
-                BOOST_CHECK_MESSAGE(D == D_ref, "Failed for depth = " << depth << " n_threads = " << n_threads);
-
-                t_trie::iterator it = D.begin();
-
-                while (it != D.end())
-                    BOOST_CHECK(spectra.is_candidate(*(it++)));
-            }
-        }
-    }
+    test_parallelization<t_parallelization_factory_random> (spectras, D_refs, 4, 4);
 }
-
 
 BOOST_AUTO_TEST_CASE(mhs_parallel_stride) {
-    for (t_id i = 0; i < 30; i++) {
-        t_count_spectra spectra;
-        diagnosis::structs::t_trie D_ref;
-
-        std::stringstream s;
-        std::ifstream f;
-
-        // Reading Input
-        s << "io/mhs/in." << i << ".txt";
-        f.open(s.str().c_str());
-        f >> spectra;
-        BOOST_CHECK(f.good());
-
-        f.close();
-        s.str("");
-
-        // Reading Output
-        s << "io/mhs/out." << i << ".txt";
-        f.open(s.str().c_str());
-        f >> D_ref;
-        BOOST_CHECK(f.good());
-        f.close();
-
-        for (t_count depth = 1; depth < 10; depth++) {
-            for (t_count n_threads = 1; n_threads < 10; n_threads++) {
-                diagnosis::structs::t_trie D;
-                t_ptr<t_parallelization_factory> pf(new t_parallelization_factory_stride(depth));
-
-                algorithms::t_mhs_parallel mhs(pf, n_threads);
-
-                mhs(spectra, D);
-                BOOST_CHECK_EQUAL(D.size(), D_ref.size());
-                BOOST_CHECK_MESSAGE(D == D_ref, "Failed for depth = " << depth << " n_threads = " << n_threads);
-
-                t_trie::iterator it = D.begin();
-
-                while (it != D.end())
-                    BOOST_CHECK(spectra.is_candidate(*(it++)));
-            }
-        }
-    }
+    test_parallelization<t_parallelization_factory_stride> (spectras, D_refs, 4, 4);
 }
 
 
-BOOST_AUTO_TEST_CASE(parallelization_stride) {
-    t_spectra * spectra;
-    t_candidate correct;
-    t_bernoulli randomizer(0.25, 1, 25, 22);
-    std::mt19937 gen;
-    t_trie D_ref;
-
-
-    spectra = randomizer(gen, correct);
-
-    {
-        t_mhs mhs;
-        D_ref.clear();
-        mhs(*spectra, D_ref);
-    }
-
-    for (t_count depth = 1; depth < 10; depth++) {
-        for (t_count n_threads = 1; n_threads < 10; n_threads++) {
-            t_trie D;
-            D.clear();
-
-            for (t_count rank = 0; rank < n_threads; rank++) {
-                t_mhs mhs;
-                t_ptr<t_parallelization> parallelization(new t_parallelization_stride(rank, n_threads, depth));
-
-                mhs.set_parallelization(parallelization);
-                mhs(*spectra, D);
-            }
-
-            BOOST_CHECK_EQUAL(D.size(), D_ref.size());
-            BOOST_CHECK_MESSAGE(D == D_ref, "Failed for depth = " << depth << " n_threads = " << n_threads);
-        }
-    }
-}
-
-BOOST_AUTO_TEST_CASE(parallelization_random) {
-    t_spectra * spectra;
-    t_candidate correct;
-    t_bernoulli randomizer(0.25, 1, 25, 22);
-    std::mt19937 gen;
-    t_trie D_ref;
-
-
-    spectra = randomizer(gen, correct);
-
-    {
-        t_mhs mhs;
-        D_ref.clear();
-        mhs(*spectra, D_ref);
-    }
-
-    for (t_count depth = 1; depth < 10; depth++) {
-        for (t_count n_threads = 1; n_threads < 10; n_threads++) {
-            t_trie D;
-            D.clear();
-
-            for (t_count rank = 0; rank < n_threads; rank++) {
-                t_mhs mhs;
-                t_ptr<t_parallelization> parallelization(new t_parallelization_random(rank, n_threads, depth, 1234));
-
-                mhs.set_parallelization(parallelization);
-                mhs(*spectra, D);
-            }
-
-            BOOST_CHECK_EQUAL(D.size(), D_ref.size());
-            BOOST_CHECK_MESSAGE(D == D_ref, "Failed for depth = " << depth << " n_threads = " << n_threads);
-        }
-    }
-}
 BOOST_AUTO_TEST_SUITE_END()

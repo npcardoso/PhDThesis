@@ -51,7 +51,7 @@ public:
         elements = 0;
     }
 
-    bool operator == (const t_trie & t);
+    bool operator == (const t_trie & t) const;
     friend class t_trie_iterator;
 
 private:

@@ -132,7 +132,7 @@ t_trie::iterator t_trie::end () const {
     return iterator(NULL);
 }
 
-bool t_trie::operator == (const t_trie & t) {
+bool t_trie::operator == (const t_trie & t) const {
     iterator my = begin(), other = t.begin();
 
 

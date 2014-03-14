@@ -1,8 +1,10 @@
 #include "mhs.h"
 
 #include "diagnosis/algorithms/similarity.h"
+#include "diagnosis/structs/candidate_pool.h"
 
 #include <boost/foreach.hpp>
+#include <thread>
 #include <list>
 
 
@@ -174,6 +176,55 @@ void t_mhs::combine (const t_spectra & spectra,
             first_it++;
         }
     }
+}
+
+t_mhs_parallel::t_mhs_parallel (const t_const_ptr<t_parallelization_factory> pf,
+                                t_count n_threads) {
+    // assert(n_threads > 1);
+    this->pf = pf;
+    this->n_threads = n_threads;
+}
+
+void t_mhs_parallel::map (t_args * args) {
+    (*args->mhs)(*args->spectra,
+                 args->D,
+                 args->filter);
+}
+
+void t_mhs_parallel::operator () (const structs::t_spectra & spectra,
+                                  t_ret_type & D,
+                                  const structs::t_spectra_filter * filter) const {
+    std::list<std::thread> threads;
+    std::list<t_args> args;
+
+
+    for (t_id i = 0; i < n_threads; i++) {
+        args.push_back(t_args());
+
+        t_ptr<t_parallelization> p((* pf)(i, n_threads));
+        t_ptr<t_mhs> mhs(new t_mhs(*this));
+        mhs->set_parallelization(p);
+
+        t_args & a = *args.rbegin();
+        a.mhs = mhs;
+        a.spectra = &spectra;
+        a.filter = filter;
+
+        threads.push_back(std::thread(&t_mhs_parallel::map, &a));
+    }
+
+    t_candidate_pool pool;
+    BOOST_FOREACH(std::thread & t,
+                  threads) {
+        t.join();
+    }
+
+    BOOST_FOREACH(t_args & a,
+                  args) {
+        pool.add(a.D);
+    }
+
+    pool.trie(D);
 }
 }
 }

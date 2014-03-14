@@ -20,15 +20,11 @@ t_basic_parallelization::t_basic_parallelization (t_count self,
 }
 
 bool t_basic_parallelization::skip (t_id rank_pos,
-                                    t_count depth) {
-    if (check(depth))
+                                    t_count depth) const {
+    if (depth == this->depth)
         return skip(rank_pos);
 
     return false;
-}
-
-bool t_basic_parallelization::check (t_count depth) const {
-    return depth == this->depth;
 }
 
 t_parallelization_random::t_parallelization_random (t_count self,
@@ -43,11 +39,30 @@ bool t_parallelization_random::skip (t_id rank_pos) const {
     t_component_id owner = distribution(*gen);
 
 
-    return owner == self;
+    return owner != self;
 }
 
 bool t_parallelization_stride::skip (t_id rank_pos) const {
-    return rank_pos % division_count == (division_count - (self + 1));
+    return rank_pos % division_count != (division_count - (self + 1));
+}
+
+t_parallelization_factory::t_parallelization_factory (t_count depth) {
+    this->depth = depth;
+}
+
+t_parallelization * t_parallelization_factory_stride::operator () (t_count self,
+                                                                   t_count division_count) const {
+    return new t_parallelization_stride(self, division_count, depth);
+}
+
+t_parallelization_factory_random::t_parallelization_factory_random (t_count depth,
+                                                                    unsigned int seed) : t_parallelization_factory(depth) {
+    this->seed = seed;
+}
+
+t_parallelization * t_parallelization_factory_random::operator () (t_count self,
+                                                                   t_count division_count) const {
+    return new t_parallelization_random(self, division_count, depth, seed);
 }
 }
 }

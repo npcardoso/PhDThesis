@@ -44,6 +44,31 @@ private:
     t_const_ptr<t_basic_cutoff> cutoff;
     t_const_ptr<t_parallelization> parallelization;
 };
+
+class t_mhs_parallel : public t_mhs {
+public:
+    t_mhs_parallel (const t_const_ptr<t_parallelization_factory> pf,
+                    t_count n_threads);
+
+
+    virtual void operator () (const structs::t_spectra & spectra,
+                              t_ret_type & D,
+                              const structs::t_spectra_filter * filter=NULL) const;
+private:
+    class t_args {
+public:
+        t_ptr<t_mhs> mhs;
+        const structs::t_spectra * spectra;
+        const structs::t_spectra_filter * filter;
+        t_mhs::t_ret_type D;
+    };
+
+    static void map (t_args * args);
+
+private:
+    t_count n_threads;
+    t_const_ptr<t_parallelization_factory> pf;
+};
 }
 }
 

@@ -102,16 +102,16 @@ bool t_trie::is_composite (const t_value_type & candidate,
     return false;
 }
 
-void t_trie::add (const t_value_type & candidate,
+bool t_trie::add (const t_value_type & candidate,
                   bool purge_composites,
                   bool check_composite) {
     if (check_composite && is_composite(candidate))
-        return;
+        return false;
 
     if (purge_composites)
         this->purge_composites(candidate, candidate.begin());
 
-    add(candidate, candidate.begin(), check_composite);
+    return add(candidate, candidate.begin(), check_composite);
 }
 
 std::ostream & t_trie::print (std::ostream & out) const {

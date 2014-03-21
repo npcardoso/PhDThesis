@@ -27,7 +27,7 @@ public:
         elements = 0;
     }
 
-    void add (const t_value_type & candidate,
+    bool add (const t_value_type & candidate,
               bool purge_composites=true,
               bool check_composite=true);
 

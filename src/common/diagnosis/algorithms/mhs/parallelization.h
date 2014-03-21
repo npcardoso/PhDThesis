@@ -2,6 +2,7 @@
 #define __PARALLELIZATION_H_5932959307b5185825a79718965aed2491de5b43__
 
 #include "types.h"
+#include "diagnosis/structs/candidate.h"
 #include "utils/boost.h"
 
 #include <boost/random/mersenne_twister.hpp>
@@ -11,7 +12,7 @@ namespace algorithms {
 class t_parallelization {
 public:
     virtual bool skip (t_id rank_pos,
-                       t_count depth) const;
+                       const structs::t_candidate & candidate) const;
 };
 
 class t_basic_parallelization : public t_parallelization {
@@ -20,7 +21,7 @@ public:
                              t_count division_count,
                              t_count depth);
     virtual bool skip (t_id rank_pos,
-                       t_count depth) const;
+                       const structs::t_candidate & candidate) const;
 protected:
     virtual bool skip (t_id rank_pos) const = 0;
 

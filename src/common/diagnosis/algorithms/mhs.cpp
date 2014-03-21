@@ -81,7 +81,7 @@ void t_mhs::calculate (const t_spectra & spectra,
                 break;
 
             /* Filter */
-            if (parallelization->skip(i, candidate.size())) {
+            if (parallelization->skip(i, candidate)) {
                 filter.filter_component(component);
                 continue;
             }

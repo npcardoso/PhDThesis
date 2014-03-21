@@ -2,10 +2,12 @@
 
 #include <boost/random/uniform_int_distribution.hpp>
 
+using namespace diagnosis::structs;
+
 namespace diagnosis {
 namespace algorithms {
 bool t_parallelization::skip (t_id rank_pos,
-                              t_count depth) const {
+                              const t_candidate & candidate) const {
     return false;
 }
 
@@ -20,8 +22,8 @@ t_basic_parallelization::t_basic_parallelization (t_count self,
 }
 
 bool t_basic_parallelization::skip (t_id rank_pos,
-                                    t_count depth) const {
-    if (depth == this->depth)
+                                    const t_candidate & candidate) const {
+    if (candidate.size() == depth)
         return skip(rank_pos);
 
     return false;

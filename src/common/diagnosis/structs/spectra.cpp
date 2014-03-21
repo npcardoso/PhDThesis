@@ -1,8 +1,10 @@
 #include "spectra.h"
 
 #include "spectra_iterator.h"
+#include "trie.h"
 
 #include <boost/foreach.hpp>
+
 namespace diagnosis {
 namespace structs {
 using namespace diagnosis::structs;
@@ -170,11 +172,8 @@ bool t_spectra::is_invalid (const t_spectra_filter * filter) const {
 
         it.set_component(0);
 
-        while (it.next_component())
-            if (get_activations(it.get_component(), it.get_transaction())) {
-                hit = true;
-                break;
-            }
+        while (!hit && it.next_component())
+            hit = is_active(it.get_component(), it.get_transaction());
 
         if (!hit)
             return true;
@@ -219,11 +218,8 @@ bool t_spectra::get_invalid (t_invalid_transactions & ret,
 
         it.set_component(0);
 
-        while (it.next_component())
-            if (get_activations(it.get_component(), it.get_transaction())) {
-                hit = true;
-                break;
-            }
+        while (!hit && it.next_component())
+            hit = is_active(it.get_component(), it.get_transaction());
 
         if (!hit)
             ret.insert(it.get_transaction());
@@ -231,6 +227,76 @@ bool t_spectra::get_invalid (t_invalid_transactions & ret,
 
     assert(ret.size() == is_invalid(filter));
     return ret.size();
+}
+
+t_ptr<t_spectra_filter> t_spectra::get_minimal_conflicts (const t_spectra_filter * filter) const {
+    t_ptr<t_spectra_filter> f;
+    t_trie t;
+    typedef std::pair<t_count, t_transaction_id> t_conflict_size;
+    std::vector<t_conflict_size> conflict_sizes;
+
+    if (filter)
+        f = t_ptr<t_spectra_filter> (new t_spectra_filter(*filter));
+    else
+        f = t_ptr<t_spectra_filter> (new t_spectra_filter());
+
+    t_spectra_iterator it(get_component_count(),
+                          get_transaction_count(),
+                          f.get());
+
+    // Filter non-error transactions
+    // TODO: Move to a separate function
+    while (it.next_transaction()) {
+        t_conflict_size s;
+        s.first = 0;
+        s.second = it.get_transaction();
+
+        while (it.next_component()) {
+            if (is_active(it.get_component(), it.get_transaction()))
+                s.first++;
+        }
+
+        conflict_sizes.push_back(s);
+
+        if (!is_error(it.get_transaction())) {
+            f->filter_transaction(it.get_transaction());
+            std::cerr << "Filtering tr " << it.get_transaction() << std::endl;
+        }
+    }
+
+    sort(conflict_sizes.begin(), conflict_sizes.end());
+
+
+    // Filter redundant conflicts
+    BOOST_FOREACH(auto & s,
+                  conflict_sizes) {
+        t_candidate conflict;
+
+
+        while (it.next_component())
+            if (is_active(it.get_component(), s.second))
+                conflict.insert(it.get_component());
+
+        if (!t.add(conflict)) {
+            f->filter_transaction(s.second);
+            std::cerr << "Filtering tr " << s.second << std::endl;
+        }
+    }
+
+    // Filter irrelevant components
+    // TODO: Move to a separate function
+    while (it.next_component()) {
+        bool hit = false;
+        it.set_transaction(0);
+
+        while (!hit && it.next_transaction())
+            hit = is_active(it.get_component(), it.get_transaction());
+
+        if (!hit)
+            f->filter_component(it.get_component());
+    }
+
+    return f;
 }
 
 void t_spectra::set_component_count (t_count component_count) {

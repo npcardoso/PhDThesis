@@ -36,6 +36,8 @@ public:
     virtual bool get_invalid (t_invalid_transactions & ret,
                               const t_spectra_filter * filter=NULL) const;
 
+    virtual t_ptr<t_spectra_filter> get_minimal_conflicts (const t_spectra_filter * filter=NULL) const;
+
     // Sets
 
     virtual void set_count (t_count component_count,

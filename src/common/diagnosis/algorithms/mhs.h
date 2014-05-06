@@ -39,7 +39,7 @@ public:
                          const structs::t_spectra_filter & filter_first,
                          const structs::t_spectra_filter & filter_second);
 
-private:
+protected:
     t_const_ptr<t_similarity> similarity;
     t_const_ptr<t_basic_cutoff> cutoff;
     t_const_ptr<t_parallelization> parallelization;

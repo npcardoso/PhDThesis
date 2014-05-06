@@ -31,11 +31,15 @@ t_spectra * t_bernoulli::operator () (std::mt19937 & gen,
     correct_candidate.clear();
 
     for (t_transaction_id t = 1; t <= n_tran; t++) {
+        bool success = false;
         spectra.set_error(t, error(gen));
 
-        for (t_component_id c = 1; c <= n_comp; c++) {
-            spectra.set_activations(c, t, activation(gen));
-        }
+        while (!success)
+            for (t_component_id c = 1; c <= n_comp; c++) {
+                bool active = activation(gen);
+                spectra.set_activations(c, t, active);
+                success = active || success;
+            }
     }
 
     return &spectra;

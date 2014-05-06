@@ -86,9 +86,10 @@ env['common_dir'] = join(root, "src", "common")
 #Build Flags
 
 if(env['debug']):
-    env['CCFLAGS'] = "-std=c++11 -g -O0"
+    env['CCFLAGS'] = "-g -O0"
 else:
-    env['CCFLAGS'] = "-std=c++11 -O3 -DNDEBUG"
+    env['CCFLAGS'] = "-O3 -DNDEBUG"
+env['CCFLAGS'] += " -std=c++11  -Wall -pedantic"
 
 env['ENV']['TERM'] = os.environ['TERM']
 env['ENV']['PATH'] = env['PATH']

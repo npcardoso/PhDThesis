@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <boost/random/uniform_real_distribution.hpp>
 
 namespace diagnosis {
 namespace algorithms {
@@ -60,22 +61,17 @@ void t_similarity::operator () (const structs::t_spectra & spectra,
                                 const structs::t_trie & D,
                                 t_ret_type & probs,
                                 const structs::t_spectra_filter * filter) const {
-    t_trie::iterator it = D.begin();
-
-    t_count n[2][2];
-
-
-    while (it != D.end()) {
+    BOOST_FOREACH(auto & d,
+                  D) {
         t_score score = NAN;
 
-        if (it->size() == 1) {
-            t_component_id c = *it->begin();
+
+        if (d.size() == 1) {
+            t_component_id c = *d.begin();
             score = (* this)(spectra, c, filter);
         }
 
         probs.push_back(score);
-
-        it++;
     }
 }
 
@@ -160,6 +156,16 @@ t_score t_jaccard::similarity_coefficient (const t_count n[2][2]) const {
 
 std::ostream & t_jaccard::print (std::ostream & out) const {
     return out << "t_jaccard";
+}
+
+t_score t_random::operator () (const structs::t_spectra & spectra,
+                               t_component_id comp,
+                               const structs::t_spectra_filter * filter) const {
+    std::mt19937 gen;
+    boost::random::uniform_real_distribution<t_error> rand(0, 1);
+
+
+    return rand(gen);
 }
 }
 }

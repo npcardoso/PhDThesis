@@ -35,20 +35,20 @@ private:
 class t_similarity : public t_candidate_ranker {
 public:
     // From t_candidate_ranker
-    void operator () (const structs::t_spectra & spectra,
-                      const structs::t_trie & D,
-                      t_ret_type & probs,
-                      const structs::t_spectra_filter * filter=NULL) const;
+    virtual void operator () (const structs::t_spectra & spectra,
+                              const structs::t_trie & D,
+                              t_ret_type & probs,
+                              const structs::t_spectra_filter * filter=NULL) const;
 
     // Calculates rank for all components in the spectra (does not sort nor normalize rank)
-    t_ptr<t_rank> operator () (const structs::t_spectra & spectra,
-                               const structs::t_spectra_filter * filter=NULL) const;
+    virtual t_ptr<t_rank> operator () (const structs::t_spectra & spectra,
+                                       const structs::t_spectra_filter * filter=NULL) const;
 
 
     // Calculates rank for a single components in the spectra
-    t_score operator () (const structs::t_spectra & spectra,
-                         t_component_id comp,
-                         const structs::t_spectra_filter * filter=NULL) const;
+    virtual t_score operator () (const structs::t_spectra & spectra,
+                                 t_component_id comp,
+                                 const structs::t_spectra_filter * filter=NULL) const;
 
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const = 0;
@@ -74,6 +74,16 @@ protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
 
     virtual std::ostream & print (std::ostream & out) const;
+};
+
+class t_random : public t_similarity {
+    // Calculates rank for a single components in the spectra
+    virtual t_score operator () (const structs::t_spectra & spectra,
+                                 t_component_id comp,
+                                 const structs::t_spectra_filter * filter=NULL) const;
+
+protected:
+    inline virtual t_score similarity_coefficient (const t_count n[2][2]) const {return 0;}
 };
 }
 }

@@ -14,11 +14,11 @@ public:
     typedef void (* t_callback)(t_id);
 
     t_execution_controller (t_count max_threads=std::thread::hardware_concurrency());
-
+    ~t_execution_controller ();
     t_id launch (const t_const_ptr<t_job> & job,
                  t_callback callback=NULL);
 
-    void join ();
+    bool join ();
 
 private:
     void signal ();

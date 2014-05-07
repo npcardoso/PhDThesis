@@ -6,6 +6,10 @@ t_execution_controller::t_execution_controller (t_count max_threads) {
     total_threads = 0;
 }
 
+t_execution_controller::~t_execution_controller () {
+    while (join()) ; // Wait for running tasks
+}
+
 t_id t_execution_controller::launch (const t_const_ptr<t_job> & job,
                                      t_callback callback) {
     std::unique_lock<std::mutex> lock(mutex);
@@ -22,11 +26,16 @@ t_id t_execution_controller::launch (const t_const_ptr<t_job> & job,
     return total_threads;
 }
 
-void t_execution_controller::join () {
+bool t_execution_controller::join () {
     std::unique_lock<std::mutex> lock(mutex);
 
 
-    free_slot.wait(lock);
+    if (active_threads) {
+        free_slot.wait(lock);
+        return true;
+    }
+
+    return false;
 }
 
 void t_execution_controller::launch_job_fun (t_execution_controller * controller,

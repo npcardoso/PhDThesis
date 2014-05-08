@@ -58,7 +58,7 @@ void t_barinel_model::gradient (const t_barinel_goodnesses & goodnesses,
 
     ret = t_barinel_goodnesses(goodnesses.size(), t_goodness_mp(0, precision));
 
-    for (t_id pattern = 1; pattern < (1 << (goodnesses.size())); pattern++) {
+    for (t_id pattern = 1; pattern < (1u << (goodnesses.size())); pattern++) {
         // PASS stuff
         for (t_id c = 0; c < goodnesses.size(); c++)
             ret[c] += pass[pattern] / goodnesses[c];

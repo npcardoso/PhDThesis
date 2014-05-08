@@ -7,13 +7,7 @@
 typedef boost::filesystem::path t_path;
 
 template <class T>
-class t_ptr : public boost::shared_ptr<T> {
-    using boost::shared_ptr<T>::shared_ptr;
-};
-
+using t_ptr = boost::shared_ptr<T>;
 template <class T>
-class t_const_ptr : public boost::shared_ptr<const T> {
-    using boost::shared_ptr<const T>::shared_ptr;
-};
-
+using t_const_ptr = boost::shared_ptr<const T>;
 #endif

@@ -10,7 +10,7 @@ namespace diagnosis {
 namespace benchmark {
 t_fuzzy_bernoulli::t_fuzzy_bernoulli  (t_count component_count,
                                        float activation_rate,
-                                       t_count error_count) : component_count(component_count), activation_rate(activation_rate), error_count(error_count) {}
+                                       t_count error_count) : activation_rate(activation_rate), component_count(component_count), error_count(error_count) {}
 
 structs::t_spectra * t_fuzzy_bernoulli::operator () (std::mt19937 & gen,
                                                      structs::t_candidate & correct_candidate) {

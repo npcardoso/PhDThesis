@@ -11,7 +11,7 @@ using namespace diagnosis;
 using namespace diagnosis::structs;
 using namespace diagnosis::benchmark;
 
-void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, int n_comp, int n_tran) {
+void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, t_count n_comp, t_count n_tran) {
     for (t_transaction_id t = 1; t <= n_tran; t++) {
         BOOST_CHECK(spectra.get_error(t) == spectra2.get_error(t));
         BOOST_CHECK(spectra.is_error(t) == spectra2.is_error(t));
@@ -103,8 +103,8 @@ BOOST_AUTO_TEST_CASE(is_minimal_candidate) {
 
 
 BOOST_AUTO_TEST_CASE(size) {
-    int n_comp = 10 + rand() % 20;
-    int n_tran = 10 + rand() % 20;
+    t_count n_comp = 10 + rand() % 20;
+    t_count n_tran = 10 + rand() % 20;
 
     t_count_spectra * spectra = new t_count_spectra();
     t_candidate correct;
@@ -141,19 +141,19 @@ BOOST_AUTO_TEST_CASE(size) {
 }
 
 BOOST_AUTO_TEST_CASE(error) {
-    int n_comp = rand() % 500;
-    int n_tran = rand() % 500;
+    t_count n_comp = rand() % 500;
+    t_count n_tran = rand() % 500;
 
     t_count_spectra spectra(n_comp, n_tran);
 
 
-    for (int i = 1; i <= n_tran; i++) {
+    for (t_count i = 1; i <= n_tran; i++) {
         spectra.set_error(i, 1);
         BOOST_CHECK(spectra.is_error(i));
         BOOST_CHECK(spectra.get_error_count() == i);
     }
 
-    for (int i = n_tran; i > 0; i--) {
+    for (t_count i = n_tran; i > 0; i--) {
         spectra.set_error(i, 0);
         BOOST_CHECK(spectra.is_error(i) == false);
         BOOST_CHECK(spectra.get_error_count() == i - 1);

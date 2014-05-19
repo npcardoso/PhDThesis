@@ -9,6 +9,8 @@
 
 #include <getopt.h>
 
+#include "types.h"
+
 template <class TYPE>
 bool verb_strtof (char * buf, TYPE & dest, bool non_negative=false) {
     char * end_ptr;
@@ -19,11 +21,11 @@ bool verb_strtof (char * buf, TYPE & dest, bool non_negative=false) {
 
     if (end_ptr == buf || *end_ptr || (non_negative && tmp < 0)) {
         std::cerr << "Invalid " << (non_negative ? "non-negative " : "") << "float number: '" << buf << "'" << std::endl;
-        return true;
+        return false;
     }
 
     dest = tmp;
-    return false;
+    return true;
 }
 
 template <class TYPE>
@@ -36,11 +38,11 @@ bool verb_strtoi (char * buf, TYPE & dest, bool non_negative=false) {
 
     if (end_ptr == buf || *end_ptr || (non_negative && tmp < 0)) {
         std::cerr << "Invalid " << (non_negative ? "non-negative " : "") << "integer number: '" << buf << "'" << std::endl;
-        return true;
+        return false;
     }
 
     dest = tmp;
-    return false;
+    return true;
 }
 
 class t_opt {
@@ -59,20 +61,6 @@ public:
 };
 
 class t_options {
-    std::ofstream devnull;
-
-    typedef std::vector<t_opt> t_opts;
-
-    t_opts opts;
-
-protected:
-    void add (const t_opt & option) {
-        opts.push_back(option);
-    }
-
-    std::string short_opts () const;
-    struct option * long_opts (int * long_ptr) const;
-
 public:
     std::ostream * verbose;
 
@@ -110,6 +98,19 @@ public:
     }
 
     virtual std::ostream & print (std::ostream & out) const;
+    std::ofstream devnull;
+
+protected:
+    void add (const t_opt & option);
+
+    std::string short_opts () const;
+    struct option * long_opts (int * long_ptr) const;
+
+private:
+    typedef std::vector<t_opt> t_opts;
+
+    t_opts opts;
+    t_count max_long_opt_size;
 };
 
 std::ostream & operator << (std::ostream & out, const t_options & opts);

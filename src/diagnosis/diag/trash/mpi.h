@@ -1,8 +1,8 @@
 #ifndef __MPI_H__
 #define __MPI_H__
 
-#include "diagnosis/algorithms/mhs.h"
-#include "diagnosis/structs/trie.h"
+#include "algorithms/mhs.h"
+#include "structs/trie.h"
 #include "stats.h"
 
 #include <iostream>

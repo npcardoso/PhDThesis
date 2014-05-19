@@ -1,5 +1,5 @@
-#ifndef __COMMON_UTILS_IOSTREAM_H__
-#define __COMMON_UTILS_IOSTREAM_H__
+#ifndef __IOSTREAM_H_6e998e029b3b9c5f4d1871ad32300819656f530f__
+#define __IOSTREAM_H_6e998e029b3b9c5f4d1871ad32300819656f530f__
 
 #include <iostream>
 #include <list>
@@ -48,5 +48,4 @@ std::ostream & operator << (std::ostream & out, const std::list<C> & container) 
     return printContainer(out, container, "l[", "]");
 }
 }
-
 #endif

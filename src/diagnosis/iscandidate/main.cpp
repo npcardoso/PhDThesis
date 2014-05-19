@@ -1,4 +1,4 @@
-#include "diagnosis/structs/count_spectra.h"
+#include "structs/count_spectra.h"
 #include "types.h"
 #include "configure.h"
 

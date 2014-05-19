@@ -1,7 +1,7 @@
 #include "mpi.h"
 
 #include "types.h"
-#include "diagnosis/heuristics/parallelization.h"
+#include "heuristics/parallelization.h"
 #include "utils/time.h"
 
 

@@ -1,8 +1,8 @@
 #ifndef __CONFIGURE_MHS_H__
 #define __CONFIGURE_MHS_H__
 
-#include "diagnosis/algorithms/barinel.h"
-#include "diagnosis/algorithms/mhs.h"
+#include "algorithms/barinel.h"
+#include "algorithms/mhs.h"
 
 #include "utils/opt.h"
 #include "types.h"

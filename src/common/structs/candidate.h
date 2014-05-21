@@ -23,6 +23,7 @@ namespace structs {
 class t_candidate : public std::set<t_component_id> {
 public:
     inline t_candidate () {}
+    inline virtual ~t_candidate () {}
     template <class InputIterator>
     t_candidate (InputIterator first, InputIterator last,
                  const key_compare & comp=key_compare(),

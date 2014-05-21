@@ -15,7 +15,7 @@ namespace benchmark {
 class t_status {
 public:
     virtual void prepare_entry (t_entry & entry) const = 0;
-    inline ~t_status () {}
+    inline virtual ~t_status () {}
 protected:
     inline t_status () {}
 };

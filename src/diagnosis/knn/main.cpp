@@ -14,10 +14,10 @@
 using namespace std;
 typedef enum {PASS = -1, UNKNOWN, FAIL = 1} t_outcome;
 
-typedef std::pair < float, t_outcome >t_feedback_token;
+typedef std::pair<float, t_outcome> t_feedback_token;
 
 
-class t_knn : public std::set < t_feedback_token > {
+class t_knn : public std::set<t_feedback_token> {
 public:
     t_outcome operator () (float val, t_count k) const {
         const_iterator left = lower_bound(t_feedback_token(val, UNKNOWN));
@@ -36,7 +36,7 @@ public:
         if (k > size())
             return UNKNOWN;
 
-        t_count fail_count;
+        t_count fail_count = 0;
         t_count i = k;
 
         while (i--) {
@@ -60,7 +60,7 @@ public:
             if (tmp->second)
                 fail_count++;
 
-// cout << i << " -- "<< tmp->first << ": " << tmp->second << " fc: " << fail_count << " ret:" << (fail_count *2 >k)<<std::endl;
+            // cout << i << " -- "<< tmp->first << ": " << tmp->second << " fc: " << fail_count << " ret:" << (fail_count *2 >k)<<std::endl;
         }
 
         if (fail_count * 2 > k)
@@ -73,18 +73,18 @@ public:
 };
 
 
-typedef pair < t_component_id, float >t_observation;
-class t_transaction : public list < t_observation > {
+typedef pair<t_component_id, float> t_observation;
+class t_transaction : public list<t_observation> {
 public:
     t_outcome outcome;
 };
 
-void purge_empty (list < t_transaction > & transactions) {
-    list < t_transaction >::iterator it = transactions.begin();
+void purge_empty (list<t_transaction> & transactions) {
+    list<t_transaction>::iterator it = transactions.begin();
 
     while (it != transactions.end()) {
         if (!it->size()) {
-            list < t_transaction >::iterator tmp = it++;
+            list<t_transaction>::iterator tmp = it++;
             transactions.erase(tmp);
         }
         else
@@ -92,9 +92,9 @@ void purge_empty (list < t_transaction > & transactions) {
     }
 }
 
-void collect_trivial (list < t_transaction > & transactions,
-                      map < t_component_id, t_knn > & knns) {
-    list < t_transaction >::iterator it = transactions.begin();
+void collect_trivial (list<t_transaction> & transactions,
+                      map<t_component_id, t_knn> & knns) {
+    list<t_transaction>::iterator it = transactions.begin();
 
     while (it != transactions.end()) {
         if (it->size() == 1) {
@@ -107,17 +107,17 @@ void collect_trivial (list < t_transaction > & transactions,
     }
 }
 
-void collect_nontrivial (list < t_transaction > & transactions,
-                         const map < t_component_id, t_knn > & knns,
-                         map < t_component_id, t_knn > & knns_out) {
-    list < t_transaction >::iterator it = transactions.begin();
+void collect_nontrivial (list<t_transaction> & transactions,
+                         const map<t_component_id, t_knn> & knns,
+                         map<t_component_id, t_knn> & knns_out) {
+    list<t_transaction>::iterator it = transactions.begin();
 
     while (it != transactions.end()) {
         t_transaction::iterator tmp = it->begin();
 
         while (tmp != it->end()) {
             cout << tmp->first << endl;
-            map < t_component_id, t_knn >::const_iterator knn = knns.find(tmp->first);
+            map<t_component_id, t_knn>::const_iterator knn = knns.find(tmp->first);
 
             if (knn == knns.end()) {
                 tmp++;
@@ -157,9 +157,9 @@ void read_transaction (istream & in, t_transaction & transaction) {
 }
 
 int main () {
-    list < t_transaction >transactions;
-    map < t_component_id, t_knn >knns;
-    map < t_component_id, t_knn >knns_out;
+    list<t_transaction> transactions;
+    map<t_component_id, t_knn> knns;
+    map<t_component_id, t_knn> knns_out;
 
     while (cin) {
         transactions.push_back(t_transaction());

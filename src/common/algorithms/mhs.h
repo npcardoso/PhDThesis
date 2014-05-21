@@ -4,11 +4,12 @@
 #include "algorithms/similarity.h"
 #include "algorithms/mhs/cutoff.h"
 #include "algorithms/mhs/parallelization.h"
+#include "diagnosis_system.h"
 #include "utils/time.h"
 
 namespace diagnosis {
 namespace algorithms {
-class t_mhs {
+class t_mhs : public t_candidate_generator {
 public:
     t_mhs (t_const_ptr<t_similarity> similarity=t_const_ptr<t_similarity> ());
 
@@ -17,25 +18,25 @@ public:
     void set_similarity (t_const_ptr<t_similarity> similarity);
 
     virtual void operator () (const structs::t_spectra & spectra,
-                              structs::t_trie & D,
+                              t_ret_type & D,
                               const structs::t_spectra_filter * filter=NULL) const;
 
     virtual void calculate (const structs::t_spectra & spectra,
-                            structs::t_trie & D,
+                            t_ret_type & D,
                             structs::t_spectra_filter & filter,
                             structs::t_candidate & candidate,
                             t_time_interval start_time=time_interval()) const;
 
     void update (const structs::t_spectra & spectra,
-                 structs::t_trie & D,
-                 const structs::t_trie & old_D,
+                 t_ret_type & D,
+                 const t_ret_type & old_D,
                  const structs::t_spectra_filter & filter) const;
 
 
     static void combine (const structs::t_spectra & spectra,
-                         structs::t_trie & D,
-                         const structs::t_trie & D_first,
-                         const structs::t_trie & D_second,
+                         t_ret_type & D,
+                         const t_ret_type & D_first,
+                         const t_ret_type & D_second,
                          const structs::t_spectra_filter & filter_first,
                          const structs::t_spectra_filter & filter_second);
 
@@ -52,7 +53,7 @@ public:
 
 
     virtual void operator () (const structs::t_spectra & spectra,
-                              structs::t_trie & D,
+                              t_ret_type & D,
                               const structs::t_spectra_filter * filter=NULL) const;
 private:
     class t_args {
@@ -60,7 +61,7 @@ public:
         t_ptr<t_mhs> mhs;
         const structs::t_spectra * spectra;
         const structs::t_spectra_filter * filter;
-        structs::t_trie D;
+        t_ret_type D;
     };
 
     static void map (t_args * args);

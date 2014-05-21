@@ -1,8 +1,9 @@
 #ifndef __SIMILARITY_H_516cee6798dbd3feb110e449857eb823bcdf0260__
 #define __SIMILARITY_H_516cee6798dbd3feb110e449857eb823bcdf0260__
 
-#include "types.h"
+#include "diagnosis_system.h"
 #include "structs/spectra.h"
+#include "types.h"
 #include "utils/boost.h"
 
 #include <vector>
@@ -32,8 +33,15 @@ private:
 };
 
 
-class t_similarity {
+class t_similarity : public t_candidate_ranker {
 public:
+    // From t_candidate_ranker
+    virtual void operator () (const structs::t_spectra & spectra,
+                              const structs::t_trie & D,
+                              t_ret_type & probs,
+                              const structs::t_spectra_filter * filter=NULL) const;
+
+
     // Calculates rank for all components in the spectra (does not sort nor normalize rank)
     virtual t_ptr<t_rank> operator () (const structs::t_spectra & spectra,
                                        const structs::t_spectra_filter * filter=NULL) const;

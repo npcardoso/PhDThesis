@@ -1,7 +1,7 @@
 #include "types.h"
-#include "diagnosis/algorithms/mhs.h"
-#include "diagnosis/algorithms/barinel.h"
-#include "diagnosis/structs/count_spectra.h"
+#include "algorithms/mhs.h"
+#include "algorithms/barinel.h"
+#include "structs/count_spectra.h"
 
 using namespace std;
 using namespace diagnosis;

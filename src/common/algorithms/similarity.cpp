@@ -57,6 +57,24 @@ t_count t_rank::size () const {
     return rank.size();
 }
 
+void t_similarity::operator () (const structs::t_spectra & spectra,
+                                const structs::t_trie & D,
+                                t_ret_type & probs,
+                                const structs::t_spectra_filter * filter) const {
+    BOOST_FOREACH(auto & d,
+                  D) {
+        t_score score = NAN;
+
+
+        if (d.size() == 1) {
+            t_component_id c = *d.begin();
+            score = (* this)(spectra, c, filter);
+        }
+
+        probs.push_back(score);
+    }
+}
+
 t_ptr<t_rank> t_similarity::operator () (const structs::t_spectra & spectra,
                                          const structs::t_spectra_filter * filter) const {
     t_spectra_iterator it(spectra.get_component_count(),

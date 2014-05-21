@@ -38,7 +38,7 @@ void t_mhs::set_parallelization (const t_const_ptr<t_parallelization> paralleliz
 }
 
 void t_mhs::operator () (const t_spectra & spectra,
-                         t_trie & D,
+                         t_ret_type & D,
                          const t_spectra_filter * filter) const {
     t_candidate candidate;
     t_spectra_filter tmp_filter;
@@ -51,7 +51,7 @@ void t_mhs::operator () (const t_spectra & spectra,
 }
 
 void t_mhs::calculate (const t_spectra & spectra,
-                       t_trie & D,
+                       t_ret_type & D,
                        t_spectra_filter & filter,
                        t_candidate & candidate,
                        t_time_interval start_time) const {
@@ -114,8 +114,8 @@ void t_mhs::calculate (const t_spectra & spectra,
 }
 
 void t_mhs::update (const t_spectra & spectra,
-                    t_trie & D,
-                    const t_trie & old_D,
+                    t_ret_type & D,
+                    const t_ret_type & old_D,
                     const t_spectra_filter & filter) const {
     std::list<t_candidate> candidates;
 
@@ -138,15 +138,15 @@ void t_mhs::update (const t_spectra & spectra,
 }
 
 void t_mhs::combine (const t_spectra & spectra,
-                     t_trie & D,
-                     const t_trie & D_first,
-                     const t_trie & D_second,
+                     t_ret_type & D,
+                     const t_ret_type & D_first,
+                     const t_ret_type & D_second,
                      const t_spectra_filter & filter_first,
                      const t_spectra_filter & filter_second) {
     std::list<t_candidate> c_first, c_second;
 
     {
-        t_trie::iterator it = D_first.begin();
+        t_ret_type::iterator it = D_first.begin();
 
         while (it != D_first.end()) {
             if (spectra.is_candidate(*it, &filter_second))
@@ -200,7 +200,7 @@ void t_mhs_parallel::map (t_args * args) {
 }
 
 void t_mhs_parallel::operator () (const structs::t_spectra & spectra,
-                                  structs::t_trie & D,
+                                  t_ret_type & D,
                                   const structs::t_spectra_filter * filter) const {
     std::list<std::thread> threads;
     std::list<t_args> args;

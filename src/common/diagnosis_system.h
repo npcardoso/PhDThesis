@@ -5,7 +5,7 @@
 #include "structs/spectra.h"
 #include "structs/spectra_filter.h"
 #include "structs/trie.h"
-//#include "utils/mpreal.h"
+// #include "utils/mpreal.h"
 #include "utils/boost.h"
 
 #include <list>
@@ -18,6 +18,7 @@ public:
     virtual void operator () (const structs::t_spectra & spectra,
                               t_ret_type & D,
                               const structs::t_spectra_filter * filter=NULL) const = 0;
+    inline virtual ~t_candidate_generator () {}
 };
 
 
@@ -31,6 +32,7 @@ public:
                               const structs::t_trie & D,
                               t_ret_type & probs,
                               const structs::t_spectra_filter * filter=NULL) const = 0;
+    inline virtual ~t_candidate_ranker () {}
 };
 
 
@@ -44,6 +46,7 @@ public:
                               t_candidate_ranker::t_ret_type & probs,
                               const structs::t_spectra_filter * filter=NULL) const;
 
+    inline virtual ~t_diagnosis_system () {}
 protected:
     t_ptr<t_candidate_generator> generator;
     t_ptr<t_candidate_ranker> ranker;

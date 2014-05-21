@@ -11,6 +11,7 @@ namespace diagnosis {
 namespace algorithms {
 class t_parallelization {
 public:
+    inline virtual ~t_parallelization () {}
     virtual bool skip (t_id rank_pos,
                        const structs::t_candidate & candidate) const;
 };
@@ -22,6 +23,7 @@ public:
                              t_count depth);
     virtual bool skip (t_id rank_pos,
                        const structs::t_candidate & candidate) const;
+
 protected:
     virtual bool skip (t_id rank_pos) const = 0;
 
@@ -52,6 +54,8 @@ public:
 class t_parallelization_factory {
 public:
     t_parallelization_factory (t_count depth);
+    inline virtual ~t_parallelization_factory () {}
+
     virtual t_parallelization * operator () (t_count self,
                                              t_count division_count) const = 0;
 protected:

@@ -9,6 +9,7 @@ namespace diagnosis {
 namespace algorithms {
 class t_basic_cutoff {
 public:
+    inline virtual ~t_basic_cutoff () {}
 
     virtual bool stop (t_count depth) const;
     virtual bool stop (const t_rank & rank,

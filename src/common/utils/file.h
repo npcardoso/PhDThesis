@@ -8,6 +8,8 @@
 
 class t_file {
 public:
+    inline virtual ~t_file () {}
+
     virtual void flush () = 0;
     const t_path & get_path () const;
     bool operator < (const t_file & other) const;

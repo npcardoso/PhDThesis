@@ -1,6 +1,8 @@
 #include "statistics_hook.h"
-#include "boost/date_time/posix_time/posix_time.hpp"
-#include "boost/lexical_cast.hpp"
+
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace boost;
 using namespace boost::posix_time;
@@ -37,7 +39,17 @@ void t_statistics_hook::trigger_event (t_collector & collector,
     entry["date"] = to_simple_string(second_clock::local_time());
     entry["duration"] = lexical_cast<std::string> (status.get_gen_duration());
     entry["size"] = lexical_cast<std::string> (status.get_candidates().size());
-    // TODO: Average candidate cardinality
+
+    t_count avg_size = 0;
+    t_count minimal = 0;
+    BOOST_FOREACH(auto & d, status.get_candidates()) {
+        avg_size += d.size();
+
+        if (status.get_spectra().is_minimal_candidate(d))
+            minimal++;
+    }
+    entry["avg_card"] = lexical_cast<std::string> (avg_size / status.get_candidates().size());
+    entry["perc_minimal"] = lexical_cast<std::string> (minimal / status.get_candidates().size());
 
     collector.add_entry(file, entry);
 }

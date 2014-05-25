@@ -48,9 +48,16 @@ void t_spectra_filter::strip (t_component_id component,
     components.filter(component);
 }
 
+t_spectra_iterator::t_spectra_iterator (const t_spectra & spectra,
+                                        const t_spectra_filter * filter) :
+    t_spectra_iterator(spectra.get_component_count(),
+                       spectra.get_transaction_count(),
+                       filter) {}
+
 t_spectra_iterator::t_spectra_iterator (t_count max_components,
                                         t_count max_transactions,
                                         const t_spectra_filter * filter) : component(max_components, filter ? &filter->components : NULL), transaction(max_transactions, filter ? &filter->transactions : NULL) {}
+
 
 bool t_spectra_iterator::next (bool transaction_oriented) {
     if (transaction_oriented) {

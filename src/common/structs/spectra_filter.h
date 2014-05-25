@@ -28,6 +28,9 @@ public:
 
 class t_spectra_iterator {
 public:
+    t_spectra_iterator (const t_spectra & spectra,
+                        const t_spectra_filter * filter=NULL);
+
     t_spectra_iterator (t_count max_components,
                         t_count max_transactions,
                         const t_spectra_filter * filter=NULL);

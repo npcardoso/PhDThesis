@@ -80,8 +80,12 @@ void t_mhs::calculate (const t_spectra & spectra,
                 break;
         }
 
+
         for (t_id i = 0; i < remaining_components; i++) {
             t_component_id component = rank->get_component(i);
+            //TODO: Optimize this?
+            if (spectra.is_invalid(&filter))
+                break;
 
             /* Cutoff */
             if (cutoff->stop(*rank, i, D,

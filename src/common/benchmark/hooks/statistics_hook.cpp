@@ -48,8 +48,8 @@ void t_statistics_hook::trigger_event (t_collector & collector,
         if (status.get_spectra().is_minimal_candidate(d))
             minimal++;
     }
-    entry["avg_card"] = lexical_cast<std::string> (avg_size / status.get_candidates().size());
-    entry["perc_minimal"] = lexical_cast<std::string> (minimal / status.get_candidates().size());
+    entry["avg_card"] = lexical_cast<std::string> (avg_size / (float) status.get_candidates().size());
+    entry["perc_minimal"] = lexical_cast<std::string> (minimal / (float) status.get_candidates().size());
 
     collector.add_entry(file, entry);
 }

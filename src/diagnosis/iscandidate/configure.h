@@ -1,7 +1,7 @@
 #ifndef __CONFIGURE_iscandidate_H__
 #define __CONFIGURE_iscandidate_H__
 
-#include "utils/opt.h"
+#include <libdiag/utils/opt.h>
 
 class t_iscandidate_options : public t_options {
 public:

@@ -1,8 +1,8 @@
 #ifndef __MEMBERSHIP_H_91121da4e84757e5b9b76386fdfa674fe072ea87__
 #define __MEMBERSHIP_H_91121da4e84757e5b9b76386fdfa674fe072ea87__
 
-#include "types.h"
-#include "utils/boost.h"
+#include "../types.h"
+#include "../utils/boost.h"
 
 #include <iostream>
 

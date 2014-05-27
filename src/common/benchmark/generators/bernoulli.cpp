@@ -1,7 +1,7 @@
 #include "bernoulli.h"
 #include <boost/random/bernoulli_distribution.hpp>
 
-#include "structs/count_spectra.h"
+#include "../../structs/count_spectra.h"
 
 using boost::bernoulli_distribution;
 using namespace diagnosis::structs;

@@ -1,10 +1,10 @@
 #ifndef __SPECTRA_FILTER_H_e9a80d3bebd598ce4b69b89f95213e4cf28b497e__
 #define __SPECTRA_FILTER_H_e9a80d3bebd598ce4b69b89f95213e4cf28b497e__
 
-#include "types.h"
-#include "structs/candidate.h"
-#include "structs/filter.h"
-#include "structs/spectra.h"
+#include "../types.h"
+#include "candidate.h"
+#include "filter.h"
+#include "spectra.h"
 
 #include <cassert>
 #include <iostream>

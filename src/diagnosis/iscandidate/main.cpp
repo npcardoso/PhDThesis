@@ -1,5 +1,5 @@
-#include "structs/count_spectra.h"
-#include "types.h"
+#include <libdiag/structs/count_spectra.h>
+#include <libdiag/types.h>
 #include "configure.h"
 
 using namespace diagnosis;

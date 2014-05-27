@@ -1,7 +1,7 @@
 #include "configure.h"
-#include "structs/ambiguity_groups.h"
-#include "structs/count_spectra.h"
-#include "utils/iostream.h"
+#include <libdiag/structs/ambiguity_groups.h>
+#include <libdiag/structs/count_spectra.h>
+#include <libdiag/utils/iostream.h>
 
 using namespace diagnosis;
 using namespace diagnosis::structs;

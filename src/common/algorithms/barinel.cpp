@@ -1,5 +1,5 @@
 #include "barinel.h"
-#include "utils/iostream.h"
+#include "../utils/iostream.h"
 
 #include <boost/foreach.hpp>
 

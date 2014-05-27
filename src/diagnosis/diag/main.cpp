@@ -1,8 +1,8 @@
 #include "configure.h"
-#include "structs/ambiguity_groups.h"
-#include "structs/count_spectra.h"
-#include "structs/diagnosis_report.h"
-#include "utils/iostream.h"
+#include <libdiag/structs/ambiguity_groups.h>
+#include <libdiag/structs/count_spectra.h>
+#include <libdiag/structs/diagnosis_report.h>
+#include <libdiag/utils/iostream.h>
 
 
 #include <list>

@@ -1,11 +1,11 @@
 #ifndef __MHS_H_957e289b8923d6c40fa69c8aa7a53a6ed1da023b__
 #define __MHS_H_957e289b8923d6c40fa69c8aa7a53a6ed1da023b__
 
-#include "algorithms/similarity.h"
-#include "algorithms/mhs/cutoff.h"
-#include "algorithms/mhs/parallelization.h"
-#include "diagnosis_system.h"
-#include "utils/time.h"
+#include "similarity.h"
+#include "mhs/cutoff.h"
+#include "mhs/parallelization.h"
+#include "../diagnosis_system.h"
+#include "../utils/time.h"
 
 namespace diagnosis {
 namespace algorithms {

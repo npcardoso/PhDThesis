@@ -1,8 +1,8 @@
 #ifndef __BENCHMARK_H__85256f48709bab034e918f5de145de7e4bc6af2b__
 #define __BENCHMARK_H__85256f48709bab034e918f5de145de7e4bc6af2b__
 
-#include "benchmark/benchmark_settings.h"
-#include "benchmark/generators/generator.h"
+#include "benchmark_settings.h"
+#include "generators/generator.h"
 
 namespace diagnosis {
 namespace benchmark {

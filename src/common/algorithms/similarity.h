@@ -1,10 +1,10 @@
 #ifndef __SIMILARITY_H_516cee6798dbd3feb110e449857eb823bcdf0260__
 #define __SIMILARITY_H_516cee6798dbd3feb110e449857eb823bcdf0260__
 
-#include "diagnosis_system.h"
-#include "structs/spectra.h"
-#include "types.h"
-#include "utils/boost.h"
+#include "../diagnosis_system.h"
+#include "../structs/spectra.h"
+#include "../types.h"
+#include "../utils/boost.h"
 
 #include <vector>
 

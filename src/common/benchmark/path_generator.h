@@ -1,8 +1,8 @@
 #ifndef __PATH_GENERATOR_H_51732833938bc903c92dbe886fb8565640d75a6a__
 #define __PATH_GENERATOR_H_51732833938bc903c92dbe886fb8565640d75a6a__
 
-#include "benchmark/types.h"
-#include "utils/boost.h"
+#include "types.h"
+#include "../utils/boost.h"
 
 
 namespace diagnosis {

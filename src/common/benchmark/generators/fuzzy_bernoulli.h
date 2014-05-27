@@ -1,9 +1,9 @@
 #ifndef __FUZZY_BERNOULLI_H_a53881ae3d9ecc98bea674a957037d2b0c5e7dcd__
 #define __FUZZY_BERNOULLI_H_a53881ae3d9ecc98bea674a957037d2b0c5e7dcd__
 
-#include "bernoulli.h"
-#include "structs/count_spectra.h"
-#include "structs/topology.h"
+#include "generator.h"
+#include "../../structs/topology.h"
+
 
 namespace diagnosis {
 namespace benchmark {

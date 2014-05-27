@@ -1,6 +1,6 @@
-#include "utils/json.h"
+#include "json.h"
 
-#include "types.h"
+#include "../types.h"
 
 void json_copy_object (std::istream & in, std::ostream & out) {
     bool in_str = false;

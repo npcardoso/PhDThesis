@@ -1,8 +1,7 @@
 #ifndef __JOB_TRACKER_H_3a988067b2a3459a561fa86477c1ef72baa65413__
 #define __JOB_TRACKER_H_3a988067b2a3459a561fa86477c1ef72baa65413__
 
-#include "benchmark/hooks/benchmark_hook.h"
-#include "benchmark/metrics.h"
+#include "benchmark_hook.h"
 
 
 namespace diagnosis {

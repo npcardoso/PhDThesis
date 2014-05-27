@@ -1,8 +1,8 @@
 #ifndef __TOPOLOGY_H_ba7162d9bafcf1d03023d9851ec73fa65ad270b2__
 #define __TOPOLOGY_H_ba7162d9bafcf1d03023d9851ec73fa65ad270b2__
 
-#include "types.h"
-#include "utils/boost.h"
+#include "../types.h"
+#include "../utils/boost.h"
 
 #include <list>
 #include <map>

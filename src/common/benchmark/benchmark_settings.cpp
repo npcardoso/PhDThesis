@@ -1,4 +1,4 @@
-#include "benchmark/benchmark_settings.h"
+#include "benchmark_settings.h"
 
 namespace diagnosis {
 namespace benchmark {

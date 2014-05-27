@@ -1,7 +1,7 @@
 #ifndef __SINGLE_FAULT_H_7fc4474ddd10cf6152746ce230d2e4124ccbed4d__
 #define __SINGLE_FAULT_H_7fc4474ddd10cf6152746ce230d2e4124ccbed4d__
 
-#include "diagnosis_system.h"
+#include "../diagnosis_system.h"
 
 namespace diagnosis {
 namespace algorithms {

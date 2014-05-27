@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
-#include "structs/ambiguity_groups.h"
-#include "structs/count_spectra.h"
+#include <libdiag/structs/ambiguity_groups.h>
+#include <libdiag/structs/count_spectra.h>
 
 #include <fstream>
 using namespace diagnosis;

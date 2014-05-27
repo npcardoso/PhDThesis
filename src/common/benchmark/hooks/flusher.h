@@ -1,7 +1,7 @@
 #ifndef __FLUSHER_H_40804107857bfa70caee529936a3415e4bedd0ca__
 #define __FLUSHER_H_40804107857bfa70caee529936a3415e4bedd0ca__
 
-#include "benchmark/hooks/benchmark_hook.h"
+#include "benchmark_hook.h"
 
 namespace diagnosis {
 namespace benchmark {

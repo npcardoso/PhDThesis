@@ -1,11 +1,11 @@
 #include "replay.h"
 
-#include "structs/count_spectra.h"
+#include "../../structs/count_spectra.h"
 
 #include <fstream>
 
-using namespace diagnosis::structs;
 using namespace std;
+using namespace diagnosis::structs;
 
 namespace diagnosis {
 namespace benchmark {

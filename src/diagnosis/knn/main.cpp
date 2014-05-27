@@ -1,5 +1,5 @@
-#include "types.h"
-#include "utils/iostream.h"
+#include <libdiag/types.h>
+#include <libdiag/utils/iostream.h>
 #include <cmath>
 #include <iostream>
 #include <algorithm>

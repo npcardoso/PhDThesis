@@ -1,8 +1,8 @@
 #ifndef __BENCHMARK_HOOK_H__0734b6b340e40970218b6c20df0194edd574e1c1__
 #define __BENCHMARK_HOOK_H__0734b6b340e40970218b6c20df0194edd574e1c1__
 
-#include "benchmark/status.h"
-#include "benchmark/collector.h"
+#include "../status.h"
+#include "../collector.h"
 
 
 namespace diagnosis {

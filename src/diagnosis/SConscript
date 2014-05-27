@@ -2,7 +2,7 @@ Import('env')
 oldenv = env
 env = env.Clone()
 
-	
+env.Append(LINKFLAGS = " -lpthread -lboost_system -lboost_thread  -L%s -l%s " % (env['lib_dir'], env['libdiag']) )
 env.Append(LINKFLAGS = " -lboost_date_time  -lboost_filesystem -Wl,-rpath,'$$ORIGIN/../lib' %s " % env['mpfr_link'] )
 Export('env')
 

@@ -1,6 +1,5 @@
 #include "opt.h"
 
-#include "types.h"
 #include <cstring>
 #include <boost/foreach.hpp>
 

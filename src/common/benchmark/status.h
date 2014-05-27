@@ -1,9 +1,9 @@
 #ifndef __STATUS_H_002ec00416d0bb9fe059ff731dccb22e60e633a2__
 #define __STATUS_H_002ec00416d0bb9fe059ff731dccb22e60e633a2__
 
-#include "benchmark/types.h"
-#include "diagnosis_system.h"
-#include "utils/time.h"
+#include "types.h"
+#include "../diagnosis_system.h"
+#include "../utils/time.h"
 
 
 #define STATUS_KEY_ITERATION "iteration"

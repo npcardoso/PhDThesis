@@ -1,7 +1,5 @@
 from os.path import join
 import os
-def SymLink(target, source, env):
-  os.symlink(os.path.abspath(str(source[0])), os.path.abspath(str(target[0])))
 
 Import('env')
 env = env.Clone()
@@ -14,9 +12,7 @@ LINKFLAGS = " ".join([
     "-ldiag"
 ])
 
-env.Append(
-    CPPPATH = Dir(env['common_dir']),
-    LINKFLAGS = LINKFLAGS )
+env.Append(LINKFLAGS = LINKFLAGS)
 
 
 wildcards = ""

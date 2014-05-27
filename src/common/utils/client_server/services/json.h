@@ -1,8 +1,8 @@
 #ifndef __SERVER_SERVICES_JSON_H__
 #define __SERVER_SERVICES_JSON_H__
 
-#include "utils/client_server/service.h"
-#include "types.h"
+#include "../service.h"
+#include "../../../types.h"
 
 #include <boost/property_tree/ptree.hpp>
 

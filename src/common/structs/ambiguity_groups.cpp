@@ -1,6 +1,6 @@
 #include "ambiguity_groups.h"
 
-#include "utils/iostream.h"
+#include "../utils/iostream.h"
 
 #include <boost/uuid/sha1.hpp>
 

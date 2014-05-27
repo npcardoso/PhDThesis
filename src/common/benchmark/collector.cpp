@@ -1,7 +1,7 @@
 #include "collector.h"
 
-#include "utils/csv.h"
-#include "utils/iostream.h"
+#include "../utils/csv.h"
+#include "../utils/iostream.h"
 
 #include <boost/foreach.hpp>
 #include <sstream>

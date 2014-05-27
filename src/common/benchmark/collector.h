@@ -1,9 +1,9 @@
 #ifndef __COLLECTOR_H_191dcca6342c7ab0e1db44a96c7660eb47e6503f__
 #define __COLLECTOR_H_191dcca6342c7ab0e1db44a96c7660eb47e6503f__
 
-#include "benchmark/status.h"
-#include "benchmark/path_generator.h"
-#include "utils/file.h"
+#include "status.h"
+#include "path_generator.h"
+#include "../utils/file.h"
 
 #include <boost/thread.hpp>
 

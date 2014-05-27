@@ -1,8 +1,8 @@
 #ifndef __CANDIDATE_H_edf867e97cb99b12f0025a979426b18b2db6b361__
 #define __CANDIDATE_H_edf867e97cb99b12f0025a979426b18b2db6b361__
 
-#include "types.h"
-#include "utils/boost.h"
+#include "../types.h"
+#include "../utils/boost.h"
 
 #include <iostream>
 #include <set>

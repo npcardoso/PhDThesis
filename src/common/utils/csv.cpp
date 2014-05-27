@@ -1,6 +1,6 @@
 #include "csv.h"
 
-#include "types.h"
+#include "../types.h"
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/foreach.hpp>

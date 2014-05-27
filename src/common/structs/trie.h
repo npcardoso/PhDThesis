@@ -1,9 +1,9 @@
 #ifndef __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
 #define __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
 
-#include "types.h"
-#include "structs/candidate.h"
-#include "utils/boost.h"
+#include "candidate.h"
+#include "../types.h"
+#include "../utils/boost.h"
 
 #include <boost/lexical_cast.hpp>
 #include <iterator>

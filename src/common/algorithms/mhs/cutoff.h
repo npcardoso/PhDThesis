@@ -1,9 +1,9 @@
 #ifndef __CUTOFF_H_eef6fe3d54a024fdbc0a8263ef12470accf5f2b0__
 #define __CUTOFF_H_eef6fe3d54a024fdbc0a8263ef12470accf5f2b0__
 
-#include "utils/time.h"
-#include "algorithms/similarity.h"
-#include "structs/trie.h"
+#include "../similarity.h"
+#include "../../utils/time.h"
+#include "../../structs/trie.h"
 
 namespace diagnosis {
 namespace algorithms {

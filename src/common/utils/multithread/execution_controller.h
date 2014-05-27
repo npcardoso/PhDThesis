@@ -1,9 +1,9 @@
 #ifndef __CONTROLLER_H_204f329ba442736d7cb8632c05d09694b718f8c2__
 #define __CONTROLLER_H_204f329ba442736d7cb8632c05d09694b718f8c2__
 
-#include "types.h"
-#include "utils/boost.h"
-#include "utils/multithread/job.h"
+#include "job.h"
+#include "../boost.h"
+#include "../../types.h"
 
 #include <thread>
 #include <mutex>

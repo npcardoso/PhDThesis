@@ -1,7 +1,7 @@
 #ifndef __DIAGNOSIS_REPORT_H_132a205ec90bbf9374e48a44e208119ba72231fa__
 #define __DIAGNOSIS_REPORT_H_132a205ec90bbf9374e48a44e208119ba72231fa__
 
-#include "diagnosis_system.h"
+#include "../diagnosis_system.h"
 
 
 namespace diagnosis {

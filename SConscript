@@ -3,6 +3,11 @@ Import('env')
 env.SConscript('src/common/SConscript')
 
 env.Append(LINKFLAGS = " -lboost_date_time  -lboost_filesystem -Wl,-rpath,'$$ORIGIN/../lib' %s " % env['mpfr_link'] )
+
+print env['include_dir']
+env.Append(CPPPATH = env['include_dir'])
+
+
 Export('env')
 
 

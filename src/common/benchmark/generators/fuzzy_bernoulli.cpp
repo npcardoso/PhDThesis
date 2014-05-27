@@ -1,4 +1,8 @@
 #include "fuzzy_bernoulli.h"
+
+#include "../../structs/count_spectra.h"
+
+
 #include <boost/random/bernoulli_distribution.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/random/uniform_real_distribution.hpp>

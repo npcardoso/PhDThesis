@@ -1,6 +1,6 @@
 #include "threaded.h"
 
-#include "utils/debug.h"
+#include "../../debug.h"
 
 #include <boost/thread/mutex.hpp>
 

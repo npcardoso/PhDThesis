@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
 
-#include "structs/count_spectra.h"
+#include <libdiag/structs/count_spectra.h>
 
 #include <boost/foreach.hpp>
 #include <boost/random/uniform_int_distribution.hpp>

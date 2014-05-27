@@ -1,6 +1,9 @@
 #ifndef __OPT_H_a99fd11755d4e31b0eb9227b503a680feb56b392__
 #define __OPT_H_a99fd11755d4e31b0eb9227b503a680feb56b392__
 
+#include "../types.h"
+
+
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -9,7 +12,6 @@
 
 #include <getopt.h>
 
-#include "types.h"
 
 template <class TYPE>
 bool verb_strtof (char * buf, TYPE & dest, bool non_negative=false) {

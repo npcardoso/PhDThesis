@@ -3,8 +3,8 @@
 
 #include "generator.h"
 
-#include "structs/count_spectra.h"
-#include "structs/topology.h"
+#include "../../structs/count_spectra.h"
+#include "../../structs/topology.h"
 
 namespace diagnosis {
 namespace benchmark {

@@ -1,7 +1,7 @@
 #include "save_hook.h"
 
-#include "structs/diagnosis_report.h"
-#include "utils/iostream.h"
+#include "../../structs/diagnosis_report.h"
+#include "../../utils/iostream.h"
 
 #include <boost/lexical_cast.hpp>
 #include <fstream>

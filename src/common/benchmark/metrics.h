@@ -1,16 +1,16 @@
 #ifndef __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 #define __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 
-#include "diagnosis_system.h"
-#include "structs/candidate.h"
-#include "structs/diagnosis_report.h"
-#include "utils/boost.h"
+#include "../diagnosis_system.h"
+#include "../structs/candidate.h"
+#include "../structs/diagnosis_report.h"
+#include "../utils/boost.h"
+#include "../utils/iostream.h"
 
 #include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <vector>
-#include "utils/iostream.h"
 
 namespace diagnosis {
 namespace benchmark {

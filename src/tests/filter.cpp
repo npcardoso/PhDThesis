@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include "structs/filter.h"
+#include <libdiag/structs/filter.h>
 
 
 #include <boost/foreach.hpp>

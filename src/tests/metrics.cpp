@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include "benchmark/metrics.h"
+#include <libdiag/benchmark/metrics.h>
 
 #include <fstream>
 using namespace diagnosis;

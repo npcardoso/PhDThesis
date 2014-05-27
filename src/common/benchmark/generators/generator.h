@@ -1,9 +1,9 @@
 #ifndef __GENERATOR_H_3875d8f146b1216dc5c63dcd0eae0eb3ead6b977__
 #define __GENERATOR_H_3875d8f146b1216dc5c63dcd0eae0eb3ead6b977__
 
-#include "structs/spectra.h"
-#include "utils/boost.h"
-#include "exceptions.h"
+#include "../../structs/spectra.h"
+#include "../../utils/boost.h"
+#include "../../exceptions.h"
 
 namespace diagnosis {
 namespace benchmark {

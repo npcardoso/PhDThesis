@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include "structs/diagnosis_report.h"
+#include <libdiag/structs/diagnosis_report.h>
 
 #include <fstream>
 using namespace diagnosis;

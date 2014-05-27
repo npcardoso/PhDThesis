@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
-#include "algorithms/mhs.h"
-#include "structs/count_spectra.h"
+#include <libdiag/algorithms/mhs.h>
+#include <libdiag/structs/count_spectra.h>
 
 
 #include <boost/foreach.hpp>

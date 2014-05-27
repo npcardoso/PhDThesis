@@ -1,7 +1,7 @@
 #ifndef __HOOK_COMBINER_H__20b4fccd457d03a26bb7b24e73393845efee8c11__
 #define __HOOK_COMBINER_H__20b4fccd457d03a26bb7b24e73393845efee8c11__
 
-#include "benchmark/hooks/benchmark_hook.h"
+#include "benchmark_hook.h"
 
 namespace diagnosis {
 namespace benchmark {

@@ -1,7 +1,7 @@
 #ifndef __SERVER_SERVICES_THREADED_H__
 #define __SERVER_SERVICES_THREADED_H__
 
-#include "utils/client_server/service.h"
+#include "../service.h"
 
 #include <boost/thread.hpp>
 // TODO: use std; use execution_controller

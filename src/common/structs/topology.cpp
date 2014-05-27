@@ -1,6 +1,6 @@
 #include "topology.h"
 
-#include "utils/rgb.h"
+#include "../utils/rgb.h"
 
 #include <boost/foreach.hpp>
 #include <boost/random/bernoulli_distribution.hpp>

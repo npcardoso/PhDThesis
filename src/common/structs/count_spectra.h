@@ -1,8 +1,8 @@
 #ifndef __COUNT_SPECTRA_H_06d5fd34e1ffdf10f1925f830cad5b1473cdad22__
 #define __COUNT_SPECTRA_H_06d5fd34e1ffdf10f1925f830cad5b1473cdad22__
 
-#include "types.h"
-#include "structs/spectra.h"
+#include "../types.h"
+#include "../structs/spectra.h"
 
 
 namespace diagnosis {

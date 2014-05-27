@@ -1,7 +1,7 @@
 #ifndef __SERVER_SERVICES_ECHO_H__
 #define __SERVER_SERVICES_ECHO_H__
 
-#include "utils/client_server/service.h"
+#include "../service.h"
 
 class t_echo_service : public t_service {
 public:

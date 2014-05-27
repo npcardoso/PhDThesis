@@ -1,8 +1,8 @@
 #ifndef __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
 #define __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
 
-#include "diagnosis_system.h"
-#include "types.h"
+#include "../diagnosis_system.h"
+#include "../types.h"
 
 #include <map>
 

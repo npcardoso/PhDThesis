@@ -1,9 +1,9 @@
 #ifndef __BENCHMARK_SETTINGS_H_6dc7d2b886ba77e1f76d2b0061b0ffaecab2961b__
 #define __BENCHMARK_SETTINGS_H_6dc7d2b886ba77e1f76d2b0061b0ffaecab2961b__
 
-#include "benchmark/hooks/benchmark_hook.h"
-#include "benchmark/collector.h"
-#include "utils/multithread/job_queue.h"
+#include "hooks/benchmark_hook.h"
+#include "collector.h"
+#include "../utils/multithread/job_queue.h"
 
 #include <vector>
 #include <map>

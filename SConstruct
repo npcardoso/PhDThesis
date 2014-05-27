@@ -7,18 +7,6 @@ def check_output(command):
 
 env = Environment()
 
-## scons output colorizer
-try:
-    from colorizer import colorizer
-    scolorizer_available = True
-except ImportError:
-    scolorizer_available = False
-
-## Scons output colorizer
-## cf. http://code.google.com/p/scolorizer/wiki/GettingStarted
-if scolorizer_available:
-    col = colorizer()
-    col.colorize(env)
 
 
 root = '#'
@@ -39,6 +27,7 @@ vars.Add('libinstrument', '', 'instrument')
 vars.Add('llvminstrument', '', 'llvminstrument')
 
 vars.Add('debug', '', False)
+vars.Add('colors', '', True)
 
 vars.Add('R_include', '', '/usr/include/R')
 
@@ -66,6 +55,22 @@ vars.Add('default_libRdiag', '', False)
 
 vars.Update(env)
 env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=0
+
+
+if env['colors']:
+    ## Scons output colorizerdd
+    ## cf. http://code.google.com/p/scolorizer/wiki/GettingStarted
+    try:
+        from colorizer import colorizer
+        colorizer().colorize(env)
+        scolorizer_available = True
+    except ImportError:
+        pass
+
+
+
+
+
 
 #Install/Build Dirs
 for i in ['prefix', 'build_dir']:

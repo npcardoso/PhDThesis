@@ -1,7 +1,7 @@
 #include "json.h"
 
-#include "utils/debug.h"
-#include "utils/json.h"
+#include "../../debug.h"
+#include "../../json.h"
 
 #include <boost/property_tree/json_parser.hpp>
 

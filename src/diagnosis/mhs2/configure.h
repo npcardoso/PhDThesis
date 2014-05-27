@@ -1,10 +1,9 @@
 #ifndef __CONFIGURE_MHS_H__
 #define __CONFIGURE_MHS_H__
 
-#include "algorithms/mhs.h"
-
-#include "utils/opt.h"
-#include "types.h"
+#include <libdiag/algorithms/mhs.h>
+#include <libdiag/utils/opt.h>
+#include <libdiag/types.h>
 
 using namespace diagnosis;
 

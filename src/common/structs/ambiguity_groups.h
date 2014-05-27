@@ -1,8 +1,8 @@
 #ifndef __AMBIGUITY_GROUPS_H_8ee792cbc6e3c1036d8a9adecc7390d05b48e1b6__
 #define __AMBIGUITY_GROUPS_H_8ee792cbc6e3c1036d8a9adecc7390d05b48e1b6__
 
-#include "structs/spectra.h"
-#include "types.h"
+#include "spectra.h"
+#include "../types.h"
 
 #include <cstring>
 #include <iomanip>

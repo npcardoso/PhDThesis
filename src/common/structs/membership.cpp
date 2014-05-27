@@ -1,4 +1,4 @@
-#include "structs/membership.h"
+#include "membership.h"
 
 namespace diagnosis {
 namespace structs {

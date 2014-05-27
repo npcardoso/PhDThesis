@@ -1,6 +1,6 @@
 #include "path_generator.h"
 
-#include "benchmark/status.h"
+#include "status.h"
 
 #include <boost/foreach.hpp>
 

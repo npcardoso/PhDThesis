@@ -1,6 +1,6 @@
 #include "echo.h"
 
-#include "utils/debug.h"
+#include "../../debug.h"
 
 void t_echo_service::operator () (std::istream & in, std::ostream & out) {
     while (in) {

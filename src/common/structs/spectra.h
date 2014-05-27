@@ -1,10 +1,10 @@
 #ifndef __SPECTRA_H_14c9fb7ba96542f0d3780a3886d24ff0ff4ff469__
 #define __SPECTRA_H_14c9fb7ba96542f0d3780a3886d24ff0ff4ff469__
 
-#include "types.h"
-#include "structs/candidate.h"
-#include "structs/spectra_filter.h"
-#include "utils/boost.h"
+#include "candidate.h"
+#include "spectra_filter.h"
+#include "../types.h"
+#include "../utils/boost.h"
 
 #include <cassert>
 #include <iostream>
@@ -124,10 +124,10 @@ public:
     virtual t_confidence set_confidence (t_transaction_id transaction,
                                          t_confidence confidence);
 
-// Checks
+    // Checks
 
     virtual bool is_error (t_transaction_id transaction) const;
-    private:
+private:
     typedef std::vector<t_error> t_errors;
     typedef std::vector<t_confidence> t_confidences;
     t_errors errors;

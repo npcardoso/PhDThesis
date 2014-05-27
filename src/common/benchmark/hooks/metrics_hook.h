@@ -1,8 +1,8 @@
 #ifndef __METRICS_HOOK_H_0b0885703861f344448f13adf9cea1633b73bc5c__
 #define __METRICS_HOOK_H_0b0885703861f344448f13adf9cea1633b73bc5c__
 
-#include "benchmark/hooks/benchmark_hook.h"
-#include "benchmark/metrics.h"
+#include "benchmark_hook.h"
+#include "../metrics.h"
 
 
 namespace diagnosis {

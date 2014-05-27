@@ -1,6 +1,6 @@
 #include "mhs.h"
 
-#include "structs/candidate_pool.h"
+#include "../structs/candidate_pool.h"
 
 #include <boost/foreach.hpp>
 #include <thread>
@@ -80,10 +80,10 @@ void t_mhs::calculate (const t_spectra & spectra,
                 break;
         }
 
-
         for (t_id i = 0; i < remaining_components; i++) {
             t_component_id component = rank->get_component(i);
-            //TODO: Optimize this?
+
+            // TODO: Optimize this?
             if (spectra.is_invalid(&filter))
                 break;
 

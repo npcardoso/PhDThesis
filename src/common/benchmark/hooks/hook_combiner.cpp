@@ -1,6 +1,6 @@
 #include "hook_combiner.h"
 
-#include "utils/time.h"
+#include "../../utils/time.h"
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>

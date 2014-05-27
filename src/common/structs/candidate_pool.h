@@ -1,7 +1,7 @@
 #ifndef __CANDIDATE_POOL_H_659de5eb48c71894774f310b54b73606ca1f9b94__
 #define __CANDIDATE_POOL_H_659de5eb48c71894774f310b54b73606ca1f9b94__
 
-#include "structs/trie.h"
+#include "trie.h"
 #include <list>
 #include <vector>
 

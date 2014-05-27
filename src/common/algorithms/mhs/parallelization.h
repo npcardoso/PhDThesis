@@ -1,9 +1,9 @@
 #ifndef __PARALLELIZATION_H_5932959307b5185825a79718965aed2491de5b43__
 #define __PARALLELIZATION_H_5932959307b5185825a79718965aed2491de5b43__
 
-#include "types.h"
-#include "structs/candidate.h"
-#include "utils/boost.h"
+#include "../../types.h"
+#include "../../structs/candidate.h"
+#include "../../utils/boost.h"
 
 #include <random>
 

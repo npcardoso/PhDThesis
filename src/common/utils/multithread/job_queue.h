@@ -2,11 +2,11 @@
 #define __JOB_QUEUE_H_ce796a9d2e67c9e939bb258dec22b3920ba4a1db__
 
 
-#include "utils/boost.h"
-#include "utils/multithread/job.h"
-#include "utils/multithread/execution_controller.h"
-#include "utils/stl.h"
-#include "utils/time.h"
+#include "job.h"
+#include "execution_controller.h"
+#include "../boost.h"
+#include "../stl.h"
+#include "../time.h"
 
 #include <queue>
 

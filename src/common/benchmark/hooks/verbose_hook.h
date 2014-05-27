@@ -1,7 +1,7 @@
 #ifndef __VERBOSE_HOOK_H__55534f6145f92c9bf1fd001e9682291868dc8331__
 #define __VERBOSE_HOOK_H__55534f6145f92c9bf1fd001e9682291868dc8331__
 
-#include "benchmark/hooks/benchmark_hook.h"
+#include "benchmark_hook.h"
 
 namespace diagnosis {
 namespace benchmark {

@@ -1,6 +1,7 @@
 #ifndef __STATISTICS_HOOK_H__9ef8a1ba45feaff2724b5ce2e9bc7b4a111b52b5__
 #define __STATISTICS_HOOK_H__9ef8a1ba45feaff2724b5ce2e9bc7b4a111b52b5__
-#include "benchmark/hooks/benchmark_hook.h"
+
+#include "benchmark_hook.h"
 
 namespace diagnosis {
 namespace benchmark {

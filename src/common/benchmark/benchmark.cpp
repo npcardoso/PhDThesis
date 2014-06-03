@@ -84,7 +84,7 @@ bool t_generator_job::operator < (const t_job & job) const {
     if (dynamic_cast<const t_ranker_job *> (&job))
         return true;
 
-    return false;
+    return this < &job;
 }
 
 t_ranker_job::t_ranker_job (t_id ranker_id,
@@ -119,10 +119,13 @@ void t_ranker_job::operator () () const {
 }
 
 bool t_ranker_job::operator < (const t_job & job) const {
-    return false;
+    if (dynamic_cast<const t_generator_job *> (&job))
+        return false;
+
+    return this < &job;
 }
 
-void run_benchmark (t_benchmark_settings & settings,
+void run_benchmark (const t_benchmark_settings & settings,
                     t_spectra_generator & generator,
                     std::mt19937 & gen,
                     t_execution_controller & controller) {

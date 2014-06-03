@@ -35,6 +35,9 @@ public:
     const structs::t_candidate & get_correct () const;
 
     virtual void prepare_entry (t_entry & entry) const;
+    inline virtual ~t_status_iteration_init () {
+        // std::cout << "Deleted t_status_iteration_init: " << get_iteration_id() << std::endl;
+    }
 
 private:
     t_id iteration_id;
@@ -60,6 +63,9 @@ public:
     virtual const t_candidate_generator::t_ret_type & get_candidates () const;
 
     virtual void prepare_entry (t_entry & entry) const;
+    inline virtual ~t_status_post_gen () {
+        // std::cout << "Deleted t_status_post_gen: " << get_iteration_id() << ", " << get_gen_name() << ", " << std::endl;
+    }
 
 private:
     std::string name;
@@ -86,6 +92,9 @@ public:
     virtual const t_candidate_ranker::t_ret_type & get_probs () const;
 
     virtual void prepare_entry (t_entry & entry) const;
+    inline virtual ~t_status_post_rank () {
+        // std::cout << "Deleted t_status_post_rank" << get_iteration_id() << ", " << get_gen_name() << ", "<< get_rank_name()<< std::endl;
+    }
 
 private:
     std::string name;

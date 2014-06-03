@@ -157,10 +157,10 @@ void run_benchmark (const t_benchmark_settings & settings,
                                                        it_status));
 
             settings.get_job_queue().add_job(job);
-        }
 
-        settings.get_job_queue().execute(controller,
-                                         true);
+            settings.get_job_queue().execute(controller,
+                                             true);
+        }
     }
 
     settings.get_job_queue().execute(controller,

@@ -1,59 +1,89 @@
 #include "collector.h"
 
-#include "../utils/csv.h"
 #include "../utils/iostream.h"
 
+#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include <random>
 #include <sstream>
 #include <iostream>
 #include <fstream>
 
 using namespace std;
-using namespace boost::filesystem;
 
 
 namespace diagnosis {
 namespace benchmark {
+t_file::t_file (const t_path & path) {
+    this->path = path;
+}
+
+const t_path & t_file::get_path () const {
+    return path;
+}
+
+bool t_file::exists () const {
+    return boost::filesystem::exists(path);
+}
+
+bool t_file::open (ifstream & stream) const {
+    if (!exists())
+        return false;
+
+    stream.open(path.string().c_str());
+    return true;
+}
+
+bool t_file::open (ofstream & stream, bool append) const {
+    if (!exists())
+        create_directories(path.parent_path());
+
+    stream.open(path.string().c_str(), append ? std::ios_base::app : std::ios_base::ate);
+    return true;
+}
+
+bool t_file::operator < (const t_file & other) const {
+    return path < other.path;
+}
+
 class t_csv_file : public t_file {
 public:
-    t_csv_file (const t_path & path) : t_file(path) {
-        boost::mutex::scoped_lock lock(mutex);
-        ifstream in;
-
-
-        open_file(in);
-        csv.read(in);
-        in.close();
-
-        need_flush = false;
-    }
+    t_csv_file (const t_path & path) : t_file(path), gen(time_interval()) {}
 
     virtual void flush () {
         boost::mutex::scoped_lock lock(mutex);
+        ofstream out;
+        bool put_header = !exists();
 
 
-        if (need_flush) {
-            ofstream out;
+        open(out, true);
+
+        if (put_header)
+            out << "id, variable, value" << std::endl;
+
+        BOOST_FOREACH(const auto & e, entries) {
+            t_id id = std::uniform_int_distribution<t_id> () (gen);
 
 
-            open_file(out);
-            csv.write(out);
-            out.close();
-            need_flush = false;
+            BOOST_FOREACH(const auto & v, e) {
+                out << id << ", \"" << v.first << "\", " <<
+                    '"' << v.second << '"' << std::endl;
+            }
         }
+        entries.clear();
+        out.close();
     }
 
-    void add_row (const t_entry & entry) {
+    void add_entry (const t_entry & entry) {
         boost::mutex::scoped_lock lock(mutex);
 
 
-        csv.add_row(entry);
-        need_flush = true;
+        entries.push_back(entry);
     }
 
 private:
-    bool need_flush;
-    t_csv csv;
+    std::list<t_entry> entries;
+    std::mt19937 gen;
 };
 
 class t_normal_file : public t_file {
@@ -65,7 +95,7 @@ public:
         ofstream out;
 
 
-        open_file(out);
+        open(out);
         out << data;
         out.close();
     }
@@ -83,7 +113,7 @@ void t_collector::add_entry (const t_path & path,
 
     // TODO: Handle cases where file == NULL
     if (file)
-        file->add_row(entry);
+        file->add_entry(entry);
 }
 
 void t_collector::save_file (const t_path & path,

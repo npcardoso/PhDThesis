@@ -4,8 +4,6 @@
 
 
 #include <boost/random/bernoulli_distribution.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
 
 using namespace diagnosis::structs;
 using namespace boost::random;

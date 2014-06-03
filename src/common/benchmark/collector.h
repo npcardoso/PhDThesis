@@ -1,14 +1,38 @@
 #ifndef __COLLECTOR_H_191dcca6342c7ab0e1db44a96c7660eb47e6503f__
 #define __COLLECTOR_H_191dcca6342c7ab0e1db44a96c7660eb47e6503f__
 
-#include "status.h"
 #include "path_generator.h"
-#include "../utils/file.h"
+#include "status.h"
+#include "../utils/boost.h"
 
 #include <boost/thread.hpp>
+#include <fstream>
 
 namespace diagnosis {
 namespace benchmark {
+typedef std::map<std::string, std::string> t_entry;
+
+class t_file {
+public:
+    inline virtual ~t_file () {}
+
+    virtual void flush () = 0;
+    const t_path & get_path () const;
+    bool exists () const;
+    bool operator < (const t_file & other) const;
+
+protected:
+    t_file (const t_path & path);
+
+    bool open (std::ifstream & stream) const;
+    bool open (std::ofstream & stream, bool append=false) const;
+
+    boost::mutex mutex;
+private:
+    t_path path;
+};
+
+
 class t_collector {
 public:
     t_collector (t_const_ptr<t_path_generator> path_generator);

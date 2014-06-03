@@ -1,9 +1,9 @@
 #ifndef __TOPOLOGIES_H_5297dae76cee7fb6b71d29e25f33dca1337a8ffd__
 #define __TOPOLOGIES_H_5297dae76cee7fb6b71d29e25f33dca1337a8ffd__
 
-#include "benchmark/generators/topology_based.h"
-#include "structs/spectra.h"
-#include "structs/topology.h"
+#include <libdiag/benchmark/generators/topology_based.h>
+#include <libdiag/structs/spectra.h>
+#include <libdiag/structs/topology.h>
 
 using namespace boost::random;
 using namespace diagnosis::structs;

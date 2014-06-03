@@ -25,5 +25,4 @@ for i in range(4):
 obj = env.Program(target = target_name, source = sources)
 env.Depends(obj, env['libdiag_shared'])
 obj = env.Install(env['bin_dir'], obj)
-obj = env.Command(join(Dir(".").srcnode().abspath, target_name), obj, SymLink)
 env.Default(obj)

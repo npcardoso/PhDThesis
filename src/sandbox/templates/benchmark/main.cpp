@@ -1,29 +1,6 @@
 #include "topologies.h"
 
-#include <libdiag/types.h>
-#include <libdiag/utils/iostream.h>
-#include <libdiag/benchmark/path_generator.h>
-#include <libdiag/benchmark/generators/generator.h>
-#include <libdiag/benchmark/generators/replay.h>
-#include <libdiag/benchmark/hooks/job_tracker.h>
-#include <libdiag/benchmark/hooks/flusher.h>
-#include <libdiag/benchmark/hooks/hook_combiner.h>
-#include <libdiag/benchmark/hooks/metrics_hook.h>
-#include <libdiag/benchmark/hooks/verbose_hook.h>
-#include <libdiag/benchmark/hooks/statistics_hook.h>
-#include <libdiag/benchmark/hooks/save_hook.h>
-#include <libdiag/benchmark/hooks/statistics_hook.h>
-#include <libdiag/benchmark/metrics.h>
-#include <libdiag/benchmark/benchmark.h>
-#include <libdiag/benchmark/benchmark_settings.h>
-#include <libdiag/algorithms/single_fault.h>
-#include <libdiag/algorithms/mhs.h>
-#include <libdiag/algorithms/mhs/similarity.h>
-#include <libdiag/algorithms/barinel.h>
-#include <libdiag/structs/count_spectra.h>
-#include <libdiag/structs/trie.h>
-
-#include <list>
+#include <libdiag/diag.h>
 #include <boost/lexical_cast.hpp>
 
 using namespace std;

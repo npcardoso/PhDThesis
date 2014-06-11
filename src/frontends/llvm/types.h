@@ -1,0 +1,6 @@
+#ifndef __TYPES_H_ebe417e55c605ed9ddbd3d7a3ecc6d3aa75cbd7c__
+#define __TYPES_H_ebe417e55c605ed9ddbd3d7a3ecc6d3aa75cbd7c__
+
+typedef unsigned long t_construct_id;
+
+#endif

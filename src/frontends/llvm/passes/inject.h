@@ -1,4 +1,4 @@
-#include "pass.h"
+#include "../pass.h"
 
 class InjectPass : public InstrumentationPass {
 protected:
@@ -6,11 +6,11 @@ protected:
 };
 
 class BlockInjectPass : public InjectPass {
-    protected:
+protected:
     virtual bool handleBasicBlock (llvm::Module & M, llvm::BasicBlock & B);
 };
 
 class FunctionInjectPass : public InjectPass {
-    protected:
+protected:
     virtual bool handleFunction (llvm::Module & M, llvm::Function & F);
 };

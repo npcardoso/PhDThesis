@@ -1,21 +1,20 @@
 #ifndef __PREPARE_H_a020f2fceeebceb22c0ca3f031ae90a679339f87__
 #define __PREPARE_H_a020f2fceeebceb22c0ca3f031ae90a679339f87__
-#include "pass.h"
 
-#include "libinterface.h"
+
+#include "../libinterface.h"
+#include "../pass.h"
 
 #include <list>
 
 
 class PrepareInstrumentionPass : public InstrumentationPass {
-    public:
+public:
     PrepareInstrumentionPass ();
     virtual bool runOnModule (llvm::Module & M);
 
 
-    private:
-    bool initFunctionOverrides (llvm::Module & M);
-
+private:
     bool registerConstruct (llvm::Module & M,
                             llvm::CallInst & I,
                             std::string var_prefix,
@@ -40,20 +39,16 @@ class PrepareInstrumentionPass : public InstrumentationPass {
 
     virtual bool handleFunctionCall (llvm::Module & M, llvm::CallInst & call);
 
-    private:
-    std::map < std::string, llvm::Value* >function_overrides;
-
+private:
     LibInterface * interface;
 
-    typedef std::pair < std::string, llvm::CallInst* >metadata_call;
+    typedef std::pair<std::string, llvm::CallInst *> metadata_call;
 
-    std::list < metadata_call >metadata;
+    std::list<metadata_call> metadata;
 
     size_t num_probes;
     size_t num_transactions;
     size_t num_oracles;
-
-
 };
 
 #endif

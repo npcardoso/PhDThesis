@@ -1,5 +1,6 @@
-#include "inject.h"
-#include "prepare.h"
+#include "passes/inject.h"
+#include "passes/prepare.h"
+#include "passes/overrides.h"
 
 #include <iostream>
 #include <llvm/DebugInfo.h>
@@ -21,8 +22,8 @@ using namespace llvm;
 cl::opt<std::string> Groble("groble", cl::desc("Specify output filename"), cl::value_desc("filename"));
 
 class SpectraInstrumentation : public ModulePass {
-    public:
-    inline SpectraInstrumentation() : ModulePass(ID) {
+public:
+    inline SpectraInstrumentation () : ModulePass(ID) {
         errs() << Groble << "\n";
         errs() << "SpectraInstrumentation: !!Init!!\n";
     }
@@ -30,20 +31,23 @@ class SpectraInstrumentation : public ModulePass {
     virtual bool runOnModule (Module & M) {
         BlockInjectPass inject_pass;
         PrepareInstrumentionPass prepare_pass;
+        OverridePass override_pass;
+
+
+        override_pass.function_overrides["pthread_create"] = "_instr_pthread_create";
 
         bool ret = false;
         ret |= inject_pass.runOnModule(M);
         ret |= prepare_pass.runOnModule(M);
+        ret |= override_pass.runOnModule(M);
         return ret;
     }
 
-
-    public:
+public:
     static char ID; // Pass identification, replacement for typeid
-
 };
 
 
 char SpectraInstrumentation::ID = 1;
 
-static RegisterPass <SpectraInstrumentation> spectra_instrument("spectra_instrument", "Instrumentation for spectra collection");
+static RegisterPass<SpectraInstrumentation> spectra_instrument("spectra_instrument", "Instrumentation for spectra collection");

@@ -1,17 +1,19 @@
-#pragma once
+#ifndef __LIBINTERFACE_H_f69272a92056d58813031184d30b22abff1c3b22__
+#define __LIBINTERFACE_H_f69272a92056d58813031184d30b22abff1c3b22__
+
 #include <llvm/IR/Function.h>
 #include <llvm/IR/Module.h>
 
-#define declare_getRegister(fun_name, var_name) \
-    private:                                    \
-    llvm::Function * register_##var_name;       \
-    void initRegister##fun_name();              \
-public:                                         \
-inline llvm::Function & getRegister##fun_name() {       \
-    if (!register_##var_name)                           \
-        initRegister##fun_name();                       \
-            return *(register_##var_name);              \
-}
+#define declare_getRegister(fun_name, var_name)\
+private:\
+    llvm::Function * register_##var_name;\
+    void initRegister##fun_name();\
+public:\
+    inline llvm::Function & getRegister##fun_name() {\
+        if (!register_##var_name)\
+            initRegister##fun_name();\
+        return *(register_##var_name);\
+    }
 
 #define init_getRegister(var_name)\
     register_##var_name = NULL;
@@ -41,7 +43,7 @@ public:
     /* Register All Related */
     declare_getRegister(All, all);
 
-    inline llvm::BasicBlock::iterator& getRegisterAllIterator () {
+    inline llvm::BasicBlock::iterator & getRegisterAllIterator () {
         if (!register_all)
             initRegisterAll();
 
@@ -65,3 +67,5 @@ public:
     declare_getRegister(OracleName, oracle_name);
     declare_getRegister(OracleLocation, oracle_location);
 };
+
+#endif

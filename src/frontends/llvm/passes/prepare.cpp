@@ -1,5 +1,6 @@
 #include "prepare.h"
-#include "types.h"
+
+#include "../types.h"
 
 #include <boost/foreach.hpp>
 #include <llvm/IR/Constants.h>
@@ -13,29 +14,6 @@ PrepareInstrumentionPass::PrepareInstrumentionPass () {
     num_oracles = 0;
     num_probes = 0;
     num_transactions = 0;
-    function_overrides["pthread_create"] = NULL;
-}
-
-bool PrepareInstrumentionPass::initFunctionOverrides (Module & M) {
-    bool changes = false;
-    ValueSymbolTable & symtbl = M.getValueSymbolTable();
-
-
-    BOOST_FOREACH(auto & it, function_overrides) {
-        Value * value = symtbl.lookup(it.first);
-
-
-        if (value && isa < Function > (value)) {
-            Function * tmp_fun = dyn_cast < Function > (value);
-            StringRef instr_name = (lib_prefix + it.first);
-
-            changes = true;
-            it.second = M.getOrInsertFunction(instr_name, tmp_fun->getFunctionType());
-        }
-        else
-            it.second = NULL;
-    }
-    return changes;
 }
 
 bool PrepareInstrumentionPass::runOnModule (Module & M) {
@@ -43,7 +21,6 @@ bool PrepareInstrumentionPass::runOnModule (Module & M) {
 
 
     interface = new LibInterface(M);
-    initFunctionOverrides(M);
 
     changes = InstrumentationPass::runOnModule(M);
 
@@ -58,11 +35,6 @@ bool PrepareInstrumentionPass::runOnModule (Module & M) {
 
 bool PrepareInstrumentionPass::handleFunctionCall (Module & M, CallInst & call) {
     if (Function * f = call.getCalledFunction()) {
-        if (Value * instr_fun = function_overrides[(f->getName()).str()]) {
-            call.setCalledFunction(instr_fun);
-            return true;
-        }
-
         if (f->getName() == "_instr_metadata")
             return registerMetadata(M, call);
 
@@ -83,8 +55,8 @@ bool PrepareInstrumentionPass::handleFunctionCall (Module & M, CallInst & call) 
 }
 
 bool PrepareInstrumentionPass::metadataSetup (Module & M,
-                                                          CallInst & I,
-                                                          std::string id_var_name) {
+                                              CallInst & I,
+                                              std::string id_var_name) {
     GlobalVariable * id_holder = M.getGlobalVariable(id_var_name, true);
 
 
@@ -99,11 +71,11 @@ bool PrepareInstrumentionPass::metadataSetup (Module & M,
 }
 
 bool PrepareInstrumentionPass::registerConstruct (Module & M,
-                                                              CallInst & I,
-                                                              std::string var_prefix,
-                                                              size_t id,
-                                                              Function * reg_fun,
-                                                              Function * reg_location_fun) {
+                                                  CallInst & I,
+                                                  std::string var_prefix,
+                                                  size_t id,
+                                                  Function * reg_fun,
+                                                  Function * reg_location_fun) {
     char buf[1024];
 
 
@@ -113,7 +85,7 @@ bool PrepareInstrumentionPass::registerConstruct (Module & M,
 
 
     Type * operand_type = Type::getIntNTy(M.getContext(), sizeof(t_construct_id) << 3);
-// I.getArgOperand(0)->getType();
+    // I.getArgOperand(0)->getType();
     GlobalVariable * id_holder =
         new GlobalVariable(M,
                            operand_type, // Type
@@ -122,7 +94,7 @@ bool PrepareInstrumentionPass::registerConstruct (Module & M,
                            ConstantInt::getSigned(operand_type, 0), // Default Value
                            id_var_name);
 
-    //errs() << "Registering construct ";
+    // errs() << "Registering construct ";
     id_holder->dump();
 
     BasicBlock::iterator & it = interface->getRegisterAllIterator();
@@ -138,10 +110,10 @@ bool PrepareInstrumentionPass::registerConstruct (Module & M,
 }
 
 bool PrepareInstrumentionPass::registerStrProp (Module & M,
-                                                            GlobalVariable & id_holder,
-                                                            Function * registar,
-                                                            std::string var_name,
-                                                            std::string value) {
+                                                GlobalVariable & id_holder,
+                                                Function * registar,
+                                                std::string var_name,
+                                                std::string value) {
     Constant * data_array = ConstantDataArray::getString(M.getContext(), value, true);
     GlobalVariable * variable =
         new GlobalVariable(M,
@@ -152,14 +124,14 @@ bool PrepareInstrumentionPass::registerStrProp (Module & M,
                            var_name);
 
     ConstantInt * zero = ConstantInt::get(M.getContext(), APInt(32, StringRef("0"), 10));
-    std::vector < Constant* >indices;
+    std::vector<Constant *> indices;
 
 
     indices.push_back(zero);
     indices.push_back(zero);
 
 
-    std::vector < Value* >args;
+    std::vector<Value *> args;
     BasicBlock::iterator & it = interface->getRegisterAllIterator();
     args.push_back(new LoadInst(&id_holder, NULL, it)); // ID
     args.push_back(ConstantExpr::getGetElementPtr(variable, indices)); //
@@ -167,7 +139,6 @@ bool PrepareInstrumentionPass::registerStrProp (Module & M,
 
     return true;
 }
-
 
 bool PrepareInstrumentionPass::registerProbe (llvm::Module & M, llvm::CallInst & I) {
     num_probes++;
@@ -203,7 +174,7 @@ bool PrepareInstrumentionPass::registerMetadata (llvm::Module & M, llvm::CallIns
     sprintf(buf, "%lu", num_oracles + num_transactions + num_probes);
     std::string id_var_name = std::string("_instr_id_") + buf;
 
-//        errs() << "Found metadata for " << id_var_name << "\n";
+    // errs() << "Found metadata for " << id_var_name << "\n";
     metadata.push_back(metadata_call(id_var_name, &I));
     return false;
 }

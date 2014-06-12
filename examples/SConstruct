@@ -1,0 +1,34 @@
+import os
+from os.path import join
+
+env = Environment()
+
+root = '#'
+
+
+vars = Variables('.scons.conf')
+
+vars.Add('PATH', '', '')
+vars.Add('LIBPATH', '', Dir('../obj/install/lib'))
+vars.Add('CPPPATH', '', Dir('../obj/install/include'))
+vars.Add('LLVM_MODULE', '', File('../obj/install/lib/libllvm_spectra_instrument.so'))
+
+
+vars.Add('build_dir', '', Dir(join(root, 'obj')))
+vars.Update(env)
+
+
+for i in ['PATH', 'LIBPATH', 'CPPPATH']:
+    if not isinstance(env[i], list):
+      env[i] = [env[i]]
+env['PATH'].extend(['/usr/local/bin', '/bin', '/usr/bin'])
+
+env['ENV']['TERM'] = os.environ['TERM']
+env['ENV']['PATH'] = env['PATH']
+env['ENV']['LD_LIBRARY_PATH'] = env['LIBPATH']
+
+env.Append(LINKFLAGS=" -linstrument")
+
+
+Export('env')
+SConscript('SConscript', variant_dir=env['build_dir'])

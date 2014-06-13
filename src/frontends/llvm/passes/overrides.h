@@ -12,6 +12,7 @@ private:
                                llvm::Function & F) const;
 
     virtual bool handleFunctionCall (llvm::Module & M,
+                                     llvm::Function & F,
                                      llvm::CallInst & call);
 
 public:

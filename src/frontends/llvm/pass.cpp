@@ -24,7 +24,8 @@ bool InstrumentationPass::runOnModule (Module & M) {
     return changes;
 }
 
-bool InstrumentationPass::handleFunction (Module & M, Function & F) {
+bool InstrumentationPass::handleFunction (Module & M,
+                                          Function & F) {
     bool changes = false;
     auto it = F.begin();
 
@@ -36,7 +37,8 @@ bool InstrumentationPass::handleFunction (Module & M, Function & F) {
     return changes;
 }
 
-bool InstrumentationPass::handleBasicBlock (Module & M, BasicBlock & B) {
+bool InstrumentationPass::handleBasicBlock (Module & M,
+                                            BasicBlock & B) {
     bool changes = false;
     auto it = B.begin();
 
@@ -48,17 +50,21 @@ bool InstrumentationPass::handleBasicBlock (Module & M, BasicBlock & B) {
     return changes;
 }
 
-bool InstrumentationPass::handleInstruction (Module & M, Instruction & I) {
+bool InstrumentationPass::handleInstruction (Module & M,
+                                             Instruction & I) {
     bool changes = false;
 
 
     if (CallInst * call = dyn_cast<CallInst> (&I))
-        changes |= handleFunctionCall(M, *call);
+        if (Function * F = call->getCalledFunction())
+            changes |= handleFunctionCall(M, *F, *call);
 
     return changes;
 }
 
-bool InstrumentationPass::handleFunctionCall (Module & M, CallInst & call) {
+bool InstrumentationPass::handleFunctionCall (Module & M,
+                                              Function & F,
+                                              CallInst & call) {
     return false;
 }
 
@@ -71,7 +77,7 @@ Type & InstrumentationPass::getArtifactIDType (Module & M) const {
 }
 
 Function & InstrumentationPass::getHitProbeFunction (Module & M) const {
-    Function * tmp = cast<Function> (M.getOrInsertFunction("_instr_hit_probe_observation",
+    Function * tmp = cast<Function> (M.getOrInsertFunction(INSTR_HIT_PROBE_FUN,
                                                            Type::getVoidTy(M.getContext()),
                                                            &getArtifactIDType(M),
                                                            NULL));
@@ -82,7 +88,7 @@ Function & InstrumentationPass::getHitProbeFunction (Module & M) const {
 }
 
 Function & InstrumentationPass::getRegisterProbeFunction (Module & M) const {
-    Function * tmp = cast<Function> (M.getOrInsertFunction("_instr_probe_register",
+    Function * tmp = cast<Function> (M.getOrInsertFunction(INSTR_PROBE_REGISTER_FUN,
                                                            &getArtifactIDType(M),
                                                            NULL));
 
@@ -92,7 +98,7 @@ Function & InstrumentationPass::getRegisterProbeFunction (Module & M) const {
 }
 
 Function & InstrumentationPass::getRegisterTransactionFunction (Module & M) const {
-    Function * tmp = cast<Function> (M.getOrInsertFunction("_instr_transaction_register",
+    Function * tmp = cast<Function> (M.getOrInsertFunction(INSTR_TRANSACTION_REGISTER_FUN,
                                                            &getArtifactIDType(M),
                                                            NULL));
 
@@ -102,7 +108,7 @@ Function & InstrumentationPass::getRegisterTransactionFunction (Module & M) cons
 }
 
 Function & InstrumentationPass::getRegisterOracleFunction (Module & M) const {
-    Function * tmp = cast<Function> (M.getOrInsertFunction("_instr_oracle_register",
+    Function * tmp = cast<Function> (M.getOrInsertFunction(INSTR_ORACLE_REGISTER_FUN,
                                                            &getArtifactIDType(M),
                                                            NULL));
 
@@ -112,7 +118,7 @@ Function & InstrumentationPass::getRegisterOracleFunction (Module & M) const {
 }
 
 Function & InstrumentationPass::getRegisterMetadataFunction (Module & M) const {
-    Function * tmp = cast<Function> (M.getOrInsertFunction("_instr_metadata",
+    Function * tmp = cast<Function> (M.getOrInsertFunction(INSTR_METADATA_REGISTER_FUN,
                                                            Type::getVoidTy(M.getContext()),
                                                            &getArtifactIDType(M),
                                                            Type::getIntNPtrTy(M.getContext(), sizeof(char *)),
@@ -130,7 +136,9 @@ Function & InstrumentationPass::getRegisterMetadataFunction (Module & M) const {
 
 
 static void appendToGlobalArray (const char * Array,
-                                 Module & M, Function * F, int Priority) {
+                                 Module & M,
+                                 Function * F,
+                                 int Priority) {
     IRBuilder<> IRB(M.getContext());
     FunctionType * FnTy = FunctionType::get(IRB.getVoidTy(), false);
     StructType * Ty =

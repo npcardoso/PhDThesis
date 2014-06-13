@@ -14,12 +14,12 @@ Value * OverridePass::getOverride (Module & M,
     return M.getOrInsertFunction(it->second, F.getFunctionType());
 }
 
-bool OverridePass::handleFunctionCall (Module & M, CallInst & call) {
-    if (Function * F = call.getCalledFunction()) {
-        if (Value * override = getOverride(M, *F)) {
-            call.setCalledFunction(override);
-            return true;
-        }
+bool OverridePass::handleFunctionCall (Module & M,
+                                       Function & F,
+                                       CallInst & call) {
+    if (Value * override = getOverride(M, F)) {
+        call.setCalledFunction(override);
+        return true;
     }
 
     return false;

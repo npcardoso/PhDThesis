@@ -16,7 +16,6 @@
 #include <llvm/ADT/Statistic.h>
 #include <llvm/Support/CommandLine.h>
 
-
 using namespace llvm;
 
 // cl::opt<std::string> Groble("groble", cl::desc("Specify output filename"), cl::value_desc("filename"));
@@ -27,16 +26,20 @@ public:
 
     virtual bool runOnModule (Module & M) {
         BlockInjectPass inject_pass;
+        MetadataInjectPass metadata_inject_pass;
         PrepareInstrumentationPass prepare_pass;
         OverridePass override_pass;
 
 
         override_pass.function_overrides["pthread_create"] = "_instr_pthread_create";
 
+        // inject_pass.inject_without_location = true;
+
         bool ret = false;
         ret |= inject_pass.runOnModule(M);
-        ret |= prepare_pass.runOnModule(M);
+        ret |= metadata_inject_pass.runOnModule(M);
         ret |= override_pass.runOnModule(M);
+        ret |= prepare_pass.runOnModule(M);
         return ret;
     }
 

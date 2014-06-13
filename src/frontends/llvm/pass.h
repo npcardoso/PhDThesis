@@ -7,6 +7,17 @@
 #include <llvm/IR/Function.h>
 #include <llvm/IR/Module.h>
 
+#define INSTR_PROBE_FUN "_instr_probe_observation"
+#define INSTR_HIT_PROBE_FUN "_instr_hit_probe_observation"
+#define INSTR_TRANSACTION_START_FUN "_instr_transaction_start"
+#define INSTR_TRANSACTION_END_FUN "_instr_transaction_end"
+#define INSTR_ORACLE_FUN "_instr_oracle_observation"
+
+
+#define INSTR_PROBE_REGISTER_FUN "_instr_probe_register"
+#define INSTR_TRANSACTION_REGISTER_FUN "_instr_transaction_register"
+#define INSTR_ORACLE_REGISTER_FUN "_instr_oracle_register"
+#define INSTR_METADATA_REGISTER_FUN "_instr_metadata"
 
 class InstrumentationPass {
 protected:
@@ -18,10 +29,15 @@ public:
     virtual bool runOnModule (llvm::Module & M);
 
 protected:
-    virtual bool handleFunction (llvm::Module & M, llvm::Function & F);
-    virtual bool handleBasicBlock (llvm::Module & M, llvm::BasicBlock & B);
-    virtual bool handleInstruction (llvm::Module & M, llvm::Instruction & I);
-    virtual bool handleFunctionCall (llvm::Module & M, llvm::CallInst & call);
+    virtual bool handleFunction (llvm::Module & M,
+                                 llvm::Function & F);
+    virtual bool handleBasicBlock (llvm::Module & M,
+                                   llvm::BasicBlock & B);
+    virtual bool handleInstruction (llvm::Module & M,
+                                    llvm::Instruction & I);
+    virtual bool handleFunctionCall (llvm::Module & M,
+                                     llvm::Function & F,
+                                     llvm::CallInst & call);
 
 
     llvm::Type & getArtifactIDType (llvm::Module & M) const;

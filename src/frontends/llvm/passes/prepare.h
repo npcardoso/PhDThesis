@@ -11,12 +11,17 @@ public:
     PrepareInstrumentationPass ();
 
 protected:
-    virtual bool handleFunctionCall (llvm::Module & M, llvm::CallInst & call);
+    virtual bool handleFunctionCall (llvm::Module & M,
+                                     llvm::Function & F,
+                                     llvm::CallInst & call);
 
 private:
-    inline bool registerProbe (llvm::Module & M, llvm::CallInst & I);
-    inline bool registerTransactionGate (llvm::Module & M, llvm::CallInst & I);
-    inline bool registerOracle (llvm::Module & M, llvm::CallInst & I);
+    inline bool registerProbe (llvm::Module & M,
+                               llvm::CallInst & I);
+    inline bool registerTransactionGate (llvm::Module & M,
+                                         llvm::CallInst & I);
+    inline bool registerOracle (llvm::Module & M,
+                                llvm::CallInst & I);
 
 
 private:

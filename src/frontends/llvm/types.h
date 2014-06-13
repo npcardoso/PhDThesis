@@ -1,6 +1,6 @@
-#ifndef __TYPES_H_ebe417e55c605ed9ddbd3d7a3ecc6d3aa75cbd7c__
-#define __TYPES_H_ebe417e55c605ed9ddbd3d7a3ecc6d3aa75cbd7c__
+#ifndef __TYPES_H_5d574b06abcaa69f4da7caaa669ac15c9a311291__
+#define __TYPES_H_5d574b06abcaa69f4da7caaa669ac15c9a311291__
 
-typedef unsigned long t_construct_id;
+#include "../../backend/types.h"
 
 #endif

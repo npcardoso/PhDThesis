@@ -2,7 +2,16 @@
 
 class InjectPass : public InstrumentationPass {
 protected:
-    bool injectProbeBefore (llvm::Module & M, llvm::Instruction & I);
+    InjectPass ();
+
+    bool injectProbeBefore (llvm::Module & M,
+                            llvm::Instruction & I) const;
+    bool injectMetadataBefore (llvm::Module & M,
+                               llvm::Instruction & I,
+                               std::string key,
+                               std::string value) const;
+public:
+    bool inject_without_location;
 };
 
 class BlockInjectPass : public InjectPass {

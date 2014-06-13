@@ -19,18 +19,15 @@
 
 using namespace llvm;
 
-cl::opt<std::string> Groble("groble", cl::desc("Specify output filename"), cl::value_desc("filename"));
+// cl::opt<std::string> Groble("groble", cl::desc("Specify output filename"), cl::value_desc("filename"));
 
 class SpectraInstrumentation : public ModulePass {
 public:
-    inline SpectraInstrumentation () : ModulePass(ID) {
-        errs() << Groble << "\n";
-        errs() << "SpectraInstrumentation: !!Init!!\n";
-    }
+    inline SpectraInstrumentation () : ModulePass(ID) {}
 
     virtual bool runOnModule (Module & M) {
         BlockInjectPass inject_pass;
-        PrepareInstrumentionPass prepare_pass;
+        PrepareInstrumentationPass prepare_pass;
         OverridePass override_pass;
 
 

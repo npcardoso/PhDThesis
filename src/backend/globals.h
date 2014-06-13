@@ -4,5 +4,8 @@
 #include "observations/tracker.h"
 extern t_tracker * tracker;
 
+#include "metadata/database.h"
+extern t_database * database;
+
 
 #endif

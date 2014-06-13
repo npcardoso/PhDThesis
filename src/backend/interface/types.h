@@ -4,6 +4,7 @@
 
 typedef unsigned long t_id;
 typedef t_id t_artifact_id;
+typedef t_id t_metadata_id;
 
 typedef double t_error;
 typedef double t_confidence;

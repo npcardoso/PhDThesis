@@ -2,6 +2,7 @@
 #define __PASS_H_5cdf6b8553e88a82dc1eeaec14603f46d20cc558__
 
 #include "types.h"
+#include <iostream>
 
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/Function.h>

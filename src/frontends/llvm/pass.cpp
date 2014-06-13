@@ -6,6 +6,8 @@
 #define METADATA_KEY_PREFIX "_instr_mkey_"
 #define METADATA_VAL_PREFIX "_instr_mval_"
 
+static const std::string run_name = std::to_string(time_interval());
+
 using namespace llvm;
 
 bool InstrumentationPass::runOnModule (Module & M) {
@@ -182,11 +184,12 @@ static void appendToGlobalArray (const char * Array,
 }
 
 Function & InstrumentationPass::getRegisterAllFunction (Module & M) const {
-    Function * register_all = cast<Function> (M.getFunction("_instr_register_all_" + M.getModuleIdentifier()));
+    std::string instr_register_all_name = "_instr_register_all_" + M.getModuleIdentifier() + "_" + run_name;
+    Function * register_all = cast<Function> (M.getFunction(instr_register_all_name));
 
 
     if (register_all == NULL) {
-        register_all = cast<Function> (M.getOrInsertFunction("_instr_register_all_" + M.getModuleIdentifier(),
+        register_all = cast<Function> (M.getOrInsertFunction(instr_register_all_name,
                                                              Type::getVoidTy(M.getContext()),
                                                              NULL));
 

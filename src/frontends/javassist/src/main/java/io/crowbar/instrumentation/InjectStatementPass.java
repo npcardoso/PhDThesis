@@ -6,6 +6,16 @@ import javassist.*;
 import javassist.bytecode.*;
 
 public class InjectStatementPass extends Pass {
+    public enum Granularity {STATEMENT,
+                             FUNCTION}
+
+
+    private Granularity granularity;
+
+    InjectStatementPass(Granularity g) {
+        granularity = g;
+    }
+
     @Override
     public void transform(ClassPool cp,
                           CtClass c) throws Exception {
@@ -15,22 +25,23 @@ public class InjectStatementPass extends Pass {
 //        }
 
         for (CtMethod m : c.getDeclaredMethods()) {
-            log.info("Found Method: " + m.getName());
-
-
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();
 
             if(ca == null)
                 continue;
 
-            int old_stack_size = ca.getMaxStack();
-            handleMethod(info, ca);
+            handleMethod(c.getName(),
+                         m.getName(),
+                         info,
+                         ca);
             ca.setMaxStack(ca.computeMaxStack());
         }
     }
 
-    public void handleMethod(MethodInfo info,
+    public void handleMethod(String classname,
+                             String methodname,
+                             MethodInfo info,
                              CodeAttribute ca) throws Exception {
         CodeIterator ci = ca.iterator();
 
@@ -45,8 +56,10 @@ public class InjectStatementPass extends Pass {
                 continue;
 
 
-            Bytecode b = new Bytecode(info.getConstPool());
-            getInstrumentationCode(b,cur_line);
+            Bytecode b = getInstrumentationCode(classname,
+                                                methodname,
+                                                cur_line,
+                                                info.getConstPool());
             ci.insert(index, b.get());
 
             last_line = cur_line;
@@ -54,20 +67,20 @@ public class InjectStatementPass extends Pass {
 
     }
 
-    protected void getInstrumentationCode(Bytecode b,
-                                          int line) {
+    protected Bytecode getInstrumentationCode(String classname,
+                                              String methodname,
+                                              int line,
+                                              ConstPool p) {
+        Bytecode b = new Bytecode(p);
         Collector collector = Collector.getDefault();
-        long id = collector.registerProbe();
-        System.out.println("getInstrumentationCode");
-        // Remove this:
-        id = 123;
-        b.add(Opcode.NOP);
+        int id = collector.register(Collector.ProbeType.HIT_PROBE, classname, methodname, line);
+
         b.addInvokestatic("io/crowbar/instrumentation/runtime/Collector",
                           "getDefault",
                           "()Lio/crowbar/instrumentation/runtime/Collector;");
-
         b.addLconst(id);
+        b.addInvokevirtual("io/crowbar/instrumentation/runtime/Collector", "hitprobe", "(J)V");
 
-        b.addInvokevirtual("io/crowbar/instrumentation/runtime/Collector", "probe", "(J)V");
+        return b;
     }
 }

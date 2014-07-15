@@ -2,14 +2,14 @@ package io.crowbar.instrumentation;
 
 import io.crowbar.instrumentation.runtime.*;
 
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import javassist.*;
-/**
- * Hello world!
- *
- */
+
 public class App
 {
+
 
     private class brogle {
         private int trackles (int a, float b) {
@@ -23,9 +23,15 @@ public class App
             return (int)b;
         }
 
+	@Test
+	public void discoversExpiredCreditCard() {
+            assertEquals(1,0);
+        }
+
     }
+
     public static void main( String[] args ) {
-        Collector.getDefault().probe(543);
+        Collector.getDefault().hitprobe(543);
     }
 
     private int blurz(int a, float b) {

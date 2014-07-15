@@ -9,6 +9,5 @@ import javassist.CtClass;
 public abstract class Pass {
     protected static Logger log = Logger.getLogger("io.crowbar.instrumentation");
 
-    public abstract void transform(ClassPool cp,
-                                   CtClass c) throws Exception;
+    public abstract void transform(CtClass c) throws Exception;
 }

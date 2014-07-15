@@ -14,6 +14,20 @@ import javassist.bytecode.*;
 public class Agent implements ClassFileTransformer {
     private static Logger log = Logger.getLogger("io.crowbar.instrumentation");
 
+
+    public static void premain(String agentArgs, Instrumentation inst) {
+        CtClass.debugDump = "debug";
+
+        Agent a = new Agent();
+        a.addPass(new InjectPass(InjectPass.Granularity.FUNCTION));
+        a.addPass(new PrintByteCodePass());
+//        a.addPass(new WrapJunit4());
+
+        inst.addTransformer(a);
+    }
+
+
+
     private List<Pass> passes = new LinkedList<Pass>();
 
     public boolean ignore(String cls) {
@@ -36,29 +50,26 @@ public class Agent implements ClassFileTransformer {
                                   byte[] bytes) throws IllegalClassFormatException {
         MethodInfo.doPreverify = true;
         if(ignore(s)) {
-            //log.info("Ignoring class: " + s);
             return bytes;
         }
 
         String currentPass = null;
-        try {
+        CtClass cc = null;
+       try {
             ClassPool cp = ClassPool.getDefault();
-            CtClass cc = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
+            cc = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
 
             log.info("Transforming class: " + s);
 
-            //  cc.defrost();
             for (Pass p : passes) {
                 currentPass = p.getClass().getName();
-                //log.info("Running Pass: " + currentPass);
-                p.transform(cp, cc);
+                p.transform(cc);
             }
-            saveBytecode(s, cc.toBytecode());
-            //log.info("Loaded class: " + s);
 
             return cc.toBytecode();
         } catch (Exception ex) {
-            log.warning("Pass '" + currentPass + "' raised an exception:\n" + ex);
+           log.warning("Pass '" + currentPass +
+                       "' raised an exception:\n" + ex);
             ex.printStackTrace();
         }
         return null;

@@ -89,14 +89,7 @@ public class Collector {
         return items.size();
     }
 
-
-
-    public void metadata (int c_id,
-                          String key,
-                          String val) {
-        Probe d = items.get(c_id);
-        d.put(key, val);
+    public Probe getProbe(int c_id) {
+        return items.get(c_id - 1);
     }
-
-    public
 }

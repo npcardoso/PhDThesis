@@ -5,24 +5,24 @@ import io.crowbar.instrumentation.runtime.*;
 import javassist.*;
 import javassist.bytecode.*;
 
-public class InjectStatementPass extends Pass {
+public class InjectPass extends Pass {
     public enum Granularity {STATEMENT,
                              FUNCTION}
 
 
     private Granularity granularity;
 
-    InjectStatementPass(Granularity g) {
+    InjectPass(Granularity g) {
         granularity = g;
     }
 
     @Override
-    public void transform(ClassPool cp,
-                          CtClass c) throws Exception {
-//        for (CtClass c : cc.getDeclaredClasses()) {
-//            log.info("Found class: " + c.getName());
-//            transform(c);
-//        }
+    public void transform(CtClass c) throws Exception {
+        log.info("Found class: " + c.getName());
+
+        for (CtClass cc : c.getDeclaredClasses()) {
+            transform(cc);
+        }
 
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
@@ -45,14 +45,16 @@ public class InjectStatementPass extends Pass {
                              CodeAttribute ca) throws Exception {
         CodeIterator ci = ca.iterator();
 
-        int last_line = -1;
-        while (ci.hasNext()) {
-            int index = ci.next();
-            int cur_line = info.getLineNumber(index);
+        for (int last_line = -1, index, cur_line;
+             ci.hasNext();
+             last_line = cur_line) {
+
+             index = ci.next();
+             cur_line = info.getLineNumber(index);
 
             if(cur_line == -1)
                 continue;
-            if(cur_line == last_line)
+            if(cur_line <= last_line)
                 continue;
 
 
@@ -62,9 +64,10 @@ public class InjectStatementPass extends Pass {
                                                 info.getConstPool());
             ci.insert(index, b.get());
 
-            last_line = cur_line;
-        }
+            if(granularity == Granularity.FUNCTION)
+                break;
 
+        }
     }
 
     protected Bytecode getInstrumentationCode(String classname,
@@ -73,13 +76,16 @@ public class InjectStatementPass extends Pass {
                                               ConstPool p) {
         Bytecode b = new Bytecode(p);
         Collector collector = Collector.getDefault();
-        int id = collector.register(Collector.ProbeType.HIT_PROBE, classname, methodname, line);
-
+        int id = collector.register(Collector.ProbeType.HIT_PROBE,
+                                    classname,
+                                    methodname,
+                                    line);
+        System.out.println("Registered " + id + " = " + collector.getProbe(id));
         b.addInvokestatic("io/crowbar/instrumentation/runtime/Collector",
                           "getDefault",
                           "()Lio/crowbar/instrumentation/runtime/Collector;");
-        b.addLconst(id);
-        b.addInvokevirtual("io/crowbar/instrumentation/runtime/Collector", "hitprobe", "(J)V");
+        b.addIconst(id);
+        b.addInvokevirtual("io/crowbar/instrumentation/runtime/Collector", "hitprobe", "(I)V");
 
         return b;
     }

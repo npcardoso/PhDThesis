@@ -12,10 +12,6 @@ public class TestWrapperPass extends Pass {
 
     @Override
     public void transform(CtClass c) throws Exception {
-        for (CtClass cc : c.getDeclaredClasses()) {
-            transform(cc);
-        }
-
         for (CtMethod m : c.getDeclaredMethods()) {
             for(Wrapper w : wrappers) {
                 if (w.matches(m)) {

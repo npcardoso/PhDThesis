@@ -12,12 +12,6 @@ public class InjectPass extends Pass {
 
     @Override
     public void transform(CtClass c) throws Exception {
-        System.out.println("Found class: " + c.getName());
-
-        for (CtClass cc : c.getDeclaredClasses()) {
-            transform(cc);
-        }
-
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();

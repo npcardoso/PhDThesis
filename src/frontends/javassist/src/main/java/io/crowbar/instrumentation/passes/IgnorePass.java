@@ -5,15 +5,35 @@ import javassist.*;
 
 public class IgnorePass extends Pass {
 
-    @Override
-    public void transform(CtClass c) throws Exception {
-        for(String s : ignores) {
-            if(c.getName().startsWith(s)) {
-                System.out.println("Ignoring Class '" + c.getName() + "' due to ignore rule '" + s + "'");
-                throw new IgnoreClassException();
-            }
-        }
+    public IgnorePass (boolean blacklist) {
+        this.blacklist = blacklist;
     }
 
-    public List<String> ignores = new LinkedList<String>();
+    @Override
+    public void transform(CtClass c) throws Exception {
+        for(String s : prefix) {
+            if(c.getName().startsWith(s)) {
+                if(blacklist)
+                    throw new IgnoreClassException();
+                else
+                    return;
+            }
+        }
+        for(String s : suffix) {
+            if(c.getName().endsWith(s)) {
+                if(blacklist)
+                    throw new IgnoreClassException();
+                else
+                    return;
+            }
+        }
+
+        if(!blacklist)
+            throw new IgnoreClassException();
+    }
+
+    private boolean blacklist;
+    public List<String> prefix = new LinkedList<String>();
+    public List<String> suffix = new LinkedList<String>();
+
 }

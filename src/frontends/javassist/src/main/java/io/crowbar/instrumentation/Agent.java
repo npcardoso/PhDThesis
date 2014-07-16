@@ -20,22 +20,29 @@ public class Agent implements ClassFileTransformer {
 
         Agent a = new Agent();
 
-        // Ignores classes in particular packages
-        IgnorePass ip = new IgnorePass();
-        ip.ignores.add("java.");
-        ip.ignores.add("sun.");
-        ip.ignores.add("javassist.");
-        ip.ignores.add("org.junit.");
-        a.passes.add(ip);
-
-        // Injects instrumentation instructions
-        InjectPass inject = new InjectPass(InjectPass.Granularity.FUNCTION);
-        a.passes.add(inject);
-
         // Wraps unit tests with instrumentation instrunctions
         TestWrapperPass twp = new TestWrapperPass();
         twp.wrappers.add(new JUnit4Wrapper());
         a.passes.add(twp);
+
+
+        // Ignores classes in particular packages
+        IgnorePass ip_black = new IgnorePass(/* blacklist */ true);
+        ip_black.prefix.add("java.");
+        ip_black.prefix.add("sun.");
+        ip_black.prefix.add("javassist.");
+        ip_black.prefix.add("org.junit.");
+        a.passes.add(ip_black);
+
+        // Ignores classes in particular packages
+        //IgnorePass ip_white = new IgnorePass(/* blacklist */ false);
+        //ip_white.suffix.add("asda");
+        //a.passes.add(ip_white);
+
+
+        // Injects instrumentation instructions
+        InjectPass inject = new InjectPass(InjectPass.Granularity.FUNCTION);
+        a.passes.add(inject);
 
 
         inst.addTransformer(a);
@@ -59,19 +66,22 @@ public class Agent implements ClassFileTransformer {
                 currentPass = p.getClass().getName();
                 p.transform(cc);
             }
-
-            return cc.toBytecode();
         }
         catch (Pass.IgnoreClassException e) {
             System.out.println("Ignoring Class: " + s);
-            return bytes;
         }
         catch (Exception ex) {
             System.err.println("Pass '" + currentPass +
                                "' raised an exception:\n" + ex);
             ex.printStackTrace();
+            return null;
         }
-        return null;
+
+        try {
+            return cc.toBytecode();
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     public List<Pass> passes = new LinkedList<Pass>();

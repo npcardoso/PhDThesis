@@ -2,6 +2,7 @@ package io.crowbar.instrumentation;
 
 import io.crowbar.instrumentation.passes.*;
 import io.crowbar.instrumentation.passes.wrappers.*;
+import io.crowbar.instrumentation.runtime.*;
 
 
 import java.lang.instrument.ClassFileTransformer;
@@ -55,17 +56,32 @@ public class Agent implements ClassFileTransformer {
                                   ProtectionDomain protectionDomain,
                                   byte[] bytes) throws IllegalClassFormatException {
         String currentPass = null;
-        CtClass cc = null;
+        CtClass c = null;
         try {
             ClassPool cp = ClassPool.getDefault();
             cp.importPackage("io.crowbar.instrumentation.runtime");
 
-            cc = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
+            c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
+
+
+            // Checking if the class is an interface
+            if((c.getModifiers() & Modifier.INTERFACE) != 0)            // TODO: Add more checks
+                throw new Pass.IgnoreClassException();
+
+
+            ProbeSet ps = new ProbeSet();
 
             for (Pass p : passes) {
                 currentPass = p.getClass().getName();
-                p.transform(cc);
+                p.transform(c, ps);
             }
+
+            int probeset_id = Collector.getDefault().register(ps);
+            CtField f = CtField.make("public static boolean[]  __CROWBAR_HIT_VECTOR__ = " +
+                                     "Collector.getDefault().getHitVector(" + probeset_id + ");", c);
+            c.addField(f);
+
+
         }
         catch (Pass.IgnoreClassException e) {
             System.out.println("Ignoring Class: " + s);
@@ -78,7 +94,7 @@ public class Agent implements ClassFileTransformer {
         }
 
         try {
-            return cc.toBytecode();
+            return c.toBytecode();
         } catch (Exception ex) {
             return null;
         }

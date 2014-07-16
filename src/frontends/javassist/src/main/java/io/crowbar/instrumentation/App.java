@@ -10,6 +10,7 @@ import javassist.*;
 public class App
 {
 
+    public static boolean[] ASDsdaf = new boolean[1235];
 
     private static class brogle {
         private int trackles (int a, float b) {
@@ -23,6 +24,10 @@ public class App
             return (int)b;
         }
 
+        private static void broglestar(){
+            ASDsdaf[444] = true;
+        }
+
 	@Test
 	public void discoversExpiredCreditCard() {
             assertEquals(1,0);
@@ -31,7 +36,7 @@ public class App
     }
 
     public static void main( String[] args ) {
-        Collector.getDefault().hitprobe(543);
+        //Collector.getDefault().hitprobe(543);
         brogle b = new brogle();
         b.discoversExpiredCreditCard();
     }
@@ -47,6 +52,9 @@ public class App
         return (int)b;
     }
 
+    private void tracklerbar () {
+        ASDsdaf[444] = true;
+    }
 
     private int crasps () {
         return 9999;

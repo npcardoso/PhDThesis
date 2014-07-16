@@ -11,16 +11,19 @@ import java.util.*;
 public class TestWrapperPass extends Pass {
 
     @Override
-    public void transform(CtClass c) throws Exception {
+    public void transform(CtClass c,
+                          ProbeSet ps) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
             for(Wrapper w : wrappers) {
                 if (w.matches(m)) {
-                    m.insertBefore(getInstrumentationCode(Collector.ProbeType.TRANSACTION_START,
+                    m.insertBefore(getInstrumentationCode(ProbeType.TRANSACTION_START,
                                                           c.getName(),
-                                                          m.getName()));
-                    m.insertAfter(getInstrumentationCode(Collector.ProbeType.TRANSACTION_END,
+                                                          m.getName(),
+                                                          ps));
+                    m.insertAfter(getInstrumentationCode(ProbeType.TRANSACTION_END,
                                                          c.getName(),
-                                                         m.getName()),
+                                                         m.getName(),
+                                                         ps),
                                   true /* asFinally */);
                     break;
                 }
@@ -28,12 +31,13 @@ public class TestWrapperPass extends Pass {
         }
 
     }
-    protected String getInstrumentationCode(Collector.ProbeType type,
+    protected String getInstrumentationCode(ProbeType type,
                                             String classname,
-                                            String methodname) {
+                                            String methodname,
+                                            ProbeSet ps) {
         Collector collector = Collector.getDefault();
-        int id = collector.register(type, classname, methodname);
-        System.out.println("Registered " + id + " = " + collector.getProbe(id));
+        int id = ps.register(type, classname, methodname);
+        System.out.println("Registered " + id + " = " + ps.get(id));
 
         return "Collector.getDefault()." + type.method_name + "(" + id + ");";
   }

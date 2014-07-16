@@ -1,5 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
+import io.crowbar.instrumentation.runtime.*;
+
 import java.util.*;
 import javassist.*;
 
@@ -10,7 +12,8 @@ public class IgnorePass extends Pass {
     }
 
     @Override
-    public void transform(CtClass c) throws Exception {
+    public void transform(CtClass c,
+                          ProbeSet ps) throws Exception {
         for(String s : prefix) {
             if(c.getName().startsWith(s)) {
                 if(blacklist)

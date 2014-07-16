@@ -11,7 +11,9 @@ public class InjectPass extends Pass {
     }
 
     @Override
-    public void transform(CtClass c) throws Exception {
+    public void transform(CtClass c,
+                          ProbeSet ps) throws Exception {
+
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();
@@ -19,16 +21,15 @@ public class InjectPass extends Pass {
             if(ca == null)
                 continue;
 
-            handleMethod(c.getName(),
-                         m.getName(),
-                         info,
-                         ca);
+            handleMethod(ps, c, m, info, ca);
             ca.setMaxStack(ca.computeMaxStack());
         }
+
     }
 
-    protected void handleMethod(String classname,
-                                String methodname,
+    protected void handleMethod(ProbeSet ps,
+                                CtClass c,
+                                CtMethod m,
                                 MethodInfo info,
                                 CodeAttribute ca) throws Exception {
         CodeIterator ci = ca.iterator();
@@ -37,8 +38,8 @@ public class InjectPass extends Pass {
              ci.hasNext();
              last_line = cur_line) {
 
-             index = ci.next();
-             cur_line = info.getLineNumber(index);
+            index = ci.next();
+            cur_line = info.getLineNumber(index);
 
             if(cur_line == -1)
                 continue;
@@ -46,10 +47,7 @@ public class InjectPass extends Pass {
                 continue;
 
 
-            Bytecode b = getInstrumentationCode(classname,
-                                                methodname,
-                                                cur_line,
-                                                info.getConstPool());
+            Bytecode b = getInstrumentationCodeFast(ps, c, m, cur_line, info.getConstPool());
             ci.insert(index, b.get());
 
             if(granularity == Granularity.FUNCTION)
@@ -58,17 +56,19 @@ public class InjectPass extends Pass {
         }
     }
 
-    protected Bytecode getInstrumentationCode(String classname,
-                                              String methodname,
+    protected Bytecode getInstrumentationCode(ProbeSet ps,
+                                              CtClass c,
+                                              CtMethod m,
                                               int line,
                                               ConstPool p) {
         Bytecode b = new Bytecode(p);
         Collector collector = Collector.getDefault();
-        int id = collector.register(Collector.ProbeType.HIT_PROBE,
-                                    classname,
-                                    methodname,
-                                    line);
-        System.out.println("Registered " + id + " = " + collector.getProbe(id));
+        int id = ps.register(ProbeType.HIT_PROBE,
+                             c.getName(),
+                             m.getName(),
+                             line);
+
+        System.out.println("Registered " + id + " = " + ps.get(id));
         b.addInvokestatic("io/crowbar/instrumentation/runtime/Collector",
                           "getDefault",
                           "()Lio/crowbar/instrumentation/runtime/Collector;");
@@ -78,6 +78,33 @@ public class InjectPass extends Pass {
         return b;
     }
 
+
+    protected Bytecode getInstrumentationCodeFast(ProbeSet ps,
+                                                  CtClass c,
+                                                  CtMethod m,
+                                                  int line,
+                                                  ConstPool p) {
+        Bytecode b = new Bytecode(p);
+        Collector collector = Collector.getDefault();
+        int id = ps.register(ProbeType.HIT_PROBE,
+                             c.getName(),
+                             m.getName(),
+                             line);
+        System.out.println("Registered " + id + " = " + ps.get(id));
+
+        b.addGetstatic(c, "__CROWBAR_HIT_VECTOR__", "[Z");
+        b.addIconst(id);
+        b.addOpcode(Opcode.ICONST_1);
+        b.addOpcode(Opcode.BASTORE);
+
+//        mv.visitVarInsn(Opcodes.ALOAD, probeVariable);
+//        mv.visitIntInsn(Opcodes.SIPUSH, id);
+//        mv.visitInsn(Opcodes.ICONST_1);
+//        mv.visitInsn(Opcodes.BASTORE);
+
+
+        return b;
+    }
 
 
     public enum Granularity {STATEMENT,

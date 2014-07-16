@@ -5,18 +5,19 @@ import java.util.*;
 
 public class Collector {
     public enum ProbeType {
-        TRANSACTION_START("TransctionStart"),
-        TRANSACTION_END("TransctionStart"),
-        HIT_PROBE("HitProbe"),
-        ORACLE("Oracle");
+        TRANSACTION_START("TransactionStart", "transactionStart"),
+        TRANSACTION_END("TransactionEnd", "transactionEnd"),
+        HIT_PROBE("HitProbe", "hitprobe"),
+        ORACLE("Oracle", "oracle");
 
-        private final String name;
-        ProbeType(String name) {
+        public final String name;
+        public final String method_name;
+        ProbeType(String name,
+                  String method_name) {
             this.name = name;
+            this.method_name = method_name;
         }
     }
-
-    private static Collector collector = new Collector();
 
     private class Probe extends HashMap<String,String> {
         Probe(ProbeType type) {
@@ -45,7 +46,6 @@ public class Collector {
         }
     }
 
-    Vector<Probe> items = new Vector<Probe>();
 
     public static Collector getDefault() {
         return collector;
@@ -53,15 +53,27 @@ public class Collector {
 
 
     public void hitprobe (int id) {
-        System.out.println("collecting probe: " + id);
+        System.out.println("!!!!!!!!! collecting probe @ " + id + "!!!!!!!!!");
     }
 // TODO: Probe with state
 
-    public void transaction (int c_id,
-                             boolean start) {}
-    public void oracle (int c_id,
+    public void transactionStart (int id) {
+        System.out.println("!!!!!!!!! starting transaction @ " + id + "!!!!!!!!!");
+    }
+
+    public void transactionEnd (int id) {
+        System.out.println("!!!!!!!!! transaction end @ " + id + "!!!!!!!!!");
+    }
+
+
+    public void oracle (int id,
                         double error,
-                        double confidence) {}
+                        double confidence) {
+        System.out.println("!!!!!!!!! collecting oracle (" + error +
+                           "," + confidence +
+                           ") @ " + id +
+                           "!!!!!!!!!");
+    }
 
     public int register(ProbeType type) {
         items.add(new Probe(type));
@@ -89,7 +101,11 @@ public class Collector {
         return items.size();
     }
 
-    public Probe getProbe(int c_id) {
-        return items.get(c_id - 1);
+    public Probe getProbe(int id) {
+        return items.get(id - 1);
     }
+
+    private static Collector collector = new Collector();
+
+    Vector<Probe> items = new Vector<Probe>();
 }

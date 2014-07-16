@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation;
+package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.runtime.*;
 
@@ -6,19 +6,13 @@ import javassist.*;
 import javassist.bytecode.*;
 
 public class InjectPass extends Pass {
-    public enum Granularity {STATEMENT,
-                             FUNCTION}
-
-
-    private Granularity granularity;
-
-    InjectPass(Granularity g) {
+    public InjectPass(Granularity g) {
         granularity = g;
     }
 
     @Override
     public void transform(CtClass c) throws Exception {
-        log.info("Found class: " + c.getName());
+        System.out.println("Found class: " + c.getName());
 
         for (CtClass cc : c.getDeclaredClasses()) {
             transform(cc);
@@ -39,10 +33,10 @@ public class InjectPass extends Pass {
         }
     }
 
-    public void handleMethod(String classname,
-                             String methodname,
-                             MethodInfo info,
-                             CodeAttribute ca) throws Exception {
+    protected void handleMethod(String classname,
+                                String methodname,
+                                MethodInfo info,
+                                CodeAttribute ca) throws Exception {
         CodeIterator ci = ca.iterator();
 
         for (int last_line = -1, index, cur_line;
@@ -89,4 +83,10 @@ public class InjectPass extends Pass {
 
         return b;
     }
+
+
+
+    public enum Granularity {STATEMENT,
+                             FUNCTION}
+    private Granularity granularity;
 }

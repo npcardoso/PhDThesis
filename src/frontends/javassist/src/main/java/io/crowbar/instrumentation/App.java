@@ -11,7 +11,7 @@ public class App
 {
 
 
-    private class brogle {
+    private static class brogle {
         private int trackles (int a, float b) {
             if(a>b)
                 return a;
@@ -32,6 +32,8 @@ public class App
 
     public static void main( String[] args ) {
         Collector.getDefault().hitprobe(543);
+        brogle b = new brogle();
+        b.discoversExpiredCreditCard();
     }
 
     private int blurz(int a, float b) {

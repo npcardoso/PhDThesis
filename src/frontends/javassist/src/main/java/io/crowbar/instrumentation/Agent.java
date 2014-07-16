@@ -19,24 +19,27 @@ public class Agent implements ClassFileTransformer {
         CtClass.debugDump = "debug";
 
         Agent a = new Agent();
-        a.passes.add(new InjectPass(InjectPass.Granularity.FUNCTION));
 
+        // Ignores classes in particular packages
+        IgnorePass ip = new IgnorePass();
+        ip.ignores.add("java.");
+        ip.ignores.add("sun.");
+        ip.ignores.add("javassist.");
+        ip.ignores.add("org.junit.");
+        a.passes.add(ip);
+
+        // Injects instrumentation instructions
+        InjectPass inject = new InjectPass(InjectPass.Granularity.FUNCTION);
+        a.passes.add(inject);
+
+        // Wraps unit tests with instrumentation instrunctions
         TestWrapperPass twp = new TestWrapperPass();
         twp.wrappers.add(new JUnit4Wrapper());
         a.passes.add(twp);
 
+
         inst.addTransformer(a);
     }
-
-
-    public boolean ignore(String cls) {
-        String ignores[] = {"java/", "sun/","javassist/"};
-        for(String s : ignores)
-            if(cls.startsWith(s))
-                return true;
-        return false;
-    }
-
 
     @Override
     public final byte[] transform(ClassLoader classLoader,
@@ -44,14 +47,9 @@ public class Agent implements ClassFileTransformer {
                                   Class<?> aClass,
                                   ProtectionDomain protectionDomain,
                                   byte[] bytes) throws IllegalClassFormatException {
-        MethodInfo.doPreverify = true;
-        if(ignore(s)) {
-            return bytes;
-        }
-
         String currentPass = null;
         CtClass cc = null;
-       try {
+        try {
             ClassPool cp = ClassPool.getDefault();
             cp.importPackage("io.crowbar.instrumentation.runtime");
 
@@ -63,10 +61,15 @@ public class Agent implements ClassFileTransformer {
             }
 
             return cc.toBytecode();
-        } catch (Exception ex) {
-           System.err.println("Pass '" + currentPass +
-                              "' raised an exception:\n" + ex);
-           ex.printStackTrace();
+        }
+        catch (Pass.IgnoreClassException e) {
+            System.out.println("Ignoring Class: " + s);
+            return bytes;
+        }
+        catch (Exception ex) {
+            System.err.println("Pass '" + currentPass +
+                               "' raised an exception:\n" + ex);
+            ex.printStackTrace();
         }
         return null;
     }

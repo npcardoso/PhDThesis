@@ -7,5 +7,7 @@ import javassist.CtClass;
 
 
 public abstract class Pass {
+    public static class IgnoreClassException extends Exception {};
+
     public abstract void transform(CtClass c) throws Exception;
 }

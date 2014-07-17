@@ -12,45 +12,39 @@ import java.net.Socket;
 
 import javassist.*;
 
-public class App
-{
-
-
+public class App {
     public static class EchoServer2 extends ThreadedServer {
         private class EchoService implements Runnable {
-            public EchoService(Socket s){
+            public EchoService (Socket s) {
                 this.socket = s;
             }
 
             @Test
-            public void run(){
+            public void run () {
                 try {
-                    while(socket.isConnected()) {
+                    while (socket.isConnected()) {
                         InputStream in = socket.getInputStream();
                         OutputStream out = socket.getOutputStream();
                         out.write(in.read());
                     }
+
                     socket.close();
                 }
                 catch (IOException e) {}
             }
-            Socket socket;
 
+            Socket socket;
         }
 
 
-        public EchoServer2(ServerSocket server_socket) {
+        public EchoServer2 (ServerSocket server_socket) {
             super(server_socket);
         }
 
-
-
         @Override
-        protected Runnable handle(Socket s) {
-            return new EchoService (s);
+        protected Runnable handle (Socket s) {
+            return new EchoService(s);
         }
-
-
     }
 
 
@@ -58,31 +52,32 @@ public class App
 
     private static class brogle {
         private int trackles (int a, float b) {
-            if(a>b)
+            if (a > b)
                 return a;
             else
-                for(;a<b;a++){
-                    if(a + "" == "123")
+                for (; a < b; a++) {
+                    if (a + "" == "123")
                         return a;
                 }
-            return (int)b;
+
+            return (int) b;
         }
 
-        private static void broglestar(){
+        private static void broglestar (final brogle asd) {
             ASDsdaf[444] = true;
         }
 
-	@Test
-	public void discoversExpiredCreditCard() {
-            assertEquals(1,1);
+        @Test
+        public void discoversExpiredCreditCard () {
+            assertEquals(1, 1);
         }
-
     }
 
-    public static void main( String[] args ) {
-
-//Collector.getDefault().hitprobe(543);
+    public static void main (String[] args) {
+        // Collector.getDefault().hitprobe(543);
         brogle b = new brogle();
+
+
         b.discoversExpiredCreditCard();
         try {
             ThreadedServer server = new EchoServer2(new ServerSocket(1234));
@@ -95,15 +90,16 @@ public class App
         }
     }
 
-    private int blurz(int a, float b) {
-        if(a>b)
+    private int blurz (int a, float b) {
+        if (a > b)
             return a;
         else
-            for(;a<b;a++){
-                if(a + "" == "123")
+            for (; a < b; a++) {
+                if (a + "" == "123")
                     return a;
             }
-        return (int)b;
+
+        return (int) b;
     }
 
     private void tracklerbar () {
@@ -113,5 +109,4 @@ public class App
     private int crasps () {
         return 9999;
     }
-
 }

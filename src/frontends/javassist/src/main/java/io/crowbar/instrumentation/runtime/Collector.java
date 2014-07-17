@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class Collector {
-    public static Collector getDefault() {
+    public static Collector getDefault () {
         return collector;
     }
 
@@ -13,13 +13,23 @@ public class Collector {
     }
 
     public void transactionEnd (String class_name, int probe_id) throws Exception {
-        boolean [] hitprobes = collectHitVectors();
+        boolean[] hitprobes = collectHitVectors();
         resetHitVectors();
-        for(boolean b : hitprobes)
-            System.out.print(b?"1 ": "0 ");
+
+        int i = 0;
+
+        for (ProbeSet ps : probeset_list) {
+            for (int j = 0; j < ps.size(); j++) {
+                System.out.print(i++);
+                System.out.println(": " + ps.getClassName() + ps.get(j));
+            }
+        }
+
+        for (boolean b : hitprobes)
+            System.out.print(b ? "1 " : "0 ");
+
         System.out.println("\n!!!!!!!!! transaction end @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
     }
-
 
     public void oracle (int id,
                         double error,
@@ -34,18 +44,21 @@ public class Collector {
         return probeset_map.get(class_name);
     }
 
-    public boolean[] collectHitVectors() throws ProbeSet.NotPreparedException{
+    public boolean[] collectHitVectors () throws ProbeSet.NotPreparedException {
         boolean[] ret = new boolean[getNumProbes()];
         int i = 0;
+
         for (ProbeSet ps : probeset_list) {
-            boolean [] hv = ps.getHitVector();
-            for(int j = 0; j < hv.length; j++)
+            boolean[] hv = ps.getHitVector();
+
+            for (int j = 0; j < hv.length; j++)
                 ret[i++] = hv[j];
         }
+
         return ret;
     }
 
-    public int getNumProbes() {
+    public int getNumProbes () {
         return total_probes;
     }
 
@@ -56,8 +69,7 @@ public class Collector {
         total_probes += ps.size();
     }
 
-
-    public void resetHitVectors() {
+    public void resetHitVectors () {
         for (ProbeSet ps : probeset_list) {
             try {
                 ps.resetHitVector();
@@ -68,8 +80,8 @@ public class Collector {
         }
     }
 
-    private static Collector collector = new Collector();
-    Map<String,ProbeSet> probeset_map = new HashMap<String,ProbeSet>();
-    List<ProbeSet> probeset_list = new ArrayList<ProbeSet>(); // This is needed to maintain serialization order
+    private static Collector collector = new Collector ();
+    Map<String, ProbeSet> probeset_map = new HashMap<String, ProbeSet> ();
+    List<ProbeSet> probeset_list = new ArrayList<ProbeSet> (); // This is needed to maintain serialization order
     private int total_probes = 0;
 }

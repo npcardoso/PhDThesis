@@ -49,6 +49,7 @@ public class Agent implements ClassFileTransformer {
         inst.addTransformer(a);
     }
 
+
     @Override
     public final byte[] transform(ClassLoader classLoader,
                                   String s,

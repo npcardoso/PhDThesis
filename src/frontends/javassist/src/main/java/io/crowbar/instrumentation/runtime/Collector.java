@@ -48,6 +48,18 @@ public class Collector {
         probesets.remove(class_name);
     }
 
+
+    public void resetAllHitProbes() {
+        for (ProbeSet ps : probesets.values()) {
+            try {
+                ps.resetHitVector();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private static Collector collector = new Collector();
     Map<String,ProbeSet> probesets = new HashMap<String,ProbeSet>();
 }

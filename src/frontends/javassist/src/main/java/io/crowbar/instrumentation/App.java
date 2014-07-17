@@ -1,9 +1,11 @@
 package io.crowbar.instrumentation;
 
 import io.crowbar.instrumentation.runtime.*;
+import io.crowbar.util.io.*;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.net.ServerSocket;
 
 import javassist.*;
 
@@ -36,7 +38,16 @@ public class App
     }
 
     public static void main( String[] args ) {
-        //Collector.getDefault().hitprobe(543);
+        try {
+            ThreadedServer server = new EchoServer(new ServerSocket(1234));
+            server.max_clients = 2;
+            server.start();
+            server.join();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+//Collector.getDefault().hitprobe(543);
         brogle b = new brogle();
         b.discoversExpiredCreditCard();
     }

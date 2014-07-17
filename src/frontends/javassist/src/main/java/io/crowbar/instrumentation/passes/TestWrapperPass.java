@@ -17,11 +17,9 @@ public class TestWrapperPass extends Pass {
             for(Wrapper w : wrappers) {
                 if (w.matches(m)) {
                     m.insertBefore(getInstrumentationCode(ProbeType.TRANSACTION_START,
-                                                          c.getName(),
                                                           m.getName(),
                                                           ps));
                     m.insertAfter(getInstrumentationCode(ProbeType.TRANSACTION_END,
-                                                         c.getName(),
                                                          m.getName(),
                                                          ps),
                                   true /* asFinally */);
@@ -32,14 +30,12 @@ public class TestWrapperPass extends Pass {
 
     }
     protected String getInstrumentationCode(ProbeType type,
-                                            String classname,
                                             String methodname,
                                             ProbeSet ps) {
         Collector collector = Collector.getDefault();
-        int id = ps.register(type, classname, methodname);
-        System.out.println("Registered " + id + " = " + ps.get(id));
+        int id = ps.register(type, methodname);
 
-        return "Collector.getDefault()." + type.method_name + "(" + id + ");";
+        return "Collector.getDefault()." + type.method_name + "(\"" + ps.getClassName() + "\", " + id + ");";
   }
 
     public List<Wrapper> wrappers = new LinkedList<Wrapper>();

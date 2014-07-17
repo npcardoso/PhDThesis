@@ -21,11 +21,6 @@ public class Agent implements ClassFileTransformer {
 
         Agent a = new Agent();
 
-        // Wraps unit tests with instrumentation instrunctions
-        TestWrapperPass twp = new TestWrapperPass();
-        twp.wrappers.add(new JUnit4Wrapper());
-        a.passes.add(twp);
-
 
         // Ignores classes in particular packages
         IgnorePass ip_black = new IgnorePass(/* blacklist */ true);
@@ -33,13 +28,18 @@ public class Agent implements ClassFileTransformer {
         ip_black.prefix.add("sun.");
         ip_black.prefix.add("javassist.");
         ip_black.prefix.add("org.junit.");
+        ip_black.modifier_mask = Modifier.INTERFACE | Modifier.ANNOTATION;
+
         a.passes.add(ip_black);
 
-        // Ignores classes in particular packages
         //IgnorePass ip_white = new IgnorePass(/* blacklist */ false);
         //ip_white.suffix.add("asda");
         //a.passes.add(ip_white);
 
+        // Wraps unit tests with instrumentation instrunctions
+        TestWrapperPass twp = new TestWrapperPass();
+        twp.wrappers.add(new JUnit4Wrapper());
+        a.passes.add(twp);
 
         // Injects instrumentation instructions
         InjectPass inject = new InjectPass(InjectPass.Granularity.FUNCTION);
@@ -55,49 +55,39 @@ public class Agent implements ClassFileTransformer {
                                   Class<?> aClass,
                                   ProtectionDomain protectionDomain,
                                   byte[] bytes) throws IllegalClassFormatException {
-        String currentPass = null;
         CtClass c = null;
+        ClassPool cp = ClassPool.getDefault();
+
         try {
-            ClassPool cp = ClassPool.getDefault();
+            c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return bytes;
+        }
+
+
+        try {
+
             cp.importPackage("io.crowbar.instrumentation.runtime");
 
-            c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
-
-
-            // Checking if the class is an interface
-            if((c.getModifiers() & Modifier.INTERFACE) != 0)            // TODO: Add more checks
-                throw new Pass.IgnoreClassException();
-
-
-            ProbeSet ps = new ProbeSet();
-
+            ProbeSet ps = new ProbeSet(c.getName());
             for (Pass p : passes) {
-                currentPass = p.getClass().getName();
                 p.transform(c, ps);
             }
+            Collector.getDefault().register(ps);
 
-            int probeset_id = Collector.getDefault().register(ps);
-            CtField f = CtField.make("public static boolean[]  __CROWBAR_HIT_VECTOR__ = " +
-                                     "Collector.getDefault().getHitVector(" + probeset_id + ");", c);
-            c.addField(f);
-
-
+            System.out.println("Instrumented Class: " + c.getName());
+            return c.toBytecode();
         }
         catch (Pass.IgnoreClassException e) {
-            System.out.println("Ignoring Class: " + s);
+//            System.out.println("Ignoring Class: " + c.getName());
         }
         catch (Exception ex) {
-            System.err.println("Pass '" + currentPass +
-                               "' raised an exception:\n" + ex);
             ex.printStackTrace();
-            return null;
         }
 
-        try {
-            return c.toBytecode();
-        } catch (Exception ex) {
-            return null;
-        }
+        return bytes;
     }
 
     public List<Pass> passes = new LinkedList<Pass>();

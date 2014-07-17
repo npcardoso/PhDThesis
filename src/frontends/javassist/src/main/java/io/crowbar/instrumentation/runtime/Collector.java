@@ -8,21 +8,20 @@ public class Collector {
         return collector;
     }
 
-// TODO: Probe with state
-
-    public void transactionStart (int id) {
-        System.out.println("!!!!!!!!! starting transaction @ " + id + "!!!!!!!!!");
+    public void transactionStart (String class_name, int probe_id) {
+        System.out.println("!!!!!!!!! transaction start @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
     }
 
-    public void transactionEnd (int id) {
-        for (boolean[] hv : hitvectors) {
+    public void transactionEnd (String class_name, int probe_id) throws Exception {
+        for (ProbeSet ps : probesets.values()) {
+            boolean [] hv = ps.getHitVector();
             for(int i = 0; i < hv.length; i++) {
-                System.out.print(hv[i]?"1 ":"0 ");
-                hv[i] = false;
+                System.out.print(hv[i]? "1 " : "0 ");
             }
+            ps.resetHitVector();
         }
         System.out.println("");
-        System.out.println("!!!!!!!!! transaction end @ " + id + "!!!!!!!!!");
+        System.out.println("!!!!!!!!! transaction end @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
     }
 
 
@@ -35,18 +34,20 @@ public class Collector {
                            "!!!!!!!!!");
     }
 
-    public int register (ProbeSet ps) {
-        classes.add(ps);
-        hitvectors.add(new boolean[ps.size()]);
-        return classes.size() - 1;
+    public ProbeSet get (String class_name) {
+        return probesets.get(class_name);
     }
 
-    public boolean[] getHitVector(int id) {
-        return hitvectors.get(id);
+
+    public void register (ProbeSet ps) throws Exception {
+        ps.prepare();
+        probesets.put(ps.getClassName(), ps);
     }
 
+    public void discard (String class_name) {
+        probesets.remove(class_name);
+    }
 
     private static Collector collector = new Collector();
-    Vector<ProbeSet> classes = new Vector<ProbeSet>();
-    Vector<boolean[]> hitvectors = new Vector<boolean[]>();
+    Map<String,ProbeSet> probesets = new HashMap<String,ProbeSet>();
 }

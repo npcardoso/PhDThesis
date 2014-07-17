@@ -6,24 +6,17 @@ class Probe extends HashMap<String,String> {
         put("type", type.name);
     }
 
-    Probe(ProbeType type,
-          String classname) {
-        this(type);
-        put("class_name", classname);
-    }
 
     Probe(ProbeType type,
-          String classname,
           String methodname) {
-        this(type, classname);
+        this(type);
         put("method_name", "" + methodname);
     }
 
     Probe(ProbeType type,
-          String classname,
           String methodname,
           int line) {
-        this(type, classname, methodname);
+        this(type, methodname);
         put("line", "" + line);
     }
 }

@@ -14,29 +14,41 @@ public class IgnorePass extends Pass {
     @Override
     public void transform(CtClass c,
                           ProbeSet ps) throws Exception {
-        for(String s : prefix) {
-            if(c.getName().startsWith(s)) {
-                if(blacklist)
-                    throw new IgnoreClassException();
-                else
-                    return;
-            }
-        }
-        for(String s : suffix) {
-            if(c.getName().endsWith(s)) {
-                if(blacklist)
-                    throw new IgnoreClassException();
-                else
-                    return;
-            }
-        }
 
-        if(!blacklist)
+        boolean matches =
+            checkPrefixes(c) ||
+            checkSuffixes(c) ||
+            checkModifiers(c);
+
+        if(matches && blacklist)
             throw new IgnoreClassException();
+
+        if(!matches && !blacklist)
+            throw new IgnoreClassException();
+
     }
+
+    private boolean checkSuffixes(CtClass c) {
+        for(String s : suffix)
+            if(c.getName().endsWith(s))
+                return true;
+        return false;
+    }
+
+    private boolean checkPrefixes (CtClass c) {
+        for(String s : prefix)
+            if(c.getName().startsWith(s))
+                return true;
+        return false;
+    }
+
+    private boolean checkModifiers (CtClass c) {
+        return (c.getModifiers() & modifier_mask) != 0;
+    }
+
 
     private boolean blacklist;
     public List<String> prefix = new LinkedList<String>();
     public List<String> suffix = new LinkedList<String>();
-
+    public int modifier_mask = 0;
 }

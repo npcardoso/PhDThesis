@@ -14,6 +14,7 @@ public class InjectPass extends Pass {
     public void transform(CtClass c,
                           ProbeSet ps) throws Exception {
 
+        boolean injected = false;
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();
@@ -21,10 +22,17 @@ public class InjectPass extends Pass {
             if(ca == null)
                 continue;
 
+            injected = true;
             handleMethod(ps, c, m, info, ca);
             ca.setMaxStack(ca.computeMaxStack());
         }
 
+        if(injected) {
+            CtField f = CtField.make("public static boolean[]  " + HIT_VECTOR_NAME + " = " +
+                                     "Collector.getDefault().get(\"" + ps.getClassName() +
+                                     "\").getHitVector();", c);
+            c.addField(f);
+        }
     }
 
     protected void handleMethod(ProbeSet ps,
@@ -47,7 +55,7 @@ public class InjectPass extends Pass {
                 continue;
 
 
-            Bytecode b = getInstrumentationCodeFast(ps, c, m, cur_line, info.getConstPool());
+            Bytecode b = getInstrumentationCode(ps, c, m, cur_line, info.getConstPool());
             ci.insert(index, b.get());
 
             if(granularity == Granularity.FUNCTION)
@@ -64,48 +72,19 @@ public class InjectPass extends Pass {
         Bytecode b = new Bytecode(p);
         Collector collector = Collector.getDefault();
         int id = ps.register(ProbeType.HIT_PROBE,
-                             c.getName(),
                              m.getName(),
                              line);
-
-        System.out.println("Registered " + id + " = " + ps.get(id));
-        b.addInvokestatic("io/crowbar/instrumentation/runtime/Collector",
-                          "getDefault",
-                          "()Lio/crowbar/instrumentation/runtime/Collector;");
-        b.addIconst(id);
-        b.addInvokevirtual("io/crowbar/instrumentation/runtime/Collector", "hitprobe", "(I)V");
-
-        return b;
-    }
-
-
-    protected Bytecode getInstrumentationCodeFast(ProbeSet ps,
-                                                  CtClass c,
-                                                  CtMethod m,
-                                                  int line,
-                                                  ConstPool p) {
-        Bytecode b = new Bytecode(p);
-        Collector collector = Collector.getDefault();
-        int id = ps.register(ProbeType.HIT_PROBE,
-                             c.getName(),
-                             m.getName(),
-                             line);
-        System.out.println("Registered " + id + " = " + ps.get(id));
-
-        b.addGetstatic(c, "__CROWBAR_HIT_VECTOR__", "[Z");
+        b.addGetstatic(c, HIT_VECTOR_NAME, HIT_VECTOR_TYPE);
         b.addIconst(id);
         b.addOpcode(Opcode.ICONST_1);
         b.addOpcode(Opcode.BASTORE);
 
-//        mv.visitVarInsn(Opcodes.ALOAD, probeVariable);
-//        mv.visitIntInsn(Opcodes.SIPUSH, id);
-//        mv.visitInsn(Opcodes.ICONST_1);
-//        mv.visitInsn(Opcodes.BASTORE);
-
-
         return b;
     }
 
+
+    private final String HIT_VECTOR_NAME =  "__CROWBAR_HIT_VECTOR__";
+    private final String HIT_VECTOR_TYPE =  "[Z";
 
     public enum Granularity {STATEMENT,
                              FUNCTION}

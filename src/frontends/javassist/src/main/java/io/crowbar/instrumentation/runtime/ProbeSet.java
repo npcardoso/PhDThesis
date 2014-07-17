@@ -2,24 +2,33 @@ package io.crowbar.instrumentation.runtime;
 import java.util.*;
 
 public class ProbeSet {
+    public class AlreadyPreparedException extends Exception {}
+    public class NotPreparedException extends Exception {}
+
     public ProbeSet(String class_name){
         this.class_name = class_name;
     }
 
-    public int register(ProbeType type) {
+    public int register(ProbeType type) throws AlreadyPreparedException {
+        if(isPrepared())
+            throw new AlreadyPreparedException();
         items.add(new Probe(type));
         return items.size() - 1;
     }
 
     public int register(ProbeType type,
-                        String method_name) {
+                        String method_name) throws AlreadyPreparedException {
+        if(isPrepared())
+            throw new AlreadyPreparedException();
         items.add(new Probe(type, method_name));
         return items.size() - 1;
     }
 
     public int register(ProbeType type,
                         String method_name,
-                        int line) {
+                        int line) throws AlreadyPreparedException {
+        if(isPrepared())
+            throw new AlreadyPreparedException();
         items.add(new Probe(type, method_name, line));
         return items.size() - 1;
     }
@@ -32,9 +41,9 @@ public class ProbeSet {
         return hitvector != null;
     }
 
-    void prepare() throws Exception {
+    void prepare() throws AlreadyPreparedException {
         if(isPrepared())
-            throw new Exception("ProbeSet already prepared");
+            throw new AlreadyPreparedException();
         hitvector = new boolean[size()];
     }
 
@@ -46,15 +55,15 @@ public class ProbeSet {
         return class_name;
     }
 
-    public boolean[] getHitVector() throws Exception {
+    public boolean[] getHitVector() throws NotPreparedException {
         if(!isPrepared())
-            throw new Exception("ProbeSet not prepared");
+            throw new NotPreparedException();
         return hitvector;
     }
 
-    public void resetHitVector() throws Exception {
+    public void resetHitVector() throws NotPreparedException {
         if(!isPrepared())
-            throw new Exception("ProbeSet not prepared");
+            throw new NotPreparedException();
 
         for(int i = 0; i < hitvector.length; i++)
             hitvector[i] = false;

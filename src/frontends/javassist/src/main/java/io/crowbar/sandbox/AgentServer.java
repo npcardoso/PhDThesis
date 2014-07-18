@@ -1,78 +1,45 @@
 package io.crowbar.sandbox;
 
-import io.crowbar.instrumentation.messaging.Messages.*;
+import io.crowbar.instrumentation.events.*;
 import io.crowbar.instrumentation.messaging.Server;
-import io.crowbar.instrumentation.passes.IgnorePass;
-import io.crowbar.instrumentation.passes.InjectPass;
-import io.crowbar.instrumentation.passes.Pass;
-import io.crowbar.instrumentation.passes.TestWrapperPass;
-import io.crowbar.instrumentation.passes.wrappers.JUnit4Wrapper;
-import io.crowbar.instrumentation.runtime.VerboseCollectorListener;
-import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.ProbeSet;
+import io.crowbar.instrumentation.runtime.*;
 
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
-import java.lang.instrument.Instrumentation;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.security.ProtectionDomain;
-import java.util.LinkedList;
-import java.util.List;
-
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.Modifier;
 
 public class AgentServer {
-    public static class VerboseService extends Server.Service {
-        public VerboseService (Socket s) {
-            super(s);
+    public static class VerboseListenerFactory extends Server.EventListenerFactory {
+        VerboseListenerFactory (ProbeStore probe_store) {
+            this.probe_store = probe_store;
         }
 
-        @Override
-        protected void handle (TransactionStartMessage m) throws Exception {
-            System.out.println("Received TransactionStartMessage: " + m);
+        public EventListener create () {
+            return new VerboseListenerFoo();
         }
 
-        @Override
-        protected void handle (TransactionEndMessage m) throws Exception {
-            System.out.println("Received TransactionEndMessage: " + m);
-
-            for (boolean b : m.hit_vector)
-                System.out.print(b ? "1 " : "0 ");
-
-            System.out.println("");
-        }
-
-        @Override
-        protected void handle (OracleMessage m) throws Exception {
-            System.out.println("Received OracleMessage: " + m);
-        }
-
-        @Override
-        protected void handle (RegisterMessage m) throws Exception {
-            System.out.println("Received RegisterMessage: " + m);
-            ProbeSet ps = m.probe_set;
-
-            for (int j = 0; j < ps.size(); j++) {
-                System.out.println(j + ": " + ps.getName() + ps.get(j));
+        public class VerboseListenerFoo extends VerboseListener implements EventListener {
+            @Override
+            public void register (ProbeSet ps) {
+                try {
+                    probe_store.register(ps);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.register(ps);
             }
         }
-    }
 
-    public static class VerboseServiceFactory extends Server.ServiceFactory {
-        @Override
-        public Server.Service create (Socket s) {
-            return new VerboseService(s);
-        }
+        private ProbeStore probe_store;
     }
-
 
     public static void main (String[] args) {
         try {
-            Server s = new Server(new VerboseServiceFactory(),
-                                  new ServerSocket(1234));
+            ProbeStore probe_store = new ProbeStore();
+
+            Server s = new Server(new ServerSocket(1234),
+                                  new VerboseListenerFactory(probe_store),
+                                  probe_store);
+
             s.start();
         }
         catch (Exception e) {

@@ -1,8 +1,8 @@
 package io.crowbar.instrumentation.messaging;
 
+import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.CollectorListener;
 import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.ProbeSet;
 
@@ -13,7 +13,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.util.UUID;
 
-public class Client implements CollectorListener {
+public class Client implements EventListener {
     class Dispatcher extends Thread {
         public void run () {
             Message message = getMessage();
@@ -72,8 +72,7 @@ public class Client implements CollectorListener {
     }
 
     @Override
-    public void register (Collector c,
-                          ProbeSet ps) {
+    public void register (ProbeSet ps) {
         try {
             postMessage(new Messages.RegisterMessage(ps));
         }
@@ -83,8 +82,7 @@ public class Client implements CollectorListener {
     }
 
     @Override
-    public void startTransaction (Collector c,
-                                  Probe p) {
+    public void startTransaction (Probe p) {
         try {
             postMessage(new Messages.TransactionStartMessage(p));
         }
@@ -94,8 +92,7 @@ public class Client implements CollectorListener {
     }
 
     @Override
-    public void endTransaction (Collector c,
-                                Probe p,
+    public void endTransaction (Probe p,
                                 boolean[] hit_vector) {
         try {
             postMessage(new Messages.TransactionEndMessage(p, hit_vector));
@@ -106,8 +103,7 @@ public class Client implements CollectorListener {
     }
 
     @Override
-    public void oracle (Collector c,
-                        Probe p,
+    public void oracle (Probe p,
                         double error,
                         double confidence) {
         try {

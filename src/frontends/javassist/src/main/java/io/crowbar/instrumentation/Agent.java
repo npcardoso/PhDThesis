@@ -1,12 +1,12 @@
 package io.crowbar.instrumentation;
 
+import io.crowbar.instrumentation.events.VerboseListener;
 import io.crowbar.instrumentation.messaging.Client;
 import io.crowbar.instrumentation.passes.IgnorePass;
 import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
 import io.crowbar.instrumentation.passes.wrappers.JUnit4Wrapper;
-import io.crowbar.instrumentation.runtime.VerboseCollectorListener;
 import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.ProbeSet;
 
@@ -55,7 +55,7 @@ public class Agent implements ClassFileTransformer {
         twp.wrappers.add(new JUnit4Wrapper());
         a.passes.add(twp);
 
-        Collector.getDefault().addListener(new VerboseCollectorListener());
+        Collector.getDefault().addListener(new VerboseListener());
         Collector.getDefault().addListener(new Client(null, 1234));
 
 

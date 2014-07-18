@@ -1,41 +1,37 @@
 package io.crowbar.instrumentation.messaging;
 
+import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.*;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.CollectorListener;
 import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.runtime.ProbeStore;
 import io.crowbar.util.io.ThreadedServer;
 
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server extends ThreadedServer {
-    BlockingQueue<Message> messages = new LinkedBlockingQueue<Message> ();
-
-    public static abstract class ServiceFactory {
-        public abstract Service create (Socket s);
+    public static abstract class EventListenerFactory {
+        public abstract EventListener create ();
     }
 
-    public static abstract class Service implements Runnable {
-        protected void handle (TransactionStartMessage m) throws Exception {}
-        protected void handle (TransactionEndMessage m) throws Exception {}
-        protected void handle (OracleMessage m) throws Exception {}
-        protected void handle (RegisterMessage m) throws Exception {}
-
-        public Service (Socket s) {
+    public static class Service implements Runnable {
+        public Service (Socket s,
+                        EventListener event_listener,
+                        ProbeStore probe_store) {
             this.s = s;
+            this.event_listener = event_listener;
+            this.probe_store = probe_store;
         }
 
         @Override
         public final void run () {
             while (true) {
-                Object m;
+                Object o;
                 try {
                     ObjectInputStream in = new ObjectInputStream(s.getInputStream());
-                    m = in.readObject();
+                    o = in.readObject();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -43,7 +39,7 @@ public class Server extends ThreadedServer {
                 }
 
                 try {
-                    dispatch(m);
+                    dispatch(o);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -51,32 +47,42 @@ public class Server extends ThreadedServer {
             }
         }
 
-        private void dispatch (Object m) throws Exception {
-            if (m instanceof TransactionStartMessage)
-                handle((TransactionStartMessage) m);
-            else if (m instanceof TransactionEndMessage)
-                handle((TransactionEndMessage) m);
-            else if (m instanceof OracleMessage)
-                handle((OracleMessage) m);
-            else if (m instanceof RegisterMessage)
-                handle((RegisterMessage) m);
+        private void dispatch (Object o) throws Exception {
+            if (o instanceof ProbeMessage) {
+                ProbeMessage m = (ProbeMessage) o;
+                Probe p = probe_store.get(m.probe_set_id, m.probe_id);
+
+                if (o instanceof TransactionStartMessage)
+                    event_listener.startTransaction(p);
+                else if (o instanceof TransactionEndMessage)
+                    event_listener.endTransaction(p, ((TransactionEndMessage) m).hit_vector);
+                else if (o instanceof OracleMessage)
+                    event_listener.oracle(p, ((OracleMessage) m).error, ((OracleMessage) m).confidence);
+            }
+            else if (o instanceof RegisterMessage)
+                event_listener.register(((RegisterMessage) o).probe_set);
             else
-                throw new Exception("Unknown Message Type: " + m);
+                throw new Exception("Unknown Message Type: " + o);
         }
 
         private Socket s;
+        private EventListener event_listener;
+        private ProbeStore probe_store;
     }
 
-    public Server (ServiceFactory service_factory,
-                   ServerSocket server_socket) {
+    public Server (ServerSocket server_socket,
+                   EventListenerFactory event_listener_factory,
+                   ProbeStore probe_store) {
         super(server_socket);
-        this.service_factory = service_factory;
+        this.event_listener_factory = event_listener_factory;
+        this.probe_store = probe_store;
     }
 
     @Override
     protected Runnable handle (Socket s) {
-        return service_factory.create(s);
+        return new Service(s, event_listener_factory.create(), probe_store);
     }
 
-    ServiceFactory service_factory;
+    EventListenerFactory event_listener_factory;
+    ProbeStore probe_store;
 }

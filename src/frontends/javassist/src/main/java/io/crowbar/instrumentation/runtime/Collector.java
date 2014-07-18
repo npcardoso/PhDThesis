@@ -1,16 +1,21 @@
 package io.crowbar.instrumentation.runtime;
 
-import java.util.*;
+import io.crowbar.instrumentation.events.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
-public class Collector {
+public class Collector implements EventGenerator {
     public static Collector getDefault () {
         return collector;
     }
 
-    public void addListener (CollectorListener cl) {
-        assert cl != null;
-        this.listeners.add(cl);
+    public void addListener (EventListener l) {
+        assert l != null;
+        this.listeners.add(l);
     }
 
     public void transactionStart (String class_name,
@@ -28,9 +33,9 @@ public class Collector {
 
         ps.getHitVector()[probe_id] = true;
 
-        for (CollectorListener cl : listeners) {
+        for (EventListener cl : listeners) {
             try {
-                cl.startTransaction(this, p);
+                cl.startTransaction(p);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -52,9 +57,9 @@ public class Collector {
 
         boolean[] hit_vector = collectHitVectors();
 
-        for (CollectorListener cl : listeners) {
+        for (EventListener cl : listeners) {
             try {
-                cl.endTransaction(this, p, hit_vector);
+                cl.endTransaction(p, hit_vector);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -78,9 +83,9 @@ public class Collector {
 
         ps.getHitVector()[probe_id] = true;
 
-        for (CollectorListener cl : listeners) {
+        for (EventListener cl : listeners) {
             try {
-                cl.oracle(this, p, error, confidence);
+                cl.oracle(p, error, confidence);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -94,9 +99,9 @@ public class Collector {
         probeset_list.add(ps);
         total_probes += ps.size();
 
-        for (CollectorListener cl : listeners) {
+        for (EventListener cl : listeners) {
             try {
-                cl.register(this, ps);
+                cl.register(ps);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -154,5 +159,5 @@ public class Collector {
     private int total_probes = 0;
 
     public boolean reset_on_transaction_start = true;
-    private List<CollectorListener> listeners = new ArrayList<CollectorListener> ();
+    private List<EventListener> listeners = new ArrayList<EventListener> ();
 }

@@ -79,7 +79,7 @@ public class App {
 
 
         b.discoversExpiredCreditCard();
-        try {
+        /*try {
             ThreadedServer server = new EchoServer2(new ServerSocket(1234));
             server.max_clients = 2;
             server.start();
@@ -87,7 +87,7 @@ public class App {
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private int blurz (int a, float b) {

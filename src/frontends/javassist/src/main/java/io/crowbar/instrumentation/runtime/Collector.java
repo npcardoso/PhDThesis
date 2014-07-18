@@ -10,6 +10,11 @@ public class Collector {
 
     public void transactionStart (String class_name, int probe_id) {
         System.out.println("!!!!!!!!! transaction start @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
+        
+        Probe p = probeset_map.get(class_name).get(probe_id);
+        for(CollectorListener cl : listeners) {
+        	cl.startTransaction(p);
+        }
     }
 
     public void transactionEnd (String class_name, int probe_id) throws Exception {
@@ -29,6 +34,11 @@ public class Collector {
             System.out.print(b ? "1 " : "0 ");
 
         System.out.println("\n!!!!!!!!! transaction end @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
+        
+        Probe p = probeset_map.get(class_name).get(probe_id);
+        for(CollectorListener cl : listeners) {
+        	cl.endTransaction(p);
+        }
     }
 
     public void oracle (int id,
@@ -80,8 +90,13 @@ public class Collector {
         }
     }
 
+    public void addListener(CollectorListener cl) {
+    	this.listeners.add(cl);
+    }
+    
     private static Collector collector = new Collector ();
     Map<String, ProbeSet> probeset_map = new HashMap<String, ProbeSet> ();
     List<ProbeSet> probeset_list = new ArrayList<ProbeSet> (); // This is needed to maintain serialization order
     private int total_probes = 0;
+    private List<CollectorListener> listeners = new ArrayList<CollectorListener>();
 }

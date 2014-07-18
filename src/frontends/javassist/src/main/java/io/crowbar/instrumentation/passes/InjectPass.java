@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.runtime.*;
-
+import io.crowbar.instrumentation.runtime.ProbeSet.AlreadyPreparedException;
 import javassist.*;
 import javassist.bytecode.*;
 
@@ -68,7 +68,7 @@ public class InjectPass extends Pass {
                                               CtClass c,
                                               CtMethod m,
                                               int line,
-                                              ConstPool p) {
+                                              ConstPool p) throws AlreadyPreparedException {
         Bytecode b = new Bytecode(p);
         Collector collector = Collector.getDefault();
         int id = ps.register(ProbeType.HIT_PROBE,

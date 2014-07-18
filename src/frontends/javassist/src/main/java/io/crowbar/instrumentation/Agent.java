@@ -1,19 +1,26 @@
 package io.crowbar.instrumentation;
 
-import io.crowbar.instrumentation.passes.*;
-import io.crowbar.instrumentation.passes.wrappers.*;
-import io.crowbar.instrumentation.runtime.*;
-
+import io.crowbar.instrumentation.messaging.AgentServer;
+import io.crowbar.instrumentation.passes.IgnorePass;
+import io.crowbar.instrumentation.passes.InjectPass;
+import io.crowbar.instrumentation.passes.Pass;
+import io.crowbar.instrumentation.passes.TestWrapperPass;
+import io.crowbar.instrumentation.passes.wrappers.JUnit4Wrapper;
+import io.crowbar.instrumentation.runtime.Collector;
+import io.crowbar.instrumentation.runtime.ProbeSet;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.security.ProtectionDomain;
-import java.util.*;
-import java.io.FileOutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
-import javassist.*;
-import javassist.bytecode.*;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.Modifier;
 
 public class Agent implements ClassFileTransformer {
     public static void premain(String agentArgs, Instrumentation inst) {
@@ -47,6 +54,19 @@ public class Agent implements ClassFileTransformer {
 
 
         inst.addTransformer(a);
+        
+        try {
+        	AgentServer as = new AgentServer(new ServerSocket(2345));
+        	as.max_clients = 1;
+        	as.start();
+        	Collector.getDefault().addListener(as);
+        	
+        	Socket s = new Socket((String)null, 2345); //create a client socket for testing
+        	
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+        
     }
 
 

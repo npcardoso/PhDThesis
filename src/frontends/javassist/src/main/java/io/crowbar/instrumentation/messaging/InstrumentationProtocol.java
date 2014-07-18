@@ -17,5 +17,5 @@ public interface InstrumentationProtocol {
     public void sendHitVector (Socket s, boolean[] hit_vector); // throws something
     public boolean[] rcvHitVector (Socket s); // throws something
 
-    // ...
+    // These methods send and receive information about start and end of transactions
 }

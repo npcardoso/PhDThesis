@@ -3,37 +3,41 @@ import java.util.*;
 
 public class ProbeSet {
     public class AlreadyPreparedException extends Exception {}
+
     public class NotPreparedException extends Exception {}
 
-    public ProbeSet(String class_name){
-        this.class_name = class_name;
+    public ProbeSet (String name) {
+        this.name = name;
     }
 
-    public int register(ProbeType type) throws AlreadyPreparedException {
-        if(isPrepared())
+    public int register (ProbeType type) throws AlreadyPreparedException {
+        if (isPrepared())
             throw new AlreadyPreparedException();
+
         items.add(new Probe(type));
         return items.size() - 1;
     }
 
-    public int register(ProbeType type,
-                        String method_name) throws AlreadyPreparedException {
-        if(isPrepared())
+    public int register (ProbeType type,
+                         String method_name) throws AlreadyPreparedException {
+        if (isPrepared())
             throw new AlreadyPreparedException();
+
         items.add(new Probe(type, method_name));
         return items.size() - 1;
     }
 
-    public int register(ProbeType type,
-                        String method_name,
-                        int line) throws AlreadyPreparedException {
-        if(isPrepared())
+    public int register (ProbeType type,
+                         String method_name,
+                         int line) throws AlreadyPreparedException {
+        if (isPrepared())
             throw new AlreadyPreparedException();
+
         items.add(new Probe(type, method_name, line));
         return items.size() - 1;
     }
 
-    public int size() {
+    public int size () {
         return items.size();
     }
 
@@ -41,35 +45,46 @@ public class ProbeSet {
         return hitvector != null;
     }
 
-    void prepare() throws AlreadyPreparedException {
-        if(isPrepared())
+    void prepare (int probeset_id) throws AlreadyPreparedException {
+        if (isPrepared())
             throw new AlreadyPreparedException();
+
         hitvector = new boolean[size()];
+        this.probeset_id = probeset_id;
     }
 
-    public Probe get(int id) {
+    public Probe get (int id) {
         return items.get(id);
     }
 
-    public String getClassName() {
-        return class_name;
+    public int getId () {
+        if (!isPrepared())
+            throw new NotPreparedException();
+
+        return probeset_id;
     }
 
-    public boolean[] getHitVector() throws NotPreparedException {
-        if(!isPrepared())
+    public string getName () {
+        return name;
+    }
+
+    public boolean[] getHitVector () throws NotPreparedException {
+        if (!isPrepared())
             throw new NotPreparedException();
+
         return hitvector;
     }
 
-    public void resetHitVector() throws NotPreparedException {
-        if(!isPrepared())
+    public void resetHitVector () throws NotPreparedException {
+        if (!isPrepared())
             throw new NotPreparedException();
 
-        for(int i = 0; i < hitvector.length; i++)
+        for (int i = 0; i < hitvector.length; i++)
             hitvector[i] = false;
     }
 
-    private String class_name;
+    private int probeset_id = -1;
+    private String name;
     private boolean[] hitvector = null;
-    private Vector<Probe> items = new Vector<Probe>();
+    private Vector<Probe> items = new Vector<Probe> ();
 }

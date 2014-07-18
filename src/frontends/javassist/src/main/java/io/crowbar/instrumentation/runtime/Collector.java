@@ -8,11 +8,20 @@ public class Collector {
         return collector;
     }
 
-    public void transactionStart (String class_name, int probe_id) {
+    public void transactionStart (String class_name, int probe_id) throws Exception {
         System.out.println("!!!!!!!!! transaction start @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
+
+        if (reset_on_transaction_start)
+            resetHitVectors();
+
+        probeset_map.get(class_name).getHitVector()[probe_id] = true;
+        ;
     }
 
     public void transactionEnd (String class_name, int probe_id) throws Exception {
+        probeset_map.get(class_name).getHitVector()[probe_id] = true;
+
+
         boolean[] hitprobes = collectHitVectors();
         resetHitVectors();
 
@@ -81,7 +90,10 @@ public class Collector {
     }
 
     private static Collector collector = new Collector ();
-    Map<String, ProbeSet> probeset_map = new HashMap<String, ProbeSet> ();
-    List<ProbeSet> probeset_list = new ArrayList<ProbeSet> (); // This is needed to maintain serialization order
+
+
+    public boolean reset_on_transaction_start = true;
+    private Map<String, ProbeSet> probeset_map = new HashMap<String, ProbeSet> ();
+    private List<ProbeSet> probeset_list = new ArrayList<ProbeSet> (); // This is needed to maintain serialization order
     private int total_probes = 0;
 }

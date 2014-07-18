@@ -1,6 +1,6 @@
 package io.crowbar.instrumentation;
 
-import io.crowbar.instrumentation.messaging.AgentClient;
+import io.crowbar.instrumentation.messaging.Client;
 import io.crowbar.instrumentation.passes.IgnorePass;
 import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
@@ -56,7 +56,7 @@ public class Agent implements ClassFileTransformer {
         a.passes.add(twp);
 
         Collector.getDefault().addListener(new VerboseCollectorListener());
-        Collector.getDefault().addListener(new AgentClient(null, 1234));
+        Collector.getDefault().addListener(new Client(null, 1234));
 
 
         inst.addTransformer(a);

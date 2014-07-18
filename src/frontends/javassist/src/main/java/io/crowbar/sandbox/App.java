@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation;
+package io.crowbar.sandbox;
 
 import io.crowbar.instrumentation.runtime.*;
 import io.crowbar.util.io.*;

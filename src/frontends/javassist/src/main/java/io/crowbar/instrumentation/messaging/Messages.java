@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public class Messages {
     public static abstract class Message {
+        protected Message () {}
         public Message (String client_id) {
             this.client_id = client_id;
         }
@@ -14,6 +15,7 @@ public class Messages {
     }
 
     public static abstract class ProbeMessage extends Message {
+        protected ProbeMessage () {}
         public ProbeMessage (String client_id,
                              Probe probe) {
             super(client_id);
@@ -24,6 +26,7 @@ public class Messages {
     }
 
     public static class TransactionStartMessage extends ProbeMessage implements Serializable {
+        protected TransactionStartMessage () {}
         TransactionStartMessage (String client_id,
                                  Probe probe) {
             super(client_id, probe);
@@ -31,6 +34,7 @@ public class Messages {
     }
 
     public static class TransactionEndMessage extends ProbeMessage implements Serializable {
+        protected TransactionEndMessage () {}
         TransactionEndMessage (String client_id,
                                Probe probe,
                                boolean[] hit_vector) {
@@ -42,6 +46,7 @@ public class Messages {
     }
 
     public static class OracleMessage extends ProbeMessage implements Serializable  {
+        protected OracleMessage () {}
         OracleMessage (String client_id,
                        Probe probe,
                        double error,

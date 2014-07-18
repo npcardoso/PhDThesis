@@ -12,7 +12,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.util.UUID;
 
-public class AgentClient implements CollectorListener {
+public class Client implements CollectorListener {
     class Dispatcher extends Thread {
         public void run () {
             Message message = getMessage();
@@ -47,7 +47,7 @@ public class AgentClient implements CollectorListener {
     }
 
 
-    public AgentClient (String host, int port) {
+    public Client (String host, int port) {
         this.host = host;
         this.port = port;
     }

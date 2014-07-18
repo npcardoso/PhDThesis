@@ -49,6 +49,16 @@ public class AgentServer {
         protected void handle (OracleMessage m) throws Exception {
             System.out.println("Received OracleMessage: " + m);
         }
+
+        @Override
+        protected void handle (RegisterMessage m) throws Exception {
+            System.out.println("Received RegisterMessage: " + m);
+            ProbeSet ps = m.probe_set;
+
+            for (int j = 0; j < ps.size(); j++) {
+                System.out.println(j + ": " + ps.getName() + ps.get(j));
+            }
+        }
     }
 
     public static class VerboseServiceFactory extends Server.ServiceFactory {

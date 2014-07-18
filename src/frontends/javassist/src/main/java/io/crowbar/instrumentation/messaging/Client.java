@@ -4,6 +4,7 @@ import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.CollectorListener;
 import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.runtime.ProbeSet;
 
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -71,16 +72,37 @@ public class Client implements CollectorListener {
     }
 
     @Override
+    public void register (Collector c,
+                          ProbeSet ps) {
+        try {
+            postMessage(new Messages.RegisterMessage(ps));
+        }
+        catch (ProbeSet.NotPreparedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void startTransaction (Collector c,
                                   Probe p) {
-        postMessage(new Messages.TransactionStartMessage(client_id, p));
+        try {
+            postMessage(new Messages.TransactionStartMessage(p));
+        }
+        catch (ProbeSet.NotPreparedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void endTransaction (Collector c,
                                 Probe p,
                                 boolean[] hit_vector) {
-        postMessage(new Messages.TransactionEndMessage(client_id, p, hit_vector));
+        try {
+            postMessage(new Messages.TransactionEndMessage(p, hit_vector));
+        }
+        catch (ProbeSet.NotPreparedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -88,14 +110,18 @@ public class Client implements CollectorListener {
                         Probe p,
                         double error,
                         double confidence) {
-        postMessage(new Messages.OracleMessage(client_id, p, error, confidence));
+        try {
+            postMessage(new Messages.OracleMessage(p, error, confidence));
+        }
+        catch (ProbeSet.NotPreparedException e) {
+            e.printStackTrace();
+        }
     }
 
     Queue<Message> messages = new LinkedList<Message> ();
 
     Socket s = null;
     Thread t = null;
-    String client_id = UUID.randomUUID().toString();
     String host;
     int port;
 }

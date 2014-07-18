@@ -36,4 +36,13 @@ public class VerboseCollectorListener implements CollectorListener {
                            ", " + p.getId() + ") : " + error +
                            ", " + confidence + " !!!!!!!!!");
     }
+
+    public void register (Collector c,
+                          ProbeSet ps) {
+        System.out.println("\n!!!!!!!!! registering probeset !!!!!!!!!");
+
+        for (int j = 0; j < ps.size(); j++) {
+            System.out.println(j + ": " + ps.getName() + ps.get(j));
+        }
+    }
 }

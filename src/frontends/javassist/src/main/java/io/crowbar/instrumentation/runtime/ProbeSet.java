@@ -6,6 +6,8 @@ public class ProbeSet implements java.io.Serializable {
 
     public static class NotPreparedException extends Exception {}
 
+    protected ProbeSet () {}
+
     public ProbeSet (String name) {
         this.name = name;
     }

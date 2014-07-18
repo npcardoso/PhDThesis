@@ -29,7 +29,12 @@ public class Collector {
         ps.getHitVector()[probe_id] = true;
 
         for (CollectorListener cl : listeners) {
-            cl.startTransaction(this, p);
+            try {
+                cl.startTransaction(this, p);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -48,7 +53,12 @@ public class Collector {
         boolean[] hit_vector = collectHitVectors();
 
         for (CollectorListener cl : listeners) {
-            cl.endTransaction(this, p, hit_vector);
+            try {
+                cl.endTransaction(this, p, hit_vector);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         resetHitVectors();
@@ -69,7 +79,28 @@ public class Collector {
         ps.getHitVector()[probe_id] = true;
 
         for (CollectorListener cl : listeners) {
-            cl.oracle(this, p, error, confidence);
+            try {
+                cl.oracle(this, p, error, confidence);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void register (ProbeSet ps) throws Exception {
+        ps.prepare(probeset_list.size());
+        probeset_map.put(ps.getName(), ps);
+        probeset_list.add(ps);
+        total_probes += ps.size();
+
+        for (CollectorListener cl : listeners) {
+            try {
+                cl.register(this, ps);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -102,13 +133,6 @@ public class Collector {
 
     public int getNumProbes () {
         return total_probes;
-    }
-
-    public void register (ProbeSet ps) throws Exception {
-        ps.prepare(probeset_list.size());
-        probeset_map.put(ps.getName(), ps);
-        probeset_list.add(ps);
-        total_probes += ps.size();
     }
 
     public void resetHitVectors () {

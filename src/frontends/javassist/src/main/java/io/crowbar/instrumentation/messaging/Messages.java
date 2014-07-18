@@ -1,44 +1,48 @@
 package io.crowbar.instrumentation.messaging;
 
 import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.runtime.ProbeSet;
 
 import java.io.Serializable;
 
 public class Messages {
-    public static abstract class Message {
-        protected Message () {}
-        public Message (String client_id) {
-            this.client_id = client_id;
+    public interface Message {}
+
+    public static class RegisterMessage implements Message, Serializable {
+        protected RegisterMessage () {}
+        public RegisterMessage (ProbeSet probe_set) throws ProbeSet.NotPreparedException {
+            if (!probe_set.isPrepared())
+                throw new ProbeSet.NotPreparedException();
+
+            this.probe_set = probe_set;
         }
 
-        String client_id;
+        public ProbeSet probe_set;
     }
 
-    public static abstract class ProbeMessage extends Message {
+    public static abstract class ProbeMessage implements Message {
         protected ProbeMessage () {}
-        public ProbeMessage (String client_id,
-                             Probe probe) {
-            super(client_id);
-            this.probe = probe;
+        public ProbeMessage (Probe probe) throws ProbeSet.NotPreparedException {
+            this.probe_set_id = probe.getProbeSet().getId();
+            this.probe_id = probe.getId();
         }
 
-        public Probe probe;
+        public int probe_set_id;
+        public int probe_id;
     }
 
     public static class TransactionStartMessage extends ProbeMessage implements Serializable {
         protected TransactionStartMessage () {}
-        TransactionStartMessage (String client_id,
-                                 Probe probe) {
-            super(client_id, probe);
+        TransactionStartMessage (Probe probe) throws ProbeSet.NotPreparedException {
+            super(probe);
         }
     }
 
     public static class TransactionEndMessage extends ProbeMessage implements Serializable {
         protected TransactionEndMessage () {}
-        TransactionEndMessage (String client_id,
-                               Probe probe,
-                               boolean[] hit_vector) {
-            super(client_id, probe);
+        TransactionEndMessage (Probe probe,
+                               boolean[] hit_vector) throws ProbeSet.NotPreparedException {
+            super(probe);
             this.hit_vector = hit_vector;
         }
 
@@ -47,11 +51,10 @@ public class Messages {
 
     public static class OracleMessage extends ProbeMessage implements Serializable  {
         protected OracleMessage () {}
-        OracleMessage (String client_id,
-                       Probe probe,
+        OracleMessage (Probe probe,
                        double error,
-                       double confidence) {
-            super(client_id, probe);
+                       double confidence) throws ProbeSet.NotPreparedException {
+            super(probe);
             this.error = error;
             this.confidence = confidence;
         }

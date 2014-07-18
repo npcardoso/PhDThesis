@@ -23,6 +23,7 @@ public class Server extends ThreadedServer {
         protected void handle (TransactionStartMessage m) throws Exception {}
         protected void handle (TransactionEndMessage m) throws Exception {}
         protected void handle (OracleMessage m) throws Exception {}
+        protected void handle (RegisterMessage m) throws Exception {}
 
         public Service (Socket s) {
             this.s = s;
@@ -37,7 +38,7 @@ public class Server extends ThreadedServer {
                     m = in.readObject();
                 }
                 catch (Exception e) {
-                    // e.printStackTrace();
+                    e.printStackTrace();
                     break;
                 }
 
@@ -57,6 +58,8 @@ public class Server extends ThreadedServer {
                 handle((TransactionEndMessage) m);
             else if (m instanceof OracleMessage)
                 handle((OracleMessage) m);
+            else if (m instanceof RegisterMessage)
+                handle((RegisterMessage) m);
             else
                 throw new Exception("Unknown Message Type: " + m);
         }

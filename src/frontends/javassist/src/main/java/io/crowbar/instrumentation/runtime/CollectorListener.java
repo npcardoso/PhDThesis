@@ -2,6 +2,9 @@ package io.crowbar.instrumentation.runtime;
 
 
 public interface CollectorListener {
+    public void register (Collector c,
+                          ProbeSet ps);
+
     public void startTransaction (Collector c,
                                   Probe p);
 

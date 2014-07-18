@@ -1,10 +1,10 @@
 package io.crowbar.instrumentation.runtime;
 import java.util.*;
 
-public class ProbeSet {
-    public class AlreadyPreparedException extends Exception {}
+public class ProbeSet implements java.io.Serializable {
+    public static class AlreadyPreparedException extends Exception {}
 
-    public class NotPreparedException extends Exception {}
+    public static class NotPreparedException extends Exception {}
 
     public ProbeSet (String name) {
         this.name = name;

@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.runtime;
 import java.util.*;
 
-public class Probe extends HashMap<String, String> {
+public class Probe extends HashMap<String, String> implements java.io.Serializable {
     Probe (int probe_id,
            ProbeSet parent,
            ProbeType type) {

@@ -40,14 +40,14 @@ public class AgentServer extends ThreadedServer implements CollectorListener {
     @Override
     public void startTransaction (Collector c,
                                   Probe p) {
-        messages.add(new Messages.TransactionStartMessage().setProbe(p));
+        messages.add(new Messages.TransactionStartMessage(p));
     }
 
     @Override
     public void endTransaction (Collector c,
                                 Probe p,
                                 boolean[] hit_vector) {
-        messages.add(new Messages.TransactionEndMessage().setProbe(p));
+        messages.add(new Messages.TransactionEndMessage(p));
     }
 
     @Override
@@ -55,6 +55,6 @@ public class AgentServer extends ThreadedServer implements CollectorListener {
                         Probe p,
                         double error,
                         double confidence) {
-        messages.add(new Messages.TransactionEndMessage().setProbe(p));
+        messages.add(new Messages.TransactionEndMessage(p));
     }
 }

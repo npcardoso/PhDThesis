@@ -34,7 +34,7 @@ public class TestWrapperPass extends Pass {
         int id = ps.register(type, methodname);
 
 
-        return "Collector.getDefault()." + type.method_name + "(\"" + ps.getClassName() + "\", " + id + ");";
+        return "Collector.getDefault()." + type.method_name + "(\"" + ps.getName() + "\", " + id + ");";
     }
 
     public List<Wrapper> wrappers = new LinkedList<Wrapper> ();

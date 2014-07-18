@@ -2,7 +2,7 @@ package io.crowbar.instrumentation.messaging;
 
 
 import io.crowbar.instrumentation.runtime.*;
-import java.net.InputStream;
+import java.io.*;
 
 
 public interface InstrumentationProtocol {
@@ -18,5 +18,5 @@ public interface InstrumentationProtocol {
     public void sendHitVector (OutputStream s, boolean[] hit_vector); // throws something
     public boolean[] rcvHitVector (InputStream s); // throws something
 
-    // ...
+    // These methods send and receive information about start and end of transactions
 }

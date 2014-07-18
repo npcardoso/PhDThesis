@@ -8,49 +8,82 @@ public class Collector {
         return collector;
     }
 
-    public void transactionStart (String class_name, int probe_id) throws Exception {
-        System.out.println("!!!!!!!!! transaction start @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
+    public void addListener (CollectorListener cl) {
+        assert cl != null;
+        this.listeners.add(cl);
+    }
+
+    public void transactionStart (String class_name,
+                                  int probe_id) throws Exception {
+        ProbeSet ps = probeset_map.get(class_name);
+
+
+        assert ps != null;
+
+        Probe p = ps.get(probe_id);
+        assert p != null;
 
         if (reset_on_transaction_start)
             resetHitVectors();
 
-        probeset_map.get(class_name).getHitVector()[probe_id] = true;
-        ;
+        ps.getHitVector()[probe_id] = true;
+
+        for (CollectorListener cl : listeners) {
+            cl.startTransaction(this, p);
+        }
     }
 
-    public void transactionEnd (String class_name, int probe_id) throws Exception {
-        probeset_map.get(class_name).getHitVector()[probe_id] = true;
+    public void transactionEnd (String class_name,
+                                int probe_id) throws ProbeSet.NotPreparedException {
+        ProbeSet ps = probeset_map.get(class_name);
 
 
-        boolean[] hitprobes = collectHitVectors();
-        resetHitVectors();
+        assert ps != null;
 
-        int i = 0;
+        Probe p = ps.get(probe_id);
+        assert p != null;
 
-        for (ProbeSet ps : probeset_list) {
-            for (int j = 0; j < ps.size(); j++) {
-                System.out.print(i++);
-                System.out.println(": " + ps.getClassName() + ps.get(j));
-            }
+        ps.getHitVector()[probe_id] = true;
+
+        boolean[] hit_vector = collectHitVectors();
+
+        for (CollectorListener cl : listeners) {
+            cl.endTransaction(this, p, hit_vector);
         }
 
-        for (boolean b : hitprobes)
-            System.out.print(b ? "1 " : "0 ");
-
-        System.out.println("\n!!!!!!!!! transaction end @ (" + class_name + "," + probe_id + ") !!!!!!!!!");
+        resetHitVectors();
     }
 
-    public void oracle (int id,
+    public void oracle (String class_name,
+                        int probe_id,
                         double error,
-                        double confidence) {
-        System.out.println("!!!!!!!!! collecting oracle (" + error +
-                           "," + confidence +
-                           ") @ " + id +
-                           "!!!!!!!!!");
+                        double confidence) throws ProbeSet.NotPreparedException {
+        ProbeSet ps = probeset_map.get(class_name);
+
+
+        assert ps != null;
+
+        Probe p = ps.get(probe_id);
+        assert p != null;
+
+        ps.getHitVector()[probe_id] = true;
+
+        for (CollectorListener cl : listeners) {
+            cl.oracle(this, p, error, confidence);
+        }
     }
 
-    public ProbeSet get (String class_name) {
-        return probeset_map.get(class_name);
+    // TODO: move the rest of this class to a different class
+    public List<ProbeSet> getProbeSets () {
+        return probeset_list;
+    }
+
+    public ProbeSet get (String name) {
+        return probeset_map.get(name);
+    }
+
+    public ProbeSet get (int probeset_id) {
+        return probeset_list.get(probeset_id);
     }
 
     public boolean[] collectHitVectors () throws ProbeSet.NotPreparedException {
@@ -72,8 +105,8 @@ public class Collector {
     }
 
     public void register (ProbeSet ps) throws Exception {
-        ps.prepare();
-        probeset_map.put(ps.getClassName(), ps);
+        ps.prepare(probeset_list.size());
+        probeset_map.put(ps.getName(), ps);
         probeset_list.add(ps);
         total_probes += ps.size();
     }
@@ -92,8 +125,10 @@ public class Collector {
     private static Collector collector = new Collector ();
 
 
-    public boolean reset_on_transaction_start = true;
     private Map<String, ProbeSet> probeset_map = new HashMap<String, ProbeSet> ();
     private List<ProbeSet> probeset_list = new ArrayList<ProbeSet> (); // This is needed to maintain serialization order
     private int total_probes = 0;
+
+    public boolean reset_on_transaction_start = true;
+    private List<CollectorListener> listeners = new ArrayList<CollectorListener> ();
 }

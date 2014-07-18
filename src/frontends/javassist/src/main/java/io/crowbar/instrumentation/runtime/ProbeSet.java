@@ -14,8 +14,9 @@ public class ProbeSet {
         if (isPrepared())
             throw new AlreadyPreparedException();
 
-        items.add(new Probe(type));
-        return items.size() - 1;
+        Probe p = new Probe(items.size(), this, type);
+        items.add(p);
+        return p.getId();
     }
 
     public int register (ProbeType type,
@@ -23,8 +24,9 @@ public class ProbeSet {
         if (isPrepared())
             throw new AlreadyPreparedException();
 
-        items.add(new Probe(type, method_name));
-        return items.size() - 1;
+        Probe p = new Probe(items.size(), this, type, method_name);
+        items.add(p);
+        return p.getId();
     }
 
     public int register (ProbeType type,
@@ -33,8 +35,9 @@ public class ProbeSet {
         if (isPrepared())
             throw new AlreadyPreparedException();
 
-        items.add(new Probe(type, method_name, line));
-        return items.size() - 1;
+        Probe p = new Probe(items.size(), this, type, method_name, line);
+        items.add(p);
+        return p.getId();
     }
 
     public int size () {
@@ -57,14 +60,14 @@ public class ProbeSet {
         return items.get(id);
     }
 
-    public int getId () {
+    public int getId () throws NotPreparedException {
         if (!isPrepared())
             throw new NotPreparedException();
 
         return probeset_id;
     }
 
-    public string getName () {
+    public String getName () {
         return name;
     }
 

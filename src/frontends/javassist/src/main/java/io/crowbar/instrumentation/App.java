@@ -79,15 +79,15 @@ public class App {
 
 
         b.discoversExpiredCreditCard();
-        try {
-            ThreadedServer server = new EchoServer2(new ServerSocket(1234));
-            server.max_clients = 2;
-            server.start();
-            server.join();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        /*try {
+         *  ThreadedServer server = new EchoServer2(new ServerSocket(1234));
+         *  server.max_clients = 2;
+         *  server.start();
+         *  server.join();
+         * }
+         * catch (Exception e) {
+         *  e.printStackTrace();
+         * }*/
     }
 
     private int blurz (int a, float b) {

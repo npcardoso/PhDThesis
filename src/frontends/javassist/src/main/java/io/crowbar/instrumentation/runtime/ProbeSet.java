@@ -47,15 +47,14 @@ public class ProbeSet implements java.io.Serializable {
     }
 
     public boolean isPrepared () {
-        return hitvector != null;
+        return probe_set_id >= 0;
     }
 
-    void prepare (int probeset_id) throws AlreadyPreparedException {
+    void prepare (int probe_set_id) throws AlreadyPreparedException {
         if (isPrepared())
             throw new AlreadyPreparedException();
 
-        hitvector = new boolean[size()];
-        this.probeset_id = probeset_id;
+        this.probe_set_id = probe_set_id;
     }
 
     public Probe get (int id) {
@@ -66,30 +65,14 @@ public class ProbeSet implements java.io.Serializable {
         if (!isPrepared())
             throw new NotPreparedException();
 
-        return probeset_id;
+        return probe_set_id;
     }
 
     public String getName () {
         return name;
     }
 
-    public boolean[] getHitVector () throws NotPreparedException {
-        if (!isPrepared())
-            throw new NotPreparedException();
-
-        return hitvector;
-    }
-
-    public void resetHitVector () throws NotPreparedException {
-        if (!isPrepared())
-            throw new NotPreparedException();
-
-        for (int i = 0; i < hitvector.length; i++)
-            hitvector[i] = false;
-    }
-
-    private int probeset_id = -1;
+    private int probe_set_id = -1;
     private String name;
-    private boolean[] hitvector = null;
     private Vector<Probe> items = new Vector<Probe> ();
 }

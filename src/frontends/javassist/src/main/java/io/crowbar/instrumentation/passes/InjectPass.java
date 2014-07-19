@@ -30,8 +30,8 @@ public class InjectPass extends Pass {
 
         if (injected) {
             CtField f = CtField.make("public static boolean[]  " + HIT_VECTOR_NAME + " = " +
-                                     "Collector.getDefault().get(\"" + ps.getName() +
-                                     "\").getHitVector();", c);
+                                     "Collector.getDefault().getHitVector(\"" + ps.getName() +
+                                     "\");", c);
             c.addField(f);
         }
     }

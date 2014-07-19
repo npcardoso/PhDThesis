@@ -8,39 +8,55 @@ import java.util.Map;
 
 
 public class ProbeStore {
-	public void register (ProbeSet ps) throws Exception {
-		try { ps.prepare(probeset_list.size()); } catch (Exception e) { }
-		if(!probeset_map.containsKey(ps.getName())) {
-			probeset_map.put(ps.getName(), ps);
-			probeset_list.add(ps);
-			total_probes += ps.size();
-		}
-	}
+    public static class AlreadyRegistered extends Exception {
+        AlreadyRegistered (String reason) {super(reason);}
+    }
 
-    // TODO: move the rest of this class to a different class
-    public List<ProbeSet> getProbeSets () {
-        return probeset_list;
+    public void register (ProbeSet ps) throws ProbeSet.NotPreparedException, AlreadyRegistered {
+        ProbeSet ps_name = by_name.get(ps.getName());
+        ProbeSet ps_id = by_id.get(ps.getId());
+
+
+        if (ps_name == null && ps_id == null) {
+            by_name.put(ps.getName(), ps);
+            by_id.put(ps.getId(), ps);
+            total_probes += ps.size();
+            return;
+        }
+
+        if (ps_name == null)
+            throw new AlreadyRegistered("'" + ps.getId() + "' was already registered for class '" + ps_id.getName() + "' ");
+
+        if (ps_id == null)
+            throw new AlreadyRegistered("'" + ps.getName() + "' was already registered with id '" + ps_name.getId() + "' ");
+
+
+        throw new AlreadyRegistered("'" + ps.getName() + "' was already registered with id '" + ps_name.getId() +
+                                    "' and '" + ps.getId() + "' was already registered for class '" + ps_id.getName() + "' ");
     }
 
     public ProbeSet get (String name) {
-        return probeset_map.get(name);
+        return by_name.get(name);
     }
 
-    public ProbeSet get (int probeset_id) {
-        return probeset_list.get(probeset_id);
+    public ProbeSet get (int probe_set_id) {
+        return by_id.get(probe_set_id);
     }
 
     public Probe get (int probe_set_id,
                       int probe_id) {
-        System.out.println(probe_set_id + ", " + probe_id + "!!!!!!11");
-        return probeset_list.get(probe_set_id).get(probe_id);
+        return by_id.get(probe_set_id).get(probe_id);
     }
 
     public int getNumProbes () {
         return total_probes;
     }
 
-    private Map<String, ProbeSet> probeset_map = new HashMap<String, ProbeSet> ();
-    private List<ProbeSet> probeset_list = new ArrayList<ProbeSet> (); // This is needed to maintain serialization order
+    public int getNumProbesSets () {
+        return by_id.size();
+    }
+
+    private Map<String, ProbeSet> by_name = new HashMap<String, ProbeSet> ();
+    private Map<Integer, ProbeSet> by_id = new HashMap<Integer, ProbeSet> ();
     private int total_probes = 0;
 }

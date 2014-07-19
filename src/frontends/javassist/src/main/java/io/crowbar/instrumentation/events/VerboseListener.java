@@ -7,14 +7,14 @@ public class VerboseListener implements EventListener {
     @Override
     public void startTransaction (Probe p) {
         System.out.println("!!!!!!!!! transaction start @ (" + p.getProbeSet().getName() +
-                           ", " + p.getId() + ") !!!!!!!!!");
+                           ", " + p.getId() + ":" + p + ") !!!!!!!!!");
     }
 
     @Override
     public void endTransaction (Probe p,
                                 boolean[] hit_vector) {
         System.out.println("\n!!!!!!!!! transaction end @ (" + p.getProbeSet().getName() +
-                           ", " + p.getId() + ") !!!!!!!!!");
+                           ", " + p.getId() + ":" + p + ") !!!!!!!!!");
 
         for (boolean b : hit_vector)
             System.out.print(b ? "1 " : "0 ");
@@ -27,7 +27,7 @@ public class VerboseListener implements EventListener {
                         double error,
                         double confidence) {
         System.out.println("\n!!!!!!!!! collecting oracle @ (" + p.getProbeSet().getName() +
-                           ", " + p.getId() + ") : " + error +
+                           ", " + p.getId() + ":" + p + ") : " + error +
                            ", " + confidence + " !!!!!!!!!");
     }
 

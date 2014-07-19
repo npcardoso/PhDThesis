@@ -7,6 +7,7 @@ import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.ProbeStore;
 import io.crowbar.util.io.ThreadedServer;
 
+import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,6 +33,9 @@ public class Server extends ThreadedServer {
                 try {
                     ObjectInputStream in = new ObjectInputStream(s.getInputStream());
                     o = in.readObject();
+                }
+                catch (EOFException e) {
+                    break;
                 }
                 catch (Exception e) {
                     e.printStackTrace();

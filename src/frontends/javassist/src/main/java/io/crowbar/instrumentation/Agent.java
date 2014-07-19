@@ -1,6 +1,7 @@
 package io.crowbar.instrumentation;
 
 import io.crowbar.instrumentation.events.VerboseListener;
+import io.crowbar.instrumentation.events.MultiListener;
 import io.crowbar.instrumentation.messaging.Client;
 import io.crowbar.instrumentation.passes.IgnorePass;
 import io.crowbar.instrumentation.passes.InjectPass;
@@ -55,28 +56,14 @@ public class Agent implements ClassFileTransformer {
         twp.wrappers.add(new JUnit4Wrapper());
         a.passes.add(twp);
 
-        Collector.getDefault().addListener(new VerboseListener());
-        Collector.getDefault().addListener(new Client(null, Integer.parseInt(agentArgs)));
+
+        MultiListener ml = new MultiListener();
+        ml.add(new VerboseListener());
+        ml.add(new Client(null, Integer.parseInt(agentArgs)));
+        Collector.getDefault().setListener(ml);
 
 
         inst.addTransformer(a);
-
-        /*
-         *
-         * // In this function, this code breaks the instrumentation..
-         *      try {
-         *          AgentServer as = new AgentServer(new ServerSocket(2345));
-         *          as.max_clients = 1;
-         *          as.start();
-         *          Collector.getDefault().addListener(as);
-         *
-         *
-         *          Socket s = new Socket((String) null, 2345); // create a client socket for testing
-         *      }
-         *      catch (Exception e) {
-         *          e.printStackTrace();
-         *          }
-         */
     }
 
     @Override

@@ -56,7 +56,7 @@ public class Agent implements ClassFileTransformer {
         a.passes.add(twp);
 
         Collector.getDefault().addListener(new VerboseListener());
-        Collector.getDefault().addListener(new Client(null, 1234));
+        Collector.getDefault().addListener(new Client(null, Integer.parseInt(agentArgs)));
 
 
         inst.addTransformer(a);

@@ -8,6 +8,8 @@ core
 a.out
 *~
 ~.tmp
+.DS_Store
+
 # Compiled Object files
 *.slo
 *.lo

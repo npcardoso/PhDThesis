@@ -8,12 +8,14 @@ import java.util.Map;
 
 
 public class ProbeStore {
-    public void register (ProbeSet ps) throws Exception {
-        ps.prepare(probeset_list.size());
-        probeset_map.put(ps.getName(), ps);
-        probeset_list.add(ps);
-        total_probes += ps.size();
-    }
+	public void register (ProbeSet ps) throws Exception {
+		try { ps.prepare(probeset_list.size()); } catch (Exception e) { }
+		if(!probeset_map.containsKey(ps.getName())) {
+			probeset_map.put(ps.getName(), ps);
+			probeset_list.add(ps);
+			total_probes += ps.size();
+		}
+	}
 
     // TODO: move the rest of this class to a different class
     public List<ProbeSet> getProbeSets () {

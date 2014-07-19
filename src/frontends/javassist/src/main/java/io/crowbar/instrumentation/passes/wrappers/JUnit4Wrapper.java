@@ -6,7 +6,7 @@ public class JUnit4Wrapper implements Wrapper {
     @Override
     public boolean matches(CtMethod m) {
         try {
-            return m.hasAnnotation(Class.forName("org.junit.Test"));
+            return m.hasAnnotation(org.junit.Test.class);
         } catch (Exception e) {}
         return false;
     }

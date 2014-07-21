@@ -1,7 +1,7 @@
 .scons.conf
 .sconsign.dblite
 obj
-
+doc
 gmon.out
 core
 .deps

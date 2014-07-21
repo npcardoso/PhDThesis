@@ -4,6 +4,7 @@ import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.*;
 import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.runtime.ProbeSet;
 import io.crowbar.instrumentation.runtime.ProbeStore;
 import io.crowbar.util.io.ThreadedServer;
 
@@ -13,9 +14,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server extends ThreadedServer {
-    public static abstract class EventListenerFactory {
-        public abstract EventListener create ();
+    public interface EventListenerFactory {
+        public EventListener create (ProbeStore ps);
     }
+
+    public interface ProbeStoreFactory {
+        public ProbeStore getOrCreate (String id);
+    }
+
 
     public static class Service implements Runnable {
         public Service (Socket s,
@@ -63,8 +69,13 @@ public class Server extends ThreadedServer {
                 else if (o instanceof OracleMessage)
                     event_listener.oracle(p, ((OracleMessage) m).error, ((OracleMessage) m).confidence);
             }
-            else if (o instanceof RegisterMessage)
-                event_listener.register(((RegisterMessage) o).probe_set);
+            else if (o instanceof RegisterMessage) {
+                ProbeSet probe_set = ((RegisterMessage) o).probe_set;
+
+                // Auto registration
+                probe_store.register(probe_set);
+                event_listener.register(probe_set);
+            }
             else
                 throw new Exception("Unknown Message Type: " + o);
         }
@@ -76,17 +87,39 @@ public class Server extends ThreadedServer {
 
     public Server (ServerSocket server_socket,
                    EventListenerFactory event_listener_factory,
-                   ProbeStore probe_store) {
+                   ProbeStoreFactory probe_store_factory) {
         super(server_socket);
         this.event_listener_factory = event_listener_factory;
-        this.probe_store = probe_store;
+        this.probe_store_factory = probe_store_factory;
     }
 
     @Override
     protected Runnable handle (Socket s) {
-        return new Service(s, event_listener_factory.create(), probe_store);
+        String id = null;
+
+
+        try {
+            Object o;
+            ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+            o = in.readObject();
+
+            if (!(o instanceof HelloMessage))
+                throw new Exception("First message should be a HelloMessage. Received instead: " + o);
+
+            id = ((HelloMessage) o).id;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        ProbeStore probe_store = probe_store_factory.getOrCreate(id);
+        EventListener event_listener = event_listener_factory.create(probe_store);
+        return new Service(s,
+                           event_listener,
+                           probe_store);
     }
 
     EventListenerFactory event_listener_factory;
-    ProbeStore probe_store;
+    ProbeStoreFactory probe_store_factory;
 }

@@ -2,6 +2,7 @@ package io.crowbar.instrumentation.messaging;
 
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.Message;
+import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
 import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.ProbeSet;
@@ -21,8 +22,12 @@ public class Client implements EventListener {
 
             while (message != null) {
                 try {
-                    if (s == null)
+                    if (s == null) {
                         s = new Socket(host, port);
+                        ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+                        out.writeObject(new HelloMessage(client_id));
+                        out.flush();
+                    }
 
                     if (message != null) {
                         ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
@@ -118,6 +123,7 @@ public class Client implements EventListener {
 
     Socket s = null;
     Thread t = null;
+    final String client_id = UUID.randomUUID().toString();
     String host;
     int port;
 }

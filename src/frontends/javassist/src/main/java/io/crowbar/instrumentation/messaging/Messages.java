@@ -8,6 +8,15 @@ import java.io.Serializable;
 public class Messages {
     public interface Message {}
 
+    public static class HelloMessage implements Message, Serializable {
+        protected HelloMessage () {}
+        public HelloMessage (String id) {
+            this.id = id;
+        }
+
+        public String id;
+    }
+
     public static class RegisterMessage implements Message, Serializable {
         protected RegisterMessage () {}
         public RegisterMessage (ProbeSet probe_set) throws ProbeSet.NotPreparedException {

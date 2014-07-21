@@ -6,9 +6,8 @@ env = env.Clone()
 llvm_ccflags = " `%s --cxxflags`" % env['llvmconfig']
 llvm_ldflags = " `%s --ldflags --libs`" % env['llvmconfig']
 
-env.Append(CPPPATH = Dir(env['common_dir']),
-	CCFLAGS = llvm_ccflags,
-	LINKFLAGS = llvm_ldflags)
+env.Append(CCFLAGS = llvm_ccflags,
+           LINKFLAGS = llvm_ldflags)
 
 target  = "llvm_spectra_instrument"
 

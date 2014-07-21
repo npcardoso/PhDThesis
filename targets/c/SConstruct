@@ -13,8 +13,8 @@ vars.Add('PATH', '', '')
 vars.Add('LIBPATH', '', '')
 vars.Add('CPPPATH', '', '')
 
-vars.Add('prefix', '', join(root, 'obj', 'install'))
-vars.Add('build_dir', '', join(root, 'obj'))
+vars.Add('prefix', '', join(root, 'build', 'install'))
+vars.Add('build_dir', '', join(root, 'build'))
 vars.Add('libext', '', 'so')
 
 vars.Add('libinstrument', '', 'instrument')
@@ -62,9 +62,6 @@ for i in ['PATH', 'LIBPATH', 'CPPPATH']:
     if not isinstance(env[i], list):
       env[i] = [env[i]]
 env['PATH'].extend(['/usr/local/bin', '/bin', '/usr/bin'])
-
-env['common_dir'] = join(root, "src", "common")
-
 
 
 #Build Flags

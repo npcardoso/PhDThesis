@@ -1,8 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.instrumentation.runtime.*;
-import io.crowbar.instrumentation.runtime.ProbeSet.AlreadyPreparedException;
 import io.crowbar.sandbox.Tree.Node;
+import io.crowbar.instrumentation.runtime.ProbeType;
 
 import javassist.*;
 import javassist.bytecode.*;
@@ -68,7 +67,7 @@ public class InjectPass extends Pass {
     protected Bytecode getInstrumentationCode (CtClass c,
                                                CtMethod m,
                                                int line,
-                                               ConstPool p) throws AlreadyPreparedException {
+                                               ConstPool p) {
         Bytecode b = new Bytecode(p);
         Node n = getNode(c, m, line);
         int id = registerProbe(c, n, ProbeType.HIT_PROBE);

@@ -9,7 +9,6 @@ import io.crowbar.instrumentation.passes.Pass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
 import io.crowbar.instrumentation.passes.wrappers.JUnit4Wrapper;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.ProbeSet;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;

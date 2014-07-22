@@ -4,8 +4,6 @@ import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.instrumentation.runtime.ProbeSet;
 
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -89,20 +87,21 @@ public class Client implements EventListener {
 
     @Override
     public void startTransaction (int probe_id) {
-        // postMessage(new Messages.TransactionStartMessage(p));
+        postMessage(new Messages.TransactionStartMessage(probe_id));
     }
 
     @Override
     public void endTransaction (int probe_id,
                                 boolean[] hit_vector) {
-        // postMessage(new Messages.TransactionEndMessage(p, hit_vector));
+        postMessage(new Messages.TransactionEndMessage(probe_id,
+                                                       hit_vector));
     }
 
     @Override
     public void oracle (int probe_id,
                         double error,
                         double confidence) {
-        // postMessage(new Messages.OracleMessage(p, error, confidence));
+        postMessage(new Messages.OracleMessage(probe_id, error, confidence));
     }
 
     Queue<Message> messages = new LinkedList<Message> ();

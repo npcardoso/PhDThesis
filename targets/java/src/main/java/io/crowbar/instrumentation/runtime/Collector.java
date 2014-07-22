@@ -26,7 +26,7 @@ public class Collector {
         this.listener = listener;
     }
 
-    public void transactionStart (int probe_id) throws Exception {
+    public void transactionStart (int probe_id) {
         if (reset_on_transaction_start)
             hit_vector.reset();
 
@@ -38,7 +38,7 @@ public class Collector {
         }
     }
 
-    public void transactionEnd (int probe_id) throws ProbeSet.NotPreparedException {
+    public void transactionEnd (int probe_id) {
         try {
             listener.endTransaction(probe_id, hit_vector.get());
         }
@@ -51,7 +51,7 @@ public class Collector {
 
     public void oracle (int probe_id,
                         double error,
-                        double confidence) throws ProbeSet.NotPreparedException {
+                        double confidence) {
         /*ProbeSet ps = probe_store.get(class_name);
          *
          *

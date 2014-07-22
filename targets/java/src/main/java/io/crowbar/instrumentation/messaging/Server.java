@@ -3,9 +3,6 @@ package io.crowbar.instrumentation.messaging;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.*;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.instrumentation.runtime.ProbeSet;
-import io.crowbar.instrumentation.runtime.ProbeStore;
 import io.crowbar.util.io.ThreadedServer;
 
 import java.io.EOFException;
@@ -15,21 +12,14 @@ import java.net.Socket;
 
 public class Server extends ThreadedServer {
     public interface EventListenerFactory {
-        public EventListener create (ProbeStore ps);
+        public EventListener create (String id);
     }
-
-    public interface ProbeStoreFactory {
-        public ProbeStore getOrCreate (String id);
-    }
-
 
     public static class Service implements Runnable {
         public Service (Socket s,
-                        EventListener event_listener,
-                        ProbeStore probe_store) {
+                        EventListener event_listener) {
             this.s = s;
             this.event_listener = event_listener;
-            this.probe_store = probe_store;
         }
 
         @Override
@@ -60,20 +50,22 @@ public class Server extends ThreadedServer {
         private void dispatch (Object o) throws Exception {
             if (o instanceof ProbeMessage) {
                 ProbeMessage m = (ProbeMessage) o;
-                Probe p = probe_store.get(m.probe_set_id, m.probe_id);
 
                 if (o instanceof TransactionStartMessage)
-                    ; // event_listener.startTransaction(p);
+                    event_listener.startTransaction(m.probe_id);
                 else if (o instanceof TransactionEndMessage)
-                    ; // event_listener.endTransaction(p, ((TransactionEndMessage) m).hit_vector);
+                    event_listener.endTransaction(m.probe_id,
+                                                  ((TransactionEndMessage) m).hit_vector);
                 else if (o instanceof OracleMessage)
-                    ; // event_listener.oracle(p, ((OracleMessage) m).error, ((OracleMessage) m).confidence);
+                    event_listener.oracle(m.probe_id,
+                                          ((OracleMessage) m).error,
+                                          ((OracleMessage) m).confidence);
             }
             else if (o instanceof RegisterMessage) {
-                ProbeSet probe_set = ((RegisterMessage) o).probe_set;
+                // ProbeSet probe_set = ((RegisterMessage) o).probe_set;
 
                 // Auto registration
-                probe_store.register(probe_set);
+                // probe_store.register(probe_set);
                 // event_listener.register(probe_set);
             }
             else
@@ -82,15 +74,12 @@ public class Server extends ThreadedServer {
 
         private Socket s;
         private EventListener event_listener;
-        private ProbeStore probe_store;
     }
 
     public Server (ServerSocket server_socket,
-                   EventListenerFactory event_listener_factory,
-                   ProbeStoreFactory probe_store_factory) {
+                   EventListenerFactory event_listener_factory) {
         super(server_socket);
         this.event_listener_factory = event_listener_factory;
-        this.probe_store_factory = probe_store_factory;
     }
 
     @Override
@@ -113,13 +102,9 @@ public class Server extends ThreadedServer {
             return null;
         }
 
-        ProbeStore probe_store = probe_store_factory.getOrCreate(id);
-        EventListener event_listener = event_listener_factory.create(probe_store);
-        return new Service(s,
-                           event_listener,
-                           probe_store);
+        EventListener event_listener = event_listener_factory.create(id);
+        return new Service(s, event_listener);
     }
 
     EventListenerFactory event_listener_factory;
-    ProbeStoreFactory probe_store_factory;
 }

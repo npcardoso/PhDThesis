@@ -11,10 +11,12 @@ public class VerboseListener implements EventListener {
                                 boolean[] hit_vector) {
         System.out.println("!!!!!!!!! transaction end @ " + probe_id + " !!!!!!!!!");
 
+        System.out.print("| ");
+
         for (boolean b : hit_vector)
             System.out.print(b ? "1 " : "0 ");
 
-        System.out.println("");
+        System.out.println("|");
     }
 
     @Override

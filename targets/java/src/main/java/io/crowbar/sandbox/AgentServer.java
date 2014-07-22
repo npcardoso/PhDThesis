@@ -9,25 +9,8 @@ import java.util.Map;
 import java.net.ServerSocket;
 
 public class AgentServer {
-    public static class ProbeStoreFactoryFoo implements Server.ProbeStoreFactory {
-        public ProbeStore getOrCreate (String id) {
-            ProbeStore probe_store = probe_stores.get(id);
-
-
-            if (probe_store == null) {
-                probe_store = new ProbeStore();
-                probe_stores.put(id, probe_store);
-            }
-
-            return probe_store;
-        }
-
-        Map<String, ProbeStore> probe_stores = new HashMap<String, ProbeStore> ();
-    }
-
-
     public static class VerboseListenerFactory implements Server.EventListenerFactory {
-        public EventListener create (ProbeStore probe_store) {
+        public EventListener create (String id) {
             return new VerboseListener();
         }
     }
@@ -35,8 +18,7 @@ public class AgentServer {
     public static void main (String[] args) {
         try {
             Server s = new Server(new ServerSocket(1234),
-                                  new VerboseListenerFactory(),
-                                  new ProbeStoreFactoryFoo());
+                                  new VerboseListenerFactory());
 
             s.start();
         }

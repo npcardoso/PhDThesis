@@ -1,20 +1,15 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.instrumentation.runtime.*;
-
-
 public class VerboseListener implements EventListener {
     @Override
-    public void startTransaction (Probe p) {
-        System.out.println("!!!!!!!!! transaction start @ (" + p.getProbeSet().getName() +
-                           ", " + p.getId() + ":" + p + ") !!!!!!!!!");
+    public void startTransaction (int probe_id) {
+        System.out.println("!!!!!!!!! transaction start @ " + probe_id + " !!!!!!!!!");
     }
 
     @Override
-    public void endTransaction (Probe p,
+    public void endTransaction (int probe_id,
                                 boolean[] hit_vector) {
-        System.out.println("!!!!!!!!! transaction end @ (" + p.getProbeSet().getName() +
-                           ", " + p.getId() + ":" + p + ") !!!!!!!!!");
+        System.out.println("!!!!!!!!! transaction end @ " + probe_id + " !!!!!!!!!");
 
         for (boolean b : hit_vector)
             System.out.print(b ? "1 " : "0 ");
@@ -23,20 +18,10 @@ public class VerboseListener implements EventListener {
     }
 
     @Override
-    public void oracle (Probe p,
+    public void oracle (int probe_id,
                         double error,
                         double confidence) {
-        System.out.println("!!!!!!!!! collecting oracle @ (" + p.getProbeSet().getName() +
-                           ", " + p.getId() + ":" + p + ") : " + error +
+        System.out.println("!!!!!!!!! collecting oracle @ " + probe_id + " : " + error +
                            ", " + confidence + " !!!!!!!!!");
-    }
-
-    @Override
-    public void register (ProbeSet ps) {
-        System.out.println("!!!!!!!!! registering probeset: " + ps.getName() + " !!!!!!!!!");
-
-        for (int j = 0; j < ps.size(); j++) {
-            System.out.println(j + ": " + ps.get(j));
-        }
     }
 }

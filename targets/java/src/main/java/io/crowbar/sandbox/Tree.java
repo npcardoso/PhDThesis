@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class Tree implements java.io.Serializable { // , Iterable<Tree> {
-    public class Node {
+public class Tree { // , Iterable<Tree> {
+    public class Node implements java.io.Serializable {
         /*!
          * \brief The node's name.
          * If the node represents:
@@ -19,28 +19,18 @@ public class Tree implements java.io.Serializable { // , Iterable<Tree> {
         private String name;
         /*!
          * \brief The node's id.
-         * This id should be -1 unless the node is registered.
-         * The parent class is responsible for assigning this id upon registration.
          */
         private int id;
         /*!
-         * \brief The node's parent.
-         * This variable should be equal to null unless the node is registered.
-         * If equal to null, the node is a root node.
-         * The parent class is responsible for assigning this upon registration.
+         * \brief The node's parent id.
          */
         private int parent_id;
         /*!
-         * \brief The tree's depth.
-         * A leaf node has depth 0.
-         */
-        private int depth = 0;
-        /*!
-         * \brief The node's children.
+         * \brief The node's children ids.
          */
         private List<Integer> children = new ArrayList<Integer> ();
         /*!
-         * \brief The node's children, acessible by name.
+         * \brief The node's children ids, acessible by name.
          */
         private Map<String, Integer> children_by_name = children_by_name = new HashMap<String, Integer> ();
         /*!
@@ -88,10 +78,6 @@ public class Tree implements java.io.Serializable { // , Iterable<Tree> {
             return getNode(parent_id);
         }
 
-        public int getDepth () {
-            return depth;
-        }
-
         public Node getChild (String name) {
             Integer child_id = children_by_name.get(name);
 
@@ -109,6 +95,7 @@ public class Tree implements java.io.Serializable { // , Iterable<Tree> {
             nodes.add(n);
             children.add(n.getId());
             children_by_name.put(n.getName(), n.getId());
+            addChildHook(this, n);
             return n;
         }
 

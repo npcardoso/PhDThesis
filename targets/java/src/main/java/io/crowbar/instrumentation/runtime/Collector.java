@@ -27,42 +27,26 @@ public class Collector {
     }
 
     public void transactionStart (int probe_id) throws Exception {
-        /*        ProbeSet ps = probe_store.get(class_name);
-         *
-         *
-         *      assert ps != null;
-         *
-         *      Probe p = ps.get(probe_id);
-         *      assert p != null;
-         *
-         *      if (reset_on_transaction_start)
-         *          hit_vector.reset();
-         *
-         *      try {
-         *          listener.startTransaction(p);
-         *      }
-         *      catch (Exception e) {
-         *          e.printStackTrace();
-         *      }
-         */}
+        if (reset_on_transaction_start)
+            hit_vector.reset();
+
+        try {
+            listener.startTransaction(probe_id);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void transactionEnd (int probe_id) throws ProbeSet.NotPreparedException {
-        /*ProbeSet ps = probe_store.get(class_name);
-         *
-         *
-         * assert ps != null;
-         *
-         * Probe p = ps.get(probe_id);
-         * assert p != null;
-         *
-         * try {
-         *  listener.endTransaction(p, hit_vector.get());
-         * }
-         * catch (Exception e) {
-         *  e.printStackTrace();
-         * }
-         *
-         * hit_vector.reset();*/
+        try {
+            listener.endTransaction(probe_id, hit_vector.get());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        hit_vector.reset();
     }
 
     public void oracle (int probe_id,
@@ -84,24 +68,25 @@ public class Collector {
          *  }*/
     }
 
-    public void register (ProbeSet ps) throws Exception {
-        ps.prepare(probe_store.getNumProbesSets());
-        probe_store.register(ps);
-
-        try {
-            listener.register(ps);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+    /*
+     *  public void register (ProbeSet ps) throws Exception {
+     *      ps.prepare(probe_store.getNumProbesSets());
+     *      probe_store.register(ps);
+     *
+     *      try {
+     *          listener.register(ps);
+     *      }
+     *      catch (Exception e) {
+     *          e.printStackTrace();
+     *      }
+     *  }
+     */
+    public boolean[] getHitVector (String group_name) {
+        return hit_vector.get(group_name); // TODO
     }
 
     public HitVector getHitVector () {
         return hit_vector;
-    }
-
-    public boolean[] getHitVector (String group_name) {
-        return null; // TODO
     }
 
     public Tree getTree () {
@@ -110,7 +95,7 @@ public class Collector {
 
     private static Collector collector = new Collector ();
 
-    private ProbeStore probe_store = new ProbeStore();
+    // private ProbeStore probe_store = new ProbeStore();
     private HitVector hit_vector = new HitVector();
 
     private Tree tree = new Tree();

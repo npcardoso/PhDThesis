@@ -63,18 +63,18 @@ public class Server extends ThreadedServer {
                 Probe p = probe_store.get(m.probe_set_id, m.probe_id);
 
                 if (o instanceof TransactionStartMessage)
-                    event_listener.startTransaction(p);
+                    ; // event_listener.startTransaction(p);
                 else if (o instanceof TransactionEndMessage)
-                    event_listener.endTransaction(p, ((TransactionEndMessage) m).hit_vector);
+                    ; // event_listener.endTransaction(p, ((TransactionEndMessage) m).hit_vector);
                 else if (o instanceof OracleMessage)
-                    event_listener.oracle(p, ((OracleMessage) m).error, ((OracleMessage) m).confidence);
+                    ; // event_listener.oracle(p, ((OracleMessage) m).error, ((OracleMessage) m).confidence);
             }
             else if (o instanceof RegisterMessage) {
                 ProbeSet probe_set = ((RegisterMessage) o).probe_set;
 
                 // Auto registration
                 probe_store.register(probe_set);
-                event_listener.register(probe_set);
+                // event_listener.register(probe_set);
             }
             else
                 throw new Exception("Unknown Message Type: " + o);

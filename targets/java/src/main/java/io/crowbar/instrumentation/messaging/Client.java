@@ -76,47 +76,33 @@ public class Client implements EventListener {
         return messages.poll();
     }
 
+    /*    @Override
+     *  public void register (ProbeSet ps) {
+     *      try {
+     *          postMessage(new Messages.RegisterMessage(ps));
+     *      }
+     *      catch (ProbeSet.NotPreparedException e) {
+     *          e.printStackTrace();
+     *      }
+     *  }
+     */
+
     @Override
-    public void register (ProbeSet ps) {
-        try {
-            postMessage(new Messages.RegisterMessage(ps));
-        }
-        catch (ProbeSet.NotPreparedException e) {
-            e.printStackTrace();
-        }
+    public void startTransaction (int probe_id) {
+        // postMessage(new Messages.TransactionStartMessage(p));
     }
 
     @Override
-    public void startTransaction (Probe p) {
-        try {
-            postMessage(new Messages.TransactionStartMessage(p));
-        }
-        catch (ProbeSet.NotPreparedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void endTransaction (Probe p,
+    public void endTransaction (int probe_id,
                                 boolean[] hit_vector) {
-        try {
-            postMessage(new Messages.TransactionEndMessage(p, hit_vector));
-        }
-        catch (ProbeSet.NotPreparedException e) {
-            e.printStackTrace();
-        }
+        // postMessage(new Messages.TransactionEndMessage(p, hit_vector));
     }
 
     @Override
-    public void oracle (Probe p,
+    public void oracle (int probe_id,
                         double error,
                         double confidence) {
-        try {
-            postMessage(new Messages.OracleMessage(p, error, confidence));
-        }
-        catch (ProbeSet.NotPreparedException e) {
-            e.printStackTrace();
-        }
+        // postMessage(new Messages.OracleMessage(p, error, confidence));
     }
 
     Queue<Message> messages = new LinkedList<Message> ();

@@ -1,17 +1,12 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.instrumentation.runtime.ProbeSet;
-
 public class NullListener implements EventListener {
-    public void register (ProbeSet ps) {}
+    public void startTransaction (int probe_id) {}
 
-    public void startTransaction (Probe p) {}
-
-    public void endTransaction (Probe p,
+    public void endTransaction (int probe_id,
                                 boolean[] hit_vector) {}
 
-    public void oracle (Probe p,
+    public void oracle (int probe_id,
                         double error,
                         double confidence) {}
 }

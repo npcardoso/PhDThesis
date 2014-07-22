@@ -8,71 +8,85 @@ import java.util.Map;
 
 
 public class HitVector {
-    public static class ProbeID {
-        public int global_id;
-        public int group_id, local_id;
+    class ProbeGroup {
+        class Probe {
+            private int id;
+            private int node_id;
 
-        public ProbeID (int global,
-                        int group_id,
-                        int local_id) {
-            this.global_id = global_id;
-            this.group_id = group_id;
-            this.local_id = local_id;
+            Probe (int id,
+                   int node_id) {
+                this.id = id;
+                this.node_id = node_id;
+            }
+
+            public boolean getActivation () {
+                assert hit_vector != null;
+                return hit_vector[id];
+            }
+
+            public int getId () { // ! Returns the probe's local id
+                return id;
+            }
+        }
+
+        private int size = 0;
+        private boolean[] hit_vector = null;
+
+        public Probe register (int node_id) {
+            assert hit_vector == null;
+            return new Probe(size++, node_id);
+        }
+
+        public boolean[] get () {
+            if (hit_vector == null)
+                hit_vector = new boolean[size];
+
+            return hit_vector;
+        }
+
+        public void reset () {
+            for (int j = 0; j < hit_vector.length; j++)
+                hit_vector[j] = false;
         }
     }
 
-    public ProbeID getCurrentID () {
-        return new ProbeID(num_probes,
-                           groups.size(),
-                           num_probes_group);
+
+    private List<ProbeGroup.Probe> probes = new ArrayList<ProbeGroup.Probe> ();
+    private Map<String, ProbeGroup> groups = new HashMap<String, ProbeGroup> ();
+
+
+    public int registerProbe (String group_name,
+                              int node_id) {
+        ProbeGroup pg = groups.get(group_name);
+
+
+        if (pg == null) {
+            pg = new ProbeGroup();
+            groups.put(group_name, pg);
+        }
+
+        ProbeGroup.Probe probe = pg.register(node_id);
+        return probe.getId();
     }
 
-    public void startGroup () {
-        if (num_probes_group != 0)
-            endGroup();
-    }
-
-    public void endGroup () {
-        if (num_probes_group == 0)
-            return;
-
-        groups.add(new boolean[num_probes_group]);
-        num_probes_group = 0;
-    }
-
-    public ProbeID register () {
-        ProbeID id = getCurrentID();
-
-
-        num_probes_group++;
-        num_probes++;
-
-        return id;
-    }
-
-    public boolean[] get (int group_id) {
-        return groups.get(group_id);
+    public boolean[] get (String group_name) {
+        System.out.println(group_name);
+        return groups.get(group_name).get();
     }
 
     public boolean[] get () {
-        boolean[] ret = new boolean[num_probes];
+        boolean[] ret = new boolean[probes.size()];
         int i = 0;
 
-        for (boolean[] g : groups)
-            for (int j = 0; j < g.length; j++)
-                ret[i++] = g[j];
+        for (ProbeGroup.Probe p : probes)
+            ret[i++] = p.getActivation();
 
         return ret;
     }
 
     public void reset () {
-        for (boolean[] g : groups)
-            for (int j = 0; j < g.length; j++)
-                g[j] = false;
+        for (Map.Entry<String, ProbeGroup> e : groups.entrySet()) {
+            e.getValue().reset();
+        }
     }
-
-    private int num_probes = 0;
-    private int num_probes_group = 0;
-    private List<boolean[]> groups;
-    private boolean[] hit_vector = null;
 }

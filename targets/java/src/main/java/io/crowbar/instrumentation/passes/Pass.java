@@ -56,7 +56,12 @@ public abstract class Pass {
     protected int registerProbe (CtClass c,
                                  Node n,
                                  ProbeType type) {
-        System.out.println("Registering: " + n);
-        return 0; // TODO
+        HitVector hv = Collector.getDefault().getHitVector();
+        int id = hv.registerProbe(c.getName(), n.getId());
+
+
+        System.out.println("Registering: " + n + " ---> " + id);
+
+        return id;
     }
 }

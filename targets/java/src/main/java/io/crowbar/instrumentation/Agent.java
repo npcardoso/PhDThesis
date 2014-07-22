@@ -89,13 +89,10 @@ public class Agent implements ClassFileTransformer {
         try {
             cp.importPackage("io.crowbar.instrumentation.runtime");
 
-            ProbeSet ps = new ProbeSet(c.getName());
-
             for (Pass p : passes) {
-                p.transform(c, ps);
+                p.transform(c);
             }
 
-            Collector.getDefault().register(ps);
 
             System.out.println("Instrumented Class: " + c.getName());
             return c.toBytecode();

@@ -11,8 +11,7 @@ public class IgnorePass extends Pass {
     }
 
     @Override
-    public void transform (CtClass c,
-                           ProbeSet ps) throws Exception {
+    public void transform (CtClass c) throws Exception {
         boolean matches =
             checkPrefixes(c) ||
             checkSuffixes(c) ||

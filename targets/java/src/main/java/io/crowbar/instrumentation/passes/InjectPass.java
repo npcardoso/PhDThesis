@@ -2,6 +2,8 @@ package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.runtime.*;
 import io.crowbar.instrumentation.runtime.ProbeSet.AlreadyPreparedException;
+import io.crowbar.sandbox.Tree.Node;
+
 import javassist.*;
 import javassist.bytecode.*;
 
@@ -11,8 +13,7 @@ public class InjectPass extends Pass {
     }
 
     @Override
-    public void transform (CtClass c,
-                           ProbeSet ps) throws Exception {
+    public void transform (CtClass c) throws Exception {
         boolean injected = false;
 
 
@@ -24,23 +25,22 @@ public class InjectPass extends Pass {
                 continue;
 
             injected = true;
-            handleMethod(ps, c, m, info, ca);
+            handleMethod(c, m);
             ca.setMaxStack(ca.computeMaxStack());
         }
 
         if (injected) {
             CtField f = CtField.make("public static boolean[]  " + HIT_VECTOR_NAME + " = " +
-                                     "Collector.getDefault().getHitVector(\"" + ps.getName() +
+                                     "Collector.getDefault().getHitVector(\"" + c.getName() +
                                      "\");", c);
             c.addField(f);
         }
     }
 
-    protected void handleMethod (ProbeSet ps,
-                                 CtClass c,
-                                 CtMethod m,
-                                 MethodInfo info,
-                                 CodeAttribute ca) throws Exception {
+    protected void handleMethod (CtClass c,
+                                 CtMethod m) throws Exception {
+        MethodInfo info = m.getMethodInfo();
+        CodeAttribute ca = info.getCodeAttribute();
         CodeIterator ci = ca.iterator();
 
 
@@ -57,7 +57,7 @@ public class InjectPass extends Pass {
                 continue;
 
 
-            Bytecode b = getInstrumentationCode(ps, c, m, cur_line, info.getConstPool());
+            Bytecode b = getInstrumentationCode(c, m, cur_line, info.getConstPool());
             ci.insert(index, b.get());
 
             if (granularity == Granularity.FUNCTION)
@@ -65,16 +65,13 @@ public class InjectPass extends Pass {
         }
     }
 
-    protected Bytecode getInstrumentationCode (ProbeSet ps,
-                                               CtClass c,
+    protected Bytecode getInstrumentationCode (CtClass c,
                                                CtMethod m,
                                                int line,
                                                ConstPool p) throws AlreadyPreparedException {
         Bytecode b = new Bytecode(p);
-        Collector collector = Collector.getDefault();
-        int id = ps.register(ProbeType.HIT_PROBE,
-                             m.getName(),
-                             line);
+        Node n = getNode(c, m, line);
+        int id = registerProbe(c, n, ProbeType.HIT_PROBE);
 
 
         b.addGetstatic(c, HIT_VECTOR_NAME, HIT_VECTOR_TYPE);

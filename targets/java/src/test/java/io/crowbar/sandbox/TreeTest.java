@@ -1,6 +1,7 @@
 package io.crowbar.sandbox;
 
-import io.crowbar.sandbox.Tree.Node;
+import io.crowbar.instrumentation.runtime.Tree;
+import io.crowbar.instrumentation.runtime.Tree.Node;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

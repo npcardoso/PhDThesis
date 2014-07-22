@@ -1,10 +1,10 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.sandbox.Tree;
-import io.crowbar.sandbox.Tree.Node;
-
-
-import io.crowbar.instrumentation.runtime.*;
+import io.crowbar.instrumentation.runtime.HitVector;
+import io.crowbar.instrumentation.runtime.Collector;
+import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Tree;
+import io.crowbar.instrumentation.runtime.Tree.Node;
 
 import java.util.logging.Logger;
 import javassist.ClassPool;
@@ -57,10 +57,8 @@ public abstract class Pass {
                                  Node n,
                                  ProbeType type) {
         HitVector hv = Collector.getDefault().getHitVector();
-        int id = hv.registerProbe(c.getName(), n.getId());
+        int id = hv.registerProbe(c.getName(), n.getId(), type);
 
-
-        System.out.println("Registering: " + n + " ---> " + id);
 
         return id;
     }

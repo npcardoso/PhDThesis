@@ -4,6 +4,8 @@ import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
 import io.crowbar.instrumentation.runtime.Collector;
+import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Tree.Node;
 
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -74,16 +76,17 @@ public class Client implements EventListener {
         return messages.poll();
     }
 
-    /*    @Override
-     *  public void register (ProbeSet ps) {
-     *      try {
-     *          postMessage(new Messages.RegisterMessage(ps));
-     *      }
-     *      catch (ProbeSet.NotPreparedException e) {
-     *          e.printStackTrace();
-     *      }
-     *  }
-     */
+    @Override
+    public void registerNode (Node n) {
+        // TODO
+    }
+
+    @Override
+    public void registerProbe (int probe_id,
+                               int node_id,
+                               ProbeType type) {
+        // TODO
+    }
 
     @Override
     public void startTransaction (int probe_id) {

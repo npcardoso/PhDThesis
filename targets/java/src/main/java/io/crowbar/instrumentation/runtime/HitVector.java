@@ -13,11 +13,13 @@ public class HitVector {
         class Probe {
             private int id;
             private int node_id;
-
+            private ProbeType type;
             Probe (int id,
-                   int node_id) {
+                   int node_id,
+                   ProbeType type) {
                 this.id = id;
                 this.node_id = node_id;
+                this.type = type;
             }
 
             public boolean getActivation () {
@@ -28,14 +30,23 @@ public class HitVector {
             public int getId () { // ! Returns the probe's local id
                 return id;
             }
+
+            public int getNodeId () {
+                return node_id;
+            }
+
+            public ProbeType getType () {
+                return type;
+            }
         }
 
         private int size = 0;
         private boolean[] hit_vector = null;
 
-        public Probe register (int node_id) {
+        public Probe register (int node_id,
+                               ProbeType type) {
             assert hit_vector == null;
-            return new Probe(size++, node_id);
+            return new Probe(size++, node_id, type);
         }
 
         public boolean[] get () {
@@ -57,7 +68,8 @@ public class HitVector {
 
 
     public int registerProbe (String group_name,
-                              int node_id) {
+                              int node_id,
+                              ProbeType type) {
         ProbeGroup pg = groups.get(group_name);
 
 
@@ -66,11 +78,17 @@ public class HitVector {
             groups.put(group_name, pg);
         }
 
-        Probe probe = pg.register(node_id);
+        Probe probe = pg.register(node_id, type);
         probes.add(probe);
+
+        registerProbeHook(probes.size() - 1,
+                          probe);
 
         return probe.getId();
     }
+
+    protected void registerProbeHook (int probe_id,
+                                      Probe probe) {}
 
     public boolean[] get (String group_name) {
         return groups.get(group_name).get();

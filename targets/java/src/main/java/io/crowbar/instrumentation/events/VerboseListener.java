@@ -1,6 +1,24 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Tree.Node;
+
 public class VerboseListener implements EventListener {
+    @Override
+    public void registerNode (Node n) {
+        System.out.println("!!!!!!!!! Registering Node: " + n +
+                           " !!!!!!!!!");
+    }
+
+    @Override
+    public void registerProbe (int probe_id,
+                               int node_id,
+                               ProbeType type) {
+        System.out.println("!!!!!!!!! Registering Probe: " + probe_id +
+                           ", node_id = " + node_id +
+                           ", type = " + type + " !!!!!!!!!");
+    }
+
     @Override
     public void startTransaction (int probe_id) {
         System.out.println("!!!!!!!!! transaction start @ " + probe_id + " !!!!!!!!!");

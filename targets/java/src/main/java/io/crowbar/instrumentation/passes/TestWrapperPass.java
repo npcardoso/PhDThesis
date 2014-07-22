@@ -1,10 +1,10 @@
 package io.crowbar.instrumentation.passes;
 
 
-import io.crowbar.instrumentation.runtime.*;
 import io.crowbar.instrumentation.passes.wrappers.*;
-import io.crowbar.sandbox.Tree;
-import io.crowbar.sandbox.Tree.Node;
+import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Tree;
+import io.crowbar.instrumentation.runtime.Tree.Node;
 
 import javassist.*;
 import javassist.bytecode.*;

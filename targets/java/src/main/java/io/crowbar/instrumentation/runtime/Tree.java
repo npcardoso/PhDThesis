@@ -1,4 +1,4 @@
-package io.crowbar.sandbox;
+package io.crowbar.instrumentation.runtime;
 
 
 import java.util.ArrayList;
@@ -74,6 +74,10 @@ public class Tree { // , Iterable<Tree> {
             return p.getFullName(separator) + separator + name;
         }
 
+        public int getParentId () {
+            return parent_id;
+        }
+
         public Node getParent () {
             return getNode(parent_id);
         }
@@ -95,13 +99,15 @@ public class Tree { // , Iterable<Tree> {
             nodes.add(n);
             children.add(n.getId());
             children_by_name.put(n.getName(), n.getId());
-            addChildHook(this, n);
+            addChildHook(n);
             return n;
         }
 
         @Override
         public String toString () {
-            return "[Node: \"" + getFullName() + "\"]";
+            return "[Node: \"" + getFullName() + "\", " +
+                   "id: " + getId() + "\", " +
+                   "parent_id = " + getParentId() + "]";
         }
     }
 
@@ -114,8 +120,7 @@ public class Tree { // , Iterable<Tree> {
         nodes.add(new Node(root_name, 0, -1));
     }
 
-    protected void addChildHook (Node parent,
-                                 Node child) {}
+    protected void addChildHook (Node child) {}
 
 
     public Node getRoot () {

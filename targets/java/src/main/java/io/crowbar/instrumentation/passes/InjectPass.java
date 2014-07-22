@@ -1,6 +1,6 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.sandbox.Tree.Node;
+import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.ProbeType;
 
 import javassist.*;

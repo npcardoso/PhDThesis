@@ -16,19 +16,12 @@
           "name": {
             "type": "string"
           },
-          "depth": {
-            "type": "number",
-            "minimum": 0
-          },
           "parentId": {
             "$ref": "#/definitions/id"
           },
           "type": {
-            "enum": [
-              "function",
-              "class",
-              "line"
-            ]
+            "type": "number",
+            "minimum": 0
           },
           "properties": {
             "type": "object"
@@ -53,10 +46,30 @@
       },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "config": {
+      "title": "Configuration parameters",
+      "type": "object",
+      "properties": {
+        "types": {
+          "description": "Array containing all the possible types of a node",
+          "type": "array",
+          "items": {
+            "title": "Type name",
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "types"
+      ]
     }
   },
   "required": [
-    "nodes"
+    "nodes",
+    "config"
   ],
   "definitions": {
     "id": {

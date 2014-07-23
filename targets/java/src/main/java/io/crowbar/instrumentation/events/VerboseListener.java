@@ -14,9 +14,9 @@ public class VerboseListener implements EventListener {
     public void registerProbe (int probe_id,
                                int node_id,
                                ProbeType type) {
-        System.out.println("!!!!!!!!! Registering Probe: " + probe_id +
-                           ", node_id = " + node_id +
-                           ", type = " + type + " !!!!!!!!!");
+        System.out.println("!!!!!!!!! Registering Probe: [probe_id: " + probe_id +
+                           ", node_id: " + node_id +
+                           ", type: " + type + " !!!!!!!!!");
     }
 
     @Override

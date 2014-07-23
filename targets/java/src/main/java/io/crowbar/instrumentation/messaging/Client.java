@@ -29,6 +29,8 @@ public class Client implements EventListener {
                         out.flush();
                     }
 
+                    System.out.println(message);
+
                     if (message != null) {
                         ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
                         out.writeObject(message);
@@ -77,15 +79,17 @@ public class Client implements EventListener {
     }
 
     @Override
-    public void registerNode (Node n) {
-        // TODO
+    public void registerNode (Node node) {
+        postMessage(new Messages.RegisterNodeMessage(node));
     }
 
     @Override
     public void registerProbe (int probe_id,
                                int node_id,
                                ProbeType type) {
-        // TODO
+        postMessage(new Messages.RegisterProbeMessage(probe_id,
+                                                      node_id,
+                                                      type));
     }
 
     @Override

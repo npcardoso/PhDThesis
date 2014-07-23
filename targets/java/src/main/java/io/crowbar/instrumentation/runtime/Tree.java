@@ -8,7 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Tree { // , Iterable<Tree> {
-    public class Node implements java.io.Serializable {
+    public static class Node implements java.io.Serializable {
+        /*!
+         * \brief The tree holding the node
+         * This field is marked as transient for serialization purposes.
+         */
+        private transient Tree tree = null;
         /*!
          * \brief The node's name.
          * If the node represents:
@@ -38,12 +43,21 @@ public class Tree { // , Iterable<Tree> {
          */
         private Map<String, String> properties = null;
 
-        private Node (String name,
+        private Node (Tree tree,
+                      String name,
                       int id,
                       int parent_id) {
+            this.tree = tree;
             this.name = name;
             this.id = id;
             this.parent_id = parent_id;
+        }
+
+        /*!
+         * \brief Checks if node is bound to a tree.
+         */
+        public boolean isBound () {
+            return tree != null;
         }
 
         public int getId () {
@@ -92,22 +106,32 @@ public class Tree { // , Iterable<Tree> {
             return getNode(child_id);
         }
 
+        private Node getNode (int node_id) {
+            assert tree != null; // ! @TODO: Create proper exception
+            return tree.getNode(node_id);
+        }
+
         public Node addChild (String name) {
-            Node n = new Node(name, nodes.size(), getId());
+            assert tree != null; // ! @TODO: Create proper exception
+            Node n = new Node(tree, name, tree.nodes.size(), getId());
 
 
-            nodes.add(n);
+            tree.nodes.add(n);
             children.add(n.getId());
             children_by_name.put(n.getName(), n.getId());
-            addChildHook(n);
+            tree.addChildHook(n);
             return n;
         }
 
         @Override
         public String toString () {
-            return "[Node: \"" + getFullName() + "\", " +
-                   "id: " + getId() + "\", " +
-                   "parent_id = " + getParentId() + "]";
+            String ret = "[state: " + (isBound() ? "B" : "Unb") + "ound, ";
+
+
+            ret += "name: \"" + (isBound() ? getFullName() : getName()) + "\", ";
+            ret += "id: " + getId() + ", ";
+            ret += "parent_id: " + getParentId() + "]";
+            return ret;
         }
     }
 
@@ -117,7 +141,7 @@ public class Tree { // , Iterable<Tree> {
     }
 
     public Tree (String root_name) {
-        nodes.add(new Node(root_name, 0, -1));
+        nodes.add(new Node(this, root_name, 0, -1));
     }
 
     protected void addChildHook (Node child) {}

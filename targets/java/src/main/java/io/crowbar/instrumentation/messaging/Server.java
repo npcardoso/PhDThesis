@@ -61,12 +61,14 @@ public class Server extends ThreadedServer {
                                           ((OracleMessage) m).error,
                                           ((OracleMessage) m).confidence);
             }
-            else if (o instanceof RegisterMessage) {
-                // ProbeSet probe_set = ((RegisterMessage) o).probe_set;
-
-                // Auto registration
-                // probe_store.register(probe_set);
-                // event_listener.register(probe_set);
+            else if (o instanceof RegisterNodeMessage) {
+                event_listener.registerNode(((RegisterNodeMessage) o).node);
+            }
+            else if (o instanceof RegisterProbeMessage) {
+                RegisterProbeMessage m = (RegisterProbeMessage) o;
+                event_listener.registerProbe(m.probe_id,
+                                             m.node_id,
+                                             m.type);
             }
             else
                 throw new Exception("Unknown Message Type: " + o);

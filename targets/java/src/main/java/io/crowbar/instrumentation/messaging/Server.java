@@ -11,35 +11,62 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server extends ThreadedServer {
-    public interface EventListenerFactory {
-        public EventListener create (String id);
+    public interface Service {
+        public EventListener getEventListener ();
+        public void interrupted ();
+        public void finalize ();
     }
 
-    public static class Service implements Runnable {
-        public Service (Socket s,
-                        EventListener event_listener) {
-            this.s = s;
-            this.event_listener = event_listener;
+    public interface ServiceFactory {
+        public Service create (String id);
+    }
+
+    private class Dispatcher implements Runnable {
+        private Socket socket;
+        private Service service = null;
+        public Dispatcher (Socket s) {
+            socket = s;
         }
 
         @Override
         public final void run () {
+            String id = null;
+            Object o = null;
+
+
+            try {
+                o = new ObjectInputStream(socket.getInputStream()).readObject();
+                System.out.println("Receiving " + o);
+
+                if (!(o instanceof HelloMessage))
+                    throw new Exception("First message should be a HelloMessage. Received instead: " + o);
+
+                id = ((HelloMessage) o).id;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            service = serviceFactory.create(id);
+
             while (true) {
-                Object o;
                 try {
-                    ObjectInputStream in = new ObjectInputStream(s.getInputStream());
-                    o = in.readObject();
-                }
-                catch (EOFException e) {
-                    break;
+                    o = new ObjectInputStream(socket.getInputStream()).readObject();
+                    System.out.println("Receiving " + o);
                 }
                 catch (Exception e) {
+                    service.interrupted();
                     e.printStackTrace();
-                    break;
+                    return;
+                }
+
+                if (o instanceof ByeMessage) {
+                    service.finalize();
+                    return;
                 }
 
                 try {
-                    // System.out.println("Receiving " + o);
                     dispatch(o);
                 }
                 catch (Exception e) {
@@ -49,6 +76,9 @@ public class Server extends ThreadedServer {
         }
 
         private void dispatch (Object o) throws Exception {
+            EventListener event_listener = service.getEventListener();
+
+
             if (o instanceof ProbeMessage) {
                 ProbeMessage m = (ProbeMessage) o;
 
@@ -74,40 +104,18 @@ public class Server extends ThreadedServer {
             else
                 throw new Exception("Unknown Message Type: " + o);
         }
-
-        private Socket s;
-        private EventListener event_listener;
     }
 
-    public Server (ServerSocket server_socket,
-                   EventListenerFactory event_listener_factory) {
-        super(server_socket);
-        this.event_listener_factory = event_listener_factory;
+    public Server (ServerSocket serverSocket,
+                   ServiceFactory serviceFactory) {
+        super(serverSocket);
+        this.serviceFactory = serviceFactory;
     }
 
     @Override
     protected Runnable handle (Socket s) {
-        String id = null;
-
-
-        try {
-            Object o;
-            ObjectInputStream in = new ObjectInputStream(s.getInputStream());
-            o = in.readObject();
-
-            if (!(o instanceof HelloMessage))
-                throw new Exception("First message should be a HelloMessage. Received instead: " + o);
-
-            id = ((HelloMessage) o).id;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        EventListener event_listener = event_listener_factory.create(id);
-        return new Service(s, event_listener);
+        return new Dispatcher(s);
     }
 
-    EventListenerFactory event_listener_factory;
+    ServiceFactory serviceFactory;
 }

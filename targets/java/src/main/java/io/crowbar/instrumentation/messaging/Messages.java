@@ -24,6 +24,13 @@ public class Messages {
         protected HelloMessage () {}
     }
 
+    public static class ByeMessage implements Message, Serializable {
+        @Override
+        public String toString () {
+            return "[[ByeMessage]]";
+        }
+    }
+
     public static class RegisterNodeMessage implements Message, Serializable {
         public Node node;
 

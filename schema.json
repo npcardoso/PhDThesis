@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "GZoltar Visualizon Input",
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "description": "Array containing all nodes",
+      "type": "array",
+      "items": {
+        "title": "Node",
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/definitions/id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "depth": {
+            "type": "number",
+            "minimum": 0
+          },
+          "parentId": {
+            "$ref": "#/definitions/id"
+          },
+          "type": {
+            "enum": [
+              "function",
+              "class",
+              "line"
+            ]
+          },
+          "properties": {
+            "type": "object"
+          },
+          "children": {
+            "description": "Id's of childs of the node",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/id"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "depth",
+          "parentId",
+          "type"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "nodes"
+  ],
+  "definitions": {
+    "id": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+}

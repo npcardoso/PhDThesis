@@ -10,25 +10,44 @@ public class Messages {
     public interface Message {}
 
     public static class HelloMessage implements Message, Serializable {
-        protected HelloMessage () {}
+        public String id;
+
         public HelloMessage (String id) {
             this.id = id;
         }
 
-        public String id;
+        @Override
+        public String toString () {
+            return "[[HelloMessage], id: " + id + "]";
+        }
+
+        protected HelloMessage () {}
     }
 
     public static class RegisterNodeMessage implements Message, Serializable {
-        protected RegisterNodeMessage () {}
+        public Node node;
+
         public RegisterNodeMessage (Node node) {
             this.node = node;
         }
 
-        public Node node;
+        @Override
+        public String toString () {
+            String ret = "[[" + this.getClass().getSimpleName() + "]: ";
+
+
+            ret += "node: " + node + "]";
+            return ret;
+        }
+
+        protected RegisterNodeMessage () {}
     }
 
     public static class RegisterProbeMessage implements Message, Serializable {
-        protected RegisterProbeMessage () {}
+        public int probe_id;
+        public int node_id;
+        public ProbeType type;
+
         public RegisterProbeMessage (int probe_id,
                                      int node_id,
                                      ProbeType type) {
@@ -37,36 +56,67 @@ public class Messages {
             this.type = type;
         }
 
-        public int probe_id;
-        public int node_id;
-        public ProbeType type;
+        @Override
+        public String toString () {
+            String ret = "[[" + this.getClass().getSimpleName() + "]: ";
+
+
+            ret += "probe_id: " + probe_id + ", ";
+            ret += "node_id: " + node_id + ", ";
+            ret += "type: " + type + "";
+            return ret;
+        }
+
+        protected RegisterProbeMessage () {}
     }
 
-    public static abstract class ProbeMessage implements Message {
-        protected ProbeMessage () {}
+    public static abstract class ProbeMessage implements Message, Serializable {
+        public int probe_id;
+
         public ProbeMessage (int probe_id) {
             this.probe_id = probe_id;
         }
 
-        public int probe_id;
+        @Override
+        public String toString () {
+            String ret = "[[" + this.getClass().getSimpleName() + "]: ";
+
+
+            ret += "probe_id: " + probe_id + "]";
+            return ret;
+        }
+
+        protected ProbeMessage () {}
     }
 
     public static class TransactionStartMessage extends ProbeMessage implements Serializable {
-        protected TransactionStartMessage () {}
         TransactionStartMessage (int probe_id) {
             super(probe_id);
         }
+
+        protected TransactionStartMessage () {}
     }
 
     public static class TransactionEndMessage extends ProbeMessage implements Serializable {
-        protected TransactionEndMessage () {}
+        public boolean[] hit_vector;
+
         TransactionEndMessage (int probe_id,
                                boolean[] hit_vector) {
             super(probe_id);
             this.hit_vector = hit_vector;
         }
 
-        public boolean[] hit_vector;
+        @Override
+        public String toString () {
+            String ret = "[[" + this.getClass().getSimpleName() + "]: ";
+
+
+            ret += "probe_id: " + probe_id + ", ";
+            ret += "hit_vector: " + hit_vector + "]";
+            return ret;
+        }
+
+        protected TransactionEndMessage () {}
     }
 
     public static class OracleMessage extends ProbeMessage implements Serializable  {

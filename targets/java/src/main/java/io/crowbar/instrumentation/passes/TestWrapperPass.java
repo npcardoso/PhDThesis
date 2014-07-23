@@ -1,9 +1,11 @@
 package io.crowbar.instrumentation.passes;
 
 
-import io.crowbar.instrumentation.passes.wrappers.*;
+import io.crowbar.instrumentation.passes.wrappers.Wrapper;
+import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree;
+import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 
 import javassist.*;
@@ -18,8 +20,8 @@ public class TestWrapperPass extends Pass {
             for (Wrapper w : wrappers) {
                 if (w.matches(m)) {
                     Node n = getNode(c, m);
-                    m.insertBefore(getInstrumentationCode(c, n, ProbeType.TRANSACTION_START));
-                    m.insertAfter(getInstrumentationCode(c, n, ProbeType.TRANSACTION_END),
+                    m.insertBefore(getInstrumentationCode(c, n, ProbeType.TRANSACTION_START, false));
+                    m.insertAfter(getInstrumentationCode(c, n, ProbeType.TRANSACTION_END, true),
                                   true /* asFinally */);
                     break;
                 }
@@ -29,11 +31,22 @@ public class TestWrapperPass extends Pass {
 
     protected String getInstrumentationCode (CtClass c,
                                              Node n,
-                                             ProbeType type) {
-        int id = registerProbe(c, n, type);
+                                             ProbeType type,
+                                             boolean hit_first) throws RegistrationException {
+        Probe p = registerProbe(c, n, type);
+        String ret = "Collector c = Collector.getDefault();";
+        String hit = "c.getHitVector().hit(" + p.getGlobalId() + ");";
 
 
-        return "Collector.getDefault()." + type.method_name + "(" + id + ");";
+        if (hit_first)
+            ret += hit;
+
+        ret += "c." + type.method_name + "(" + p.getGlobalId() + ");";
+
+        if (!hit_first)
+            ret += hit;
+
+        return ret;
     }
 
     public List<Wrapper> wrappers = new LinkedList<Wrapper> ();

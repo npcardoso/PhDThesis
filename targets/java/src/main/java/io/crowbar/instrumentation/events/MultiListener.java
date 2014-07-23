@@ -14,7 +14,7 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public void registerNode (Node n) {
+    public void registerNode (Node n) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.registerNode(n);
@@ -28,7 +28,7 @@ public class MultiListener implements EventListener {
     @Override
     public void registerProbe (int probe_id,
                                int node_id,
-                               ProbeType type) {
+                               ProbeType type) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.registerProbe(probe_id, node_id, type);
@@ -40,7 +40,7 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public void startTransaction (int probe_id) {
+    public void startTransaction (int probe_id) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.startTransaction(probe_id);
@@ -53,7 +53,7 @@ public class MultiListener implements EventListener {
 
     @Override
     public void endTransaction (int probe_id,
-                                boolean[] hit_vector) {
+                                boolean[] hit_vector) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.endTransaction(probe_id,
@@ -68,7 +68,7 @@ public class MultiListener implements EventListener {
     @Override
     public void oracle (int probe_id,
                         double error,
-                        double confidence) {
+                        double confidence) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.oracle(probe_id, error, confidence);

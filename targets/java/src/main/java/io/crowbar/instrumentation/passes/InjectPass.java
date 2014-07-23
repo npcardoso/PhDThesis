@@ -1,7 +1,9 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.instrumentation.runtime.Tree.Node;
+import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Tree.Node;
+import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import javassist.*;
 import javassist.bytecode.*;
@@ -67,14 +69,14 @@ public class InjectPass extends Pass {
     protected Bytecode getInstrumentationCode (CtClass c,
                                                CtMethod m,
                                                int line,
-                                               ConstPool p) {
-        Bytecode b = new Bytecode(p);
+                                               ConstPool pool) throws RegistrationException {
+        Bytecode b = new Bytecode(pool);
         Node n = getNode(c, m, line);
-        int id = registerProbe(c, n, ProbeType.HIT_PROBE);
+        Probe p = registerProbe(c, n, ProbeType.HIT_PROBE);
 
 
         b.addGetstatic(c, HIT_VECTOR_NAME, HIT_VECTOR_TYPE);
-        b.addIconst(id);
+        b.addIconst(p.getLocalId());
         b.addOpcode(Opcode.ICONST_1);
         b.addOpcode(Opcode.BASTORE);
 

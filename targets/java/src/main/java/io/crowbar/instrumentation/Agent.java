@@ -36,6 +36,8 @@ public class Agent implements ClassFileTransformer {
         ip_black.prefix.add("sun.");
         ip_black.prefix.add("javassist.");
         ip_black.prefix.add("org.junit.");
+        ip_black.prefix.add("io.crowbar.instrumentation");
+
         ip_black.modifier_mask = Modifier.INTERFACE | Modifier.ANNOTATION;
 
         a.passes.add(ip_black);
@@ -57,9 +59,16 @@ public class Agent implements ClassFileTransformer {
 
 
         MultiListener ml = new MultiListener();
-        ml.add(new VerboseListener());
-        ml.add(new Client(null, Integer.parseInt(agentArgs)));
-        Collector.getDefault().setListener(ml);
+        VerboseListener vl = new VerboseListener();
+
+        // vl.prefix = "!!!!!!!! ";
+        // vl.suffix = " !!!!!!!!";
+
+        Client cl = new Client(null, Integer.parseInt(agentArgs));
+        ml.add(vl);
+        ml.add(cl);
+
+        Collector.getDefault().start("Workspace-" + cl.client_id, ml);
 
 
         inst.addTransformer(a);

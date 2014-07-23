@@ -1,10 +1,12 @@
 package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.runtime.HitVector;
+import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.runtime.Tree.Node;
+import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import java.util.logging.Logger;
 import javassist.ClassPool;
@@ -17,7 +19,7 @@ public abstract class Pass {
 
     public abstract void transform (CtClass c) throws Exception;
 
-    protected Node getNode (CtClass c) {
+    protected Node getNode (CtClass c) throws RegistrationException {
         Node root = Collector.getDefault().getTree().getRoot();
         Node n = root.getChild(c.getName());
 
@@ -29,7 +31,7 @@ public abstract class Pass {
     }
 
     protected Node getNode (CtClass c,
-                            CtMethod m) {
+                            CtMethod m) throws RegistrationException {
         Node parent = getNode(c);
         Node n = parent.getChild(m.getName());
 
@@ -42,7 +44,7 @@ public abstract class Pass {
 
     protected Node getNode (CtClass c,
                             CtMethod m,
-                            int line) {
+                            int line) throws RegistrationException {
         Node parent = getNode(c, m);
         Node n = parent.getChild("" + line);
 
@@ -53,13 +55,12 @@ public abstract class Pass {
         return n;
     }
 
-    protected int registerProbe (CtClass c,
-                                 Node n,
-                                 ProbeType type) {
+    protected Probe registerProbe (CtClass c,
+                                   Node n,
+                                   ProbeType type) throws RegistrationException {
         HitVector hv = Collector.getDefault().getHitVector();
-        int id = hv.registerProbe(c.getName(), n.getId(), type);
 
 
-        return id;
+        return hv.registerProbe(c.getName(), n.getId(), type);
     }
 }

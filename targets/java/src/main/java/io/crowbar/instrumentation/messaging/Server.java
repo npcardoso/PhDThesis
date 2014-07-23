@@ -39,6 +39,7 @@ public class Server extends ThreadedServer {
                 }
 
                 try {
+                    // System.out.println("Receiving " + o);
                     dispatch(o);
                 }
                 catch (Exception e) {

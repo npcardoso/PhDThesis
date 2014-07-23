@@ -7,7 +7,40 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class Tree { // , Iterable<Tree> {
+public class Tree implements Iterable<Tree.Node> {
+    public static class RegistrationException extends Exception {
+        public RegistrationException (String str) {
+            super(str);
+        }
+    }
+
+    public static class AlreadyBoundException extends RegistrationException {
+        public AlreadyBoundException (Node node) {
+            super("Node " + node + " is already bound.");
+        }
+    }
+
+    public static class AlreadyRegisteredException extends RegistrationException {
+        public AlreadyRegisteredException (Node node, Node existent_node) {
+            super("Node with node_id: " + node.getId() + " already exists. " +
+                  "New: " + node + ", " +
+                  "Existent: " + existent_node);
+        }
+    }
+
+    public static class InvalidRootNodeException extends RegistrationException {
+        public InvalidRootNodeException (Node node) {
+            super("Trying to register root node " + node +
+                  " in a tree that already contains a node.");
+        }
+    }
+
+    public static class NoSuchNodeException extends RegistrationException {
+        public NoSuchNodeException (int id) {
+            super("Node with node_id: " + id + " does not exist!");
+        }
+    }
+
     public static class Node implements java.io.Serializable {
         /*!
          * \brief The tree holding the node
@@ -43,11 +76,9 @@ public class Tree { // , Iterable<Tree> {
          */
         private Map<String, String> properties = null;
 
-        private Node (Tree tree,
-                      String name,
+        private Node (String name,
                       int id,
                       int parent_id) {
-            this.tree = tree;
             this.name = name;
             this.id = id;
             this.parent_id = parent_id;
@@ -58,6 +89,10 @@ public class Tree { // , Iterable<Tree> {
          */
         public boolean isBound () {
             return tree != null;
+        }
+
+        public boolean isRoot () {
+            return parent_id < 0;
         }
 
         public int getId () {
@@ -83,7 +118,7 @@ public class Tree { // , Iterable<Tree> {
 
 
             if (p == null)
-                return getName();
+                return name;
 
             return p.getFullName(separator) + separator + name;
         }
@@ -106,20 +141,10 @@ public class Tree { // , Iterable<Tree> {
             return getNode(child_id);
         }
 
-        private Node getNode (int node_id) {
+        public Node addChild (String name) throws RegistrationException {
             assert tree != null; // ! @TODO: Create proper exception
-            return tree.getNode(node_id);
-        }
-
-        public Node addChild (String name) {
-            assert tree != null; // ! @TODO: Create proper exception
-            Node n = new Node(tree, name, tree.nodes.size(), getId());
-
-
-            tree.nodes.add(n);
-            children.add(n.getId());
-            children_by_name.put(n.getName(), n.getId());
-            tree.addChildHook(n);
+            Node n = new Node(name, tree.nodes.size(), this.id);
+            tree.registerChild(n);
             return n;
         }
 
@@ -133,22 +158,27 @@ public class Tree { // , Iterable<Tree> {
             ret += "parent_id: " + getParentId() + "]";
             return ret;
         }
+
+        private Node getNode (int node_id) {
+            assert tree != null; // ! @TODO: Create proper exception
+            return tree.getNode(node_id);
+        }
     }
 
 
-    public Tree () {
-        this("");
-    }
+    protected Tree () {}
 
     public Tree (String root_name) {
-        nodes.add(new Node(this, root_name, 0, -1));
+        try {
+            registerChild(new Node(root_name, 0, -1));
+        }
+        catch (RegistrationException e) {
+            e.printStackTrace(); // ! Should never happen
+        }
     }
 
-    protected void addChildHook (Node child) {}
-
-
     public Node getRoot () {
-        return nodes.get(0);
+        return getNode(0);
     }
 
     public Node getNode (int id) {
@@ -158,5 +188,58 @@ public class Tree { // , Iterable<Tree> {
         return nodes.get(id);
     }
 
-    private List<Node> nodes = new ArrayList<Node> ();
+    public Iterator<Node> iterator () {
+        return nodes.iterator();
+    }
+
+    protected void registerChild (Node node) throws RegistrationException {
+        assert node.getId() == nodes.size();
+        _registerChild(node);
+        nodes.add(node);
+    }
+
+    /*!
+     * \brief Registers a node as a child of another node.
+     * This method should be called in order to bind a node to a Tree.
+     * The Node should be properly initialized.
+     * The following actions are performed:
+     *  - Add the child node to both parent's child list and map.
+     *  - Set the child's tree equal to "this".
+     * The following action is *not* performed:
+     *  - Add the node to nodes list at correct position.
+     * The node should be added to the list *after* calling this method.
+     * @throws AlreadyBoundException: if the node is already bound to some tree.
+     * @throws AlreadyRegisteredException: if the a node with same id  exists in the tree.
+     * @throws InvalidRootNodeException: if the node is a root node but the tree already has one root node.
+     * @throws NoSuchNodeException: if parent node does not exist and the node is not a root node.
+     */
+    protected final void _registerChild (Node node) throws RegistrationException {
+        if (node.tree != null)
+            throw new AlreadyBoundException(node);
+
+        Node existent = getNode(node.getId());
+
+        if (existent != null) {
+            throw new AlreadyRegisteredException(node, existent);
+        }
+
+        Node parent = getNode(node.getParentId());
+
+        if (parent == null) {
+            if (node.isRoot()) {
+                if (nodes.size() != 0 || node.getId() != 0)
+                    throw new InvalidRootNodeException(node);
+            }
+            else
+                throw new NoSuchNodeException(node.getParentId());
+        }
+        else {
+            parent.children.add(node.getId());
+            parent.children_by_name.put(node.getName(), node.getId());
+        }
+
+        node.tree = this;
+    }
+
+    protected ArrayList<Node> nodes = new ArrayList<Node> ();
 }

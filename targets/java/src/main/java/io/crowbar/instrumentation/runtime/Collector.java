@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
+import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.runtime.Tree.Node;
@@ -16,20 +17,48 @@ import java.util.UUID;
 
 
 public class Collector {
+    private static Collector collector = new Collector ();
+    private EventListener listener = null;
+    private HitVector hit_vector = null;
+    private Tree tree = null;
+    public boolean reset_on_transaction_start = true;
+
+
     public static Collector getDefault () {
         return collector;
     }
 
-    public Collector () {
-        setListener(new NullListener());
-    }
-
-    public void setListener (EventListener listener) {
+    public void start (String name,
+                       EventListener listener) {
         this.listener = listener;
+        hit_vector = new HitVector() {
+            @Override
+            public Probe registerProbe (String group_name,
+                                        int node_id,
+                                        ProbeType type) {
+                Probe p = super.registerProbe(group_name,
+                                              node_id,
+                                              type);
+
+
+                Collector.this.registerProbe(p.getGlobalId(),
+                                             p.getNodeId(),
+                                             p.getType());
+                return p;
+            }
+        };
+        this.tree = new Tree(name) {
+            @Override
+            protected void registerChild (Node node) throws RegistrationException {
+                super.registerChild(node);
+                registerNode(node);
+            }
+        };
     }
 
     public void registerNode (Node n) {
         try {
+            System.out.println(n);
             listener.registerNode(n);
         }
         catch (Exception e) {
@@ -93,26 +122,4 @@ public class Collector {
     public Tree getTree () {
         return tree;
     }
-
-    private static Collector collector = new Collector ();
-
-    private HitVector hit_vector = new HitVector() {
-        @Override
-        protected void registerProbeHook (int probe_id,
-                                          ProbeGroup.Probe probe) {
-            Collector.this.registerProbe(probe_id,
-                                         probe.getNodeId(),
-                                         probe.getType());
-        }
-    };
-
-    private Tree tree = new Tree() {
-        @Override
-        protected void addChildHook (Node node) {
-            registerNode(node);
-        }
-    };
-
-    private EventListener listener = null;
-    public boolean reset_on_transaction_start = true;
 }

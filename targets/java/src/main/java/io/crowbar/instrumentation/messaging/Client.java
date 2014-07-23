@@ -29,13 +29,11 @@ public class Client implements EventListener {
                         out.flush();
                     }
 
-                    System.out.println(message);
-
                     if (message != null) {
                         ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
                         out.writeObject(message);
                         out.flush();
-                        System.out.println("Sending " + message);
+                        // System.out.println("Sending " + message);
                     }
 
                     message = getMessage();
@@ -115,7 +113,7 @@ public class Client implements EventListener {
 
     Socket s = null;
     Thread t = null;
-    final String client_id = UUID.randomUUID().toString();
+    public final String client_id = UUID.randomUUID().toString();
     String host;
     int port;
 }

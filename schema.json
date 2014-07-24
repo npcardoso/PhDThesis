@@ -19,10 +19,6 @@
           "parentId": {
             "$ref": "#/definitions/id"
           },
-          "type": {
-            "type": "number",
-            "minimum": 0
-          },
           "properties": {
             "type": "object"
           },
@@ -38,9 +34,7 @@
         },
         "required": [
           "id",
-          "name",
-          "parentId",
-          "type"
+          "name"
         ]
       },
       "minItems": 1,
@@ -50,19 +44,18 @@
       "title": "Configuration parameters",
       "type": "object",
       "properties": {
-        "types": {
+        "granularities": {
           "description": "Array containing all the possible types of a node",
           "type": "array",
           "items": {
-            "title": "Type name",
+            "title": "Granularity name",
             "type": "string"
           },
-          "minItems": 1,
-          "uniqueItems": true
+          "minItems": 1
         }
       },
       "required": [
-        "types"
+        "granularities"
       ]
     }
   },

@@ -37,6 +37,7 @@ public class AgentServer {
         @Override
         public void interrupted () {
             System.out.println(sb);
+            System.out.println(TreeJSONSerializer.serialize(tr));
         }
 
         @Override

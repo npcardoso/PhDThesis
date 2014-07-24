@@ -32,6 +32,7 @@ public class Agent implements ClassFileTransformer {
 
         // Ignores classes in particular packages
         IgnorePass ip_black = new IgnorePass( /* blacklist */ true);
+        ip_black.prefix.add("javax.");
         ip_black.prefix.add("java.");
         ip_black.prefix.add("sun.");
         ip_black.prefix.add("javassist.");
@@ -84,6 +85,10 @@ public class Agent implements ClassFileTransformer {
         ClassPool cp = null;
 
 
+        if (classLoader == null)
+            return null;
+
+
         try {
             cp = ClassPool.getDefault();
             c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
@@ -106,13 +111,13 @@ public class Agent implements ClassFileTransformer {
             return c.toBytecode();
         }
         catch (Pass.IgnoreClassException e) {
-            // System.out.println("Ignoring Class: " + c.getName());
+            System.err.println("Ignoring Class: " + c.getName());
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return bytes;
+        return null;
     }
 
     public List<Pass> passes = new LinkedList<Pass> ();

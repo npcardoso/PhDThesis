@@ -35,7 +35,7 @@ public class Messages {
         public Node node;
 
         public RegisterNodeMessage (Node node) {
-            this.node = node;
+            this.node = new Node(node);
         }
 
         @Override

@@ -1,0 +1,54 @@
+package io.crowbar.instrumentation.runtime;
+
+
+import io.crowbar.instrumentation.runtime.Tree.Node;
+
+import flexjson.JSONSerializer;
+import flexjson.TypeContext;
+import flexjson.transformer.AbstractTransformer;
+
+import java.util.List;
+
+public class TreeJSONSerializer {
+    public static class TreeNodeTransformer extends AbstractTransformer {
+        @Override
+        public void transform (Object object) {
+            Node n = (Node) object;
+            TypeContext typeContext = getContext().writeOpenObject();
+
+
+            getContext().writeName("id");
+            getContext().transform(n.getId());
+            getContext().writeComma();
+            getContext().writeName("name");
+            getContext().transform(n.getName());
+            getContext().writeComma();
+            getContext().writeName("parent_id");
+            getContext().transform(n.getParentId());
+            getContext().writeComma();
+
+            List<Integer> children = n.getChildren();
+
+            if (children.size() > 0) {
+                getContext().writeComma();
+                getContext().writeName("children");
+                getContext().transform(children);
+            }
+
+            getContext().writeCloseObject();
+        }
+    }
+
+    public static String serialize (Tree t) {
+        return serialize(t, new JSONSerializer());
+    }
+
+    public static String serialize (Tree t,
+                                    JSONSerializer serializer) {
+        return serializer
+               .transform(new TreeNodeTransformer(), Tree.Node.class)
+               .exclude("*")
+               .prettyPrint(true)
+               .serialize(t);
+    }
+}

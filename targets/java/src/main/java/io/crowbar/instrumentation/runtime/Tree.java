@@ -2,6 +2,7 @@ package io.crowbar.instrumentation.runtime;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -70,7 +71,7 @@ public class Tree implements Iterable<Tree.Node> {
         /*!
          * \brief The node's children ids, acessible by name.
          */
-        private Map<String, Integer> children_by_name = children_by_name = new HashMap<String, Integer> ();
+        private Map<String, Integer> children_by_name = new HashMap<String, Integer> ();
         /*!
          * \brief A map for additional node properties.
          */
@@ -82,6 +83,12 @@ public class Tree implements Iterable<Tree.Node> {
             this.name = name;
             this.id = id;
             this.parent_id = parent_id;
+        }
+
+        public Node (Node n) {
+            this.name = n.name;
+            this.id = n.id;
+            this.parent_id = n.parent_id;
         }
 
         /*!
@@ -131,6 +138,10 @@ public class Tree implements Iterable<Tree.Node> {
             return getNode(parent_id);
         }
 
+        public List<Integer> getChildren () {
+            return Collections.unmodifiableList(children);
+        }
+
         public Node getChild (String name) {
             Integer child_id = children_by_name.get(name);
 
@@ -155,7 +166,8 @@ public class Tree implements Iterable<Tree.Node> {
 
             ret += "name: \"" + (isBound() ? getFullName() : getName()) + "\", ";
             ret += "id: " + getId() + ", ";
-            ret += "parent_id: " + getParentId() + "]";
+            ret += "parent_id: " + getParentId() + ", ";
+            ret += "children: " + children + "]";
             return ret;
         }
 
@@ -188,6 +200,10 @@ public class Tree implements Iterable<Tree.Node> {
         return nodes.get(id);
     }
 
+    public List<Node> getNodes () {
+        return Collections.unmodifiableList(nodes);
+    }
+
     public Iterator<Node> iterator () {
         return nodes.iterator();
     }
@@ -203,13 +219,13 @@ public class Tree implements Iterable<Tree.Node> {
      * This method should be called in order to bind a node to a Tree.
      * The Node should be properly initialized.
      * The following actions are performed:
-     *  - Add the child node to both parent's child list and map.
+     *  - Add the child node to both parent's list and map.
      *  - Set the child's tree equal to "this".
      * The following action is *not* performed:
      *  - Add the node to nodes list at correct position.
      * The node should be added to the list *after* calling this method.
      * @throws AlreadyBoundException: if the node is already bound to some tree.
-     * @throws AlreadyRegisteredException: if the a node with same id  exists in the tree.
+     * @throws AlreadyRegisteredException: if the a node with same id exists in the tree.
      * @throws InvalidRootNodeException: if the node is a root node but the tree already has one root node.
      * @throws NoSuchNodeException: if parent node does not exist and the node is not a root node.
      */

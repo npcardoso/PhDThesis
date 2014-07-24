@@ -7,6 +7,11 @@
   <version>1.0-SNAPSHOT</version>
   <name>javassist</name>
   <url>http://maven.apache.org</url>
+  
+  <properties>
+    <checkstyle.config.location>${project.basedir}/../../configs/checkstyle.xml</checkstyle.config.location>
+  </properties>
+  
   <build>
     <plugins>
       <plugin>
@@ -41,6 +46,22 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <!--executions>
+          <execution>
+            <id>verify-style</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions-->
+        <configuration>
+          <logViolationsToConsole>true</logViolationsToConsole>
+        </configuration>
       </plugin>
     </plugins>
   </build>

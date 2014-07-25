@@ -37,8 +37,11 @@ public class Agent implements ClassFileTransformer {
         ip_black.prefix.add("sun.");
         ip_black.prefix.add("javassist.");
         ip_black.prefix.add("org.junit.");
-        ip_black.prefix.add("io.crowbar.instrumentation");
-
+        ip_black.prefix.add("io.crowbar.");
+        ip_black.prefix.add("org.eclipse.");
+        ip_black.prefix.add("com.sun.");
+        ip_black.prefix.add("junit.");
+        
         ip_black.modifier_mask = Modifier.INTERFACE | Modifier.ANNOTATION;
 
         a.passes.add(ip_black);

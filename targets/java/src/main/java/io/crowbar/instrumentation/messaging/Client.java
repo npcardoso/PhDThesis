@@ -33,7 +33,7 @@ public class Client implements EventListener {
                         ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
                         out.writeObject(message);
                         out.flush();
-                        System.out.println("Sending " + message);
+                        // System.out.println("Sending " + message);
                     }
 
                     message = getMessage();

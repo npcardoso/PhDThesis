@@ -26,7 +26,9 @@ public class HitVector {
             }
 
             public boolean getActivation () {
-                assert hit_vector != null;
+                if (hit_vector == null)
+                    return false;
+
                 return hit_vector[local_id];
             }
 
@@ -47,6 +49,7 @@ public class HitVector {
             }
 
             public void hit () {
+                assert hit_vector != null;
                 hit_vector[local_id] = true;
             }
         }
@@ -69,6 +72,9 @@ public class HitVector {
         }
 
         public void reset () {
+            if (hit_vector == null)
+                return;
+
             for (int j = 0; j < hit_vector.length; j++)
                 hit_vector[j] = false;
         }
@@ -98,7 +104,12 @@ public class HitVector {
         return probe;
     }
 
+    public boolean exists (String group_name) {
+        return groups.containsKey(group_name);
+    }
+
     public boolean[] get (String group_name) {
+        assert exists(group_name);
         return groups.get(group_name).get();
     }
 

@@ -8,6 +8,7 @@ import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
 import io.crowbar.instrumentation.passes.wrappers.JUnit4Wrapper;
+import io.crowbar.instrumentation.passes.wrappers.TestNGWrapper;
 import io.crowbar.instrumentation.runtime.Collector;
 
 import java.lang.instrument.ClassFileTransformer;
@@ -36,10 +37,11 @@ public class Agent implements ClassFileTransformer {
         ip_black.prefix.add("java.");
         ip_black.prefix.add("sun.");
         ip_black.prefix.add("javassist.");
-        ip_black.prefix.add("org.junit.");
         ip_black.prefix.add("io.crowbar.instrumentation");
+        ip_black.prefix.add("org.junit.");
+        ip_black.prefix.add("org.apache.");
 
-        ip_black.modifier_mask = Modifier.INTERFACE | Modifier.ANNOTATION;
+        ip_black.modifier_mask = Modifier.INTERFACE | Modifier.ANNOTATION | Modifier.NATIVE | Modifier.ABSTRACT;
 
         a.passes.add(ip_black);
 
@@ -56,6 +58,7 @@ public class Agent implements ClassFileTransformer {
         // Wraps unit tests with instrumentation instrunctions
         TestWrapperPass twp = new TestWrapperPass();
         twp.wrappers.add(new JUnit4Wrapper());
+        twp.wrappers.add(new TestNGWrapper());
         a.passes.add(twp);
 
 
@@ -66,7 +69,7 @@ public class Agent implements ClassFileTransformer {
         // vl.suffix = " !!!!!!!!";
 
         Client cl = new Client(null, Integer.parseInt(agentArgs));
-        ml.add(vl);
+        // ml.add(vl);
         ml.add(cl);
 
         Collector.getDefault().start("Workspace-" + cl.client_id, ml);
@@ -114,6 +117,7 @@ public class Agent implements ClassFileTransformer {
             System.err.println("Ignoring Class: " + c.getName());
         }
         catch (Exception ex) {
+            System.err.println("Error in Class: " + c.getName());
             ex.printStackTrace();
         }
 

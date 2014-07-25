@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation.passes;
 
+import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.Node;
@@ -15,9 +16,6 @@ public class InjectPass extends Pass {
 
     @Override
     public void transform (CtClass c) throws Exception {
-        boolean injected = false;
-
-
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();
@@ -25,15 +23,14 @@ public class InjectPass extends Pass {
             if (ca == null)
                 continue;
 
-            injected = true;
             handleMethod(c, m);
             ca.setMaxStack(ca.computeMaxStack());
         }
 
-        if (injected) {
+        if (Collector.getDefault().getHitVector().exists(c.getName())) {
             CtField f = CtField.make("public static boolean[]  " + HIT_VECTOR_NAME + " = " +
-                                     "Collector.getDefault().getHitVector(\"" + c.getName() +
-                                     "\");", c);
+                                     "Collector.getDefault().getHitVector().get(" +
+                                     "\"" + c.getName() + "\");", c);
             c.addField(f);
         }
     }

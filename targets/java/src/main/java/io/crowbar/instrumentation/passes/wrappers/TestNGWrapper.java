@@ -2,11 +2,11 @@ package io.crowbar.instrumentation.passes.wrappers;
 
 import javassist.CtMethod;
 
-public class JUnit4Wrapper implements Wrapper {
+public class TestNGWrapper implements Wrapper {
     @Override
     public boolean matches (CtMethod m) {
         try {
-            return m.hasAnnotation(Class.forName("org.junit.Test"));
+            return m.hasAnnotation(Class.forName("org.testng.annotations.Test"));
         }
         catch (Exception e) {}
         return false;

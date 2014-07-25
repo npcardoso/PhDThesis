@@ -58,7 +58,6 @@ public class Collector {
 
     public void registerNode (Node n) {
         try {
-            System.out.println(n);
             listener.registerNode(n);
         }
         catch (Exception e) {
@@ -109,10 +108,6 @@ public class Collector {
         catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean[] getHitVector (String group_name) {
-        return hit_vector.get(group_name);
     }
 
     public HitVector getHitVector () {

@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
 
-import io.crowbar.instrumentation.passes.wrappers.Wrapper;
+import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree;
@@ -13,20 +13,41 @@ import javassist.bytecode.*;
 
 import java.util.*;
 
-public class TestWrapperPass extends Pass {
+public class TestWrapperPass extends AbstractPass {
+    private final List<ActionTaker> actionTakers = new LinkedList<ActionTaker> ();
+
+
+    public TestWrapperPass (ActionTaker... actionTakers) {
+        this.actionTakers.addAll(Arrays.asList(actionTakers));
+    }
+
+    public TestWrapperPass (List<ActionTaker> actionTakers) {
+        this.actionTakers.addAll(actionTakers);
+    }
+
     @Override
-    public void transform (CtClass c) throws Exception {
+    public Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
-            for (Wrapper w : wrappers) {
-                if (w.matches(m)) {
+            for (ActionTaker at : actionTakers) {
+                ActionTaker.Action ret = at.getAction(m);
+
+                switch (ret) {
+                case ACCEPT:
                     Node n = getNode(c, m);
                     m.insertBefore(getInstrumentationCode(c, n, ProbeType.TRANSACTION_START, false));
                     m.insertAfter(getInstrumentationCode(c, n, ProbeType.TRANSACTION_END, true),
                                   true /* asFinally */);
-                    break;
+
+                case REJECT:
+                    return Outcome.CONTINUE;
+
+                case NEXT:
+                    continue;
                 }
             }
         }
+
+        return Outcome.CONTINUE;
     }
 
     protected String getInstrumentationCode (CtClass c,
@@ -48,6 +69,4 @@ public class TestWrapperPass extends Pass {
 
         return ret;
     }
-
-    public List<Wrapper> wrappers = new LinkedList<Wrapper> ();
 }

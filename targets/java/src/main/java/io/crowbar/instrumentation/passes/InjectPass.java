@@ -9,13 +9,29 @@ import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 import javassist.*;
 import javassist.bytecode.*;
 
-public class InjectPass extends Pass {
-    public InjectPass (Granularity g) {
-        granularity = g;
+public class InjectPass extends AbstractPass {
+    public enum Granularity {
+        STATEMENT,
+        FUNCTION
+    }
+
+    private static final String HIT_VECTOR_TYPE = "[Z";
+
+    private final Granularity granularity;
+    private final String hitVectorName;
+
+    public InjectPass (Granularity granularity) {
+        this(granularity, "__CROWBAR_HIT_VECTOR__");
+    }
+
+    public InjectPass (Granularity granularity,
+                       String hitVectorName) {
+        this.granularity = granularity;
+        this.hitVectorName = hitVectorName;
     }
 
     @Override
-    public void transform (CtClass c) throws Exception {
+    public Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();
@@ -28,11 +44,13 @@ public class InjectPass extends Pass {
         }
 
         if (Collector.getDefault().getHitVector().exists(c.getName())) {
-            CtField f = CtField.make("public static boolean[]  " + HIT_VECTOR_NAME + " = " +
+            CtField f = CtField.make("public static boolean[]  " + hitVectorName + " = " +
                                      "Collector.getDefault().getHitVector().get(" +
                                      "\"" + c.getName() + "\");", c);
             c.addField(f);
         }
+
+        return Outcome.CONTINUE;
     }
 
     protected void handleMethod (CtClass c,
@@ -72,20 +90,11 @@ public class InjectPass extends Pass {
         Probe p = registerProbe(c, n, ProbeType.HIT_PROBE);
 
 
-        b.addGetstatic(c, HIT_VECTOR_NAME, HIT_VECTOR_TYPE);
+        b.addGetstatic(c, hitVectorName, HIT_VECTOR_TYPE);
         b.addIconst(p.getLocalId());
         b.addOpcode(Opcode.ICONST_1);
         b.addOpcode(Opcode.BASTORE);
 
         return b;
     }
-
-    private final String HIT_VECTOR_NAME = "__CROWBAR_HIT_VECTOR__";
-    private final String HIT_VECTOR_TYPE = "[Z";
-
-    public enum Granularity {
-        STATEMENT,
-        FUNCTION
-    }
-    private Granularity granularity;
 }

@@ -7,8 +7,16 @@ public class VerboseListener implements EventListener {
     public String prefix = "";
     public String suffix = "";
 
+    public boolean enableRegisterNode = true;
+    public boolean enableRegisterProbe = true;
+    public boolean enableStartTransaction = true;
+    public boolean enableEndTransaction = true;
+    public boolean enableOracle = true;
+
     @Override
     public void registerNode (Node n) throws Exception {
+        if (!enableRegisterNode) return;
+
         String ret = prefix;
 
 
@@ -21,6 +29,8 @@ public class VerboseListener implements EventListener {
     public void registerProbe (int probe_id,
                                int node_id,
                                ProbeType type) throws Exception {
+        if (!enableRegisterProbe) return;
+
         String ret = prefix;
 
 
@@ -33,6 +43,8 @@ public class VerboseListener implements EventListener {
 
     @Override
     public void startTransaction (int probe_id) throws Exception {
+        if (!enableStartTransaction) return;
+
         String ret = prefix;
 
 
@@ -44,14 +56,17 @@ public class VerboseListener implements EventListener {
     @Override
     public void endTransaction (int probe_id,
                                 boolean[] hit_vector) throws Exception {
+        if (!enableEndTransaction) return;
+
         String ret = prefix;
 
 
         ret += "Transaction End: [probe_id: " + probe_id;
         ret += ", hit_vector: [ ";
 
-        for (boolean b : hit_vector)
-            ret += b ? "1 " : "0 ";
+        for (int i = 0; i < hit_vector.length; i++) {
+            ret += hit_vector[i] ? (i + " ") : "";
+        }
 
         ret += "]]" + suffix;
         System.out.println(ret);
@@ -61,6 +76,8 @@ public class VerboseListener implements EventListener {
     public void oracle (int probe_id,
                         double error,
                         double confidence) throws Exception {
+        if (!enableOracle) return;
+
         String ret = prefix;
 
 

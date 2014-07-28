@@ -3,12 +3,17 @@ package io.crowbar.instrumentation;
 import io.crowbar.instrumentation.events.VerboseListener;
 import io.crowbar.instrumentation.events.MultiListener;
 import io.crowbar.instrumentation.messaging.Client;
-import io.crowbar.instrumentation.passes.IgnorePass;
+import io.crowbar.instrumentation.passes.FilterPass;
 import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
-import io.crowbar.instrumentation.passes.wrappers.JUnit4Wrapper;
-import io.crowbar.instrumentation.passes.wrappers.TestNGWrapper;
+import io.crowbar.instrumentation.passes.matchers.BlackList;
+import io.crowbar.instrumentation.passes.matchers.JUnit4TestMatcher;
+import io.crowbar.instrumentation.passes.matchers.ModifierMatcher;
+import io.crowbar.instrumentation.passes.matchers.PrefixMatcher;
+import io.crowbar.instrumentation.passes.matchers.TestNGTestMatcher;
+import io.crowbar.instrumentation.passes.matchers.WhiteList;
+
 import io.crowbar.instrumentation.runtime.Collector;
 
 import java.lang.instrument.ClassFileTransformer;
@@ -32,22 +37,18 @@ public class Agent implements ClassFileTransformer {
 
 
         // Ignores classes in particular packages
-        IgnorePass ip_black = new IgnorePass( /* blacklist */ true);
-        ip_black.prefix.add("javax.");
-        ip_black.prefix.add("java.");
-        ip_black.prefix.add("sun.");
-        ip_black.prefix.add("javassist.");
-        ip_black.prefix.add("io.crowbar.instrumentation");
-        ip_black.prefix.add("org.junit.");
-        ip_black.prefix.add("org.apache.");
+        PrefixMatcher pMatcher = new PrefixMatcher("javax.",
+                                                   "java.",
+                                                   "sun.",
+                                                   "javassist.",
+                                                   "io.crowbar.instrumentation",
+                                                   "org.apache.");
 
-        ip_black.modifier_mask = Modifier.INTERFACE | Modifier.ANNOTATION | Modifier.NATIVE | Modifier.ABSTRACT;
+        ModifierMatcher mMatcher = new ModifierMatcher(Modifier.NATIVE);
 
-        a.passes.add(ip_black);
-
-        // IgnorePass ip_white = new IgnorePass(/* blacklist */ false);
-        // ip_white.suffix.add("asda");
-        // a.passes.add(ip_white);
+        FilterPass fp = new FilterPass(new BlackList(mMatcher),
+                                       new BlackList(pMatcher));
+        a.passes.add(fp);
 
 
         // Injects instrumentation instructions
@@ -56,21 +57,23 @@ public class Agent implements ClassFileTransformer {
 
 
         // Wraps unit tests with instrumentation instrunctions
-        TestWrapperPass twp = new TestWrapperPass();
-        twp.wrappers.add(new JUnit4Wrapper());
-        twp.wrappers.add(new TestNGWrapper());
+        TestWrapperPass twp = new TestWrapperPass(new BlackList(new ModifierMatcher(Modifier.ABSTRACT)), // Skip Abstract Methods
+                                                  new WhiteList(new JUnit4TestMatcher()),
+                                                  new WhiteList(new TestNGTestMatcher()));
         a.passes.add(twp);
 
 
         MultiListener ml = new MultiListener();
         VerboseListener vl = new VerboseListener();
+        vl.enableRegisterNode = false;
+        vl.enableRegisterProbe = false;
 
-        // vl.prefix = "!!!!!!!! ";
+        vl.prefix = "!!!!!!!! ";
         // vl.suffix = " !!!!!!!!";
 
         Client cl = new Client(null, Integer.parseInt(agentArgs));
-        // ml.add(vl);
-        ml.add(cl);
+        ml.add(vl);
+        // ml.add(cl);
 
         Collector.getDefault().start("Workspace-" + cl.client_id, ml);
 
@@ -106,15 +109,24 @@ public class Agent implements ClassFileTransformer {
             cp.importPackage("io.crowbar.instrumentation.runtime");
 
             for (Pass p : passes) {
-                p.transform(c);
+                Pass.Outcome ret = p.transform(c);
+
+                switch (ret) {
+                case CONTINUE:
+                    continue;
+
+                case ABORT:
+                    System.err.println("Ignoring Class: " + c.getName());
+                    return null;
+
+                case RETURN:
+                    break;
+                }
             }
 
 
-            System.out.println("Instrumented Class: " + c.getName());
+            // System.out.println("Instrumented Class: " + c.getName());
             return c.toBytecode();
-        }
-        catch (Pass.IgnoreClassException e) {
-            System.err.println("Ignoring Class: " + c.getName());
         }
         catch (Exception ex) {
             System.err.println("Error in Class: " + c.getName());

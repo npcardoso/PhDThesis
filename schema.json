@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GZoltar Visualizon Input",
+  "title": "Crowbar Visualizon Input",
   "type": "object",
   "properties": {
     "nodes": {
@@ -11,19 +11,21 @@
         "type": "object",
         "properties": {
           "id": {
+            "description": "Unique identifier of a node, also represents the node position on the nodes array",
             "$ref": "#/definitions/id"
           },
           "name": {
             "type": "string"
           },
           "parentId": {
+            "description": "Unique identifier of a parent of the node and its position on the nodes array",
             "$ref": "#/definitions/id"
           },
           "properties": {
             "type": "object"
           },
           "children": {
-            "description": "Id's of childs of the node",
+            "description": "Array containing the unique identifier of childs of the node",
             "type": "array",
             "items": {
               "$ref": "#/definitions/id"
@@ -45,10 +47,10 @@
       "type": "object",
       "properties": {
         "granularities": {
-          "description": "Array containing all the possible types of a node",
+          "description": "Array containing all the possible granularities name ordered by depth",
           "type": "array",
           "items": {
-            "title": "Granularity name",
+            "title": "Granularity",
             "type": "string"
           },
           "minItems": 1

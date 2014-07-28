@@ -6,7 +6,7 @@ public class Spectra {
     private ArrayList<boolean[]> activity = new ArrayList<boolean[]> ();
     private ArrayList<Boolean> error = new ArrayList<Boolean> ();
 
-    public void setActivity (int transactionId,
+    public final void setActivity (int transactionId,
                              boolean[] hitVector) {
         activity.ensureCapacity(transactionId + 1);
 
@@ -14,7 +14,7 @@ public class Spectra {
             activity.add(null);
         }
 
-        boolean hv[] = new boolean[hitVector.length];
+        boolean[] hv = new boolean[hitVector.length];
         System.arraycopy(hitVector, 0,
                          hv, 0,
                          hitVector.length);
@@ -22,7 +22,7 @@ public class Spectra {
         activity.set(transactionId, hv);
     }
 
-    public void setError (int transactionId,
+    public final void setError (int transactionId,
                           boolean error) {
         this.error.ensureCapacity(transactionId + 1);
 
@@ -33,22 +33,23 @@ public class Spectra {
         this.error.set(transactionId, error);
     }
 
-    public int getNumComponents () {
+    public final int getNumComponents () {
         int numComponents = 0;
 
 
-        for (boolean[] hv : activity)
+        for (boolean[] hv : activity) {
             numComponents = Math.max(numComponents, hv.length);
+        }
 
         return numComponents;
     }
 
-    public int getNumTransactions () {
+    public final int getNumTransactions () {
         return Math.max(activity.size(),
                         error.size());
     }
 
-    public boolean getActivity (int transactionId,
+    public final boolean getActivity (int transactionId,
                                 int componentId) {
         if (transactionId < 0 || transactionId >= activity.size())
             return false;
@@ -61,7 +62,7 @@ public class Spectra {
         return hv[componentId];
     }
 
-    public boolean getError (int transactionId) {
+    public final boolean getError (int transactionId) {
         if (transactionId < 0 || transactionId >= error.size())
             return false;
 
@@ -69,7 +70,7 @@ public class Spectra {
     }
 
     @Override
-    public String toString () {
+    public final String toString () {
         int numComponents = getNumComponents();
         int numTransactions = getNumTransactions();
 
@@ -83,8 +84,9 @@ public class Spectra {
         for (int i = 0; i < numTransactions; i++) {
             ret.append("\n");
 
-            for (int j = 0; j < numComponents; j++)
+            for (int j = 0; j < numComponents; j++) {
                 ret.append(getActivity(i, j) ? "1 " : "0 ");
+            }
 
             ret.append(getError(i) ? "-" : "+");
         }

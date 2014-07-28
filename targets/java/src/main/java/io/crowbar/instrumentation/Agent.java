@@ -19,8 +19,6 @@ import io.crowbar.instrumentation.runtime.Collector;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.security.ProtectionDomain;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,7 +77,7 @@ public class Agent implements ClassFileTransformer {
         ml.add(vl);
         // ml.add(cl);
 
-        Collector.getDefault().start("Workspace-" + cl.client_id, ml);
+        Collector.getDefault().start("Workspace-" + cl.getCliendId(), ml);
 
 
         inst.addTransformer(a);
@@ -102,8 +100,7 @@ public class Agent implements ClassFileTransformer {
         try {
             cp = ClassPool.getDefault();
             c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return bytes;
         }
@@ -124,6 +121,7 @@ public class Agent implements ClassFileTransformer {
                     return null;
 
                 case RETURN:
+                default:
                     break;
                 }
             }
@@ -131,8 +129,7 @@ public class Agent implements ClassFileTransformer {
 
             // System.out.println("Instrumented Class: " + c.getName());
             return c.toBytecode();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.err.println("Error in Class: " + c.getName());
             ex.printStackTrace();
         }
@@ -140,5 +137,5 @@ public class Agent implements ClassFileTransformer {
         return null;
     }
 
-    public List<Pass> passes = new LinkedList<Pass> ();
+    private List<Pass> passes = new LinkedList<Pass> ();
 }

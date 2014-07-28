@@ -4,7 +4,6 @@ import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
-
 public class TreeRebuilder extends Tree implements EventListener {
     public static class DisabledRegistrationException extends RegistrationException {
         public DisabledRegistrationException () {

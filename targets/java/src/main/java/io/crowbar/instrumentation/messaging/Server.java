@@ -1,24 +1,29 @@
 package io.crowbar.instrumentation.messaging;
 
 import io.crowbar.instrumentation.events.EventListener;
-import io.crowbar.instrumentation.messaging.Messages.*;
-import io.crowbar.instrumentation.runtime.Collector;
+import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
+import io.crowbar.instrumentation.messaging.Messages.ByeMessage;
+import io.crowbar.instrumentation.messaging.Messages.ProbeMessage;
+import io.crowbar.instrumentation.messaging.Messages.TransactionStartMessage;
+import io.crowbar.instrumentation.messaging.Messages.TransactionEndMessage;
+import io.crowbar.instrumentation.messaging.Messages.OracleMessage;
+import io.crowbar.instrumentation.messaging.Messages.RegisterNodeMessage;
+import io.crowbar.instrumentation.messaging.Messages.RegisterProbeMessage;
 import io.crowbar.util.io.ThreadedServer;
 
-import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server extends ThreadedServer {
     public interface Service {
-        public EventListener getEventListener ();
-        public void interrupted ();
-        public void finalize ();
+        EventListener getEventListener ();
+        void interrupted ();
+        void finalize ();
     }
 
     public interface ServiceFactory {
-        public Service create (String id);
+        Service create (String id);
     }
 
     private class Dispatcher implements Runnable {
@@ -41,9 +46,8 @@ public class Server extends ThreadedServer {
                 if (!(o instanceof HelloMessage))
                     throw new Exception("First message should be a HelloMessage. Received instead: " + o);
 
-                id = ((HelloMessage) o).id;
-            }
-            catch (Exception e) {
+                id = ((HelloMessage) o).getId();
+            } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
@@ -54,8 +58,7 @@ public class Server extends ThreadedServer {
                 try {
                     o = new ObjectInputStream(socket.getInputStream()).readObject();
                     System.out.println("Receiving " + o);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     service.interrupted();
                     e.printStackTrace();
                     return;
@@ -68,40 +71,36 @@ public class Server extends ThreadedServer {
 
                 try {
                     dispatch(o);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
         private void dispatch (Object o) throws Exception {
-            EventListener event_listener = service.getEventListener();
+            EventListener eventListener = service.getEventListener();
 
 
             if (o instanceof ProbeMessage) {
                 ProbeMessage m = (ProbeMessage) o;
 
                 if (o instanceof TransactionStartMessage)
-                    event_listener.startTransaction(m.probe_id);
+                    eventListener.startTransaction(m.getProbeId());
                 else if (o instanceof TransactionEndMessage)
-                    event_listener.endTransaction(m.probe_id,
-                                                  ((TransactionEndMessage) m).hit_vector);
+                    eventListener.endTransaction(m.getProbeId(),
+                                                  ((TransactionEndMessage) m).getHitVector());
                 else if (o instanceof OracleMessage)
-                    event_listener.oracle(m.probe_id,
-                                          ((OracleMessage) m).error,
-                                          ((OracleMessage) m).confidence);
-            }
-            else if (o instanceof RegisterNodeMessage) {
-                event_listener.registerNode(((RegisterNodeMessage) o).node);
-            }
-            else if (o instanceof RegisterProbeMessage) {
+                    eventListener.oracle(m.getProbeId(),
+                                          ((OracleMessage) m).getError(),
+                                          ((OracleMessage) m).getConfidence());
+            } else if (o instanceof RegisterNodeMessage) {
+                eventListener.registerNode(((RegisterNodeMessage) o).getNode());
+            } else if (o instanceof RegisterProbeMessage) {
                 RegisterProbeMessage m = (RegisterProbeMessage) o;
-                event_listener.registerProbe(m.probe_id,
-                                             m.node_id,
-                                             m.type);
-            }
-            else
+                eventListener.registerProbe(m.getProbeId(),
+                                             m.getNodeId(),
+                                             m.getType());
+            } else
                 throw new Exception("Unknown Message Type: " + o);
         }
     }
@@ -113,9 +112,9 @@ public class Server extends ThreadedServer {
     }
 
     @Override
-    protected Runnable handle (Socket s) {
+    protected final Runnable handle (Socket s) {
         return new Dispatcher(s);
     }
 
-    ServiceFactory serviceFactory;
+    private ServiceFactory serviceFactory;
 }

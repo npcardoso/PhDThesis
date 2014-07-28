@@ -33,7 +33,7 @@
 <module name="Checker">
 
     <!-- Checks that a package-info.java file exists for each package. -->
-    <module name="JavadocPackage"/>
+    <!--module name="JavadocPackage"/-->
 
     <!-- Checks whether files end with a new line. -->
     <!--module name="NewlineAtEndOfFile"/-->
@@ -57,10 +57,10 @@
     <module name="TreeWalker">
 
         <!-- Checks for Javadoc comments. -->
-        <module name="JavadocMethod"/>
+        <!--module name="JavadocMethod"/>
         <module name="JavadocType"/>
         <module name="JavadocVariable"/>
-        <module name="JavadocStyle"/>
+        <module name="JavadocStyle"/-->
 
         <!-- Checks for Naming Conventions. -->
         <module name="ConstantName">
@@ -95,9 +95,7 @@
         <module name="AvoidStarImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
-        <module name="IllegalImport">
-            <property name="illegalPkgs" value="java.io, java.sql"/>
-        </module>
+        <module name="IllegalImport"/>
 
         <!-- Checks for Size Violations. -->
         <!--module name="LineLength">

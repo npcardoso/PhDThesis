@@ -1,43 +1,33 @@
 package io.crowbar.instrumentation.runtime;
 
 import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
-import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.runtime.Tree.Node;
-
+import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import io.crowbar.instrumentation.events.EventListener;
-import io.crowbar.instrumentation.events.NullListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 
 public class Collector {
     private static Collector collector = new Collector ();
     private EventListener listener = null;
-    private HitVector hit_vector = null;
+    private HitVector hitVector = null;
     private Tree tree = null;
-    public boolean reset_on_transaction_start = true;
+    private boolean resetOnTransactionStart = true;
 
 
     public static Collector getDefault () {
         return collector;
     }
 
-    public void start (String name,
+    public final void start (String name,
                        EventListener listener) {
         this.listener = listener;
-        hit_vector = new HitVector() {
+        hitVector = new HitVector() {
             @Override
-            public Probe registerProbe (String group_name,
-                                        int node_id,
+            public Probe registerProbe (String groupName,
+                                        int nodeId,
                                         ProbeType type) {
-                Probe p = super.registerProbe(group_name,
-                                              node_id,
+                Probe p = super.registerProbe(groupName,
+                                              nodeId,
                                               type);
 
 
@@ -56,65 +46,60 @@ public class Collector {
         };
     }
 
-    public void registerNode (Node n) {
+    public final void registerNode (Node n) {
         try {
             listener.registerNode(n);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void registerProbe (int probe_id,
-                               int node_id,
+    public final void registerProbe (int probeId,
+                               int nodeId,
                                ProbeType type) {
         try {
-            listener.registerProbe(probe_id, node_id, type);
-        }
-        catch (Exception e) {
+            listener.registerProbe(probeId, nodeId, type);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void transactionStart (int probe_id) {
-        if (reset_on_transaction_start)
-            hit_vector.reset();
+    public final void transactionStart (int probeId) {
+        if (resetOnTransactionStart)
+            hitVector.reset();
 
         try {
-            listener.startTransaction(probe_id);
-        }
-        catch (Exception e) {
+            listener.startTransaction(probeId);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void transactionEnd (int probe_id) {
+    public final void transactionEnd (int probeId) {
         try {
-            listener.endTransaction(probe_id, hit_vector.get());
-        }
-        catch (Exception e) {
+            listener.endTransaction(probeId, hitVector.get());
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        hit_vector.reset();
+        hitVector.reset();
     }
 
-    public void oracle (int probe_id,
+    public final void oracle (int probeId,
                         double error,
                         double confidence) {
         try {
-            listener.oracle(probe_id, error, confidence);
-        }
-        catch (Exception e) {
+            listener.oracle(probeId, error, confidence);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public HitVector getHitVector () {
-        return hit_vector;
+    public final HitVector getHitVector () {
+        return hitVector;
     }
 
-    public Tree getTree () {
+    public final Tree getTree () {
         return tree;
     }
 }

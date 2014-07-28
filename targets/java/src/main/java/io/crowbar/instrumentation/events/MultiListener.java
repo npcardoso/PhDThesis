@@ -8,13 +8,13 @@ import java.util.List;
 
 
 public class MultiListener implements EventListener {
-    public void add (EventListener l) {
+    public final void add (EventListener l) {
         assert l != null;
         this.listeners.add(l);
     }
 
     @Override
-    public void registerNode (Node n) throws Exception {
+    public final void registerNode (Node n) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.registerNode(n);
@@ -26,12 +26,12 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public void registerProbe (int probe_id,
-                               int node_id,
-                               ProbeType type) throws Exception {
+    public final void registerProbe (int probeId,
+                                     int nodeId,
+                                     ProbeType type) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.registerProbe(probe_id, node_id, type);
+                el.registerProbe(probeId, nodeId, type);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -40,10 +40,10 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public void startTransaction (int probe_id) throws Exception {
+    public final void startTransaction (int probeId) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.startTransaction(probe_id);
+                el.startTransaction(probeId);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -52,12 +52,12 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public void endTransaction (int probe_id,
-                                boolean[] hit_vector) throws Exception {
+    public final void endTransaction (int probeId,
+                                      boolean[] hitVector) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.endTransaction(probe_id,
-                                  hit_vector);
+                el.endTransaction(probeId,
+                                  hitVector);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -66,12 +66,12 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public void oracle (int probe_id,
-                        double error,
-                        double confidence) throws Exception {
+    public final void oracle (int probeId,
+                              double error,
+                              double confidence) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.oracle(probe_id, error, confidence);
+                el.oracle(probeId, error, confidence);
             }
             catch (Exception e) {
                 e.printStackTrace();

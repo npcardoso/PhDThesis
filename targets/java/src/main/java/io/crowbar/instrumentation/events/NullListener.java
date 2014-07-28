@@ -5,22 +5,22 @@ import io.crowbar.instrumentation.runtime.Tree.Node;
 
 public class NullListener implements EventListener {
     @Override
-    public void registerNode (Node n) throws Exception {}
+    public final void registerNode (Node n) throws Exception {}
 
     @Override
-    public void registerProbe (int probe_id,
-                               int node_id,
-                               ProbeType type) throws Exception {}
+    public final void registerProbe (int probeId,
+                                     int nodeId,
+                                     ProbeType type) throws Exception {}
 
     @Override
-    public void startTransaction (int probe_id) throws Exception {}
+    public final void startTransaction (int probeId) throws Exception {}
 
     @Override
-    public void endTransaction (int probe_id,
-                                boolean[] hit_vector) throws Exception {}
+    public final void endTransaction (int probeId,
+                                      boolean[] hitVector) throws Exception {}
 
     @Override
-    public void oracle (int probe_id,
-                        double error,
-                        double confidence) throws Exception {}
+    public final void oracle (int probeId,
+                              double error,
+                              double confidence) throws Exception {}
 }

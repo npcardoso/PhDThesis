@@ -4,18 +4,46 @@ import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 
 public class VerboseListener implements EventListener {
-    public String prefix = "";
-    public String suffix = "";
+    private String prefix = "";
+    private String suffix = "";
 
-    public boolean enableRegisterNode = true;
-    public boolean enableRegisterProbe = true;
-    public boolean enableStartTransaction = true;
-    public boolean enableEndTransaction = true;
-    public boolean enableOracle = true;
+    private boolean registerNode = true;
+    private boolean registerProbe = true;
+    private boolean startTransaction = true;
+    private boolean endTransaction = true;
+    private boolean oracle = true;
+
+    public final void setPrefix (String str) {
+        prefix = str;
+    }
+
+    public final void setSuffix (String str) {
+        suffix = str;
+    }
+
+    public final void enableRegisterNode (boolean enable) {
+        registerNode = enable;
+    }
+
+    public final void enableRegisterProbe (boolean enable) {
+        registerProbe = enable;
+    }
+
+    public final void enableStartTransaction (boolean enable) {
+        startTransaction = enable;
+    }
+
+    public final void enableEndTransaction (boolean enable) {
+        endTransaction = enable;
+    }
+
+    public final void enableOracle (boolean enable) {
+        oracle = enable;
+    }
 
     @Override
-    public void registerNode (Node n) throws Exception {
-        if (!enableRegisterNode) return;
+    public final void registerNode (Node n) throws Exception {
+        if (!registerNode) return;
 
         String ret = prefix;
 
@@ -26,46 +54,46 @@ public class VerboseListener implements EventListener {
     }
 
     @Override
-    public void registerProbe (int probe_id,
-                               int node_id,
-                               ProbeType type) throws Exception {
-        if (!enableRegisterProbe) return;
+    public final void registerProbe (int probeId,
+                                     int nodeId,
+                                     ProbeType type) throws Exception {
+        if (!registerProbe) return;
 
         String ret = prefix;
 
 
-        ret += "Registering Probe: [probe_id: " + probe_id;
-        ret += ", node_id: " + node_id;
+        ret += "Registering Probe: [probeId: " + probeId;
+        ret += ", nodeId: " + nodeId;
         ret += ", type: " + type + "]";
         ret += suffix;
         System.out.println(ret);
     }
 
     @Override
-    public void startTransaction (int probe_id) throws Exception {
-        if (!enableStartTransaction) return;
+    public final void startTransaction (int probeId) throws Exception {
+        if (!startTransaction) return;
 
         String ret = prefix;
 
 
-        ret += "Transaction Start: [probe_id: " + probe_id + "]";
+        ret += "Transaction Start: [probeId: " + probeId + "]";
         ret += suffix;
         System.out.println(ret);
     }
 
     @Override
-    public void endTransaction (int probe_id,
-                                boolean[] hit_vector) throws Exception {
-        if (!enableEndTransaction) return;
+    public final void endTransaction (int probeId,
+                                      boolean[] hitVector) throws Exception {
+        if (!endTransaction) return;
 
         String ret = prefix;
 
 
-        ret += "Transaction End: [probe_id: " + probe_id;
-        ret += ", hit_vector: [ ";
+        ret += "Transaction End: [probeId: " + probeId;
+        ret += ", hitVector: [ ";
 
-        for (int i = 0; i < hit_vector.length; i++) {
-            ret += hit_vector[i] ? (i + " ") : "";
+        for (int i = 0; i < hitVector.length; i++) {
+            ret += hitVector[i] ? (i + " ") : "";
         }
 
         ret += "]]" + suffix;
@@ -73,15 +101,15 @@ public class VerboseListener implements EventListener {
     }
 
     @Override
-    public void oracle (int probe_id,
-                        double error,
-                        double confidence) throws Exception {
-        if (!enableOracle) return;
+    public final void oracle (int probeId,
+                              double error,
+                              double confidence) throws Exception {
+        if (!oracle) return;
 
         String ret = prefix;
 
 
-        ret += "Oracle: [probe_id: " + probe_id + ", ";
+        ret += "Oracle: [probeId: " + probeId + ", ";
         ret += "error: " + error + ", ";
         ret += "confidence: " + confidence + "]";
         ret += suffix;

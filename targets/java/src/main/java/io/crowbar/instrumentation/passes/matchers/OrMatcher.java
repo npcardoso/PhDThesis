@@ -14,12 +14,12 @@ public class OrMatcher implements Matcher {
     }
 
     @Override
-    public boolean matches (CtClass c) {
+    public final boolean matches (CtClass c) {
         return matcherA.matches(c) || matcherB.matches(c);
     }
 
     @Override
-    public boolean matches (CtMethod m) {
+    public final boolean matches (CtMethod m) {
         return matcherA.matches(m) || matcherB.matches(m);
     }
 }

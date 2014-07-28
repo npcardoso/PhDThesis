@@ -20,12 +20,12 @@ public class PrefixMatcher implements Matcher {
     }
 
     @Override
-    public boolean matches (CtClass c) {
+    public final boolean matches (CtClass c) {
         return matches(c.getName());
     }
 
     @Override
-    public boolean matches (CtMethod m) {
+    public final boolean matches (CtMethod m) {
         return matches(m.getName());
     }
 

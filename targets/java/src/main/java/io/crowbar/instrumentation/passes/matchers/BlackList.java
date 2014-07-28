@@ -6,7 +6,7 @@ public class BlackList extends AbstractActionTaker {
     }
 
     @Override
-    public Action getAction (boolean matches) {
+    public final Action getAction (boolean matches) {
         if (matches)
             return Action.REJECT;
 

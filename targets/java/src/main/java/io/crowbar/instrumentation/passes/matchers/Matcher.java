@@ -5,6 +5,6 @@ import javassist.CtMethod;
 
 
 public interface Matcher {
-    public boolean matches (CtClass c);
-    public boolean matches (CtMethod c);
+    boolean matches (CtClass c);
+    boolean matches (CtMethod c);
 }

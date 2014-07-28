@@ -9,26 +9,26 @@ public class SpectraBuilder extends Spectra implements EventListener {
     private int transactionId = 0;
 
     @Override
-    public void registerNode (Node node) throws Exception {}
+    public final void registerNode (Node node) throws Exception {}
 
     @Override
-    public void registerProbe (int probe_id,
-                               int node_id,
-                               ProbeType type) throws Exception {}
+    public final void registerProbe (int probeId,
+                                     int nodeId,
+                                     ProbeType type) throws Exception {}
 
     @Override
-    public void startTransaction (int probe_id) {}
+    public final void startTransaction (int probeId) {}
 
     @Override
-    public void endTransaction (int probe_id,
-                                boolean[] hit_vector) {
-        setActivity(transactionId++, hit_vector);
+    public final void endTransaction (int probeId,
+                                      boolean[] hitVector) {
+        setActivity(transactionId++, hitVector);
     }
 
     @Override
-    public void oracle (int probe_id,
-                        double error,
-                        double confidence) {
+    public final void oracle (int probeId,
+                              double error,
+                              double confidence) {
         setError(transactionId, error > 0);
     }
 }

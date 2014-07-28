@@ -2,6 +2,8 @@ package io.crowbar.instrumentation.events;
 
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree;
+import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
+
 
 public class TreeRebuilder extends Tree implements EventListener {
     public static class DisabledRegistrationException extends RegistrationException {
@@ -12,12 +14,12 @@ public class TreeRebuilder extends Tree implements EventListener {
 
 
     @Override
-    public void registerChild (Node node) throws RegistrationException {
+    public final void registerChild (Node node) throws RegistrationException {
         throw new DisabledRegistrationException();
     }
 
     @Override
-    public void registerNode (Node node) throws Exception {
+    public final void registerNode (Node node) throws Exception {
         _registerChild(node);
 
         nodes.ensureCapacity(node.getId() + 1);
@@ -30,19 +32,19 @@ public class TreeRebuilder extends Tree implements EventListener {
     }
 
     @Override
-    public void registerProbe (int probe_id,
-                               int node_id,
-                               ProbeType type) throws Exception {}
+    public final void registerProbe (int probeId,
+                                     int nodeId,
+                                     ProbeType type) throws Exception {}
 
     @Override
-    public void startTransaction (int probe_id) {}
+    public final void startTransaction (int probeId) {}
 
     @Override
-    public void endTransaction (int probe_id,
-                                boolean[] hit_vector) {}
+    public final void endTransaction (int probeId,
+                                      boolean[] hitVector) {}
 
     @Override
-    public void oracle (int probe_id,
-                        double error,
-                        double confidence) {}
+    public final void oracle (int probeId,
+                              double error,
+                              double confidence) {}
 }

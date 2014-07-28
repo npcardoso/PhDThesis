@@ -10,12 +10,12 @@ public class NotMatcher implements Matcher {
     }
 
     @Override
-    public boolean matches (CtClass c) {
+    public final boolean matches (CtClass c) {
         return !matcher.matches(c);
     }
 
     @Override
-    public boolean matches (CtMethod m) {
+    public final boolean matches (CtMethod m) {
         return !matcher.matches(m);
     }
 }

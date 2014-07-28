@@ -8,12 +8,12 @@ public class TestNGTestMatcher implements Matcher {
     private static final Matcher matcher = new AnnotationMatcher("org.testng.annotations.Test");
 
     @Override
-    public boolean matches (CtClass c) {
+    public final boolean matches (CtClass c) {
         return false;
     }
 
     @Override
-    public boolean matches (CtMethod m) {
+    public final boolean matches (CtMethod m) {
         return matcher.matches(m);
     }
 }

@@ -69,11 +69,11 @@ public class Agent implements ClassFileTransformer {
 
         MultiListener ml = new MultiListener();
         VerboseListener vl = new VerboseListener();
-        vl.enableRegisterNode = false;
-        vl.enableRegisterProbe = false;
+        vl.enableRegisterNode(false);
+        vl.enableRegisterProbe(false);
 
-        vl.prefix = "!!!!!!!! ";
-        // vl.suffix = " !!!!!!!!";
+        vl.setPrefix("!!!!!!!! ");
+        // vl.setSuffix(" !!!!!!!!");
 
         Client cl = new Client(null, Integer.parseInt(agentArgs));
         ml.add(vl);

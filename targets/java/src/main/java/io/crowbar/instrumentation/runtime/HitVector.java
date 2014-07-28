@@ -10,18 +10,18 @@ import java.util.Map;
 
 public class HitVector {
     public class ProbeGroup {
-        public class Probe {
-            private int global_id;
-            private int local_id;
-            private int node_id;
+        public final class Probe {
+            private int globalId;
+            private int localId;
+            private int nodeId;
             private ProbeType type;
-            private Probe (int global_id,
-                           int local_id,
-                           int node_id,
+            private Probe (int globalId,
+                           int localId,
+                           int nodeId,
                            ProbeType type) {
-                this.global_id = global_id;
-                this.local_id = local_id;
-                this.node_id = node_id;
+                this.globalId = globalId;
+                this.localId = localId;
+                this.nodeId = nodeId;
                 this.type = type;
             }
 
@@ -29,19 +29,19 @@ public class HitVector {
                 if (hit_vector == null)
                     return false;
 
-                return hit_vector[local_id];
+                return hit_vector[localId];
             }
 
             public int getLocalId () {
-                return local_id;
+                return localId;
             }
 
             public int getGlobalId () {
-                return global_id;
+                return globalId;
             }
 
             public int getNodeId () {
-                return node_id;
+                return nodeId;
             }
 
             public ProbeType getType () {
@@ -50,28 +50,28 @@ public class HitVector {
 
             public void hit () {
                 assert hit_vector != null;
-                hit_vector[local_id] = true;
+                hit_vector[localId] = true;
             }
         }
 
         private int size = 0;
         private boolean[] hit_vector = null;
 
-        public Probe register (int global_id,
-                               int node_id,
-                               ProbeType type) {
+        public final Probe register (int globalId,
+                                     int nodeId,
+                                     ProbeType type) {
             assert hit_vector == null;
-            return new Probe(global_id, size++, node_id, type);
+            return new Probe(globalId, size++, nodeId, type);
         }
 
-        public boolean[] get () {
+        public final boolean[] get () {
             if (hit_vector == null)
                 hit_vector = new boolean[size];
 
             return hit_vector;
         }
 
-        public void reset () {
+        public final void reset () {
             if (hit_vector == null)
                 return;
 
@@ -88,7 +88,7 @@ public class HitVector {
 
 
     public Probe registerProbe (String group_name,
-                                int node_id,
+                                int nodeId,
                                 ProbeType type) {
         ProbeGroup pg = groups.get(group_name);
 
@@ -98,22 +98,22 @@ public class HitVector {
             groups.put(group_name, pg);
         }
 
-        Probe probe = pg.register(probes.size(), node_id, type);
+        Probe probe = pg.register(probes.size(), nodeId, type);
         probes.add(probe);
 
         return probe;
     }
 
-    public boolean exists (String group_name) {
+    public final boolean exists (String group_name) {
         return groups.containsKey(group_name);
     }
 
-    public boolean[] get (String group_name) {
+    public final boolean[] get (String group_name) {
         assert exists(group_name);
         return groups.get(group_name).get();
     }
 
-    public boolean[] get () {
+    public final boolean[] get () {
         boolean[] ret = new boolean[probes.size()];
         int i = 0;
 
@@ -123,14 +123,14 @@ public class HitVector {
         return ret;
     }
 
-    public void hit (int global_id) {
-        Probe p = probes.get(global_id);
+    public final void hit (int globalId) {
+        Probe p = probes.get(globalId);
 
 
         p.hit();
     }
 
-    public void reset () {
+    public final void reset () {
         for (Map.Entry<String, ProbeGroup> e : groups.entrySet()) {
             e.getValue().reset();
         }

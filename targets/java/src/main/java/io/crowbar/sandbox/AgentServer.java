@@ -14,16 +14,16 @@ public class AgentServer {
         SpectraBuilder sb = new SpectraBuilder();
         TreeRebuilder tr = new TreeRebuilder();
         DummyService (String id) {
-            VerboseListener vl1 = new VerboseListener();
+            // VerboseListener vl1 = new VerboseListener();
 
 
-            vl1.prefix = "[[ " + id + " ]][[[ Pre-TreeRebuilder  ]]] ";
-            ml.add(vl1);
+            // vl1.prefix = "[[ " + id + " ]][[[ Pre-TreeRebuilder  ]]] ";
+            // ml.add(vl1);
 
             ml.add(tr);
 
             VerboseListener vl2 = new VerboseListener();
-            vl2.prefix = "[[ " + id + " ]][[[ Post-TreeRebuilder ]]] ";
+            // vl2.prefix = "[[ " + id + " ]][[[ Post-TreeRebuilder ]]] ";
             ml.add(vl2);
 
             ml.add(sb);

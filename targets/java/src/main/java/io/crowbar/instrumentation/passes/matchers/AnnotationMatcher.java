@@ -12,20 +12,22 @@ public class AnnotationMatcher implements Matcher {
     }
 
     @Override
-    public boolean matches (CtClass c) {
+    public final boolean matches (CtClass c) {
         try {
             return c.hasAnnotation(Class.forName(annotation));
         }
-        catch (Exception e) {}
-        return false;
+        catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public boolean matches (CtMethod m) {
+    public final boolean matches (CtMethod m) {
         try {
             return m.hasAnnotation(Class.forName(annotation));
         }
-        catch (Exception e) {}
-        return false;
+        catch (Exception e) {
+            return false;
+        }
     }
 }

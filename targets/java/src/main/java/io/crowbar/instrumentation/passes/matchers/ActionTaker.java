@@ -8,6 +8,6 @@ public interface ActionTaker {
         ACCEPT, NEXT, REJECT
     }
 
-    public Action getAction (CtClass c);
-    public Action getAction (CtMethod c);
+    Action getAction (CtClass c);
+    Action getAction (CtMethod c);
 }

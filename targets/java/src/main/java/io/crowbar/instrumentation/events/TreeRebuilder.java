@@ -19,15 +19,15 @@ public class TreeRebuilder extends Tree implements EventListener {
 
     @Override
     public final void registerNode (Node node) throws Exception {
-        _registerChild(node);
+        registerChildNode (node);
 
-        nodes.ensureCapacity(node.getId() + 1);
+       getNodeList().ensureCapacity(node.getId() + 1);
 
-        while (nodes.size() <= node.getId()) {
-            nodes.add(null);
+        while (getNodeList().size() <= node.getId()) {
+        	getNodeList().add(null);
         }
 
-        nodes.set(node.getId(), node);
+        getNodeList().set(node.getId(), node);
     }
 
     @Override

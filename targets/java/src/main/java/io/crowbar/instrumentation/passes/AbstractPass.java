@@ -4,7 +4,6 @@ import io.crowbar.instrumentation.runtime.HitVector;
 import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 

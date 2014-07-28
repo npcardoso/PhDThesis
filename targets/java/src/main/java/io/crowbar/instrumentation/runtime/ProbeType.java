@@ -1,5 +1,4 @@
 package io.crowbar.instrumentation.runtime;
-import java.util.*;
 
 public enum ProbeType {
     TRANSACTION_START("TransactionStart", "transactionStart"),
@@ -7,11 +6,19 @@ public enum ProbeType {
     HIT_PROBE("HitProbe", "hitprobe"),
     ORACLE("Oracle", "oracle");
 
-    public final String name;
-    public final String method_name;
+    private final String name;
+    private final String methodName;
     ProbeType(String name,
-              String method_name) {
+              String methodName) {
         this.name = name;
-        this.method_name = method_name;
+        this.methodName = methodName;
+    }
+    
+    public final String getName() {
+    	return name;
+    }
+    
+    public final String getMethodName() {
+    	return methodName;
     }
 }

@@ -4,14 +4,15 @@ package io.crowbar.instrumentation.passes;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 
-import javassist.*;
-import javassist.bytecode.*;
+import javassist.CtClass;
+import javassist.CtMethod;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.LinkedList;
 
 public class TestWrapperPass extends AbstractPass {
     private final List<ActionTaker> actionTakers = new LinkedList<ActionTaker> ();
@@ -42,6 +43,7 @@ public class TestWrapperPass extends AbstractPass {
                     return Outcome.CONTINUE;
 
                 case NEXT:
+                default:
                     continue;
                 }
             }
@@ -53,18 +55,18 @@ public class TestWrapperPass extends AbstractPass {
     protected String getInstrumentationCode (CtClass c,
                                              Node n,
                                              ProbeType type,
-                                             boolean hit_first) throws RegistrationException {
+                                             boolean hitFirst) throws RegistrationException {
         Probe p = registerProbe(c, n, type);
         String ret = "Collector c = Collector.getDefault();";
         String hit = "c.getHitVector().hit(" + p.getGlobalId() + ");";
 
 
-        if (hit_first)
+        if (hitFirst)
             ret += hit;
 
-        ret += "c." + type.method_name + "(" + p.getGlobalId() + ");";
+        ret += "c." + type.getMethodName() + "(" + p.getGlobalId() + ");";
 
-        if (!hit_first)
+        if (!hitFirst)
             ret += hit;
 
         return ret;

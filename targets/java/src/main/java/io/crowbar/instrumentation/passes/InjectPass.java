@@ -6,8 +6,15 @@ import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
-import javassist.*;
-import javassist.bytecode.*;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.CtField;
+import javassist.bytecode.MethodInfo;
+import javassist.bytecode.CodeAttribute;
+import javassist.bytecode.CodeIterator;
+import javassist.bytecode.Bytecode;
+import javassist.bytecode.ConstPool;
+import javassist.bytecode.Opcode;
 
 public class InjectPass extends AbstractPass {
     public enum Granularity {
@@ -60,20 +67,20 @@ public class InjectPass extends AbstractPass {
         CodeIterator ci = ca.iterator();
 
 
-        for (int last_line = -1, index, cur_line;
+        for (int lastLine = -1, index, curLine;
              ci.hasNext();
-             last_line = cur_line) {
+             lastLine = curLine) {
             index = ci.next();
-            cur_line = info.getLineNumber(index);
+            curLine = info.getLineNumber(index);
 
-            if (cur_line == -1)
+            if (curLine == -1)
                 continue;
 
-            if (cur_line <= last_line)
+            if (curLine <= lastLine)
                 continue;
 
 
-            Bytecode b = getInstrumentationCode(c, m, cur_line, info.getConstPool());
+            Bytecode b = getInstrumentationCode(c, m, curLine, info.getConstPool());
             ci.insert(index, b.get());
 
             if (granularity == Granularity.FUNCTION)

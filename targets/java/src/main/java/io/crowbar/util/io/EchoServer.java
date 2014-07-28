@@ -1,6 +1,8 @@
 package io.crowbar.util.io;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -19,16 +21,17 @@ public class EchoServer extends ThreadedServer {
                 }
 
                 socket.close();
+            } catch (IOException e) {
+            	e.printStackTrace();
             }
-            catch (IOException e) {}
         }
 
-        Socket socket;
+        private Socket socket;
     }
 
 
-    public EchoServer (ServerSocket server_socket) {
-        super(server_socket);
+    public EchoServer (ServerSocket serverSocket) {
+        super(serverSocket);
     }
 
     @Override

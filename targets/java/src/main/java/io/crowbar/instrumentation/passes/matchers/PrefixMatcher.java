@@ -30,9 +30,10 @@ public class PrefixMatcher implements Matcher {
     }
 
     private boolean matches (String name) {
-        for (String s : prefix)
+        for (String s : prefix) {
             if (name.startsWith(s))
                 return true;
+        }
 
         return false;
     }

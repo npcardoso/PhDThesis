@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
+import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,10 +23,10 @@ public class Tree implements Iterable<Tree.Node> {
     }
 
     public static class AlreadyRegisteredException extends RegistrationException {
-        public AlreadyRegisteredException (Node node, Node existent_node) {
+        public AlreadyRegisteredException (Node node, Node existentNode) {
             super("Node with node_id: " + node.getId() + " already exists. " +
                   "New: " + node + ", " +
-                  "Existent: " + existent_node);
+                  "Existent: " + existentNode);
         }
     }
 
@@ -63,7 +64,7 @@ public class Tree implements Iterable<Tree.Node> {
         /*!
          * \brief The node's parent id.
          */
-        private int parent_id;
+        private int parentId;
         /*!
          * \brief The node's children ids.
          */
@@ -71,7 +72,7 @@ public class Tree implements Iterable<Tree.Node> {
         /*!
          * \brief The node's children ids, acessible by name.
          */
-        private Map<String, Integer> children_by_name = new HashMap<String, Integer> ();
+        private Map<String, Integer> childrenByName = new HashMap<String, Integer> ();
         /*!
          * \brief A map for additional node properties.
          */
@@ -79,16 +80,16 @@ public class Tree implements Iterable<Tree.Node> {
 
         private Node (String name,
                       int id,
-                      int parent_id) {
+                      int parentId) {
             this.name = name;
             this.id = id;
-            this.parent_id = parent_id;
+            this.parentId = parentId;
         }
 
         public Node (Node n) {
             this.name = n.name;
             this.id = n.id;
-            this.parent_id = n.parent_id;
+            this.parentId = n.parentId;
         }
 
         /*!
@@ -99,7 +100,7 @@ public class Tree implements Iterable<Tree.Node> {
         }
 
         public boolean isRoot () {
-            return parent_id < 0;
+            return parentId < 0;
         }
 
         public int getId () {
@@ -131,11 +132,11 @@ public class Tree implements Iterable<Tree.Node> {
         }
 
         public int getParentId () {
-            return parent_id;
+            return parentId;
         }
 
         public Node getParent () {
-            return getNode(parent_id);
+            return getNode(parentId);
         }
 
         public List<Integer> getChildren () {
@@ -143,13 +144,13 @@ public class Tree implements Iterable<Tree.Node> {
         }
 
         public Node getChild (String name) {
-            Integer child_id = children_by_name.get(name);
+            Integer childId = childrenByName.get(name);
 
 
-            if (child_id == null)
+            if (childId == null)
                 return null;
 
-            return getNode(child_id);
+            return getNode(childId);
         }
 
         public Node addChild (String name) throws RegistrationException {
@@ -171,20 +172,19 @@ public class Tree implements Iterable<Tree.Node> {
             return ret;
         }
 
-        private Node getNode (int node_id) {
+        private Node getNode (int nodeId) {
             assert tree != null; // ! @TODO: Create proper exception
-            return tree.getNode(node_id);
+            return tree.getNode(nodeId);
         }
     }
 
 
     protected Tree () {}
 
-    public Tree (String root_name) {
+    public Tree (String rootName) {
         try {
-            registerChild(new Node(root_name, 0, -1));
-        }
-        catch (RegistrationException e) {
+            registerChild(new Node(rootName, 0, -1));
+        } catch (RegistrationException e) {
             e.printStackTrace(); // ! Should never happen
         }
     }
@@ -210,7 +210,7 @@ public class Tree implements Iterable<Tree.Node> {
 
     protected void registerChild (Node node) throws RegistrationException {
         assert node.getId() == nodes.size();
-        _registerChild(node);
+        registerChildNode(node);
         nodes.add(node);
     }
 
@@ -229,7 +229,7 @@ public class Tree implements Iterable<Tree.Node> {
      * @throws InvalidRootNodeException: if the node is a root node but the tree already has one root node.
      * @throws NoSuchNodeException: if parent node does not exist and the node is not a root node.
      */
-    protected final void _registerChild (Node node) throws RegistrationException {
+    protected final void registerChildNode (Node node) throws RegistrationException {
         if (node.tree != null)
             throw new AlreadyBoundException(node);
 
@@ -245,17 +245,19 @@ public class Tree implements Iterable<Tree.Node> {
             if (node.isRoot()) {
                 if (nodes.size() != 0 || node.getId() != 0)
                     throw new InvalidRootNodeException(node);
-            }
-            else
+            } else
                 throw new NoSuchNodeException(node.getParentId());
-        }
-        else {
+        } else {
             parent.children.add(node.getId());
-            parent.children_by_name.put(node.getName(), node.getId());
+            parent.childrenByName.put(node.getName(), node.getId());
         }
 
         node.tree = this;
     }
 
-    protected ArrayList<Node> nodes = new ArrayList<Node> ();
+    protected final ArrayList<Node> getNodeList() {
+    	return nodes;
+    }
+    
+    private ArrayList<Node> nodes = new ArrayList<Node> ();
 }

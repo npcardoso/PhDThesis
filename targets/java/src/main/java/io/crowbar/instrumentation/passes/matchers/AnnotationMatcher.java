@@ -15,8 +15,7 @@ public class AnnotationMatcher implements Matcher {
     public final boolean matches (CtClass c) {
         try {
             return c.hasAnnotation(Class.forName(annotation));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -25,8 +24,7 @@ public class AnnotationMatcher implements Matcher {
     public final boolean matches (CtMethod m) {
         try {
             return m.hasAnnotation(Class.forName(annotation));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }

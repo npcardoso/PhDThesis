@@ -1,16 +1,14 @@
 package io.crowbar.sandbox;
 
-import io.crowbar.instrumentation.runtime.*;
-import io.crowbar.util.io.*;
+import io.crowbar.util.io.ThreadedServer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import java.net.ServerSocket;
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 import java.net.Socket;
-
-
-import javassist.*;
 
 public class App {
     public static class EchoServer2 extends ThreadedServer {
@@ -29,16 +27,17 @@ public class App {
                     }
 
                     socket.close();
+                } catch (IOException e) {
+                	e.printStackTrace();
                 }
-                catch (IOException e) {}
             }
 
-            Socket socket;
+            private Socket socket;
         }
 
 
-        public EchoServer2 (ServerSocket server_socket) {
-            super(server_socket);
+        public EchoServer2 (ServerSocket serverSocket) {
+            super(serverSocket);
         }
 
         @Override
@@ -48,9 +47,9 @@ public class App {
     }
 
 
-    public static boolean[] ASDsdaf = new boolean[1235];
+    private static boolean[] aSDsdaf = new boolean[1235];
 
-    private static class brogle {
+    private static class Brogle {
         private int trackles (int a, float b) {
             if (a > b)
                 return a;
@@ -63,8 +62,8 @@ public class App {
             return (int) b;
         }
 
-        private static void broglestar (final brogle asd) {
-            ASDsdaf[444] = true;
+        private static void broglestar (final Brogle asd) {
+        	aSDsdaf[444] = true;
         }
 
         @Test
@@ -75,7 +74,7 @@ public class App {
 
     public static void main (String[] args) {
         // Collector.getDefault().hitprobe(543);
-        brogle b = new brogle();
+        Brogle b = new Brogle();
 
 
         b.discoversExpiredCreditCard();
@@ -103,7 +102,7 @@ public class App {
     }
 
     private void tracklerbar () {
-        ASDsdaf[444] = true;
+    	aSDsdaf[444] = true;
     }
 
     private int crasps () {

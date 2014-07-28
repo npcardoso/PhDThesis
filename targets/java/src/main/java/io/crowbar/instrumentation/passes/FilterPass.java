@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javassist.CtClass;
-import javassist.CtMethod;
 
 public class FilterPass extends AbstractPass {
     private final List<ActionTaker> actionTakers = new LinkedList<ActionTaker> ();
@@ -53,6 +52,9 @@ public class FilterPass extends AbstractPass {
 
             case REJECT:
                 return rejectOutcome;
+            
+            default:
+            	continue;
             }
         }
 

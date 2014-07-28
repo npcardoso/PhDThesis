@@ -5,17 +5,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public abstract class ThreadedServer extends Thread {
-    public ThreadedServer (ServerSocket server_socket) {
-        this.server_socket = server_socket;
+    public ThreadedServer (ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
     }
 
     @Override
     public void run () {
-        while (!server_socket.isClosed()) {
+        while (!serverSocket.isClosed()) {
             try {
-                final Socket s = server_socket.accept();
+                final Socket s = serverSocket.accept();
 
-                if (max_clients > 0 && threads.activeCount() >= max_clients) {
+                if (maxClients > 0 && threads.activeCount() >= maxClients) {
                     s.close();
                 }
 
@@ -30,15 +30,18 @@ public abstract class ThreadedServer extends Thread {
                                       }
                                       );
                 t.start();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public final void setMaxClients(int maxClients) {
+    	this.maxClients = maxClients;
+    }
+    
     protected abstract Runnable handle (Socket s);
     private ThreadGroup threads = new ThreadGroup(""); // TODO: What's the purpose of name?
-    private ServerSocket server_socket;
-    public int max_clients = 0;
+    private ServerSocket serverSocket;
+    private int maxClients = 0;
 }

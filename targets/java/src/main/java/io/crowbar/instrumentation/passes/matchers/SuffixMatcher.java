@@ -30,9 +30,10 @@ public class SuffixMatcher implements Matcher {
     }
 
     private boolean matches (String name) {
-        for (String s : suffix)
+        for (String s : suffix) {
             if (name.endsWith(s))
                 return true;
+        }
 
         return false;
     }

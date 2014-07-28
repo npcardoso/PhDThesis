@@ -5,7 +5,7 @@ import javassist.CtMethod;
 
 
 public class TestNGTestMatcher implements Matcher {
-    private static final Matcher matcher = new AnnotationMatcher("org.testng.annotations.Test");
+    private static final Matcher MATCHER = new AnnotationMatcher("org.testng.annotations.Test");
 
     @Override
     public final boolean matches (CtClass c) {
@@ -14,6 +14,6 @@ public class TestNGTestMatcher implements Matcher {
 
     @Override
     public final boolean matches (CtMethod m) {
-        return matcher.matches(m);
+        return MATCHER.matches(m);
     }
 }

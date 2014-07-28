@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 public class HitVector {
-    public class ProbeGroup {
+    public final class ProbeGroup {
         public final class Probe {
             private int globalId;
             private int localId;
@@ -26,10 +26,10 @@ public class HitVector {
             }
 
             public boolean getActivation () {
-                if (hit_vector == null)
+                if (hitVector == null)
                     return false;
 
-                return hit_vector[localId];
+                return hitVector[localId];
             }
 
             public int getLocalId () {
@@ -49,37 +49,38 @@ public class HitVector {
             }
 
             public void hit () {
-                assert hit_vector != null;
-                hit_vector[localId] = true;
+                assert hitVector != null;
+                hitVector[localId] = true;
             }
         }
 
         private int size = 0;
-        private boolean[] hit_vector = null;
+        private boolean[] hitVector = null;
 
-        public final Probe register (int globalId,
+        public Probe register (int globalId,
                                      int nodeId,
                                      ProbeType type) {
-            assert hit_vector == null;
+            assert hitVector == null;
             return new Probe(globalId, size++, nodeId, type);
         }
 
-        public final boolean[] get () {
-            if (hit_vector == null)
-                hit_vector = new boolean[size];
+        public boolean[] get () {
+            if (hitVector == null)
+                hitVector = new boolean[size];
 
-            return hit_vector;
+            return hitVector;
         }
 
-        public final void reset () {
-            if (hit_vector == null)
+        public void reset () {
+            if (hitVector == null)
                 return;
 
-            for (int j = 0; j < hit_vector.length; j++)
-                hit_vector[j] = false;
+            for (int j = 0; j < hitVector.length; j++) {
+                hitVector[j] = false;
+            }
         }
 
-        private void ProbeGroup () {}
+        private ProbeGroup () {}
     }
 
 
@@ -87,15 +88,15 @@ public class HitVector {
     private Map<String, ProbeGroup> groups = new HashMap<String, ProbeGroup> ();
 
 
-    public Probe registerProbe (String group_name,
+    public Probe registerProbe (String groupName,
                                 int nodeId,
                                 ProbeType type) {
-        ProbeGroup pg = groups.get(group_name);
+        ProbeGroup pg = groups.get(groupName);
 
 
         if (pg == null) {
             pg = new ProbeGroup();
-            groups.put(group_name, pg);
+            groups.put(groupName, pg);
         }
 
         Probe probe = pg.register(probes.size(), nodeId, type);
@@ -104,21 +105,22 @@ public class HitVector {
         return probe;
     }
 
-    public final boolean exists (String group_name) {
-        return groups.containsKey(group_name);
+    public final boolean exists (String groupName) {
+        return groups.containsKey(groupName);
     }
 
-    public final boolean[] get (String group_name) {
-        assert exists(group_name);
-        return groups.get(group_name).get();
+    public final boolean[] get (String groupName) {
+        assert exists(groupName);
+        return groups.get(groupName).get();
     }
 
     public final boolean[] get () {
         boolean[] ret = new boolean[probes.size()];
         int i = 0;
 
-        for (Probe p : probes)
+        for (Probe p : probes) {
             ret[i++] = p.getActivation();
+        }
 
         return ret;
     }

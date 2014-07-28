@@ -5,10 +5,10 @@ import javassist.CtMethod;
 
 
 public class ModifierMatcher implements Matcher {
-    private final int modifier_mask;
+    private final int modifierMask;
 
-    public ModifierMatcher (int modifier_mask) {
-        this.modifier_mask = modifier_mask;
+    public ModifierMatcher (int modifierMask) {
+        this.modifierMask = modifierMask;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class ModifierMatcher implements Matcher {
         return matches(m.getModifiers());
     }
 
-    private final boolean matches (int modifier) {
-        return (modifier & modifier_mask) != 0;
+    private boolean matches (int modifier) {
+        return (modifier & modifierMask) != 0;
     }
 }

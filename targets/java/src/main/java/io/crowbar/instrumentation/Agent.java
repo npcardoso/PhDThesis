@@ -41,8 +41,12 @@ public class Agent implements ClassFileTransformer {
                                                    "java.",
                                                    "sun.",
                                                    "javassist.",
-                                                   "io.crowbar.instrumentation",
-                                                   "org.apache.");
+                                                   "io.crowbar.",
+                                                   "org.apache.",
+                                                   "org.junit.",
+                                                   "org.eclipse.",
+                                                   "com.sun.",
+                                                   "junit.");
 
         ModifierMatcher mMatcher = new ModifierMatcher(Modifier.NATIVE);
 

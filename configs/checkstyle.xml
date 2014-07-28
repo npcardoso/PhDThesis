@@ -36,7 +36,7 @@
     <module name="JavadocPackage"/>
 
     <!-- Checks whether files end with a new line. -->
-    <module name="NewlineAtEndOfFile"/>
+    <!--module name="NewlineAtEndOfFile"/-->
     
     <!-- Checks for Size Violations. -->
     <module name="FileLength">
@@ -44,15 +44,15 @@
     </module>
     
     <!-- Checks for whitespace. -->
-    <module name="FileTabCharacter"/>
+    <!--module name="FileTabCharacter"/-->
 
     <!-- Check for trailing spaces. -->
-    <module name="RegexpSingleline">
+    <!--module name="RegexpSingleline">
         <property name="format" value="\s+$"/>
         <property name="minimum" value="0"/>
         <property name="maximum" value="0"/>
         <property name="message" value="Line has trailing spaces."/>
-    </module>
+    </module-->
 
     <module name="TreeWalker">
 
@@ -100,7 +100,7 @@
         </module>
 
         <!-- Checks for Size Violations. -->
-        <module name="LineLength">
+        <!--module name="LineLength">
             <property name="max" value="100"/>
         </module>
         <module name="MethodLength">
@@ -111,11 +111,11 @@
         <module name="ParameterNumber">
            <property name="max" value="10"/>
            <property name="tokens" value="METHOD_DEF"/>
-        </module>
+        </module-->
 
         <!-- Checks for whitespace. -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
-        <module name="GenericWhitespace"/>
+        <!--module name="GenericWhitespace"/>
         <module name="EmptyForIteratorPad"/>
         <module name="MethodParamPad">
             <property name="tokens" value="METHOD_DEF"/>
@@ -130,7 +130,7 @@
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <module name="WhitespaceAfter"/>
-        <module name="WhitespaceAround"/>
+        <module name="WhitespaceAround"/-->
 
         <!-- Modifier Checks. -->
         <module name="ModifierOrder"/>

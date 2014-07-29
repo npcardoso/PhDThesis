@@ -26,8 +26,9 @@ public final class Collector {
 
     private Collector (String name,
                        EventListener listener) {
-        tree = new Tree(name);
         this.listener = listener;
+        tree = new Tree(name);
+        registerNode(tree.getRoot());
     }
 
     public void registerNode (Node n) {
@@ -105,6 +106,10 @@ public final class Collector {
 
     public Node addNode (String name,
                          Node parent) throws RegistrationException {
-        return tree.addNode(name, parent);
+        Node n = tree.addNode(name, parent);
+
+
+        registerNode(n);
+        return n;
     }
 }

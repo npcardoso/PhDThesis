@@ -38,6 +38,7 @@ public class TestWrapperPass extends AbstractPass {
                     m.insertBefore(getInstrumentationCode(c, n, ProbeType.TRANSACTION_START, false));
                     m.insertAfter(getInstrumentationCode(c, n, ProbeType.TRANSACTION_END, true),
                                   true /* asFinally */);
+                    break;
 
                 case REJECT:
                     return Outcome.CONTINUE;

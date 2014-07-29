@@ -39,7 +39,7 @@ public class Agent implements ClassFileTransformer {
                                                    "java.",
                                                    "sun.",
                                                    "javassist.",
-                                                   "io.crowbar.",
+                                                   "io.crowbar.instrumentation",
                                                    "org.apache.",
                                                    "org.junit.",
                                                    "org.eclipse.",
@@ -76,7 +76,7 @@ public class Agent implements ClassFileTransformer {
 
         Client cl = new Client(null, Integer.parseInt(agentArgs));
         ml.add(vl);
-        // ml.add(cl);
+        ml.add(cl);
 
         Collector.getDefault().start("Workspace-" + cl.getCliendId(), ml);
 
@@ -101,7 +101,8 @@ public class Agent implements ClassFileTransformer {
         try {
             cp = ClassPool.getDefault();
             c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return bytes;
         }
@@ -130,7 +131,8 @@ public class Agent implements ClassFileTransformer {
 
             // System.out.println("Instrumented Class: " + c.getName());
             return c.toBytecode();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             System.err.println("Error in Class: " + c.getName());
             ex.printStackTrace();
         }

@@ -7,6 +7,7 @@ import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 
+import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
@@ -30,14 +31,17 @@ public final class TestWrapperPass extends AbstractPass {
     public Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
             for (ActionTaker at : actionTakers) {
-                ActionTaker.Action ret = at.getAction(c,m);
+                ActionTaker.Action ret = at.getAction(c, m);
 
                 switch (ret) {
                 case ACCEPT:
                     Node n = getNode(c, m);
-                    m.insertBefore(getInstrumentationCode(c, n, ProbeType.TRANSACTION_START, false));
-                    m.insertAfter(getInstrumentationCode(c, n, ProbeType.TRANSACTION_END, true),
-                                  true /* asFinally */);
+                    m.insertBefore(getTransactionCode(c, n, ProbeType.TRANSACTION_START, false));
+                    m.insertAfter(getTransactionCode(c, n, ProbeType.TRANSACTION_END, true),
+                                  false /* asFinally */);
+                    m.addCatch(getOracleCode(c, n, "e"),
+                               ClassPool.getDefault().get("java.lang.Throwable"),
+                               "e");
                     break;
 
                 case REJECT:
@@ -53,10 +57,24 @@ public final class TestWrapperPass extends AbstractPass {
         return Outcome.CONTINUE;
     }
 
-    private String getInstrumentationCode (CtClass c,
-                                           Node n,
-                                           ProbeType type,
-                                           boolean hitFirst) throws RegistrationException {
+    private String getOracleCode (CtClass c,
+                                  Node n,
+                                  String exVariable) throws RegistrationException {
+        Probe p = registerProbe(c, n, ProbeType.ORACLE);
+        String ret = "{{Collector c = Collector.getDefault();";
+
+
+        ret += "c.getHitVector().hit(" + p.getGlobalId() + ");";
+        ret += "c." + ProbeType.ORACLE.getMethodName() + "(" + p.getGlobalId() + ", 1d, 1d);}";
+        ret += "{" + getTransactionCode(c, n, ProbeType.TRANSACTION_END, true) + "}";
+        ret += "throw " + exVariable + ";}";
+        return ret;
+    }
+
+    private String getTransactionCode (CtClass c,
+                                       Node n,
+                                       ProbeType type,
+                                       boolean hitFirst) throws RegistrationException {
         Probe p = registerProbe(c, n, type);
         String ret = "Collector c = Collector.getDefault();";
         String hit = "c.getHitVector().hit(" + p.getGlobalId() + ");";

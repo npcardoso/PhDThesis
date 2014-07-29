@@ -45,6 +45,11 @@ public class App {
         protected final Runnable handle (Socket s) {
             return new EchoService(s);
         }
+
+        @Test
+        public void discoversExpiredCreditCard2 () {
+            assertEquals(1, 1);
+        }
     }
 
 
@@ -71,6 +76,11 @@ public class App {
         public void discoversExpiredCreditCard () {
             assertEquals(1, 1);
         }
+
+        @Test
+        public void discoversExpiredCreditCard2 () {
+            assertEquals(1, 0);
+        }
     }
 
     public static void main (String[] args) {
@@ -79,6 +89,8 @@ public class App {
 
 
         b.discoversExpiredCreditCard();
+        b.discoversExpiredCreditCard2();
+
         /*try {
          *  ThreadedServer server = new EchoServer2(new ServerSocket(1234));
          *  server.max_clients = 2;

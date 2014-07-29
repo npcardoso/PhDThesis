@@ -3,34 +3,30 @@ package io.crowbar.diagnosis;
 import java.util.ArrayList;
 
 public class Spectra {
-    private ArrayList<boolean[]> activity = new ArrayList<boolean[]> ();
-    private ArrayList<Boolean> error = new ArrayList<Boolean> ();
+    private final ArrayList<boolean[]> activity = new ArrayList<boolean[]> ();
+    private final ArrayList<Boolean> error = new ArrayList<Boolean> ();
 
     public final void setActivity (int transactionId,
-                             boolean[] hitVector) {
+                                   boolean[] hitVector) {
         activity.ensureCapacity(transactionId + 1);
 
         while (activity.size() <= transactionId) {
             activity.add(null);
         }
 
-        boolean[] hv = new boolean[hitVector.length];
-        System.arraycopy(hitVector, 0,
-                         hv, 0,
-                         hitVector.length);
-
+        boolean[] hv = hitVector.clone();
         activity.set(transactionId, hv);
     }
 
     public final void setError (int transactionId,
-                          boolean error) {
-        this.error.ensureCapacity(transactionId + 1);
+                                boolean err) {
+        error.ensureCapacity(transactionId + 1);
 
-        while (this.error.size() <= transactionId) {
-            this.error.add(null);
+        while (error.size() <= transactionId) {
+            error.add(false);
         }
 
-        this.error.set(transactionId, error);
+        error.set(transactionId, err);
     }
 
     public final int getNumComponents () {
@@ -50,13 +46,13 @@ public class Spectra {
     }
 
     public final boolean getActivity (int transactionId,
-                                int componentId) {
+                                      int componentId) {
         if (transactionId < 0 || transactionId >= activity.size())
             return false;
 
         boolean[] hv = activity.get(transactionId);
 
-        if (componentId < 0 || componentId > hv.length)
+        if (componentId < 0 || componentId >= hv.length)
             return false;
 
         return hv[componentId];
@@ -66,7 +62,9 @@ public class Spectra {
         if (transactionId < 0 || transactionId >= error.size())
             return false;
 
-        return error.get(transactionId);
+        Boolean ret = error.get(transactionId);
+        System.err.println("getError: " + ret);
+        return (ret == null) ? false : ret;
     }
 
     @Override

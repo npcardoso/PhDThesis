@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.messaging;
 
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Probe;
 
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ public class Messages {
     public interface Message {}
 
     public static final class HelloMessage implements Message, Serializable {
-        private String id;
+        private final String id;
 
         public HelloMessage (String id) {
             this.id = id;
@@ -25,7 +25,9 @@ public class Messages {
             return "[[HelloMessage], id: " + id + "]";
         }
 
-        protected HelloMessage () {}
+        protected HelloMessage () {
+            this(null);
+        }
     }
 
     public static final class ByeMessage implements Message, Serializable {
@@ -36,7 +38,7 @@ public class Messages {
     }
 
     public static final class RegisterNodeMessage implements Message, Serializable {
-        private Node node;
+        private final Node node;
 
         public RegisterNodeMessage (Node node) {
             this.node = new Node(node);
@@ -55,32 +57,19 @@ public class Messages {
             return ret;
         }
 
-        protected RegisterNodeMessage () {}
+        protected RegisterNodeMessage () {
+            this(null);
+        }
     }
 
     public static final class RegisterProbeMessage implements Message, Serializable {
-        private int probeId;
-        private int nodeId;
-        private ProbeType type;
-
-        public RegisterProbeMessage (int probeId,
-                                     int nodeId,
-                                     ProbeType type) {
-            this.probeId = probeId;
-            this.nodeId = nodeId;
-            this.type = type;
+        private final Probe probe;
+        public RegisterProbeMessage (Probe probe) {
+            this.probe = new Probe(probe);
         }
 
-        public int getProbeId () {
-            return probeId;
-        }
-
-        public int getNodeId () {
-            return nodeId;
-        }
-
-        public ProbeType getType () {
-            return type;
+        public final Probe getProbe () {
+            return probe;
         }
 
         @Override
@@ -88,17 +77,17 @@ public class Messages {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
 
 
-            ret += "probe_id: " + probeId + ", ";
-            ret += "node_id: " + nodeId + ", ";
-            ret += "type: " + type + "";
+            ret += probe + "]";
             return ret;
         }
 
-        protected RegisterProbeMessage () {}
+        protected RegisterProbeMessage () {
+            this(null);
+        }
     }
 
     public abstract static class ProbeMessage implements Message, Serializable {
-        private int probeId;
+        private final int probeId;
 
         public ProbeMessage (int probeId) {
             this.probeId = probeId;
@@ -117,7 +106,9 @@ public class Messages {
             return ret;
         }
 
-        protected ProbeMessage () {}
+        protected ProbeMessage () {
+            this(-1);
+        }
     }
 
     public static final class TransactionStartMessage extends ProbeMessage implements Serializable {
@@ -125,7 +116,9 @@ public class Messages {
             super(probeId);
         }
 
-        protected TransactionStartMessage () {}
+        protected TransactionStartMessage () {
+            this(-1);
+        }
     }
 
     public static final class TransactionEndMessage extends ProbeMessage implements Serializable {
@@ -151,14 +144,15 @@ public class Messages {
             return ret;
         }
 
-        protected TransactionEndMessage () {}
+        protected TransactionEndMessage () {
+            this(-1, null);
+        }
     }
 
     public static final class OracleMessage extends ProbeMessage implements Serializable  {
-        private double error;
-        private double confidence;
+        private final double error;
+        private final double confidence;
 
-        protected OracleMessage () {}
         OracleMessage (int probeId,
                        double error,
                        double confidence) {
@@ -173,6 +167,10 @@ public class Messages {
 
         public double getConfidence () {
             return confidence;
+        }
+
+        protected OracleMessage () {
+            this(-1, -1, -1);
         }
     }
 }

@@ -47,7 +47,8 @@ public class Server extends ThreadedServer {
                     throw new Exception("First message should be a HelloMessage. Received instead: " + o);
 
                 id = ((HelloMessage) o).getId();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
@@ -58,7 +59,8 @@ public class Server extends ThreadedServer {
                 try {
                     o = new ObjectInputStream(socket.getInputStream()).readObject();
                     System.out.println("Receiving " + o);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     service.interrupted();
                     e.printStackTrace();
                     return;
@@ -71,7 +73,8 @@ public class Server extends ThreadedServer {
 
                 try {
                     dispatch(o);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -88,19 +91,20 @@ public class Server extends ThreadedServer {
                     eventListener.startTransaction(m.getProbeId());
                 else if (o instanceof TransactionEndMessage)
                     eventListener.endTransaction(m.getProbeId(),
-                                                  ((TransactionEndMessage) m).getHitVector());
+                                                 ((TransactionEndMessage) m).getHitVector());
                 else if (o instanceof OracleMessage)
                     eventListener.oracle(m.getProbeId(),
-                                          ((OracleMessage) m).getError(),
-                                          ((OracleMessage) m).getConfidence());
-            } else if (o instanceof RegisterNodeMessage) {
+                                         ((OracleMessage) m).getError(),
+                                         ((OracleMessage) m).getConfidence());
+            }
+            else if (o instanceof RegisterNodeMessage) {
                 eventListener.registerNode(((RegisterNodeMessage) o).getNode());
-            } else if (o instanceof RegisterProbeMessage) {
+            }
+            else if (o instanceof RegisterProbeMessage) {
                 RegisterProbeMessage m = (RegisterProbeMessage) o;
-                eventListener.registerProbe(m.getProbeId(),
-                                             m.getNodeId(),
-                                             m.getType());
-            } else
+                eventListener.registerProbe(m.getProbe());
+            }
+            else
                 throw new Exception("Unknown Message Type: " + o);
         }
     }

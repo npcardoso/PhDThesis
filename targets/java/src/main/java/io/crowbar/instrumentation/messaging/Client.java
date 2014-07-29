@@ -4,7 +4,7 @@ import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Probe;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -86,12 +86,8 @@ public class Client implements EventListener {
     }
 
     @Override
-    public final void registerProbe (int probeId,
-                                     int nodeId,
-                                     ProbeType type) {
-        postMessage(new Messages.RegisterProbeMessage(probeId,
-                                                      nodeId,
-                                                      type));
+    public final void registerProbe (Probe probe) {
+        postMessage(new Messages.RegisterProbeMessage(probe));
     }
 
     @Override

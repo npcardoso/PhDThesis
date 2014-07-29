@@ -2,7 +2,7 @@ package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
@@ -51,9 +51,9 @@ public abstract class AbstractPass implements Pass {
         return n;
     }
 
-    protected final Probe registerProbe (CtClass cls,
-                                         Node n,
-                                         ProbeType type) throws RegistrationException {
+    protected final HitProbe registerProbe (CtClass cls,
+                                            Node n,
+                                            ProbeType type) throws RegistrationException {
         Collector c = Collector.instance();
 
 

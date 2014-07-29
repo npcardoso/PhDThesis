@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
@@ -105,7 +105,7 @@ public class InjectPass extends AbstractPass {
                                              Node n,
                                              ConstPool pool) throws RegistrationException {
         Bytecode b = new Bytecode(pool);
-        Probe p = registerProbe(c, n, ProbeType.HIT_PROBE);
+        HitProbe p = registerProbe(c, n, ProbeType.HIT_PROBE);
 
 
         b.addGetstatic(c, hitVectorName, HIT_VECTOR_TYPE);

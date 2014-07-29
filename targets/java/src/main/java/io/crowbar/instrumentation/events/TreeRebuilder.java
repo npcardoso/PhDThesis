@@ -2,7 +2,7 @@ package io.crowbar.instrumentation.events;
 
 import io.crowbar.instrumentation.runtime.AbstractTree;
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Probe;
 
 public class TreeRebuilder extends AbstractTree implements EventListener {
     public static class DisabledRegistrationException extends RegistrationException {
@@ -17,9 +17,7 @@ public class TreeRebuilder extends AbstractTree implements EventListener {
     }
 
     @Override
-    public final void registerProbe (int probeId,
-                                     int nodeId,
-                                     ProbeType type) throws Exception {}
+    public final void registerProbe (Probe probe) throws Exception {}
 
     @Override
     public final void startTransaction (int probeId) {}

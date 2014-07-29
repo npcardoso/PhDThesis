@@ -1,6 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
-import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,13 +9,13 @@ import java.util.Map;
 
 
 class HitVector {
-    private List<ProbeGroup.Probe> probes = new ArrayList<ProbeGroup.Probe> ();
+    private List<HitProbe> probes = new ArrayList<HitProbe> ();
     private Map<String, ProbeGroup> groups = new HashMap<String, ProbeGroup> ();
 
 
-    public Probe registerProbe (String groupName,
-                                int nodeId,
-                                ProbeType type) {
+    public HitProbe registerProbe (String groupName,
+                                   int nodeId,
+                                   ProbeType type) {
         ProbeGroup pg = groups.get(groupName);
 
 
@@ -24,7 +24,7 @@ class HitVector {
             groups.put(groupName, pg);
         }
 
-        Probe probe = pg.register(probes.size(), nodeId, type);
+        HitProbe probe = pg.register(probes.size(), nodeId, type);
         probes.add(probe);
 
         return probe;
@@ -43,7 +43,7 @@ class HitVector {
         boolean[] ret = new boolean[probes.size()];
         int i = 0;
 
-        for (Probe p : probes) {
+        for (HitProbe p : probes) {
             ret[i++] = p.getActivation();
         }
 
@@ -51,7 +51,7 @@ class HitVector {
     }
 
     public final void hit (int globalId) {
-        Probe p = probes.get(globalId);
+        HitProbe p = probes.get(globalId);
 
 
         p.hit();

@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.events;
 
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.ProbeType;
+import io.crowbar.instrumentation.runtime.Probe;
 
 public class VerboseListener implements EventListener {
     private String prefix = "";
@@ -54,17 +54,11 @@ public class VerboseListener implements EventListener {
     }
 
     @Override
-    public final void registerProbe (int probeId,
-                                     int nodeId,
-                                     ProbeType type) throws Exception {
+    public final void registerProbe (Probe p) throws Exception {
         if (!registerProbe) return;
 
         String ret = prefix;
-
-
-        ret += "Registering Probe: [probeId: " + probeId;
-        ret += ", nodeId: " + nodeId;
-        ret += ", type: " + type + "]";
+        ret += "Registering Probe: " + p;
         ret += suffix;
         System.out.println(ret);
     }

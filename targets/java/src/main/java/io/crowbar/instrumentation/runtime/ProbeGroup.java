@@ -1,19 +1,14 @@
 package io.crowbar.instrumentation.runtime;
 
 public final class ProbeGroup {
-    public final class Probe {
-        private int globalId;
+    public final class HitProbe extends Probe {
         private int localId;
-        private int nodeId;
-        private ProbeType type;
-        private Probe (int globalId,
-                       int localId,
-                       int nodeId,
-                       ProbeType type) {
-            this.globalId = globalId;
+        private HitProbe (int globalId,
+                          int localId,
+                          int nodeId,
+                          ProbeType type) {
+            super(globalId, nodeId, type);
             this.localId = localId;
-            this.nodeId = nodeId;
-            this.type = type;
         }
 
         public boolean getActivation () {
@@ -27,18 +22,6 @@ public final class ProbeGroup {
             return localId;
         }
 
-        public int getGlobalId () {
-            return globalId;
-        }
-
-        public int getNodeId () {
-            return nodeId;
-        }
-
-        public ProbeType getType () {
-            return type;
-        }
-
         public void hit () {
             assert hitVector != null;
             hitVector[localId] = true;
@@ -50,11 +33,11 @@ public final class ProbeGroup {
 
     ProbeGroup () {}
 
-    public Probe register (int globalId,
-                           int nodeId,
-                           ProbeType type) {
+    public HitProbe register (int globalId,
+                              int nodeId,
+                              ProbeType type) {
         assert hitVector == null;
-        return new Probe(globalId, size++, nodeId, type);
+        return new HitProbe(globalId, size++, nodeId, type);
     }
 
     public boolean[] get () {

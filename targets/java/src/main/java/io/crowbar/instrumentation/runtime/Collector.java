@@ -1,6 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
-import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import io.crowbar.instrumentation.events.EventListener;
@@ -39,17 +39,17 @@ public final class Collector {
         }
     }
 
-    public Probe registerProbe (String groupName,
-                                int nodeId,
-                                ProbeType type) throws RegistrationException {
-        Probe p = hitVector.registerProbe(groupName,
-                                          nodeId,
-                                          type);
+    public HitProbe registerProbe (String groupName,
+                                   int nodeId,
+                                   ProbeType type) throws RegistrationException {
+        HitProbe p = hitVector.registerProbe(groupName,
+                                             nodeId,
+                                             type);
 
 
         System.err.println("Register: " + p);
         try {
-            listener.registerProbe(p.getGlobalId(), nodeId, type);
+            listener.registerProbe(p);
         }
         catch (Exception e) {
             e.printStackTrace();

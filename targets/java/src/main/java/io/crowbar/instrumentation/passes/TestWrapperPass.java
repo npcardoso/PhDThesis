@@ -3,7 +3,7 @@ package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
@@ -60,12 +60,12 @@ public final class TestWrapperPass extends AbstractPass {
     private String getOracleCode (CtClass c,
                                   Node n,
                                   String exVariable) throws RegistrationException {
-        Probe p = registerProbe(c, n, ProbeType.ORACLE);
+        HitProbe p = registerProbe(c, n, ProbeType.ORACLE);
         String ret = "{{Collector c = Collector.instance();";
 
 
-        ret += "c.hit(" + p.getGlobalId() + ");";
-        ret += "c." + ProbeType.ORACLE.getMethodName() + "(" + p.getGlobalId() + ", 1d, 1d);}";
+        ret += "c.hit(" + p.getId() + ");";
+        ret += "c." + ProbeType.ORACLE.getMethodName() + "(" + p.getId() + ", 1d, 1d);}";
         ret += "{" + getTransactionCode(c, n, ProbeType.TRANSACTION_END, true) + "}";
         ret += "throw " + exVariable + ";}";
         return ret;
@@ -75,15 +75,15 @@ public final class TestWrapperPass extends AbstractPass {
                                        Node n,
                                        ProbeType type,
                                        boolean hitFirst) throws RegistrationException {
-        Probe p = registerProbe(c, n, type);
+        HitProbe p = registerProbe(c, n, type);
         String ret = "Collector c = Collector.instance();";
-        String hit = "c.hit(" + p.getGlobalId() + ");";
+        String hit = "c.hit(" + p.getId() + ");";
 
 
         if (hitFirst)
             ret += hit;
 
-        ret += "c." + type.getMethodName() + "(" + p.getGlobalId() + ");";
+        ret += "c." + type.getMethodName() + "(" + p.getId() + ");";
 
         if (!hitFirst)
             ret += hit;

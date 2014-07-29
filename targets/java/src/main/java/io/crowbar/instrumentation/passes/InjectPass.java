@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
@@ -39,6 +38,9 @@ public class InjectPass extends AbstractPass {
 
     @Override
     public final Outcome transform (CtClass c) throws Exception {
+        boolean injected = false;
+
+
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();
@@ -46,13 +48,13 @@ public class InjectPass extends AbstractPass {
             if (ca == null)
                 continue;
 
-            handleMethod(c, m);
+            injected = injected || handleMethod(c, m);
             ca.setMaxStack(ca.computeMaxStack());
         }
 
-        if (Collector.getDefault().getHitVector().exists(c.getName())) {
+        if (injected) {
             CtField f = CtField.make("public static boolean[]  " + hitVectorName + " = " +
-                                     "Collector.getDefault().getHitVector().get(" +
+                                     "Collector.getDefault().getHitVector(" +
                                      "\"" + c.getName() + "\");", c);
             c.addField(f);
         }
@@ -60,11 +62,16 @@ public class InjectPass extends AbstractPass {
         return Outcome.CONTINUE;
     }
 
-    private void handleMethod (CtClass c,
-                               CtMethod m) throws Exception {
+    /*!
+     * \brief Handles instrumentation injection on a method level
+     * @return Returns false if no probe was injected, true otherwise.
+     */
+    private boolean handleMethod (CtClass c,
+                                  CtMethod m) throws Exception {
         MethodInfo info = m.getMethodInfo();
         CodeAttribute ca = info.getCodeAttribute();
         CodeIterator ci = ca.iterator();
+        boolean injected = false;
 
 
         for (int lastLine = -1, index, curLine;
@@ -80,20 +87,24 @@ public class InjectPass extends AbstractPass {
                 continue;
 
 
-            Bytecode b = getInstrumentationCode(c, m, curLine, info.getConstPool());
+            Node n = (granularity == Granularity.FUNCTION) ?
+                     getNode(c, m) : getNode(c, m, curLine);
+
+            Bytecode b = getInstrumentationCode(c, n, info.getConstPool());
             ci.insert(index, b.get());
+            injected = true;
 
             if (granularity == Granularity.FUNCTION)
                 break;
         }
+
+        return injected;
     }
 
     private Bytecode getInstrumentationCode (CtClass c,
-                                             CtMethod m,
-                                             int line,
+                                             Node n,
                                              ConstPool pool) throws RegistrationException {
         Bytecode b = new Bytecode(pool);
-        Node n = getNode(c, m, line);
         Probe p = registerProbe(c, n, ProbeType.HIT_PROBE);
 
 

@@ -1,6 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
-import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
@@ -9,7 +9,7 @@ import io.crowbar.instrumentation.events.EventListener;
 public class Collector {
     private static Collector collector = new Collector ();
     private EventListener listener = null;
-    private HitVector hitVector = null;
+    private final HitVector hitVector = new HitVector();
     private Tree tree = null;
     private boolean resetOnTransactionStart = true;
 
@@ -19,24 +19,8 @@ public class Collector {
     }
 
     public final void start (String name,
-                       EventListener listener) {
+                             EventListener listener) {
         this.listener = listener;
-        hitVector = new HitVector() {
-            @Override
-            public Probe registerProbe (String groupName,
-                                        int nodeId,
-                                        ProbeType type) {
-                Probe p = super.registerProbe(groupName,
-                                              nodeId,
-                                              type);
-
-
-                Collector.this.registerProbe(p.getGlobalId(),
-                                             p.getNodeId(),
-                                             p.getType());
-                return p;
-            }
-        };
         this.tree = new Tree(name) {
             @Override
             protected void registerChild (Node node) throws RegistrationException {
@@ -49,19 +33,28 @@ public class Collector {
     public final void registerNode (Node n) {
         try {
             listener.registerNode(n);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public final void registerProbe (int probeId,
-                               int nodeId,
-                               ProbeType type) {
+    public final Probe registerProbe (String groupName,
+                                      int nodeId,
+                                      ProbeType type) throws RegistrationException {
+        Probe p = hitVector.registerProbe(groupName,
+                                          nodeId,
+                                          type);
+
+
+        System.err.println("Register: " + p);
         try {
-            listener.registerProbe(probeId, nodeId, type);
-        } catch (Exception e) {
+            listener.registerProbe(p.getGlobalId(), nodeId, type);
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
+        return p;
     }
 
     public final void transactionStart (int probeId) {
@@ -70,7 +63,8 @@ public class Collector {
 
         try {
             listener.startTransaction(probeId);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -78,7 +72,8 @@ public class Collector {
     public final void transactionEnd (int probeId) {
         try {
             listener.endTransaction(probeId, hitVector.get());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -86,17 +81,22 @@ public class Collector {
     }
 
     public final void oracle (int probeId,
-                        double error,
-                        double confidence) {
+                              double error,
+                              double confidence) {
         try {
             listener.oracle(probeId, error, confidence);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public final HitVector getHitVector () {
-        return hitVector;
+    public final boolean[] getHitVector (String className) {
+        return hitVector.get(className);
+    }
+
+    public final void hit (int globalProbeId) {
+        hitVector.hit(globalProbeId);
     }
 
     public final Tree getTree () {

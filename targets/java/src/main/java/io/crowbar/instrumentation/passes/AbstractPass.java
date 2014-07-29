@@ -1,8 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.instrumentation.runtime.HitVector;
-import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.Collector;
+import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
@@ -51,9 +50,8 @@ public abstract class AbstractPass implements Pass {
     protected final Probe registerProbe (CtClass c,
                                          Node n,
                                          ProbeType type) throws RegistrationException {
-        HitVector hv = Collector.getDefault().getHitVector();
-
-
-        return hv.registerProbe(c.getName(), n.getId(), type);
+        return Collector.getDefault().registerProbe(c.getName(),
+                                                    n.getId(),
+                                                    type);
     }
 }

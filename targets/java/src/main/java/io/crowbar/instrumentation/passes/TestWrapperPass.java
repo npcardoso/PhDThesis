@@ -2,7 +2,7 @@ package io.crowbar.instrumentation.passes;
 
 
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
-import io.crowbar.instrumentation.runtime.HitVector.ProbeGroup.Probe;
+import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 import io.crowbar.instrumentation.runtime.Tree.Node;
@@ -64,7 +64,7 @@ public final class TestWrapperPass extends AbstractPass {
         String ret = "{{Collector c = Collector.getDefault();";
 
 
-        ret += "c.getHitVector().hit(" + p.getGlobalId() + ");";
+        ret += "c.hit(" + p.getGlobalId() + ");";
         ret += "c." + ProbeType.ORACLE.getMethodName() + "(" + p.getGlobalId() + ", 1d, 1d);}";
         ret += "{" + getTransactionCode(c, n, ProbeType.TRANSACTION_END, true) + "}";
         ret += "throw " + exVariable + ";}";
@@ -77,7 +77,7 @@ public final class TestWrapperPass extends AbstractPass {
                                        boolean hitFirst) throws RegistrationException {
         Probe p = registerProbe(c, n, type);
         String ret = "Collector c = Collector.getDefault();";
-        String hit = "c.getHitVector().hit(" + p.getGlobalId() + ");";
+        String hit = "c.hit(" + p.getGlobalId() + ");";
 
 
         if (hitFirst)

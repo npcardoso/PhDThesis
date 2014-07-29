@@ -13,12 +13,12 @@ public enum ProbeType {
         this.name = name;
         this.methodName = methodName;
     }
-    
-    public final String getName() {
-    	return name;
+
+    public final String getName () {
+        return name;
     }
-    
-    public final String getMethodName() {
-    	return methodName;
+
+    public final String getMethodName () {
+        return methodName;
     }
 }

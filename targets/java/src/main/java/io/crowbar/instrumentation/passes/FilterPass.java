@@ -8,7 +8,7 @@ import java.util.List;
 
 import javassist.CtClass;
 
-public class FilterPass extends AbstractPass {
+public final class FilterPass extends AbstractPass {
     private final List<ActionTaker> actionTakers = new LinkedList<ActionTaker> ();
     private Outcome fallbackOutcome = Outcome.CONTINUE;
     private Outcome acceptOutcome = Outcome.CONTINUE;
@@ -23,17 +23,17 @@ public class FilterPass extends AbstractPass {
         this.actionTakers.addAll(actionTakers);
     }
 
-    public final FilterPass setFallbackOutcome (Outcome targetOutcome) {
+    public FilterPass setFallbackOutcome (Outcome targetOutcome) {
         fallbackOutcome = targetOutcome;
         return this;
     }
 
-    public final FilterPass setAcceptOutcome (Outcome targetOutcome) {
+    public FilterPass setAcceptOutcome (Outcome targetOutcome) {
         acceptOutcome = targetOutcome;
         return this;
     }
 
-    public final FilterPass setReject (Outcome targetOutcome) {
+    public FilterPass setReject (Outcome targetOutcome) {
         rejectOutcome = targetOutcome;
         return this;
     }
@@ -52,9 +52,9 @@ public class FilterPass extends AbstractPass {
 
             case REJECT:
                 return rejectOutcome;
-            
+
             default:
-            	continue;
+                continue;
             }
         }
 

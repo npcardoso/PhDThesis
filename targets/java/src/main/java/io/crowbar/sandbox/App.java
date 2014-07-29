@@ -27,8 +27,9 @@ public class App {
                     }
 
                     socket.close();
-                } catch (IOException e) {
-                	e.printStackTrace();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -41,7 +42,7 @@ public class App {
         }
 
         @Override
-        protected Runnable handle (Socket s) {
+        protected final Runnable handle (Socket s) {
             return new EchoService(s);
         }
     }
@@ -63,7 +64,7 @@ public class App {
         }
 
         private static void broglestar (final Brogle asd) {
-        	aSDsdaf[444] = true;
+            aSDsdaf[444] = true;
         }
 
         @Test
@@ -102,7 +103,7 @@ public class App {
     }
 
     private void tracklerbar () {
-    	aSDsdaf[444] = true;
+        aSDsdaf[444] = true;
     }
 
     private int crasps () {

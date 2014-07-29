@@ -25,7 +25,7 @@ public class SuffixMatcher implements Matcher {
     }
 
     @Override
-    public final boolean matches (CtMethod m) {
+    public final boolean matches (CtClass c, CtMethod m) {
         return matches(m.getName());
     }
 

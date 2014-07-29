@@ -17,8 +17,8 @@ public abstract class AbstractActionTaker implements ActionTaker {
     }
 
     @Override
-    public final Action getAction (CtMethod m) {
-        return getAction(matcher.matches(m));
+    public final Action getAction (CtClass c, CtMethod m) {
+        return getAction(matcher.matches(c,m));
     }
 
     protected abstract Action getAction (boolean matches);

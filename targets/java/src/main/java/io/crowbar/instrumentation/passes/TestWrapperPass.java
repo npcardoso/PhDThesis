@@ -30,7 +30,7 @@ public class TestWrapperPass extends AbstractPass {
     public Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
             for (ActionTaker at : actionTakers) {
-                ActionTaker.Action ret = at.getAction(m);
+                ActionTaker.Action ret = at.getAction(c,m);
 
                 switch (ret) {
                 case ACCEPT:

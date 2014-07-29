@@ -1,19 +1,19 @@
 package io.crowbar.instrumentation;
 
-import io.crowbar.instrumentation.events.VerboseListener;
 import io.crowbar.instrumentation.events.MultiListener;
+import io.crowbar.instrumentation.events.VerboseListener;
 import io.crowbar.instrumentation.messaging.Client;
 import io.crowbar.instrumentation.passes.FilterPass;
 import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
 import io.crowbar.instrumentation.passes.matchers.BlackList;
+import io.crowbar.instrumentation.passes.matchers.JUnit3TestMatcher;
 import io.crowbar.instrumentation.passes.matchers.JUnit4TestMatcher;
 import io.crowbar.instrumentation.passes.matchers.ModifierMatcher;
 import io.crowbar.instrumentation.passes.matchers.PrefixMatcher;
 import io.crowbar.instrumentation.passes.matchers.TestNGTestMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
-
 import io.crowbar.instrumentation.runtime.Collector;
 
 import java.lang.instrument.ClassFileTransformer;
@@ -60,6 +60,7 @@ public class Agent implements ClassFileTransformer {
 
         // Wraps unit tests with instrumentation instrunctions
         TestWrapperPass twp = new TestWrapperPass(new BlackList(new ModifierMatcher(Modifier.ABSTRACT)), // Skip Abstract Methods
+                                                  new WhiteList(new JUnit3TestMatcher()),
                                                   new WhiteList(new JUnit4TestMatcher()),
                                                   new WhiteList(new TestNGTestMatcher()));
         a.passes.add(twp);

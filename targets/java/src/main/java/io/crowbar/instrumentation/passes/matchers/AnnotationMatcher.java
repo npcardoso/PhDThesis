@@ -21,7 +21,7 @@ public class AnnotationMatcher implements Matcher {
     }
 
     @Override
-    public final boolean matches (CtMethod m) {
+    public final boolean matches (CtClass c, CtMethod m) {
         try {
             return m.hasAnnotation(Class.forName(annotation));
         } catch (Exception e) {

@@ -9,5 +9,5 @@ public interface ActionTaker {
     }
 
     Action getAction (CtClass c);
-    Action getAction (CtMethod c);
+    Action getAction (CtClass c, CtMethod m);
 }

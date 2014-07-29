@@ -15,7 +15,7 @@ public class NotMatcher implements Matcher {
     }
 
     @Override
-    public final boolean matches (CtMethod m) {
-        return !matcher.matches(m);
+    public final boolean matches (CtClass c, CtMethod m) {
+        return !matcher.matches(c,m);
     }
 }

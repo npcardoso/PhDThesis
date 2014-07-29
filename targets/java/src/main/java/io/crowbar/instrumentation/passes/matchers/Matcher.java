@@ -6,5 +6,5 @@ import javassist.CtMethod;
 
 public interface Matcher {
     boolean matches (CtClass c);
-    boolean matches (CtMethod c);
+    boolean matches (CtClass c, CtMethod m);
 }

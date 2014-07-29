@@ -13,7 +13,7 @@ public class TestNGTestMatcher implements Matcher {
     }
 
     @Override
-    public final boolean matches (CtMethod m) {
-        return MATCHER.matches(m);
+    public final boolean matches (CtClass c, CtMethod m) {
+        return MATCHER.matches(c,m);
     }
 }

@@ -19,7 +19,7 @@ public class AndMatcher implements Matcher {
     }
 
     @Override
-    public final boolean matches (CtMethod m) {
-        return matcherA.matches(m) && matcherB.matches(m);
+    public final boolean matches (CtClass c, CtMethod m) {
+        return matcherA.matches(c,m) && matcherB.matches(c,m);
     }
 }

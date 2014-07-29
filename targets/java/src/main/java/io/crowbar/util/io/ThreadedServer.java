@@ -10,7 +10,7 @@ public abstract class ThreadedServer extends Thread {
     }
 
     @Override
-    public void run () {
+    public final void run () {
         while (!serverSocket.isClosed()) {
             try {
                 final Socket s = serverSocket.accept();
@@ -30,16 +30,17 @@ public abstract class ThreadedServer extends Thread {
                                       }
                                       );
                 t.start();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public final void setMaxClients(int maxClients) {
-    	this.maxClients = maxClients;
+    public final void setMaxClients (int maxClients) {
+        this.maxClients = maxClients;
     }
-    
+
     protected abstract Runnable handle (Socket s);
     private ThreadGroup threads = new ThreadGroup(""); // TODO: What's the purpose of name?
     private ServerSocket serverSocket;

@@ -12,7 +12,7 @@ import javassist.CtMethod;
 
 
 public abstract class AbstractPass implements Pass {
-    protected Node getNode (CtClass c) throws RegistrationException {
+    protected final Node getNode (CtClass c) throws RegistrationException {
         Node root = Collector.getDefault().getTree().getRoot();
         Node n = root.getChild(c.getName());
 
@@ -23,8 +23,8 @@ public abstract class AbstractPass implements Pass {
         return n;
     }
 
-    protected Node getNode (CtClass c,
-                            CtMethod m) throws RegistrationException {
+    protected final Node getNode (CtClass c,
+                                  CtMethod m) throws RegistrationException {
         Node parent = getNode(c);
         Node n = parent.getChild(m.getName());
 
@@ -35,9 +35,9 @@ public abstract class AbstractPass implements Pass {
         return n;
     }
 
-    protected Node getNode (CtClass c,
-                            CtMethod m,
-                            int line) throws RegistrationException {
+    protected final Node getNode (CtClass c,
+                                  CtMethod m,
+                                  int line) throws RegistrationException {
         Node parent = getNode(c, m);
         Node n = parent.getChild("" + line);
 
@@ -48,9 +48,9 @@ public abstract class AbstractPass implements Pass {
         return n;
     }
 
-    protected Probe registerProbe (CtClass c,
-                                   Node n,
-                                   ProbeType type) throws RegistrationException {
+    protected final Probe registerProbe (CtClass c,
+                                         Node n,
+                                         ProbeType type) throws RegistrationException {
         HitVector hv = Collector.getDefault().getHitVector();
 
 

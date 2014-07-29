@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class EchoServer extends ThreadedServer {
+public final class EchoServer extends ThreadedServer {
     private class EchoService implements Runnable {
         public EchoService (Socket s) {
             this.socket = s;
@@ -21,8 +21,9 @@ public class EchoServer extends ThreadedServer {
                 }
 
                 socket.close();
-            } catch (IOException e) {
-            	e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
             }
         }
 

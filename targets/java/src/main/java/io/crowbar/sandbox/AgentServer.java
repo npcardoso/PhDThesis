@@ -10,12 +10,12 @@ import io.crowbar.instrumentation.runtime.TreeJSONSerializer;
 
 import java.net.ServerSocket;
 
-public class AgentServer {
-    public static class DummyService implements Server.Service {
+public final class AgentServer {
+    private static class DummyService implements Server.Service {
         private MultiListener ml = new MultiListener();
         private SpectraBuilder sb = new SpectraBuilder();
         private TreeRebuilder tr = new TreeRebuilder();
-        
+
         DummyService (String id) {
             // VerboseListener vl1 = new VerboseListener();
 
@@ -50,7 +50,7 @@ public class AgentServer {
     }
 
     public static class DummyServiceFactory implements Server.ServiceFactory {
-        public Server.Service create (String id) {
+        public final Server.Service create (String id) {
             return new DummyService(id);
         }
     }
@@ -60,7 +60,8 @@ public class AgentServer {
             Server s = new Server(new ServerSocket(1234),
                                   new DummyServiceFactory());
             s.start();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

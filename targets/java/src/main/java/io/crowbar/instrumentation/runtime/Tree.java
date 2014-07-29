@@ -43,7 +43,7 @@ public class Tree implements Iterable<Tree.Node> {
         }
     }
 
-    public static class Node implements java.io.Serializable {
+    public static final class Node implements java.io.Serializable {
         /*!
          * \brief The tree holding the node
          * This field is marked as transient for serialization purposes.
@@ -56,23 +56,23 @@ public class Tree implements Iterable<Tree.Node> {
          *  - A method: method name
          *  - A line: line number
          */
-        private String name;
+        private final String name;
         /*!
          * \brief The node's id.
          */
-        private int id;
+        private final int id;
         /*!
          * \brief The node's parent id.
          */
-        private int parentId;
+        private final int parentId;
         /*!
          * \brief The node's children ids.
          */
-        private List<Integer> children = new ArrayList<Integer> ();
+        private final List<Integer> children = new ArrayList<Integer> ();
         /*!
          * \brief The node's children ids, acessible by name.
          */
-        private Map<String, Integer> childrenByName = new HashMap<String, Integer> ();
+        private final Map<String, Integer> childrenByName = new HashMap<String, Integer> ();
         /*!
          * \brief A map for additional node properties.
          */
@@ -184,27 +184,28 @@ public class Tree implements Iterable<Tree.Node> {
     public Tree (String rootName) {
         try {
             registerChild(new Node(rootName, 0, -1));
-        } catch (RegistrationException e) {
+        }
+        catch (RegistrationException e) {
             e.printStackTrace(); // ! Should never happen
         }
     }
 
-    public Node getRoot () {
+    public final Node getRoot () {
         return getNode(0);
     }
 
-    public Node getNode (int id) {
+    public final Node getNode (int id) {
         if (id < 0 || id >= nodes.size())
             return null;
 
         return nodes.get(id);
     }
 
-    public List<Node> getNodes () {
+    public final List<Node> getNodes () {
         return Collections.unmodifiableList(nodes);
     }
 
-    public Iterator<Node> iterator () {
+    public final Iterator<Node> iterator () {
         return nodes.iterator();
     }
 
@@ -245,9 +246,11 @@ public class Tree implements Iterable<Tree.Node> {
             if (node.isRoot()) {
                 if (nodes.size() != 0 || node.getId() != 0)
                     throw new InvalidRootNodeException(node);
-            } else
+            }
+            else
                 throw new NoSuchNodeException(node.getParentId());
-        } else {
+        }
+        else {
             parent.children.add(node.getId());
             parent.childrenByName.put(node.getName(), node.getId());
         }
@@ -255,9 +258,9 @@ public class Tree implements Iterable<Tree.Node> {
         node.tree = this;
     }
 
-    protected final ArrayList<Node> getNodeList() {
-    	return nodes;
+    protected final ArrayList<Node> getNodeList () {
+        return nodes;
     }
-    
+
     private ArrayList<Node> nodes = new ArrayList<Node> ();
 }

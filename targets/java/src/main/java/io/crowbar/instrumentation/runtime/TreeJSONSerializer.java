@@ -9,8 +9,8 @@ import flexjson.transformer.AbstractTransformer;
 
 import java.util.List;
 
-public class TreeJSONSerializer {
-    public static class TreeNodeTransformer extends AbstractTransformer {
+public final class TreeJSONSerializer {
+    public static final class TreeNodeTransformer extends AbstractTransformer {
         @Override
         public void transform (Object object) {
             Node n = (Node) object;

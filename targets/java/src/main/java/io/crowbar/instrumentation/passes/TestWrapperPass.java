@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
 
-public class TestWrapperPass extends AbstractPass {
+public final class TestWrapperPass extends AbstractPass {
     private final List<ActionTaker> actionTakers = new LinkedList<ActionTaker> ();
 
 
@@ -52,10 +52,10 @@ public class TestWrapperPass extends AbstractPass {
         return Outcome.CONTINUE;
     }
 
-    protected String getInstrumentationCode (CtClass c,
-                                             Node n,
-                                             ProbeType type,
-                                             boolean hitFirst) throws RegistrationException {
+    private String getInstrumentationCode (CtClass c,
+                                           Node n,
+                                           ProbeType type,
+                                           boolean hitFirst) throws RegistrationException {
         Probe p = registerProbe(c, n, type);
         String ret = "Collector c = Collector.getDefault();";
         String hit = "c.getHitVector().hit(" + p.getGlobalId() + ");";

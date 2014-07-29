@@ -9,45 +9,45 @@ import java.io.Serializable;
 public class Messages {
     public interface Message {}
 
-    public static class HelloMessage implements Message, Serializable {
+    public static final class HelloMessage implements Message, Serializable {
         private String id;
 
         public HelloMessage (String id) {
             this.id = id;
         }
 
-        public final String getId() {
-        	return id;
+        public String getId () {
+            return id;
         }
-        
+
         @Override
-        public final String toString () {
+        public String toString () {
             return "[[HelloMessage], id: " + id + "]";
         }
 
         protected HelloMessage () {}
     }
 
-    public static class ByeMessage implements Message, Serializable {
+    public static final class ByeMessage implements Message, Serializable {
         @Override
-        public final String toString () {
+        public String toString () {
             return "[[ByeMessage]]";
         }
     }
 
-    public static class RegisterNodeMessage implements Message, Serializable {
+    public static final class RegisterNodeMessage implements Message, Serializable {
         private Node node;
 
         public RegisterNodeMessage (Node node) {
             this.node = new Node(node);
         }
-        
-        public final Node getNode() {
-        	return node;
+
+        public Node getNode () {
+            return node;
         }
 
         @Override
-        public final String toString () {
+        public String toString () {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
 
 
@@ -58,7 +58,7 @@ public class Messages {
         protected RegisterNodeMessage () {}
     }
 
-    public static class RegisterProbeMessage implements Message, Serializable {
+    public static final class RegisterProbeMessage implements Message, Serializable {
         private int probeId;
         private int nodeId;
         private ProbeType type;
@@ -71,20 +71,20 @@ public class Messages {
             this.type = type;
         }
 
-        public final int getProbeId() {
-        	return probeId;
+        public int getProbeId () {
+            return probeId;
         }
-        
-        public final int getNodeId() {
-        	return nodeId;
+
+        public int getNodeId () {
+            return nodeId;
         }
-        
-        public final ProbeType getType() {
-        	return type;
+
+        public ProbeType getType () {
+            return type;
         }
-        
+
         @Override
-        public final String toString () {
+        public String toString () {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
 
 
@@ -103,9 +103,9 @@ public class Messages {
         public ProbeMessage (int probeId) {
             this.probeId = probeId;
         }
-        
-        public final int getProbeId() {
-        	return probeId;
+
+        public final int getProbeId () {
+            return probeId;
         }
 
         @Override
@@ -120,7 +120,7 @@ public class Messages {
         protected ProbeMessage () {}
     }
 
-    public static class TransactionStartMessage extends ProbeMessage implements Serializable {
+    public static final class TransactionStartMessage extends ProbeMessage implements Serializable {
         TransactionStartMessage (int probeId) {
             super(probeId);
         }
@@ -128,7 +128,7 @@ public class Messages {
         protected TransactionStartMessage () {}
     }
 
-    public static class TransactionEndMessage extends ProbeMessage implements Serializable {
+    public static final class TransactionEndMessage extends ProbeMessage implements Serializable {
         private boolean[] hitVector;
 
         TransactionEndMessage (int probeId,
@@ -137,12 +137,12 @@ public class Messages {
             this.hitVector = hitVector;
         }
 
-        public final boolean[] getHitVector() {
-        	return hitVector;
+        public boolean[] getHitVector () {
+            return hitVector;
         }
-        
+
         @Override
-        public final String toString () {
+        public String toString () {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
 
 
@@ -154,11 +154,11 @@ public class Messages {
         protected TransactionEndMessage () {}
     }
 
-    public static class OracleMessage extends ProbeMessage implements Serializable  {
-    	private double error;
+    public static final class OracleMessage extends ProbeMessage implements Serializable  {
+        private double error;
         private double confidence;
-        
-    	protected OracleMessage () {}
+
+        protected OracleMessage () {}
         OracleMessage (int probeId,
                        double error,
                        double confidence) {
@@ -166,13 +166,13 @@ public class Messages {
             this.error = error;
             this.confidence = confidence;
         }
-        
-        public final double getError() {
-        	return error;
+
+        public double getError () {
+            return error;
         }
-        
-        public final double getConfidence() {
-        	return confidence;
+
+        public double getConfidence () {
+            return confidence;
         }
     }
 }

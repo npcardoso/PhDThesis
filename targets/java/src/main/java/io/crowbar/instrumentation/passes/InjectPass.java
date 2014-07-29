@@ -38,7 +38,7 @@ public class InjectPass extends AbstractPass {
     }
 
     @Override
-    public Outcome transform (CtClass c) throws Exception {
+    public final Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
             MethodInfo info = m.getMethodInfo();
             CodeAttribute ca = info.getCodeAttribute();
@@ -60,8 +60,8 @@ public class InjectPass extends AbstractPass {
         return Outcome.CONTINUE;
     }
 
-    protected void handleMethod (CtClass c,
-                                 CtMethod m) throws Exception {
+    private void handleMethod (CtClass c,
+                               CtMethod m) throws Exception {
         MethodInfo info = m.getMethodInfo();
         CodeAttribute ca = info.getCodeAttribute();
         CodeIterator ci = ca.iterator();
@@ -88,10 +88,10 @@ public class InjectPass extends AbstractPass {
         }
     }
 
-    protected Bytecode getInstrumentationCode (CtClass c,
-                                               CtMethod m,
-                                               int line,
-                                               ConstPool pool) throws RegistrationException {
+    private Bytecode getInstrumentationCode (CtClass c,
+                                             CtMethod m,
+                                             int line,
+                                             ConstPool pool) throws RegistrationException {
         Bytecode b = new Bytecode(pool);
         Node n = getNode(c, m, line);
         Probe p = registerProbe(c, n, ProbeType.HIT_PROBE);

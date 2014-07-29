@@ -11,47 +11,52 @@ import javassist.CtMethod;
 
 
 public abstract class AbstractPass implements Pass {
-    protected final Node getNode (CtClass c) throws RegistrationException {
-        Node root = Collector.getDefault().getTree().getRoot();
-        Node n = root.getChild(c.getName());
+    protected final Node getNode (CtClass cls) throws RegistrationException {
+        Collector c = Collector.instance();
+        Node root = c.getRootNode();
+        Node n = root.getChild(cls.getName());
 
 
         if (n == null)
-            n = root.addChild(c.getName());
+            n = c.addNode(cls.getName(),
+                          root);
 
         return n;
     }
 
-    protected final Node getNode (CtClass c,
+    protected final Node getNode (CtClass cls,
                                   CtMethod m) throws RegistrationException {
-        Node parent = getNode(c);
+        Collector c = Collector.instance();
+        Node parent = getNode(cls);
         Node n = parent.getChild(m.getName());
 
 
         if (n == null)
-            n = parent.addChild(m.getName());
+            n = c.addNode(m.getName(), parent);
 
         return n;
     }
 
-    protected final Node getNode (CtClass c,
+    protected final Node getNode (CtClass cls,
                                   CtMethod m,
                                   int line) throws RegistrationException {
-        Node parent = getNode(c, m);
+        Collector c = Collector.instance();
+        Node parent = getNode(cls, m);
         Node n = parent.getChild("" + line);
 
 
         if (n == null)
-            n = parent.addChild("" + line);
+            n = c.addNode("" + line, parent);
 
         return n;
     }
 
-    protected final Probe registerProbe (CtClass c,
+    protected final Probe registerProbe (CtClass cls,
                                          Node n,
                                          ProbeType type) throws RegistrationException {
-        return Collector.getDefault().registerProbe(c.getName(),
-                                                    n.getId(),
-                                                    type);
+        Collector c = Collector.instance();
+
+
+        return c.registerProbe(cls.getName(), n.getId(), type);
     }
 }

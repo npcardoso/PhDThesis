@@ -61,7 +61,7 @@ public final class TestWrapperPass extends AbstractPass {
                                   Node n,
                                   String exVariable) throws RegistrationException {
         Probe p = registerProbe(c, n, ProbeType.ORACLE);
-        String ret = "{{Collector c = Collector.getDefault();";
+        String ret = "{{Collector c = Collector.instance();";
 
 
         ret += "c.hit(" + p.getGlobalId() + ");";
@@ -76,7 +76,7 @@ public final class TestWrapperPass extends AbstractPass {
                                        ProbeType type,
                                        boolean hitFirst) throws RegistrationException {
         Probe p = registerProbe(c, n, type);
-        String ret = "Collector c = Collector.getDefault();";
+        String ret = "Collector c = Collector.instance();";
         String hit = "c.hit(" + p.getGlobalId() + ");";
 
 

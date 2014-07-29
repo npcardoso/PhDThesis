@@ -6,31 +6,31 @@ import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import io.crowbar.instrumentation.events.EventListener;
 
-public class Collector {
-    private static Collector collector = new Collector ();
-    private EventListener listener = null;
+public final class Collector {
+    private static Collector collector = null;
+    private final EventListener listener;
     private final HitVector hitVector = new HitVector();
-    private Tree tree = null;
+    private final Tree tree;
     private boolean resetOnTransactionStart = true;
 
 
-    public static Collector getDefault () {
+    public static Collector instance () {
+        assert collector != null;
         return collector;
     }
 
-    public final void start (String name,
-                             EventListener listener) {
-        this.listener = listener;
-        this.tree = new Tree(name) {
-            @Override
-            protected void registerChild (Node node) throws RegistrationException {
-                super.registerChild(node);
-                registerNode(node);
-            }
-        };
+    public static void start (String name,
+                              EventListener listener) {
+        collector = new Collector(name, listener);
     }
 
-    public final void registerNode (Node n) {
+    private Collector (String name,
+                       EventListener listener) {
+        tree = new Tree(name);
+        this.listener = listener;
+    }
+
+    public void registerNode (Node n) {
         try {
             listener.registerNode(n);
         }
@@ -39,9 +39,9 @@ public class Collector {
         }
     }
 
-    public final Probe registerProbe (String groupName,
-                                      int nodeId,
-                                      ProbeType type) throws RegistrationException {
+    public Probe registerProbe (String groupName,
+                                int nodeId,
+                                ProbeType type) throws RegistrationException {
         Probe p = hitVector.registerProbe(groupName,
                                           nodeId,
                                           type);
@@ -57,7 +57,7 @@ public class Collector {
         return p;
     }
 
-    public final void transactionStart (int probeId) {
+    public void transactionStart (int probeId) {
         if (resetOnTransactionStart)
             hitVector.reset();
 
@@ -69,7 +69,7 @@ public class Collector {
         }
     }
 
-    public final void transactionEnd (int probeId) {
+    public void transactionEnd (int probeId) {
         try {
             listener.endTransaction(probeId, hitVector.get());
         }
@@ -80,9 +80,9 @@ public class Collector {
         hitVector.reset();
     }
 
-    public final void oracle (int probeId,
-                              double error,
-                              double confidence) {
+    public void oracle (int probeId,
+                        double error,
+                        double confidence) {
         try {
             listener.oracle(probeId, error, confidence);
         }
@@ -91,15 +91,20 @@ public class Collector {
         }
     }
 
-    public final boolean[] getHitVector (String className) {
+    public boolean[] getHitVector (String className) {
         return hitVector.get(className);
     }
 
-    public final void hit (int globalProbeId) {
+    public void hit (int globalProbeId) {
         hitVector.hit(globalProbeId);
     }
 
-    public final Tree getTree () {
-        return tree;
+    public Node getRootNode () {
+        return tree.getRoot();
+    }
+
+    public Node addNode (String name,
+                         Node parent) throws RegistrationException {
+        return tree.addNode(name, parent);
     }
 }

@@ -153,13 +153,6 @@ public class Tree implements Iterable<Tree.Node> {
             return getNode(childId);
         }
 
-        public Node addChild (String name) throws RegistrationException {
-            assert tree != null; // ! @TODO: Create proper exception
-            Node n = new Node(name, tree.nodes.size(), this.id);
-            tree.registerChild(n);
-            return n;
-        }
-
         @Override
         public String toString () {
             String ret = "[state: " + (isBound() ? "B" : "Unb") + "ound, ";
@@ -178,12 +171,14 @@ public class Tree implements Iterable<Tree.Node> {
         }
     }
 
+    private ArrayList<Node> nodes = new ArrayList<Node> ();
+
 
     protected Tree () {}
 
     public Tree (String rootName) {
         try {
-            registerChild(new Node(rootName, 0, -1));
+            addNode(new Node(rootName, 0, -1));
         }
         catch (RegistrationException e) {
             e.printStackTrace(); // ! Should never happen
@@ -209,10 +204,15 @@ public class Tree implements Iterable<Tree.Node> {
         return nodes.iterator();
     }
 
-    protected void registerChild (Node node) throws RegistrationException {
-        assert node.getId() == nodes.size();
-        registerChildNode(node);
-        nodes.add(node);
+    public final Node addNode (String name,
+                               Node parent) throws RegistrationException {
+        Node n = new Node(name,
+                          nodes.size(),
+                          parent.getId());
+
+
+        addNode(n);
+        return n;
     }
 
     /*!
@@ -222,15 +222,13 @@ public class Tree implements Iterable<Tree.Node> {
      * The following actions are performed:
      *  - Add the child node to both parent's list and map.
      *  - Set the child's tree equal to "this".
-     * The following action is *not* performed:
      *  - Add the node to nodes list at correct position.
-     * The node should be added to the list *after* calling this method.
      * @throws AlreadyBoundException: if the node is already bound to some tree.
      * @throws AlreadyRegisteredException: if the a node with same id exists in the tree.
      * @throws InvalidRootNodeException: if the node is a root node but the tree already has one root node.
      * @throws NoSuchNodeException: if parent node does not exist and the node is not a root node.
      */
-    protected final void registerChildNode (Node node) throws RegistrationException {
+    protected final void addNode (Node node) throws RegistrationException {
         if (node.tree != null)
             throw new AlreadyBoundException(node);
 
@@ -256,11 +254,13 @@ public class Tree implements Iterable<Tree.Node> {
         }
 
         node.tree = this;
-    }
 
-    protected final ArrayList<Node> getNodeList () {
-        return nodes;
-    }
+        nodes.ensureCapacity(node.getId() + 1);
 
-    private ArrayList<Node> nodes = new ArrayList<Node> ();
+        while (nodes.size() <= node.getId()) {
+            nodes.add(null);
+        }
+
+        nodes.set(node.getId(), node);
+    }
 }

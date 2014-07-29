@@ -78,7 +78,7 @@ public class Agent implements ClassFileTransformer {
         ml.add(vl);
         ml.add(cl);
 
-        Collector.getDefault().start("Workspace-" + cl.getCliendId(), ml);
+        Collector.instance().start("Workspace-" + cl.getCliendId(), ml);
 
 
         inst.addTransformer(a);

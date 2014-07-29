@@ -20,8 +20,8 @@ public class TreeTest {
 
         assertNotNull(n);
 
-        Node c1 = n.addChild("foo1");
-        Node c2 = n.addChild("foo2");
+        Node c1 = t.addNode("foo1", n);
+        Node c2 = t.addNode("foo2", n);
 
         assertEquals(n, c1.getParent());
         assertEquals(n, c2.getParent());
@@ -30,10 +30,10 @@ public class TreeTest {
         assertEquals(c2, n.getChild("foo2"));
 
 
-        Node c11 = c1.addChild("foo1");
-        Node c12 = c1.addChild("foo2");
-        Node c21 = c2.addChild("foo1");
-        Node c22 = c2.addChild("foo2");
+        Node c11 = t.addNode("foo1", c1);
+        Node c12 = t.addNode("foo2", c1);
+        Node c21 = t.addNode("foo1", c2);
+        Node c22 = t.addNode("foo2", c2);
 
         assertEquals(c1, c11.getParent());
         assertEquals(c1, c12.getParent());

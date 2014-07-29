@@ -54,7 +54,7 @@ public class InjectPass extends AbstractPass {
 
         if (injected) {
             CtField f = CtField.make("public static boolean[]  " + hitVectorName + " = " +
-                                     "Collector.getDefault().getHitVector(" +
+                                     "Collector.instance().getHitVector(" +
                                      "\"" + c.getName() + "\");", c);
             c.addField(f);
         }

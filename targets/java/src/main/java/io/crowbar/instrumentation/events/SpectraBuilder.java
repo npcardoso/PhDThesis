@@ -1,8 +1,8 @@
 package io.crowbar.instrumentation.events;
 
 import io.crowbar.diagnosis.Spectra;
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.Node;
 
 public class SpectraBuilder extends Spectra implements EventListener {
     private int transactionId = 0;

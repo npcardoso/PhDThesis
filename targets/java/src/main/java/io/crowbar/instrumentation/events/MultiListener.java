@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,8 @@ public class MultiListener implements EventListener {
         for (EventListener el : listeners) {
             try {
                 el.registerNode(n);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -31,7 +32,8 @@ public class MultiListener implements EventListener {
         for (EventListener el : listeners) {
             try {
                 el.registerProbe(probeId, nodeId, type);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -42,7 +44,8 @@ public class MultiListener implements EventListener {
         for (EventListener el : listeners) {
             try {
                 el.startTransaction(probeId);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -55,7 +58,8 @@ public class MultiListener implements EventListener {
             try {
                 el.endTransaction(probeId,
                                   hitVector);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -68,7 +72,8 @@ public class MultiListener implements EventListener {
         for (EventListener el : listeners) {
             try {
                 el.oracle(probeId, error, confidence);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }

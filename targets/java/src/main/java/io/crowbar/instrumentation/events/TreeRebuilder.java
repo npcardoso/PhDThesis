@@ -1,10 +1,10 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.instrumentation.runtime.AbstractTree;
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree;
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
-public class TreeRebuilder extends Tree implements EventListener {
+public class TreeRebuilder extends AbstractTree implements EventListener {
     public static class DisabledRegistrationException extends RegistrationException {
         public DisabledRegistrationException () {
             super("registerChild method should not be used with a TreeRebuilder");

@@ -3,8 +3,8 @@ package io.crowbar.instrumentation.messaging;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.Node;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -35,15 +35,17 @@ public class Client implements EventListener {
                     }
 
                     message = getMessage();
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     System.out.println("Exception, reseting socket");
                     e.printStackTrace();
 
                     s = null;
                     try {
                         Thread.sleep(10000);
-                    } catch (Exception e2) {
-                    	e.printStackTrace();
+                    }
+                    catch (Exception e2) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -56,8 +58,8 @@ public class Client implements EventListener {
         this.port = port;
     }
 
-    public final String getCliendId() {
-    	return this.clientId;
+    public final String getCliendId () {
+        return this.clientId;
     }
 
     private synchronized void postMessage (Messages.Message m) {
@@ -85,8 +87,8 @@ public class Client implements EventListener {
 
     @Override
     public final void registerProbe (int probeId,
-                               int nodeId,
-                               ProbeType type) {
+                                     int nodeId,
+                                     ProbeType type) {
         postMessage(new Messages.RegisterProbeMessage(probeId,
                                                       nodeId,
                                                       type));
@@ -99,15 +101,15 @@ public class Client implements EventListener {
 
     @Override
     public final void endTransaction (int probeId,
-                                boolean[] hitVector) {
+                                      boolean[] hitVector) {
         postMessage(new Messages.TransactionEndMessage(probeId,
                                                        hitVector));
     }
 
     @Override
     public final void oracle (int probeId,
-                        double error,
-                        double confidence) {
+                              double error,
+                              double confidence) {
         postMessage(new Messages.OracleMessage(probeId, error, confidence));
     }
 

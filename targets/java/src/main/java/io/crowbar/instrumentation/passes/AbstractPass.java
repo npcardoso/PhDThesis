@@ -1,9 +1,9 @@
 package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.runtime.Collector;
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import javassist.CtClass;

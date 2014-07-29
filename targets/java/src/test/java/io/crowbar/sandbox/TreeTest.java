@@ -1,7 +1,7 @@
 package io.crowbar.sandbox;
 
-import io.crowbar.instrumentation.runtime.Tree;
-import io.crowbar.instrumentation.runtime.Tree.Node;
+import io.crowbar.instrumentation.runtime.Node;
+import io.crowbar.instrumentation.runtime.WritableTree;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import static org.junit.Assert.*;
@@ -11,7 +11,7 @@ import org.junit.Test;
 public class TreeTest {
     @Test
     public void TestAddChild () throws RegistrationException {
-        Tree t = new Tree("");
+        WritableTree t = new WritableTree("");
 
         Node n = t.getRoot();
 

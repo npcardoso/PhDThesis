@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.Node;
 
 public class NullListener implements EventListener {
     @Override

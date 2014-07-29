@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
 import io.crowbar.instrumentation.runtime.ProbeGroup.Probe;
-import io.crowbar.instrumentation.runtime.Tree.Node;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import io.crowbar.instrumentation.events.EventListener;
@@ -10,7 +9,7 @@ public final class Collector {
     private static Collector collector = null;
     private final EventListener listener;
     private final HitVector hitVector = new HitVector();
-    private final Tree tree;
+    private final WritableTree tree;
     private boolean resetOnTransactionStart = true;
 
 
@@ -27,7 +26,7 @@ public final class Collector {
     private Collector (String name,
                        EventListener listener) {
         this.listener = listener;
-        tree = new Tree(name);
+        tree = new WritableTree(name);
         registerNode(tree.getRoot());
     }
 

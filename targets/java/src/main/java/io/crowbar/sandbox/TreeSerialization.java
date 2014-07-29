@@ -1,14 +1,14 @@
 package io.crowbar.sandbox;
 
 
-import io.crowbar.instrumentation.runtime.Tree;
-import io.crowbar.instrumentation.runtime.Tree.Node;
+import io.crowbar.instrumentation.runtime.WritableTree;
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.TreeJSONSerializer;
 
 
 public class TreeSerialization {
     public static void main (String[] args) {
-        Tree t = new Tree("");
+        WritableTree t = new WritableTree("");
 
 
         try {

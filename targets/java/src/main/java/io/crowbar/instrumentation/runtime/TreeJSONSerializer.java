@@ -1,8 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
 
-import io.crowbar.instrumentation.runtime.Tree.Node;
-
 import flexjson.JSONSerializer;
 import flexjson.TypeContext;
 import flexjson.transformer.AbstractTransformer;

@@ -63,7 +63,6 @@ public class Spectra {
             return false;
 
         Boolean ret = error.get(transactionId);
-        System.err.println("getError: " + ret);
         return (ret == null) ? false : ret;
     }
 

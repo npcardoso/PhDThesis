@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.messaging;
 
+import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.Node;
 
 
 import java.io.Serializable;

@@ -1,8 +1,10 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.diagnosis.Spectra;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.spectra.EditableSpectra;
+import io.crowbar.instrumentation.spectra.Spectra;
+import io.crowbar.instrumentation.spectra.HitTransaction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,12 +12,16 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 
-public class SpectraBuilder extends Spectra implements EventListener {
+public class SpectraBuilder extends AbstractEventListener {
     private int transactionId = 0;
     private boolean error = false;
-    private final List<String> ignorePatterns = new LinkedList<String> ();
-    private boolean fallbackAccept = true;
+    private final EditableSpectra spectra = new EditableSpectra();
 
+    /**
+     * @TODO: Remove this
+     */
+    private boolean fallbackAccept = true;
+    private final List<String> ignorePatterns = new LinkedList<String> ();
 
     public SpectraBuilder () {}
 
@@ -27,14 +33,12 @@ public class SpectraBuilder extends Spectra implements EventListener {
         this.ignorePatterns.addAll(ignorePatterns);
     }
 
-    @Override
-    public final void registerNode (Node node) throws Exception {}
+    public final Spectra getSpectra () {
+        return spectra;
+    }
 
     @Override
     public final void registerProbe (Probe probe) throws Exception {}
-
-    @Override
-    public final void startTransaction (int probeId) {}
 
     @Override
     public final void endTransaction (int probeId,
@@ -49,8 +53,9 @@ public class SpectraBuilder extends Spectra implements EventListener {
             }
         }
 
-        setActivity(transactionId, hitVector);
-        setError(transactionId, error);
+        HitTransaction t = new HitTransaction(hitVector, error ? 1 : 0, 1, exception);
+        spectra.setTransaction(transactionId, t);
+
         reset(true);
     }
 

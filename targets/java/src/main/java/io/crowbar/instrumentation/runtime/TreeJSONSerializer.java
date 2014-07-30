@@ -56,7 +56,6 @@ public final class TreeJSONSerializer {
                                     JSONSerializer serializer) {
         return serializer
                .transform(new TreeNodeTransformer(), Tree.class)
-               .prettyPrint(true)
                .serialize(t);
     }
 }

@@ -5,6 +5,8 @@ import io.crowbar.instrumentation.runtime.WritableTree;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.TreeJSONSerializer;
 
+import java.util.UUID;
+
 
 public class TreeSerialization {
     public static void main (String[] args) {
@@ -13,17 +15,27 @@ public class TreeSerialization {
 
         try {
             Node n = t.getRoot();
-
-            Node c1 = t.addNode("foo1", n);
-            Node c2 = t.addNode("foo2", n);
-            Node c11 = t.addNode("foo1", c1);
-            Node c12 = t.addNode("foo2", c1);
-            Node c21 = t.addNode("foo1", c2);
-            Node c22 = t.addNode("foo2", c2);
+            createTree(t, n, 10, 15, 4);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println(TreeJSONSerializer.serialize(t));
+    }
+
+    public static void createTree (WritableTree t,
+                                   Node n,
+                                   int children_min,
+                                   int children_max,
+                                   int depth) throws Exception {
+        if (depth <= 0)
+            return;
+
+        int children = (int) (Math.random() * (children_max - children_min) + children_min);
+
+        for (int i = 0; i < children; i++) {
+            Node n_child = t.addNode(UUID.randomUUID().toString().substring(0, 10), n);
+            createTree(t, n_child, children_min, children_max, depth - 1);
+        }
     }
 }

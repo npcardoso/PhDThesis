@@ -4,8 +4,9 @@ import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.spectra.EditableSpectra;
-import io.crowbar.instrumentation.spectra.Spectra;
 import io.crowbar.instrumentation.spectra.HitTransaction;
+import io.crowbar.instrumentation.spectra.Metadata;
+import io.crowbar.instrumentation.spectra.Spectra;
 
 
 public class SpectraBuilder extends AbstractEventListener {
@@ -31,7 +32,7 @@ public class SpectraBuilder extends AbstractEventListener {
         Node n = treeRebuilder.getTree().getNode(probe.getNodeId());
 
 
-        spectra.setMetadata(probe.getId(), n);
+        spectra.setMetadata(probe.getId(), new Metadata(probe.getType(), n));
         // TODO: Add probeType
     }
 

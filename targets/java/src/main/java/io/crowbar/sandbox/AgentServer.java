@@ -20,13 +20,15 @@ public final class AgentServer {
 
         @Override
         public void interrupted () {
+            System.out.println("-------------------JSON-----------------------");
             System.out.println(TreeJSONSerializer.serialize(spectraBuilder.getTree()));
+            System.out.println("-------------------HIT SPECTRA-----------------------");
             System.out.println(HitSpectraSerializer.serialize(spectraBuilder.getSpectra()));
         }
 
         @Override
         public void finalize () {
-            System.out.println(HitSpectraSerializer.serialize(spectraBuilder.getSpectra()));
+            interrupted();
         }
     }
 

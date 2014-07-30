@@ -1,7 +1,5 @@
 package io.crowbar.instrumentation.spectra;
 
-import io.crowbar.instrumentation.runtime.Node;
-
 public final class HitSpectraSerializer {
     public static String serialize (Spectra spectra) {
         int numComp = spectra.getNumComponents();
@@ -12,13 +10,16 @@ public final class HitSpectraSerializer {
         str.append("[");
 
         for (int i = 0; i < numComp; i++) {
-            Node n = spectra.getMetadata(i);
+            Metadata m = spectra.getMetadata(i);
 
             if (!first)
                 str.append(", ");
 
-            str.append(i + ": ");
-            str.append(n.getFullName(":", 1));
+            str.append(i + ": (");
+            str.append(m.getType().getName());
+            str.append(", ");
+            str.append(m.getNode().getFullName(":", 1));
+            str.append(")");
             first = false;
         }
 

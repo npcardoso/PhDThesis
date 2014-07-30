@@ -14,7 +14,6 @@ public final class TreeJSONSerializer {
 
 
             getContext().writeOpenArray();
-            boolean first = true;
 
             for (Node n : t) {
                 getContext().writeOpenObject();
@@ -37,11 +36,7 @@ public final class TreeJSONSerializer {
                 }
 
                 getContext().writeCloseObject();
-
-                if (!first)
-                    getContext().writeComma();
-
-                first = false;
+                getContext().writeComma();
             }
 
             getContext().writeCloseArray();

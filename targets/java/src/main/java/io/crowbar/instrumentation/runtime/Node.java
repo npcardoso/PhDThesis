@@ -97,7 +97,7 @@ public final class Node implements java.io.Serializable {
         Node p = getParent();
 
 
-        if (p == null) || getDepth() <= fromDepth)
+        if (p == null || getDepth() <= fromDepth)
             return name;
 
         return p.getFullName(separator, fromDepth) + separator + name;

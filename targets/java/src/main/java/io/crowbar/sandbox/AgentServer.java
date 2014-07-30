@@ -1,9 +1,7 @@
 package io.crowbar.sandbox;
 
 import io.crowbar.instrumentation.events.EventListener;
-import io.crowbar.instrumentation.events.MultiListener;
 import io.crowbar.instrumentation.events.SpectraBuilder;
-import io.crowbar.instrumentation.events.VerboseListener;
 import io.crowbar.instrumentation.messaging.Server;
 import io.crowbar.instrumentation.runtime.TreeJSONSerializer;
 import io.crowbar.instrumentation.spectra.HitSpectraSerializer;

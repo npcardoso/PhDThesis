@@ -42,7 +42,7 @@ public class EditableSpectra<T extends Transaction, M> implements Spectra<T, M> 
     }
 
     @Override
-    public Iterator<T> iterator () {
+    public final Iterator<T> iterator () {
         return transactions.iterator();
     }
 

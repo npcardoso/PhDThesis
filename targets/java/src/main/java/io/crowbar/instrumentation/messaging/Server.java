@@ -41,7 +41,7 @@ public class Server extends ThreadedServer {
 
             try {
                 o = new ObjectInputStream(socket.getInputStream()).readObject();
-                System.out.println("Receiving " + o);
+                // System.out.println("Receiving " + o);
 
                 if (!(o instanceof HelloMessage))
                     throw new Exception("First message should be a HelloMessage. Received instead: " + o);
@@ -58,7 +58,7 @@ public class Server extends ThreadedServer {
             while (true) {
                 try {
                     o = new ObjectInputStream(socket.getInputStream()).readObject();
-                    System.out.println("Receiving " + o);
+                    // System.out.println("Receiving " + o);
                 }
                 catch (Exception e) {
                     service.interrupted();

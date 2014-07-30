@@ -7,11 +7,6 @@ import io.crowbar.instrumentation.spectra.EditableSpectra;
 import io.crowbar.instrumentation.spectra.Spectra;
 import io.crowbar.instrumentation.spectra.HitTransaction;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.regex.Pattern;
-
 
 public class SpectraBuilder extends AbstractEventListener {
     private boolean error = false;

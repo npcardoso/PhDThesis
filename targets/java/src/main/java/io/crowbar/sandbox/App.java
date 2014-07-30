@@ -4,6 +4,8 @@ import io.crowbar.util.io.ThreadedServer;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.junit.Assume;
+
 import java.net.ServerSocket;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,8 +13,8 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class App {
-    public static class EchoServer2 extends ThreadedServer {
-        private class EchoService implements Runnable {
+    public static final class EchoServer2 extends ThreadedServer {
+        private final class EchoService implements Runnable {
             public EchoService (Socket s) {
                 this.socket = s;
             }
@@ -42,7 +44,7 @@ public class App {
         }
 
         @Override
-        protected final Runnable handle (Socket s) {
+        protected Runnable handle (Socket s) {
             return new EchoService(s);
         }
 
@@ -81,6 +83,12 @@ public class App {
         public void discoversExpiredCreditCard2 () {
             assertEquals(1, 0);
         }
+
+        @Test
+        public void testAssume () {
+            Assume.assumeTrue(1 == 0);
+            assertEquals(1, 0);
+        }
     }
 
     public static void main (String[] args) {
@@ -88,8 +96,10 @@ public class App {
         Brogle b = new Brogle();
 
 
-        b.discoversExpiredCreditCard();
-        b.discoversExpiredCreditCard2();
+        try {b.discoversExpiredCreditCard();} catch (Exception e) {}
+        try {b.testAssume();} catch (Exception e) {}
+        try {b.discoversExpiredCreditCard2();} catch (Exception e) {}
+
 
         /*try {
          *  ThreadedServer server = new EchoServer2(new ServerSocket(1234));

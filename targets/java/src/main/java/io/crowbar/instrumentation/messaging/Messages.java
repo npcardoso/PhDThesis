@@ -68,7 +68,7 @@ public class Messages {
             this.probe = new Probe(probe);
         }
 
-        public final Probe getProbe () {
+        public Probe getProbe () {
             return probe;
         }
 
@@ -122,12 +122,20 @@ public class Messages {
     }
 
     public static final class TransactionEndMessage extends ProbeMessage implements Serializable {
-        private boolean[] hitVector;
+        private final String exception;
+        private final boolean[] hitVector;
+
 
         TransactionEndMessage (int probeId,
+                               String exception,
                                boolean[] hitVector) {
             super(probeId);
+            this.exception = exception;
             this.hitVector = hitVector;
+        }
+
+        public String getException () {
+            return exception;
         }
 
         public boolean[] getHitVector () {
@@ -139,13 +147,14 @@ public class Messages {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
 
 
-            ret += "probe_id: " + getProbeId() + ", ";
-            ret += "hit_vector: " + hitVector + "]";
+            ret += "probeId: " + getProbeId() + ", ";
+            ret += "exception: " + getException() + ", ";
+            ret += "hitVector: " + getHitVector() + "]";
             return ret;
         }
 
         protected TransactionEndMessage () {
-            this(-1, null);
+            this(-1, null, null);
         }
     }
 

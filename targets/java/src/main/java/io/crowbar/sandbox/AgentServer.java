@@ -13,7 +13,7 @@ import java.net.ServerSocket;
 public final class AgentServer {
     private static class DummyService implements Server.Service {
         private MultiListener ml = new MultiListener();
-        private SpectraBuilder sb = new SpectraBuilder();
+        private SpectraBuilder sb = new SpectraBuilder("org\\.junit\\.Assume\\$AssumptionViolatedException"); // Ignore tests that ended with this exception
         private TreeRebuilder tr = new TreeRebuilder();
 
         DummyService (String id) {

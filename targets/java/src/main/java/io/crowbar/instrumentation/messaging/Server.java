@@ -91,6 +91,7 @@ public class Server extends ThreadedServer {
                     eventListener.startTransaction(m.getProbeId());
                 else if (o instanceof TransactionEndMessage)
                     eventListener.endTransaction(m.getProbeId(),
+                                                 ((TransactionEndMessage) m).getException(),
                                                  ((TransactionEndMessage) m).getHitVector());
                 else if (o instanceof OracleMessage)
                     eventListener.oracle(m.getProbeId(),

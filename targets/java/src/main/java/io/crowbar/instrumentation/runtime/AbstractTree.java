@@ -1,5 +1,7 @@
 package io.crowbar.instrumentation.runtime;
 
+import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;

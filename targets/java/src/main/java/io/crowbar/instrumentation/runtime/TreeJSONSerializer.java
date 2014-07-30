@@ -2,7 +2,6 @@ package io.crowbar.instrumentation.runtime;
 
 
 import flexjson.JSONSerializer;
-import flexjson.TypeContext;
 import flexjson.transformer.AbstractTransformer;
 
 import java.util.List;

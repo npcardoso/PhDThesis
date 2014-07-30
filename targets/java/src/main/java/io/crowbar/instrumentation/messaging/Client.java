@@ -97,8 +97,10 @@ public class Client implements EventListener {
 
     @Override
     public final void endTransaction (int probeId,
+                                      String exception,
                                       boolean[] hitVector) {
         postMessage(new Messages.TransactionEndMessage(probeId,
+                                                       exception,
                                                        hitVector));
     }
 

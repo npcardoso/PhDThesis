@@ -15,6 +15,7 @@ public class NullListener implements EventListener {
 
     @Override
     public final void endTransaction (int probeId,
+                                      String exception,
                                       boolean[] hitVector) throws Exception {}
 
     @Override

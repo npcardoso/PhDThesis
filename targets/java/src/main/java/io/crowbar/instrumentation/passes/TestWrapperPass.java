@@ -2,6 +2,7 @@ package io.crowbar.instrumentation.passes;
 
 
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
+import io.crowbar.instrumentation.passes.matchers.ActionTaker.Action;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.runtime.ProbeType;
@@ -31,10 +32,9 @@ public final class TestWrapperPass extends AbstractPass {
     public Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
             for (ActionTaker at : actionTakers) {
-                ActionTaker.Action ret = at.getAction(c, m);
+                Action ret = at.getAction(c, m);
 
-                switch (ret) {
-                case ACCEPT:
+                if (ret == Action.ACCEPT) {
                     Node n = getNode(c, m);
                     m.insertBefore(getTransactionCode(c, n, ProbeType.TRANSACTION_START, false));
                     m.insertAfter(getTransactionCode(c, n, ProbeType.TRANSACTION_END, true),
@@ -42,14 +42,9 @@ public final class TestWrapperPass extends AbstractPass {
                     m.addCatch(getOracleCode(c, n, "e"),
                                ClassPool.getDefault().get("java.lang.Throwable"),
                                "e");
-                    break;
-
-                case REJECT:
+                }
+                else if (ret == Action.REJECT) {
                     return Outcome.CONTINUE;
-
-                case NEXT:
-                default:
-                    continue;
                 }
             }
         }
@@ -60,13 +55,15 @@ public final class TestWrapperPass extends AbstractPass {
     private String getOracleCode (CtClass c,
                                   Node n,
                                   String exVariable) throws RegistrationException {
-        HitProbe p = registerProbe(c, n, ProbeType.ORACLE);
-        String ret = "{{Collector c = Collector.instance();";
+        HitProbe op = registerProbe(c, n, ProbeType.ORACLE);
+        HitProbe tp = registerProbe(c, n, ProbeType.TRANSACTION_END);
+        String ret = "{Collector c = Collector.instance();";
 
 
-        ret += "c.hit(" + p.getId() + ");";
-        ret += "c." + ProbeType.ORACLE.getMethodName() + "(" + p.getId() + ", 1d, 1d);}";
-        ret += "{" + getTransactionCode(c, n, ProbeType.TRANSACTION_END, true) + "}";
+        ret += "c.hit(" + op.getId() + ");";
+        ret += "c." + op.getType().getMethodName() + "(" + op.getId() + ", 1d, 1d);";
+        ret += "c.hit(" + tp.getId() + ");";
+        ret += "c." + tp.getType().getMethodName() + "(" + tp.getId() + ", " + exVariable + ");";
         ret += "throw " + exVariable + ";}";
         return ret;
     }
@@ -83,7 +80,13 @@ public final class TestWrapperPass extends AbstractPass {
         if (hitFirst)
             ret += hit;
 
-        ret += "c." + type.getMethodName() + "(" + p.getId() + ");";
+        ret += "c." + type.getMethodName() + "(";
+        ret += p.getId();
+
+        if (type == ProbeType.TRANSACTION_END)
+            ret += ", null";
+
+        ret += ");";
 
         if (!hitFirst)
             ret += hit;

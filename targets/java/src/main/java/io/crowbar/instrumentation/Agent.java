@@ -59,10 +59,11 @@ public class Agent implements ClassFileTransformer {
 
 
         // Wraps unit tests with instrumentation instrunctions
-        TestWrapperPass twp = new TestWrapperPass(new BlackList(new ModifierMatcher(Modifier.ABSTRACT)), // Skip Abstract Methods
-                                                  new WhiteList(new JUnit3TestMatcher()),
-                                                  new WhiteList(new JUnit4TestMatcher()),
-                                                  new WhiteList(new TestNGTestMatcher()));
+        TestWrapperPass twp = new TestWrapperPass(
+            new BlackList(new ModifierMatcher(Modifier.ABSTRACT)), // Skip Abstract Methods
+            new WhiteList(new JUnit3TestMatcher()),
+            new WhiteList(new JUnit4TestMatcher()),
+            new WhiteList(new TestNGTestMatcher()));
         a.passes.add(twp);
 
 

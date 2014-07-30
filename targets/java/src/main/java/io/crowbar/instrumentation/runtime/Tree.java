@@ -38,9 +38,9 @@ public interface Tree extends Iterable<Node> {
     }
 
 
-    public int size ();
-    public Node getRoot ();
-    public Node getNode (int id);
-    public List<Node> getNodes ();
-    public Iterator<Node> iterator ();
+    int size ();
+    Node getRoot ();
+    Node getNode (int id);
+    List<Node> getNodes ();
+    Iterator<Node> iterator ();
 }

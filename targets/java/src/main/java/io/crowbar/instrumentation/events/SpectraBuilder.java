@@ -33,7 +33,6 @@ public class SpectraBuilder extends AbstractEventListener {
 
 
         spectra.setMetadata(probe.getId(), new Metadata(probe.getType(), n));
-        // TODO: Add probeType
     }
 
     @Override

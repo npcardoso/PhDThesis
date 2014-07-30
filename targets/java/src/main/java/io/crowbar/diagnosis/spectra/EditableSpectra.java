@@ -27,17 +27,28 @@ public class EditableSpectra<T extends Transaction, M> implements Spectra<T, M> 
 
     @Override
     public final T getTransaction (int transactionId) {
+        if (transactionId < 0 || transactionId >= transactions.size())
+            return null;
+
         return transactions.get(transactionId);
     }
 
     @Override
     public final M getMetadata (int componentId) {
+        if (componentId < 0 || componentId >= metadata.size())
+            return null;
+
         return metadata.get(componentId);
     }
 
     @Override
     public Iterator<T> iterator () {
         return transactions.iterator();
+    }
+
+    public final void appendTransaction (T transaction) {
+        setTransaction(transactions.size(),
+                       transaction);
     }
 
     public final void setTransaction (int transactionId,

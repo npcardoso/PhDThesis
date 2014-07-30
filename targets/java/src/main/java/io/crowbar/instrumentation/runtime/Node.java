@@ -30,6 +30,10 @@ public final class Node implements java.io.Serializable {
      */
     private final int parentId;
     /*!
+     * \brief The node's depth in the tree.
+     */
+    private int depth = -1;
+    /*!
      * \brief The node's children ids.
      */
     private final List<Integer> children = new ArrayList<Integer> ();
@@ -82,13 +86,21 @@ public final class Node implements java.io.Serializable {
      * \brief Concatenates the names of all nodes in the path to the root using "separator" as separator.
      */
     public String getFullName (String separator) {
+        return getFullName(separator, 0);
+    }
+
+    /*!
+     * \brief Concatenates the names of all nodes in the path to the root using "separator" as separator.
+     */
+    public String getFullName (String separator,
+                               int fromDepth) {
         Node p = getParent();
 
 
-        if (p == null)
+        if (p == null) || getDepth() <= fromDepth)
             return name;
 
-        return p.getFullName(separator) + separator + name;
+        return p.getFullName(separator, fromDepth) + separator + name;
     }
 
     public int getParentId () {
@@ -97,6 +109,10 @@ public final class Node implements java.io.Serializable {
 
     public Node getParent () {
         return getNode(parentId);
+    }
+
+    public int getDepth () {
+        return depth;
     }
 
     public List<Integer> getChildren () {
@@ -120,7 +136,7 @@ public final class Node implements java.io.Serializable {
 
         ret += "name: \"" + (isBound() ? getFullName() : getName()) + "\", ";
         ret += "id: " + getId() + ", ";
-        ret += "parent_id: " + getParentId() + ", ";
+        ret += "parentId: " + getParentId() + ", ";
         ret += "children: " + children + "]";
         return ret;
     }
@@ -138,5 +154,11 @@ public final class Node implements java.io.Serializable {
 
     void setTree (Tree tree) {
         this.tree = tree;
+        Node n = getNode(parentId);
+
+        if (n == null)
+            depth = 0;
+        else
+            depth = n.depth + 1;
     }
 }

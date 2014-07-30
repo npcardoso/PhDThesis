@@ -45,4 +45,32 @@ public class TreeTest {
         assertEquals(c21, c2.getChild("foo1"));
         assertEquals(c22, c2.getChild("foo2"));
     }
+
+    @Test
+    public void TestFullName () throws RegistrationException {
+        WritableTree t = new WritableTree("foo0");
+        int count = 4;
+        Node n = t.getRoot();
+        String ret = "foo0";
+
+
+        for (int i = 1; i < count; i++) {
+            n = t.addNode("foo" + i, n);
+            ret += ":foo" + i;
+        }
+
+        assertEquals(ret, n.getFullName(":"));
+
+        for (int i = 0; i < count; i++) {
+            ret = "";
+            Node tmp = n;
+
+            for (int j = i; j < count; j++) {
+                ret = tmp.getName() + ":" + ret;
+                tmp = tmp.getParent();
+            }
+
+            assertEquals(ret, n.getFullName(":", i) + ":");
+        }
+    }
 }

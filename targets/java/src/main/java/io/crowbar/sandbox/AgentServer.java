@@ -18,8 +18,7 @@ public final class AgentServer {
             return spectraBuilder;
         }
 
-        @Override
-        public void interrupted () {
+        private void showState () {
             System.out.println("-------------------JSON-----------------------");
             System.out.println(TreeJSONSerializer.serialize(spectraBuilder.getTree()));
             System.out.println("-------------------HIT SPECTRA-----------------------");
@@ -27,8 +26,17 @@ public final class AgentServer {
         }
 
         @Override
+        public void interrupted () {
+            System.out.println("------------------- Interrupted -----------------------");
+            showState();
+            System.out.println("------------------- Interrupted -----------------------");
+        }
+
+        @Override
         public void finalize () {
-            interrupted();
+            System.out.println("------------------- finalizing -----------------------");
+            showState();
+            System.out.println("------------------- finalizing -----------------------");
         }
     }
 

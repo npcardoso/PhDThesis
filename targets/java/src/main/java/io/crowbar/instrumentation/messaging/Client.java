@@ -74,8 +74,7 @@ public class Client implements EventListener {
             new Thread() {
                 public void run() {
                     try {
-                        postMessage(new ByeMessage());
-                        t.join();
+                        postMessage(new ByeMessage()).join();
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -88,13 +87,18 @@ public class Client implements EventListener {
         return this.clientId;
     }
 
-    private synchronized void postMessage (Messages.Message m) {
+    /*!
+     * Returns posts message and returns dispatcher thread.
+     */
+    private synchronized Thread postMessage (Messages.Message m) {
         messages.add(m);
 
         if (t == null) {
             t = new Dispatcher();
             t.start();
         }
+
+        return t;
     }
 
     private synchronized Message getMessage () {

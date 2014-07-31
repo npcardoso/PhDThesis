@@ -19,7 +19,7 @@ public class Server extends ThreadedServer {
     public interface Service {
         EventListener getEventListener ();
         void interrupted ();
-        void finalize ();
+        void terminate ();
     }
 
     public interface ServiceFactory {
@@ -43,7 +43,7 @@ public class Server extends ThreadedServer {
                     Object o = new ObjectInputStream(socket.getInputStream()).readObject();
 
                     if (o instanceof ByeMessage) {
-                        service.finalize();
+                        service.terminate();
                         break;
                     }
                     else
@@ -68,8 +68,6 @@ public class Server extends ThreadedServer {
         private String handshake () throws Exception {
             Object o = new ObjectInputStream(socket.getInputStream()).readObject();
 
-
-            // System.out.println("Receiving " + o);
 
             if (!(o instanceof HelloMessage))
                 throw new Exception("First message should be a HelloMessage. Received instead: " + o);

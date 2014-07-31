@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.passes;
 
 import io.crowbar.instrumentation.passes.wrappers.TestWrapper;
-import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker.Action;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;

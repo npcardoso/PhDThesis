@@ -16,18 +16,19 @@ public class ActionTakerToTestWrapper implements TestWrapper {
     }
 
     @Override
-    public Action getAction (CtClass c) {
+    public final Action getAction (CtClass c) {
         return actionTaker.getAction(c);
     }
 
     @Override
-    public Action getAction (CtClass c, CtMethod m) {
+    public final Action getAction (CtClass c,
+                                   CtMethod m) {
         return actionTaker.getAction(c, m);
     }
 
     @Override
-    public Set<String> validExceptions (CtClass c,
-                                        CtMethod m) {
+    public final Set<String> validExceptions (CtClass c,
+                                              CtMethod m) {
         return null;
     }
 }

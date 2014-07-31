@@ -13,25 +13,26 @@ import javassist.CtMethod;
 
 
 public class JUnit3TestWrapper implements TestWrapper {
-    private static final ActionTaker actionTaker =
+    private static final ActionTaker ACTION_TAKER =
         new WhiteList(
             new AndMatcher(
                 new SuperclassMatcher("junit.framework.TestCase"),
                 new PrefixMatcher("test")));
 
     @Override
-    public Action getAction (CtClass c) {
-        return actionTaker.getAction(c);
+    public final Action getAction (CtClass c) {
+        return ACTION_TAKER.getAction(c);
     }
 
     @Override
-    public Action getAction (CtClass c, CtMethod m) {
-        return actionTaker.getAction(c, m);
+    public final Action getAction (CtClass c,
+                                   CtMethod m) {
+        return ACTION_TAKER.getAction(c, m);
     }
 
     @Override
-    public Set<String> validExceptions (CtClass c,
-                                        CtMethod m) {
+    public final Set<String> validExceptions (CtClass c,
+                                              CtMethod m) {
         return null;
     }
 }

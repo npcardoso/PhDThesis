@@ -15,7 +15,6 @@ import io.crowbar.instrumentation.passes.wrappers.ActionTakerToTestWrapper;
 import io.crowbar.instrumentation.passes.wrappers.TestNGTestWrapper;
 import io.crowbar.instrumentation.passes.wrappers.JUnit3TestWrapper;
 import io.crowbar.instrumentation.passes.wrappers.JUnit4TestWrapper;
-import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
 
 import java.lang.instrument.ClassFileTransformer;

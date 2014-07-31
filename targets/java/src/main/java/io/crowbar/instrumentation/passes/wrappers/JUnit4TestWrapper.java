@@ -13,22 +13,23 @@ import javassist.CtMethod;
 
 
 public class JUnit4TestWrapper implements TestWrapper {
-    private static final ActionTaker actionTaker =
+    private static final ActionTaker ACTION_TAKER =
         new WhiteList(new AnnotationMatcher("org.junit.Test"));
 
     @Override
-    public Action getAction (CtClass c) {
-        return actionTaker.getAction(c);
+    public final Action getAction (CtClass c) {
+        return ACTION_TAKER.getAction(c);
     }
 
     @Override
-    public Action getAction (CtClass c, CtMethod m) {
-        return actionTaker.getAction(c, m);
+    public final Action getAction (CtClass c,
+                                   CtMethod m) {
+        return ACTION_TAKER.getAction(c, m);
     }
 
     @Override
-    public Set<String> validExceptions (CtClass c,
-                                        CtMethod m) {
+    public final Set<String> validExceptions (CtClass c,
+                                              CtMethod m) {
         Set<String> ret = new HashSet<String> ();
         ret.add("org.junit.Assume$AssumptionViolatedException");
 
@@ -36,12 +37,9 @@ public class JUnit4TestWrapper implements TestWrapper {
             Object annotation = m.getAnnotation(Class.forName("org.junit.Test"));
             Method method = annotation.getClass().getMethod("expected");
             Class expected = (Class) method.invoke(annotation);
-
             ret.add(expected.getName());
         }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
+        catch (Throwable e) {}
 
         return ret;
     }

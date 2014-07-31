@@ -33,7 +33,7 @@ public final class AgentServer {
         }
 
         @Override
-        public void finalize () {
+        public void terminate () {
             System.out.println("------------------- finalizing -----------------------");
             showState();
             System.out.println("------------------- finalizing -----------------------");

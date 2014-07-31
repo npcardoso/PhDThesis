@@ -19,7 +19,7 @@ public class Server extends ThreadedServer {
     public interface Service {
         EventListener getEventListener ();
         void interrupted ();
-        void finalize ();
+        void terminate ();
     }
 
     public interface ServiceFactory {
@@ -67,7 +67,7 @@ public class Server extends ThreadedServer {
                 }
 
                 if (o instanceof ByeMessage) {
-                    service.finalize();
+                    service.terminate();
                     return;
                 }
 

@@ -6,13 +6,15 @@ import io.crowbar.instrumentation.messaging.Client;
 import io.crowbar.instrumentation.passes.FilterPass;
 import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
+import io.crowbar.instrumentation.passes.StackSizePass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
 import io.crowbar.instrumentation.passes.matchers.BlackList;
-import io.crowbar.instrumentation.passes.matchers.JUnit3TestMatcher;
-import io.crowbar.instrumentation.passes.matchers.JUnit4TestMatcher;
 import io.crowbar.instrumentation.passes.matchers.ModifierMatcher;
 import io.crowbar.instrumentation.passes.matchers.PrefixMatcher;
-import io.crowbar.instrumentation.passes.matchers.TestNGTestMatcher;
+import io.crowbar.instrumentation.passes.wrappers.ActionTakerToTestWrapper;
+import io.crowbar.instrumentation.passes.wrappers.TestNGTestWrapper;
+import io.crowbar.instrumentation.passes.wrappers.JUnit3TestWrapper;
+import io.crowbar.instrumentation.passes.wrappers.JUnit4TestWrapper;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
 
@@ -60,11 +62,17 @@ public class Agent implements ClassFileTransformer {
 
         // Wraps unit tests with instrumentation instrunctions
         TestWrapperPass twp = new TestWrapperPass(
-            new BlackList(new ModifierMatcher(Modifier.ABSTRACT)), // Skip Abstract Methods
-            new WhiteList(new JUnit3TestMatcher()),
-            new WhiteList(new JUnit4TestMatcher()),
-            new WhiteList(new TestNGTestMatcher()));
+            new ActionTakerToTestWrapper(
+                new BlackList(
+                    new ModifierMatcher(Modifier.ABSTRACT))), // Skip Abstract Methods
+            new JUnit3TestWrapper(),
+            new JUnit4TestWrapper(),
+            new TestNGTestWrapper());
         a.passes.add(twp);
+
+        // Recalculates the stack size for all methods
+        StackSizePass stackSizePass = new StackSizePass();
+        a.passes.add(stackSizePass);
 
 
         MultiListener ml = new MultiListener();

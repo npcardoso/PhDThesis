@@ -1,6 +1,6 @@
 package io.crowbar.instrumentation.passes;
 
-
+import io.crowbar.instrumentation.passes.wrappers.TestWrapper;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker.Action;
 import io.crowbar.instrumentation.runtime.Node;
@@ -15,33 +15,34 @@ import javassist.CtMethod;
 import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Set;
+
 
 public final class TestWrapperPass extends AbstractPass {
-    private final List<ActionTaker> actionTakers = new LinkedList<ActionTaker> ();
+    private final List<TestWrapper> testWrappers = new LinkedList<TestWrapper> ();
 
 
-    public TestWrapperPass (ActionTaker... actionTakers) {
-        this.actionTakers.addAll(Arrays.asList(actionTakers));
+    public TestWrapperPass (TestWrapper... testWrappers) {
+        this.testWrappers.addAll(Arrays.asList(testWrappers));
     }
 
-    public TestWrapperPass (List<ActionTaker> actionTakers) {
-        this.actionTakers.addAll(actionTakers);
+    public TestWrapperPass (List<TestWrapper> testWrappers) {
+        this.testWrappers.addAll(testWrappers);
     }
 
     @Override
     public Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
-            for (ActionTaker at : actionTakers) {
-                Action ret = at.getAction(c, m);
+            for (TestWrapper tw : testWrappers) {
+                Action ret = tw.getAction(c, m);
 
                 if (ret == Action.ACCEPT) {
                     Node n = getNode(c, m);
                     m.insertBefore(getTransactionCode(c, n, ProbeType.TRANSACTION_START, false));
+                    Set<String> validExceptions = tw.validExceptions(c, m);
+                    injectOracles(c, m, n, validExceptions);
                     m.insertAfter(getTransactionCode(c, n, ProbeType.TRANSACTION_END, true),
-                                  false /* asFinally */);
-                    m.addCatch(getOracleCode(c, n, "e"),
-                               ClassPool.getDefault().get("java.lang.Throwable"),
-                               "e");
+                                  true /* asFinally */);
                 }
                 else if (ret == Action.REJECT) {
                     return Outcome.CONTINUE;
@@ -52,20 +53,51 @@ public final class TestWrapperPass extends AbstractPass {
         return Outcome.CONTINUE;
     }
 
-    private String getOracleCode (CtClass c,
-                                  Node n,
-                                  String exVariable) throws RegistrationException {
+    private void injectOracles (CtClass c,
+                                CtMethod m,
+                                Node n,
+                                Set<String> validExceptions) throws Exception {
+        final String exVariable = "e";
         HitProbe op = registerProbe(c, n, ProbeType.ORACLE);
-        HitProbe tp = registerProbe(c, n, ProbeType.TRANSACTION_END);
-        String ret = "{Collector c = Collector.instance();";
+        StringBuilder code = new StringBuilder();
 
 
-        ret += "c.hit(" + op.getId() + ");";
-        ret += "c." + op.getType().getMethodName() + "(" + op.getId() + ", 1d, 1d);";
-        ret += "c.hit(" + tp.getId() + ");";
-        ret += "c." + tp.getType().getMethodName() + "(" + tp.getId() + ", " + exVariable + ");";
-        ret += "throw " + exVariable + ";}";
-        return ret;
+        // TODO: Add reason to oracle
+
+        code.append("{Collector c = Collector.instance();");
+        code.append("String exStr = " + exVariable + ".getClass().getName();");
+
+        if (validExceptions != null && validExceptions.size() > 0) {
+            code.append("String validEx[] = new String[]{");
+
+            boolean first = true;
+
+            for (String exception : validExceptions) {
+                if (!first)
+                    code.append(",");
+
+                code.append("\"" + exception + "\"");
+                first = false;
+            }
+
+            code.append("};");
+
+            code.append("if(java.util.Arrays.asList(validEx).contains(exStr)) {");
+            // code.append("System.err.println(\"!!!!!!!!!!!!!Allowed Exception: \" + exStr);");
+            code.append("c.hit(" + op.getId() + ");");
+            code.append("c." + op.getType().getMethodName() + "(" + op.getId() + ", 0d, 1d);");
+            code.append("} else");
+        }
+
+        code.append("{");
+        // code.append("System.err.println(\"!!!!!!!!!!!!!!!Disallowed Exception: \" + exStr);");
+        code.append("c.hit(" + op.getId() + ");");
+        code.append("c." + op.getType().getMethodName() + "(" + op.getId() + ", 1d, 1d);");
+        code.append("}return;}");
+
+
+        CtClass exceptionCls = ClassPool.getDefault().get("java.lang.Throwable");
+        m.addCatch(code.toString(), exceptionCls, exVariable);
     }
 
     private String getTransactionCode (CtClass c,

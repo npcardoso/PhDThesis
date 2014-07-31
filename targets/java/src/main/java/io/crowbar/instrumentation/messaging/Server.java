@@ -35,78 +35,81 @@ public class Server extends ThreadedServer {
 
         @Override
         public final void run () {
-            String id = null;
-            Object o = null;
-
-
             try {
-                o = new ObjectInputStream(socket.getInputStream()).readObject();
-                // System.out.println("Receiving " + o);
+                String id = handshake();
+                service = serviceFactory.create(id);
 
-                if (!(o instanceof HelloMessage))
-                    throw new Exception("First message should be a HelloMessage. Received instead: " + o);
+                while (true) {
+                    Object o = new ObjectInputStream(socket.getInputStream()).readObject();
 
-                id = ((HelloMessage) o).getId();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-
-            service = serviceFactory.create(id);
-
-            while (true) {
-                try {
-                    o = new ObjectInputStream(socket.getInputStream()).readObject();
-                    // System.out.println("Receiving " + o);
+                    if (o instanceof ByeMessage) {
+                        service.finalize();
+                        break;
+                    }
+                    else
+                        dispatch(o);
                 }
-                catch (Exception e) {
+            }
+            catch (Throwable e) {
+                if (service != null)
                     service.interrupted();
-                    e.printStackTrace();
-                    return;
-                }
 
-                if (o instanceof ByeMessage) {
-                    service.finalize();
-                    return;
-                }
-
-                try {
-                    dispatch(o);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
+                e.printStackTrace();
             }
+            try {
+                socket.close();
+            }
+            catch (Throwable e) {}
         }
 
-        private void dispatch (Object o) throws Exception {
+        /*!
+         * Performs the handshake and returns client id on sucess.
+         */
+        private String handshake () throws Exception {
+            Object o = new ObjectInputStream(socket.getInputStream()).readObject();
+
+
+            // System.out.println("Receiving " + o);
+
+            if (!(o instanceof HelloMessage))
+                throw new Exception("First message should be a HelloMessage. Received instead: " + o);
+
+            return ((HelloMessage) o).getId();
+        }
+
+        private void dispatch (Object o) {
             EventListener eventListener = service.getEventListener();
 
 
-            if (o instanceof ProbeMessage) {
-                ProbeMessage m = (ProbeMessage) o;
+            try {
+                if (o instanceof ProbeMessage) {
+                    ProbeMessage m = (ProbeMessage) o;
 
-                if (o instanceof TransactionStartMessage)
-                    eventListener.startTransaction(m.getProbeId());
-                else if (o instanceof TransactionEndMessage)
-                    eventListener.endTransaction(m.getProbeId(),
-                                                 ((TransactionEndMessage) m).getException(),
-                                                 ((TransactionEndMessage) m).getHitVector());
-                else if (o instanceof OracleMessage)
-                    eventListener.oracle(m.getProbeId(),
-                                         ((OracleMessage) m).getError(),
-                                         ((OracleMessage) m).getConfidence());
+                    if (o instanceof TransactionStartMessage)
+                        eventListener.startTransaction(m.getProbeId());
+                    else if (o instanceof TransactionEndMessage)
+                        eventListener.endTransaction(m.getProbeId(),
+                                                     ((TransactionEndMessage) m).getException(),
+                                                     ((TransactionEndMessage) m).getHitVector());
+                    else if (o instanceof OracleMessage)
+                        eventListener.oracle(m.getProbeId(),
+                                             ((OracleMessage) m).getError(),
+                                             ((OracleMessage) m).getConfidence());
+                }
+                else if (o instanceof RegisterNodeMessage) {
+                    eventListener.registerNode(((RegisterNodeMessage) o).getNode());
+                }
+                else if (o instanceof RegisterProbeMessage) {
+                    RegisterProbeMessage m = (RegisterProbeMessage) o;
+                    eventListener.registerProbe(m.getProbe());
+                }
+                else {
+                    throw new Exception("Unknown Message Type: " + o);
+                }
             }
-            else if (o instanceof RegisterNodeMessage) {
-                eventListener.registerNode(((RegisterNodeMessage) o).getNode());
+            catch (Throwable e) {
+                e.printStackTrace();
             }
-            else if (o instanceof RegisterProbeMessage) {
-                RegisterProbeMessage m = (RegisterProbeMessage) o;
-                eventListener.registerProbe(m.getProbe());
-            }
-            else
-                throw new Exception("Unknown Message Type: " + o);
         }
     }
 

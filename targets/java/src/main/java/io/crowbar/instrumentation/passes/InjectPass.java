@@ -49,7 +49,7 @@ public class InjectPass extends AbstractPass {
                 continue;
 
             injected = injected || handleMethod(c, m);
-            ca.setMaxStack(ca.computeMaxStack());
+            // ca.setMaxStack(ca.computeMaxStack());
         }
 
         if (injected) {

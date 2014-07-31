@@ -62,6 +62,10 @@ public class Client implements EventListener {
         return this.clientId;
     }
 
+    public final Socket getSocket () {
+    	return this.s;
+    }
+    
     private synchronized void postMessage (Messages.Message m) {
         messages.add(m);
 

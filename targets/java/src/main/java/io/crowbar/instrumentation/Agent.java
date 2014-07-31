@@ -16,6 +16,7 @@ import io.crowbar.instrumentation.passes.matchers.TestNGTestMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
 
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -75,7 +76,7 @@ public class Agent implements ClassFileTransformer {
         vl.setPrefix("!!!!!!!! ");
         // vl.setSuffix(" !!!!!!!!");
 
-        Client cl = new Client(null, Integer.parseInt(agentArgs));
+        final Client cl = new Client(null, Integer.parseInt(agentArgs));
         ml.add(vl);
         ml.add(cl);
 
@@ -83,6 +84,16 @@ public class Agent implements ClassFileTransformer {
 
 
         inst.addTransformer(a);
+        
+        Runtime.getRuntime().addShutdownHook(new Thread() { 
+        	public void run() {        		
+        		try {
+					cl.getSocket().close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
+        } );
     }
 
     @Override

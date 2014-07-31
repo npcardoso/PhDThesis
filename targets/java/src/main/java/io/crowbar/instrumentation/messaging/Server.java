@@ -62,7 +62,7 @@ public class Server extends ThreadedServer {
                 }
                 catch (Exception e) {
                     service.interrupted();
-                    e.printStackTrace();
+                    //e.printStackTrace(); //TODO: is there a cleaner way to do this?
                     return;
                 }
 

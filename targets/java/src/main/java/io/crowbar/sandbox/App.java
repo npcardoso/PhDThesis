@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class App {
     public static final class EchoServer2 extends ThreadedServer {
@@ -89,6 +90,12 @@ public class App {
             Assume.assumeTrue(1 == 0);
             assertEquals(1, 0);
         }
+
+        @Test(expected = IndexOutOfBoundsException.class)
+        public void testIndexOutOfBoundsException () {
+            ArrayList emptyList = new ArrayList();
+            Object o = emptyList.get(0);
+        }
     }
 
     public static void main (String[] args) {
@@ -98,7 +105,8 @@ public class App {
 
         try {b.discoversExpiredCreditCard();} catch (Exception e) {}
         try {b.testAssume();} catch (Exception e) {}
-        try {b.discoversExpiredCreditCard2();} catch (Exception e) {}
+        try {b.testIndexOutOfBoundsException();} catch (Throwable e) {}
+        try {b.discoversExpiredCreditCard2();} catch (Throwable e) {}
 
 
         /*try {

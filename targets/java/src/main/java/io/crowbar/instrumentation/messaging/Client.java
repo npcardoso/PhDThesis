@@ -1,6 +1,7 @@
 package io.crowbar.instrumentation.messaging;
 
 import io.crowbar.instrumentation.events.EventListener;
+import io.crowbar.instrumentation.messaging.Messages.ByeMessage;
 import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
 import io.crowbar.instrumentation.runtime.Node;
@@ -29,15 +30,15 @@ public class Client implements EventListener {
 
                     if (message != null) {
                         ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+                        // System.out.println("Sending " + message);
                         out.writeObject(message);
                         out.flush();
-                        // System.out.println("Sending " + message);
                     }
 
                     message = getMessage();
                 }
                 catch (Exception e) {
-                    System.out.println("Exception, reseting socket");
+                    System.err.println("Exception, reseting socket");
                     e.printStackTrace();
 
                     s = null;
@@ -52,10 +53,35 @@ public class Client implements EventListener {
         }
     }
 
+    private Queue<Message> messages = new LinkedList<Message> ();
+    private Socket s = null;
+    private Thread t = null;
+    private final String clientId = UUID.randomUUID().toString();
+    private String host;
+    private int port;
+
 
     public Client (String host, int port) {
         this.host = host;
         this.port = port;
+
+        /*!
+         *  This blob ensures that the connection with the server is
+         *  properly closed by sending a ByeMessage when the VM shuts
+         *  down.
+         */
+        Runtime.getRuntime().addShutdownHook(
+            new Thread() {
+                public void run() {
+                    try {
+                        postMessage(new ByeMessage());
+                        t.join();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     }
 
     public final String getCliendId () {
@@ -114,11 +140,4 @@ public class Client implements EventListener {
                               double confidence) {
         postMessage(new Messages.OracleMessage(probeId, error, confidence));
     }
-
-    private Queue<Message> messages = new LinkedList<Message> ();
-    private Socket s = null;
-    private Thread t = null;
-    private final String clientId = UUID.randomUUID().toString();
-    private String host;
-    private int port;
 }

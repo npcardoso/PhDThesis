@@ -18,6 +18,10 @@ function init(){
 		}
 	});
 
+	//prepare data
+    dataInlining(data_ex);
+
+
 	//Render the default visualizations
 	visualizations[0].init("#tabs-0",width,height);
 }

@@ -79,7 +79,6 @@ function Sunburst(data, element, width, height, colorFunction, clickEvent) {
 }
 
 function sunburstInit(elementID,width,height){
-    dataInlining(data_ex);
     var sunburst = new Sunburst(data_ex[0],d3.select(elementID),width,height,calculateColor,visClickEv);
     sunburst.render();
 }

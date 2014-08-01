@@ -28,7 +28,7 @@ function Sunburst(data, element, width, height, colorFunction, clickEvent) {
 	//Partion layout preparion (Create of the function that computes elements relative size)
 	var partition = d3.layout.partition()
         .value(function(d) {
-            return d.size;
+            return 1;
      });
     
     
@@ -79,6 +79,7 @@ function Sunburst(data, element, width, height, colorFunction, clickEvent) {
 }
 
 function sunburstInit(elementID,width,height){
-    var sunburst = new Sunburst(data_ex,d3.select(elementID),width,height,calculateColor,visClickEv);
+    dataInlining(data_ex);
+    var sunburst = new Sunburst(data_ex[0],d3.select(elementID),width,height,calculateColor,visClickEv);
     sunburst.render();
 }

@@ -5,6 +5,10 @@ import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.runtime.Collector;
+
+import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -33,6 +37,65 @@ public class TestNGTestWrapper implements TestWrapper {
                                        Probe p,
                                        String collectorVar,
                                        String exceptionVar) {
-        return null;
+        Class[] expected = null;
+        String expectedMsgRegex = null;
+
+        try {
+            Object annotation = m.getAnnotation(Class.forName("org.testng.annotations.Test"));
+            Method method = annotation.getClass().getMethod("expectedExceptions");
+            expected = (Class[])method.invoke(annotation);
+            method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
+            expectedMsgRegex = (String) method.invoke(annotation);
+
+            // expectedStr = expected.getName();
+        }
+        catch (Throwable e) {}
+
+        if (expectedMsgRegex == null)
+            expectedMsgRegex = ".*";
+
+        StringBuilder code = new StringBuilder();
+        code.append(getClass().getName() + ".isPass(");
+        code.append(collectorVar + ", ");
+        code.append(p.getId() + ", ");
+        code.append(exceptionVar + ", ");
+        code.append("new String[]{");
+        boolean first = true;
+
+        for (Class cls : expected) {
+            if (!first)
+                code.append(", ");
+
+            code.append("\"" + cls.getName() + "\"");
+            first = false;
+        }
+
+        code.append("}, ");
+        code.append("\"" + expectedMsgRegex + "\")");
+        return "if(" + code.toString() + ") throw " + exceptionVar + ";";
+    }
+
+    private static boolean isSameType (Object o,
+                                       String type) {
+        try {
+            Class cls = Class.forName(type);
+            return cls.isAssignableFrom(o.getClass());
+        }
+        catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static final boolean isPass (Collector c,
+                                        int probeId,
+                                        Throwable e,
+                                        String[] expected,
+                                        String expectedMsgRegex) {
+        for (String cls : expected)
+            if (isSameType(e, cls))
+                if (Pattern.matches(expectedMsgRegex, e.getMessage()))
+                    return true;
+
+        return false;
     }
 }

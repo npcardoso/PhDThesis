@@ -127,7 +127,7 @@ public class Agent implements ClassFileTransformer {
                     continue;
 
                 case ABORT:
-                    System.err.println("Ignoring Class: " + c.getName());
+                    // System.err.println("Ignoring Class: " + c.getName());
                     return null;
 
                 case RETURN:
@@ -137,7 +137,7 @@ public class Agent implements ClassFileTransformer {
             }
 
 
-            // System.out.println("Instrumented Class: " + c.getName());
+            // System.err.println("Instrumented Class: " + c.getName());
             return c.toBytecode();
         }
         catch (Exception ex) {

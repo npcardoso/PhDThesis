@@ -75,24 +75,39 @@ public class App {
             aSDsdaf[444] = true;
         }
 
+        /*        @Test(expectedExceptions = ArithmeticException.class)
+         *      public void divisionWithException() { int i = 1 / 0; }
+         */
         @Test
         public void discoversExpiredCreditCard () {
             assertEquals(1, 1);
         }
 
         @Test
-        public void discoversExpiredCreditCard2 () {
+        public void discoversExpiredCreditCard2 () { // !Should Fail
             assertEquals(1, 0);
         }
 
         @Test
-        public void testAssume () {
+        public void testAssume () { // !Should Pass
             Assume.assumeTrue(1 == 0);
             assertEquals(1, 0);
         }
 
-        @Test(expected = IndexOutOfBoundsException.class)
+        @Test(expected = IndexOutOfBoundsException.class) // !Should Pass
         public void testIndexOutOfBoundsException () {
+            ArrayList emptyList = new ArrayList();
+            Object o = emptyList.get(0);
+        }
+
+        @Test(expected = Exception.class) // !Should Pass
+        public void testExpectedSubclass () {
+            ArrayList emptyList = new ArrayList();
+            Object o = emptyList.get(0);
+        }
+
+        @Test(expected = ArithmeticException.class) // !Should Fail
+        public void testExpectedSubclass2 () {
             ArrayList emptyList = new ArrayList();
             Object o = emptyList.get(0);
         }
@@ -103,9 +118,12 @@ public class App {
         Brogle b = new Brogle();
 
 
+        // try {b.divisionWithException();} catch (Exception e) {}
         try {b.discoversExpiredCreditCard();} catch (Exception e) {}
         try {b.testAssume();} catch (Exception e) {}
         try {b.testIndexOutOfBoundsException();} catch (Throwable e) {}
+        try {b.testExpectedSubclass();} catch (Throwable e) {}
+        try {b.testExpectedSubclass2();} catch (Throwable e) {}
         try {b.discoversExpiredCreditCard2();} catch (Throwable e) {}
 
 

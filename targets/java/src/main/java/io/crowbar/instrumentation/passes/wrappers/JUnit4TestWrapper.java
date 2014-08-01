@@ -3,10 +3,11 @@ package io.crowbar.instrumentation.passes.wrappers;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
+import io.crowbar.instrumentation.runtime.Node;
+import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.runtime.Collector;
 
 import java.lang.reflect.Method;
-import java.util.Set;
-import java.util.HashSet;
 
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -28,19 +29,58 @@ public class JUnit4TestWrapper implements TestWrapper {
     }
 
     @Override
-    public final Set<String> validExceptions (CtClass c,
-                                              CtMethod m) {
-        Set<String> ret = new HashSet<String> ();
-        ret.add("org.junit.Assume$AssumptionViolatedException");
+    public final String getOracleCode (CtClass c,
+                                       CtMethod m,
+                                       Node n,
+                                       Probe p,
+                                       String collectorVar,
+                                       String exceptionVar) {
+        String expectedStr = null;
+
 
         try {
             Object annotation = m.getAnnotation(Class.forName("org.junit.Test"));
             Method method = annotation.getClass().getMethod("expected");
             Class expected = (Class) method.invoke(annotation);
-            ret.add(expected.getName());
+            expectedStr = expected.getName();
         }
         catch (Throwable e) {}
 
-        return ret;
+        if (expectedStr == null)
+            expectedStr = "\"\"";
+        else
+            expectedStr = "\"" + expectedStr + "\"";
+
+        String oracleCall =
+            getClass().getName() + ".isPass(" +
+            collectorVar + ", " +
+            p.getId() + ", " +
+            exceptionVar + ", " +
+            expectedStr + ")";
+        return "if(" + oracleCall + ") throw " + exceptionVar + ";";
+    }
+
+    private static boolean isSameType (Object o,
+                                       String type) {
+        try {
+            Class cls = Class.forName(type);
+            return cls.isAssignableFrom(o.getClass());
+        }
+        catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static final boolean isPass (Collector c,
+                                        int probeId,
+                                        Throwable e,
+                                        String expected) {
+        if (isSameType(e, "org.junit.Assume$AssumptionViolatedException"))
+            return true;
+
+        if (isSameType(e, expected))
+            return true;
+
+        return false;
     }
 }

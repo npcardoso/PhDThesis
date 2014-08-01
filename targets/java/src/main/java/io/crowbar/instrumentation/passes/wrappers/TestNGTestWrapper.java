@@ -3,8 +3,8 @@ package io.crowbar.instrumentation.passes.wrappers;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
-
-import java.util.Set;
+import io.crowbar.instrumentation.runtime.Node;
+import io.crowbar.instrumentation.runtime.Probe;
 
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -27,8 +27,12 @@ public class TestNGTestWrapper implements TestWrapper {
     }
 
     @Override
-    public final Set<String> validExceptions (CtClass c,
-                                              CtMethod m) {
+    public final String getOracleCode (CtClass c,
+                                       CtMethod m,
+                                       Node n,
+                                       Probe p,
+                                       String collectorVar,
+                                       String exceptionVar) {
         return null;
     }
 }

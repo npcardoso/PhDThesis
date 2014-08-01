@@ -47,7 +47,6 @@ public final class Collector {
                                              type);
 
 
-        System.err.println("Register: " + p);
         try {
             listener.registerProbe(p);
         }

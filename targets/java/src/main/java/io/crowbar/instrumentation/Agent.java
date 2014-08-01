@@ -43,7 +43,10 @@ public class Agent implements ClassFileTransformer {
                                                    "io.crowbar.instrumentation",
                                                    "org.apache.",
                                                    "org.junit.",
+                                                   "org.hamcrest",
                                                    "org.eclipse.",
+                                                   "org.testng",
+                                                   "com.beust",
                                                    "com.sun.",
                                                    "junit.");
 
@@ -86,7 +89,7 @@ public class Agent implements ClassFileTransformer {
         ml.add(vl);
         ml.add(cl);
 
-        Collector.instance().start("Workspace-" + cl.getCliendId(), ml);
+        Collector.start("Workspace-" + cl.getCliendId(), ml);
 
 
         inst.addTransformer(a);

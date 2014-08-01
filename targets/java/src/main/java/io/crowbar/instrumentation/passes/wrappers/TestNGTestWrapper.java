@@ -59,18 +59,24 @@ public class TestNGTestWrapper implements TestWrapper {
         code.append(collectorVar + ", ");
         code.append(p.getId() + ", ");
         code.append(exceptionVar + ", ");
-        code.append("new String[]{");
-        boolean first = true;
-
-        for (Class cls : expected) {
-            if (!first)
-                code.append(", ");
-
-            code.append("\"" + cls.getName() + "\"");
-            first = false;
+        
+        if(expected.length == 0) {
+        	code.append("null, ");
         }
+        else {
+        	code.append("new String[]{");
+        	boolean first = true;
 
-        code.append("}, ");
+        	for (Class cls : expected) {
+            	if (!first)
+                	code.append(", ");
+
+            	code.append("\"" + cls.getName() + "\"");
+            	first = false;
+        	}
+
+        	code.append("}, ");
+        }
         code.append("\"" + expectedMsgRegex + "\")");
         return "if(" + code.toString() + ") throw " + exceptionVar + ";";
     }
@@ -91,11 +97,12 @@ public class TestNGTestWrapper implements TestWrapper {
                                         Throwable e,
                                         String[] expected,
                                         String expectedMsgRegex) {
-        for (String cls : expected)
-            if (isSameType(e, cls))
-                if (Pattern.matches(expectedMsgRegex, e.getMessage()))
-                    return true;
-
+        if(expected != null)
+        	for (String cls : expected)
+        		if (isSameType(e, cls))
+        			if (Pattern.matches(expectedMsgRegex, e.getMessage()))
+        				return true;
+        
         return false;
     }
 }

@@ -24,8 +24,13 @@ public class SuperclassMatcher implements Matcher {
 
     private boolean matchesSuperclass (CtClass c) {
     	try {
-    		String sc = c.getSuperclass().getName();
-    		return superclass.equals(sc);
+    		CtClass superCtClass = c.getSuperclass();
+    		while(superCtClass != null) {
+    			if(superclass.equals(superCtClass.getName()))
+    				return true;
+    			superCtClass = superCtClass.getSuperclass();
+    		}
+    		return false;
     	} catch (NotFoundException e) {
     		return false;
     	}

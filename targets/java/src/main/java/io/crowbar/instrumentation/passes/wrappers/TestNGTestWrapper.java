@@ -1,11 +1,13 @@
 package io.crowbar.instrumentation.passes.wrappers;
 
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
+import io.crowbar.instrumentation.passes.matchers.AndMatcher;
 import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
+import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
+import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.instrumentation.runtime.Collector;
 
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
@@ -17,7 +19,9 @@ import javassist.CtMethod;
 public class TestNGTestWrapper implements TestWrapper {
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
-            new AnnotationMatcher("org.testng.annotations.Test"));
+        	new AndMatcher(
+        		new AnnotationMatcher("org.testng.annotations.Test"),
+        		new ReturnTypeMatcher("void")));
 
     @Override
     public final Action getAction (CtClass c) {

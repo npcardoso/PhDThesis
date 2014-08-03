@@ -1,10 +1,22 @@
 //Program entry point
 function init(){
-	//Calculate rendering dimensions (dependent on css)
+	//Calculate rendering dimensions (dependent on css) it will be dynamic on future
 	var width= $(window).width()-75;
 	var height = $(window).height()-115;
 
-	//Render html of the buttons
+	renderButtonsHtml(width,height);
+
+	//prepare data
+	dataInlining(data_ex);
+	probabilityCalculator(data_ex[0]);
+
+
+	//Render the default visualization
+	visualizations[0].init("#tabs-0",width,height);
+}
+
+//Render html of the buttons
+function renderButtonsHtml(width,height){
 	$("body").append('<div id="tabs"><ul></ul></div>');
 	$.each(visualizations, function(index, visualization) {
 		$("#tabs ul").append('<li><a href="#tabs-'+index+'">'+visualization.displayName+'</a></li>');
@@ -17,24 +29,24 @@ function init(){
 			visualizations[visualizationIndex].init("#tabs-"+visualizationIndex,width,height);
 		}
 	});
-
-	//prepare data
-    dataInlining(data_ex);
-
-
-	//Render the default visualizations
-	visualizations[0].init("#tabs-0",width,height);
 }
 
-//Function called when a node is clicked on the visualization
+//Function called when a node is clicked on the visualization Now is just shows an alert
 function visClickEv(node) {
-	alert(node);
+	var anscestors = getAncestors(node);
+	var str = "";
+	var len = anscestors.length;
+	for (var i = 0; i < len; i++) {
+		str += anscestors[i].name + " -> ";
+	};
+	str += node.name;
+	alert(str);
 }
 
 //Helper function to calculate the color of a node
 function calculateColor(d) {
-	if ( typeof calculateColor.d3Color == 'undefined' ) {
-		calculateColor.d3Color = d3.scale.category20c();
+	if(!calculateColor.hasOwnProperty('gradiant')){
+		calculateColor.gradiant = new Gradiant();
 	}
-	return calculateColor.d3Color((d.children ? d : d.parent).name); 
+	return calculateColor.gradiant.normal(d);
 }

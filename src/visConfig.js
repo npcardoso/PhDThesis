@@ -6,8 +6,8 @@ visualizations =
 	init : sunburstInit
 },
 {
-	displayName : "Table",
+	displayName : "Sunburst No Animation",
 	iconUrl : "",
-	init: null
+	init : sunburstNoAniInit
 }
 ];

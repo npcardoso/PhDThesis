@@ -57,6 +57,7 @@ function Sunburst(data, element, width, height, colorFunction, clickEvent) {
 	
 	//Function called when a node is clicked call the clicke event and applites the animation
      function click(d) {
+        clickEvent(d);
            path.transition()
                .duration(750)
                .attrTween("d", arcTween(d));

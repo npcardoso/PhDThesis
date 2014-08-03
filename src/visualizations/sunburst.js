@@ -5,7 +5,7 @@ function Sunburst(data, element, width, height, colorFunction, clickEvent) {
     this.clickEvent = clickEvent;  
     
     var svg, path;
-	//Public rendering function renders the visualion onthe element passed
+	//Public rendering function renders the visualion on the element passed
     this.render = function() {
         element.html("");
         svg = element.append("svg")
@@ -55,7 +55,7 @@ function Sunburst(data, element, width, height, colorFunction, clickEvent) {
             return Math.max(0, y(d.y + d.dy));
         });
 	
-	//Function called when a node is clicked call the clicke event and applites the animation
+	//Function called when a node is clicked call the click event and applicates the animation
      function click(d) {
         clickEvent(d);
            path.transition()

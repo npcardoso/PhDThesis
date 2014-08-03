@@ -25,7 +25,7 @@
             "type": "object"
           },
           "children": {
-            "description": "Array containing the unique identifier of childs of the node",
+            "description": "Array containing the unique identifiers of children of the node",
             "type": "array",
             "items": {
               "$ref": "#/definitions/id"

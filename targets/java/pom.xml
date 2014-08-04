@@ -51,16 +51,23 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <!--executions>
-          <execution>
+            <execution>
             <id>verify-style</id>
             <phase>process-sources</phase>
             <goals>
-              <goal>check</goal>
+            <goal>check</goal>
             </goals>
-          </execution>
-        </executions-->
+            </execution>
+            </executions-->
         <configuration>
           <logViolationsToConsole>true</logViolationsToConsole>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testNGArtifactName>none:none</testNGArtifactName>
         </configuration>
       </plugin>
     </plugins>

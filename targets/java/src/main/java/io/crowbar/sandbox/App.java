@@ -5,11 +5,6 @@ import io.crowbar.util.io.ThreadedServer;
 import static org.junit.Assert.assertEquals;
 import org.junit.Assume;
 
-import java.net.ServerSocket;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class App {
@@ -30,6 +25,10 @@ public class App {
 
         private static void broglestar (final Brogle asd) {
             aSDsdaf[444] = true;
+        }
+
+        @org.testng.annotations.Test()
+        public void emptyTestNG () { // !Should Pass
         }
 
         @org.testng.annotations.Test(expectedExceptions = ArithmeticException.class)
@@ -91,6 +90,7 @@ public class App {
 
 
         // try {b.divisionWithException();} catch (Exception e) {}
+        try {b.emptyTestNG();} catch (Exception e) {}
         try {b.divisionWithException();} catch (Exception e) {}
         try {b.expectedMessage();} catch (Exception e) {}
         try {b.expectedMessage2();} catch (Exception e) {}

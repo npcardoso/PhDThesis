@@ -14,7 +14,6 @@ import javassist.CtMethod;
 import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Set;
 
 
 public final class TestWrapperPass extends AbstractPass {

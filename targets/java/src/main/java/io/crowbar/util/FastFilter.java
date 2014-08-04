@@ -64,7 +64,7 @@ public final class FastFilter implements EditableFilter {
     }
 
     @Override
-    public final void filter (int item) {
+    public void filter (int item) {
         assert item >= 0;
 
         if (isFiltered(item))
@@ -91,14 +91,14 @@ public final class FastFilter implements EditableFilter {
     }
 
     @Override
-    public final void filterAll (List<Integer> list) {
+    public void filterAll (List<Integer> list) {
         for (int i : list) {
             filter(i);
         }
     }
 
     @Override
-    public final boolean equals (Object o) {
+    public boolean equals (Object o) {
         if (!(o instanceof Filter))
             return false;
 
@@ -116,7 +116,7 @@ public final class FastFilter implements EditableFilter {
     }
 
     @Override
-    public final String toString () {
+    public String toString () {
         StringBuilder str = new StringBuilder();
 
 

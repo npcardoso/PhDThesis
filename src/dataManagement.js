@@ -12,8 +12,8 @@ function dataInlining (data) {
 function getAncestors(node){
 	if(node.hasOwnProperty('parent')){
 		var parentAncestors = getAncestors(node.parent);
-		hasOwnProperty.push(node.parent);
-		return ancestors;
+		parentAncestors.push(node.parent);
+		return parentAncestors;
 	}
 	return new Array(0);
 }

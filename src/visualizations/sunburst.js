@@ -7,13 +7,15 @@ function Sunburst(data, element, width, height, colorFunction, clickEvent) {
     this.clickEvent = clickEvent;  
     
     var arc_render = new ArcRender(width,height);
-    var svg, path;
+
 
     //Partion layout preparion (Create of the function that computes elements relative size)
     var partition = d3.layout.partition()
-    .value(function(d) {
+    .value(function(node) {
         return 1;
     });
+
+    var svg, path;
 
 	//Public rendering function renders the visualion on the element passed
     this.render = function() {
@@ -67,6 +69,7 @@ function ArcRender(width,height){
     .outerRadius(function(d) {
         return Math.max(0, y(d.y + d.dy));
     });
+   
     this.arc = arc;
 
     //Computes the arc animation

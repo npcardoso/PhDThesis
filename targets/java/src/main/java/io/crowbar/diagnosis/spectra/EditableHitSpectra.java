@@ -1,3 +1,5 @@
 package io.crowbar.diagnosis.spectra;
 
-public class EditableHitSpectra<M> extends EditableSpectra<HitActivity, M> implements HitSpectra<M> {}
+public class EditableHitSpectra<TM extends Metadata,
+                                CM extends Metadata>
+extends EditableSpectra<HitActivity, TM, CM> {}

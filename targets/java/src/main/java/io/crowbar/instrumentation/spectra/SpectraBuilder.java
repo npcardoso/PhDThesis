@@ -1,7 +1,5 @@
 package io.crowbar.instrumentation.spectra;
 
-import io.crowbar.diagnosis.spectra.HitSpectra;
-import io.crowbar.diagnosis.spectra.EditableHitSpectra;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.Tree;
@@ -12,9 +10,10 @@ import io.crowbar.instrumentation.events.TreeRebuilder;
 public class SpectraBuilder extends AbstractEventListener {
     private boolean error = false;
     private final TreeRebuilder treeRebuilder = new TreeRebuilder();
-    private final EditableHitSpectra<Metadata> spectra = new EditableHitSpectra();
+    private final EditableSpectra spectra = new EditableSpectra();
 
-    public final HitSpectra<Metadata> getSpectra () {
+
+    public final Spectra getSpectra () {
         return spectra;
     }
 
@@ -32,7 +31,9 @@ public class SpectraBuilder extends AbstractEventListener {
         Node n = treeRebuilder.getTree().getNode(probe.getNodeId());
 
 
-        spectra.setMetadata(probe.getId(), new Metadata(probe.getType(), n));
+        spectra.setComponent(probe.getId(),
+                             new Component(
+                                 new ComponentMetadata(probe.getType(), n)));
     }
 
     @Override

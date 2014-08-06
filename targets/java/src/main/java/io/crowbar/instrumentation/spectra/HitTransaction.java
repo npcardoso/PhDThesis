@@ -7,7 +7,7 @@ import io.crowbar.diagnosis.spectra.HitActivity;
 import java.util.AbstractList;
 
 
-public class HitTransaction extends AbstractTransaction<HitActivity> {
+public class HitTransaction extends AbstractTransaction<HitActivity, TransactionMetadata> {
     private static class ActivityListAdaptor extends AbstractList<HitActivity> {
         private final boolean[] hitVector;
         ActivityListAdaptor (boolean[] hitVector) {

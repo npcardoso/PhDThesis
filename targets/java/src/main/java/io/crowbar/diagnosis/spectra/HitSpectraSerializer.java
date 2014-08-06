@@ -1,7 +1,7 @@
 package io.crowbar.diagnosis.spectra;
 
 public class HitSpectraSerializer {
-    public static String serialize (Spectra< ? extends Activity, ? > spectra) {
+    public static String serialize (Spectra< ? extends Activity, ? , ? > spectra) {
         int numComp = spectra.getNumComponents();
         int numTran = spectra.getNumTransactions();
         StringBuilder str = new StringBuilder();

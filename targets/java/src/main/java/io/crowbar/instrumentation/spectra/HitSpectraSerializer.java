@@ -1,9 +1,8 @@
 package io.crowbar.instrumentation.spectra;
 
-import io.crowbar.diagnosis.spectra.HitSpectra;
 
 public final class HitSpectraSerializer {
-    public static String serialize (HitSpectra<Metadata> spectra) {
+    public static String serialize (Spectra spectra) {
         int numComp = spectra.getNumComponents();
         StringBuilder str = new StringBuilder();
         boolean first = true;
@@ -12,7 +11,7 @@ public final class HitSpectraSerializer {
         str.append("[");
 
         for (int i = 0; i < numComp; i++) {
-            Metadata m = spectra.getMetadata(i);
+            ComponentMetadata m = spectra.getComponent(i).getMetadata();
 
             if (!first)
                 str.append(", ");

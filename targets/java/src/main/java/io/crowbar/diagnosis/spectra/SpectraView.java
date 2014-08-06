@@ -8,8 +8,11 @@ import java.util.NoSuchElementException;
  * As this class does not make any copies of the original spectra, it assumes its immutability.
  * Changes to the spectra after the creation of the view may have unpredictable consequences.
  */
-public class SpectraView<A extends Activity, M> implements Spectra<A, M> {
-    private class SpectraIterator implements Iterator<Transaction<A> > {
+public class SpectraView<A extends Activity,
+                         TM extends Metadata,
+                         CM extends Metadata>
+implements Spectra<A, TM, CM> {
+    private class SpectraIterator implements Iterator<Transaction<A, TM> > {
         private int i = 0;
 
         @Override
@@ -18,7 +21,7 @@ public class SpectraView<A extends Activity, M> implements Spectra<A, M> {
         }
 
         @Override
-        public Transaction<A> next () {
+        public Transaction<A, TM> next () {
             if (!hasNext())
                 throw new NoSuchElementException();
 
@@ -31,11 +34,11 @@ public class SpectraView<A extends Activity, M> implements Spectra<A, M> {
         }
     };
 
-    private final Spectra<A, M> spectra;
+    private final Spectra<A, TM, CM> spectra;
     private final int[] components;
     private final int[] transactions;
 
-    public SpectraView (Spectra<A, M> spectra,
+    public SpectraView (Spectra<A, TM, CM> spectra,
                         SortedSet<Integer> components,
                         SortedSet<Integer> transactions) {
         int i;
@@ -79,17 +82,17 @@ public class SpectraView<A extends Activity, M> implements Spectra<A, M> {
     }
 
     @Override
-    public final Transaction<A> getTransaction (int transactionId) {
+    public final Transaction<A, TM> getTransaction (int transactionId) {
         return new TransactionView(this, spectra.getTransaction(transactions[transactionId]));
     }
 
     @Override
-    public final M getMetadata (int componentId) {
-        return spectra.getMetadata(components[componentId]);
+    public final Component<CM> getComponent (int componentId) {
+        return spectra.getComponent(components[componentId]);
     }
 
     @Override
-    public final Iterator<Transaction<A> > iterator () {
+    public final Iterator<Transaction<A, TM> > iterator () {
         return new SpectraIterator();
     }
 }

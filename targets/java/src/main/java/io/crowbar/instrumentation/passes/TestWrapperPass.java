@@ -36,10 +36,13 @@ public final class TestWrapperPass extends AbstractPass {
 
                 if (ret == Action.ACCEPT) {
                     Node n = getNode(c, m);
-                    m.insertBefore(getTransactionCode(c, n, ProbeType.TRANSACTION_START, false));
-                    injectOracles(c, m, n, tw);
-                    m.insertAfter(getTransactionCode(c, n, ProbeType.TRANSACTION_END, true),
-                                  true /* asFinally */);
+                    HitProbe sp = registerProbe(c, n, ProbeType.TRANSACTION_START);
+                    HitProbe ep = registerProbe(c, n, ProbeType.TRANSACTION_END);
+
+                    m.insertBefore(getTransactionCode(sp, false));
+                    injectOracles(c, m, n, tw, ep);
+                    m.insertAfter(getTransactionCode(ep, true),
+                                  false /* asFinally */);
                 }
                 else if (ret == Action.REJECT) {
                     return Outcome.CONTINUE;
@@ -53,33 +56,53 @@ public final class TestWrapperPass extends AbstractPass {
     private void injectOracles (CtClass c,
                                 CtMethod m,
                                 Node n,
-                                TestWrapper wrapper) throws Exception {
+                                TestWrapper wrapper,
+                                HitProbe transactionEndProbe) throws Exception {
         final String exceptionVar = "eeeeeeeeeee";
         final String collectorVar = "ccccccccccc";
         HitProbe op = registerProbe(c, n, ProbeType.ORACLE);
         StringBuilder code = new StringBuilder();
 
 
+        /*!
+         * The following code generates something like this:
+         * {Collector ccccccccccc = Collector.instance();
+         *  try {
+         *      // ... oracleCode ... throw eeeeeeeeeee; <-- if transaction is a pass should throw.
+         *      ccccccccccc.hit(id);
+         *      ccccccccccc.oracle(id, 1d, 1d);
+         *  }
+         *  finally {
+         *      ccccccccccc.hit(id);
+         *      ccccccccccc.transactionEnd(id,eeeeeeeeeee);
+         *      throw eeeeeeeeeee;
+         *  }
+         *  }
+         */
         code.append("{Collector " + collectorVar + " = Collector.instance();");
-
-
+        code.append("try {");
         String oracleCode = wrapper.getOracleCode(c, m, n, op, collectorVar, exceptionVar);
         code.append((oracleCode != null) ? oracleCode : "");
 
-        // TODO: Add reason to oracle
+        // Oracle Fail
         code.append(collectorVar + ".hit(" + op.getId() + ");");
         code.append(collectorVar + "." + op.getType().getMethodName() + "(" + op.getId() + ", 1d, 1d);");
-        code.append("throw " + exceptionVar + ";}");
+
+        code.append("} finally {");
+        // Transaction End
+        code.append(collectorVar + ".hit(" + transactionEndProbe.getId() + ");");
+        code.append(collectorVar + "." + transactionEndProbe.getType().getMethodName() + "(");
+        code.append(transactionEndProbe.getId() + ",");
+        code.append(exceptionVar + ");");
+
+        code.append("throw " + exceptionVar + ";}}");
 
         CtClass exceptionCls = ClassPool.getDefault().get("java.lang.Throwable");
         m.addCatch(code.toString(), exceptionCls, exceptionVar);
     }
 
-    private String getTransactionCode (CtClass c,
-                                       Node n,
-                                       ProbeType type,
+    private String getTransactionCode (HitProbe p,
                                        boolean hitFirst) throws RegistrationException {
-        HitProbe p = registerProbe(c, n, type);
         String ret = "Collector c = Collector.instance();";
         String hit = "c.hit(" + p.getId() + ");";
 
@@ -87,11 +110,8 @@ public final class TestWrapperPass extends AbstractPass {
         if (hitFirst)
             ret += hit;
 
-        ret += "c." + type.getMethodName() + "(";
+        ret += "c." + p.getType().getMethodName() + "(";
         ret += p.getId();
-
-        if (type == ProbeType.TRANSACTION_END)
-            ret += ", null";
 
         ret += ");";
 

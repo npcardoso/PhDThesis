@@ -26,17 +26,10 @@ public class HitTransaction extends AbstractTransaction<HitActivity, Transaction
     }
 
 
-    private final String exception;
-
     public HitTransaction (boolean[] hitVector,
                            double error,
                            double confidence,
-                           String exception) {
-        super(new ActivityListAdaptor(hitVector), error, confidence);
-        this.exception = exception;
-    }
-
-    public final String getException () {
-        return exception;
+                           TransactionMetadata metadata) {
+        super(new ActivityListAdaptor(hitVector), error, confidence, metadata);
     }
 }

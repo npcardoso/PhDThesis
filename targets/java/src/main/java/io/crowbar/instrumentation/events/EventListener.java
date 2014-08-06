@@ -11,7 +11,8 @@ public interface EventListener {
     void startTransaction (int probeId) throws Exception;
 
     void endTransaction (int probeId,
-                         String exception,
+                         String exceptionClass,
+                         String exceptionMessage,
                          boolean[] hitVector) throws Exception;
 
     void oracle (int probeId,

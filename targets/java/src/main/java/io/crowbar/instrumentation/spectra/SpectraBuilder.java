@@ -38,9 +38,14 @@ public class SpectraBuilder extends AbstractEventListener {
 
     @Override
     public final void endTransaction (int probeId,
-                                      String exception,
+                                      String exceptionClass,
+                                      String exceptionMessage,
                                       boolean[] hitVector) {
-        HitTransaction t = new HitTransaction(hitVector, error ? 1 : 0, 1, exception);
+        TransactionMetadata m = new TransactionMetadata(exceptionClass,
+                                                        exceptionMessage);
+        HitTransaction t = new HitTransaction(hitVector,
+                                              error ? 1 : 0, 1,
+                                              m);
 
 
         spectra.appendTransaction(t);

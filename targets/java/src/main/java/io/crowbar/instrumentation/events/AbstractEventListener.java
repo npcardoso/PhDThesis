@@ -15,7 +15,8 @@ public abstract class AbstractEventListener implements EventListener {
 
     @Override
     public void endTransaction (int probeId,
-                                String exception,
+                                String exceptionClass,
+                                String exceptionMessage,
                                 boolean[] hitVector) throws Exception {}
 
     @Override

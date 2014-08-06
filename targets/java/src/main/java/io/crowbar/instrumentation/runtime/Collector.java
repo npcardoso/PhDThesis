@@ -70,7 +70,7 @@ public final class Collector {
 
     public void transactionEnd (int probeId) {
         try {
-            listener.endTransaction(probeId, null, hitVector.get());
+            listener.endTransaction(probeId, null, null, hitVector.get());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -82,13 +82,17 @@ public final class Collector {
     public void transactionEnd (int probeId,
                                 Throwable exception) {
         try {
-            String e = null;
+            String exceptionClass = null;
+            String exceptionMessage = null;
 
-            if (exception != null)
-                e = exception.getClass().getName();
+            if (exception != null) {
+                exceptionClass = exception.getClass().getName();
+                exceptionMessage = exception.getMessage();
+            }
 
             listener.endTransaction(probeId,
-                                    e,
+                                    exceptionClass,
+                                    exceptionMessage,
                                     hitVector.get());
         }
         catch (Exception e) {

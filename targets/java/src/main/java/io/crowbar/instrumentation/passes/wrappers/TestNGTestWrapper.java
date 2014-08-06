@@ -74,7 +74,6 @@ public class TestNGTestWrapper implements TestWrapper {
 
         code.append("}, ");
         code.append("\"" + expectedMsgRegex + "\")");
-        System.err.println("if(" + code.toString() + ") throw " + exceptionVar + ";");
 
         return "if(" + code.toString() + ") throw " + exceptionVar + ";";
     }

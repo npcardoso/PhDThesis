@@ -1,8 +1,8 @@
 package io.crowbar.diagnosis.spectra;
 
-public interface Spectra<T, M> extends Iterable<T> {
+public interface Spectra<A extends Activity, M> extends Iterable<Transaction<A> > {
     int getNumComponents ();
     int getNumTransactions ();
-    T getTransaction (int transactionId);
+    Transaction<A> getTransaction (int transactionId);
     M getMetadata (int componentId);
 }

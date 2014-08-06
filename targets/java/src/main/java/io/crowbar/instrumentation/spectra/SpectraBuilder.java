@@ -1,20 +1,20 @@
-package io.crowbar.instrumentation.events;
+package io.crowbar.instrumentation.spectra;
 
+import io.crowbar.diagnosis.spectra.HitSpectra;
+import io.crowbar.diagnosis.spectra.EditableHitSpectra;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.Tree;
-import io.crowbar.instrumentation.spectra.EditableSpectra;
-import io.crowbar.instrumentation.spectra.HitTransaction;
-import io.crowbar.instrumentation.spectra.Metadata;
-import io.crowbar.instrumentation.spectra.Spectra;
+import io.crowbar.instrumentation.events.AbstractEventListener;
+import io.crowbar.instrumentation.events.TreeRebuilder;
 
 
 public class SpectraBuilder extends AbstractEventListener {
     private boolean error = false;
     private final TreeRebuilder treeRebuilder = new TreeRebuilder();
-    private final EditableSpectra spectra = new EditableSpectra();
+    private final EditableHitSpectra<Metadata> spectra = new EditableHitSpectra();
 
-    public final Spectra getSpectra () {
+    public final HitSpectra<Metadata> getSpectra () {
         return spectra;
     }
 

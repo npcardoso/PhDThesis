@@ -51,7 +51,8 @@ implements Transaction<A, TM> {
         int active = 0;
 
         for (A a : this) {
-            active += a.isActive() ? 1 : 0;
+            if (a != null)
+                active += a.isActive() ? 1 : 0;
         }
 
         this.active = active;

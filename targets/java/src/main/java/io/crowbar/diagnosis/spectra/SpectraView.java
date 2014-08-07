@@ -1,8 +1,13 @@
 package io.crowbar.diagnosis.spectra;
 
+import io.crowbar.diagnosis.spectra.matcher.SpectraMatcher;
+
 import java.util.SortedSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.LinkedList;
+
 /*!
  * This class creates a view of an arbitrary spectra with some components/transactions ommited.
  * As this class does not make any copies of the original spectra, it assumes its immutability.
@@ -39,28 +44,41 @@ implements Spectra<A, TM, CM> {
     private final int[] transactions;
 
     public SpectraView (Spectra<A, TM, CM> spectra,
-                        SortedSet<Integer> components,
-                        SortedSet<Integer> transactions) {
-        int i;
-
+                        SpectraMatcher< ? super A, ? super TM, ? super CM> matcher) {
+        List<Integer> tmp;
 
         this.spectra = spectra;
 
-        this.components = new int[components.size()];
-        i = 0;
+        tmp = new LinkedList<Integer> ();
 
-        for (int c : components) {
-            assert c >= 0 && c < spectra.getNumComponents();
-            this.components[i++] = c;
+        for (int c = 0; c < spectra.getNumComponents(); c++) {
+            if (matcher.matchComponent(spectra, c))
+                tmp.add(c);
         }
 
-        this.transactions = new int[transactions.size()];
-        i = 0;
+        this.components = toArray(tmp);
 
-        for (int t : transactions) {
-            assert t >= 0 && t < spectra.getNumTransactions();
-            this.transactions[i++] = t;
+
+        tmp = new LinkedList<Integer> ();
+
+        for (int t = 0; t < spectra.getNumTransactions(); t++) {
+            if (matcher.matchTransaction(spectra, t))
+                tmp.add(t);
         }
+
+        this.transactions = toArray(tmp);
+        System.out.printf("View has %d tr, %d comp\n", getNumTransactions(), getNumComponents());
+    }
+
+    private static final int[] toArray (List<Integer> l) {
+        int[] ret = new int[l.size()];
+        int i = 0;
+
+        for (Integer el : l) {
+            ret[i++] = el;
+        }
+
+        return ret;
     }
 
     public final int getComponentMapping (int id) {
@@ -83,7 +101,12 @@ implements Spectra<A, TM, CM> {
 
     @Override
     public final Transaction<A, TM> getTransaction (int transactionId) {
-        return new TransactionView(this, spectra.getTransaction(transactions[transactionId]));
+        Transaction<A, TM> t = spectra.getTransaction(transactions[transactionId]);
+
+        if (t == null)
+            return null;
+
+        return new TransactionView<A, TM> (this, t);
     }
 
     @Override

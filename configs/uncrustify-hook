@@ -42,7 +42,6 @@ indent() {
 
 # Indent the file with `indent' if this is a C/H file
 __indent_C() {
-    echo "!!!!!!!!!!"
 	if test ! -x "$INDENT"
 	then
 		return;

@@ -1,4 +1,7 @@
 package io.crowbar.instrumentation.spectra;
 
-public class EditableSpectra extends
-io.crowbar.diagnosis.spectra.EditableSpectra<HitTransaction, Metadata> implements Spectra {}
+import io.crowbar.diagnosis.spectra.EditableHitSpectra;
+
+public class EditableSpectra
+extends EditableHitSpectra<TransactionMetadata, ComponentMetadata>
+implements Spectra {}

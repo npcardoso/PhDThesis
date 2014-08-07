@@ -122,20 +122,27 @@ public class Messages {
     }
 
     public static final class TransactionEndMessage extends ProbeMessage implements Serializable {
-        private final String exception;
+        private final String exceptionClass;
+        private final String exceptionMessage;
         private final boolean[] hitVector;
 
 
         TransactionEndMessage (int probeId,
-                               String exception,
+                               String exceptionClass,
+                               String exceptionMessage,
                                boolean[] hitVector) {
             super(probeId);
-            this.exception = exception;
+            this.exceptionClass = exceptionClass;
+            this.exceptionMessage = exceptionMessage;
             this.hitVector = hitVector;
         }
 
-        public String getException () {
-            return exception;
+        public String getExceptionClass () {
+            return exceptionClass;
+        }
+
+        public String getExceptionMessage () {
+            return exceptionMessage;
         }
 
         public boolean[] getHitVector () {
@@ -148,13 +155,14 @@ public class Messages {
 
 
             ret += "probeId: " + getProbeId() + ", ";
-            ret += "exception: " + getException() + ", ";
+            ret += "exceptionClass: " + getExceptionClass() + ", ";
+            ret += "exceptionMessage: " + getExceptionMessage() + ", ";
             ret += "hitVector: " + getHitVector() + "]";
             return ret;
         }
 
         protected TransactionEndMessage () {
-            this(-1, null, null);
+            this(-1, null, null, null);
         }
     }
 

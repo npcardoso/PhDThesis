@@ -3,20 +3,17 @@ package io.crowbar.diagnosis.spectra;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class EditableSpectra<T extends Transaction, M> implements Spectra<T, M> {
-    private final ArrayList<T> transactions = new ArrayList<T> ();
-    private final ArrayList<M> metadata = new ArrayList<M> ();
+public class EditableSpectra<A extends Activity,
+                             TM extends Metadata,
+                             CM extends Metadata>
+implements Spectra<A, TM, CM> {
+    private final ArrayList<Transaction<A, TM> > transactions = new ArrayList();
+    private final ArrayList<Component<CM> > components = new ArrayList();
 
+    private int numComponents = 0;
 
     @Override
     public final int getNumComponents () {
-        int numComponents = 0;
-
-
-        for (T transaction : transactions) {
-            numComponents = Math.max(numComponents, transaction.size());
-        }
-
         return numComponents;
     }
 
@@ -26,7 +23,7 @@ public class EditableSpectra<T extends Transaction, M> implements Spectra<T, M> 
     }
 
     @Override
-    public final T getTransaction (int transactionId) {
+    public final Transaction<A, TM> getTransaction (int transactionId) {
         if (transactionId < 0 || transactionId >= transactions.size())
             return null;
 
@@ -34,25 +31,25 @@ public class EditableSpectra<T extends Transaction, M> implements Spectra<T, M> 
     }
 
     @Override
-    public final M getMetadata (int componentId) {
-        if (componentId < 0 || componentId >= metadata.size())
+    public final Component<CM> getComponent (int componentId) {
+        if (componentId < 0 || componentId >= components.size())
             return null;
 
-        return metadata.get(componentId);
+        return components.get(componentId);
     }
 
     @Override
-    public final Iterator<T> iterator () {
+    public final Iterator<Transaction<A, TM> > iterator () {
         return transactions.iterator();
     }
 
-    public final void appendTransaction (T transaction) {
+    public final void appendTransaction (Transaction<A, TM> transaction) {
         setTransaction(transactions.size(),
                        transaction);
     }
 
     public final void setTransaction (int transactionId,
-                                      T transaction) {
+                                      Transaction<A, TM> transaction) {
         transactions.ensureCapacity(transactionId + 1);
 
         while (transactions.size() <= transactionId) {
@@ -60,16 +57,18 @@ public class EditableSpectra<T extends Transaction, M> implements Spectra<T, M> 
         }
 
         transactions.set(transactionId, transaction);
+
+        numComponents = Math.max(numComponents, transaction.size());
     }
 
-    public final void setMetadata (int componentId,
-                                   M m) {
-        metadata.ensureCapacity(componentId + 1);
+    public final void setComponent (int componentId,
+                                    Component<CM> metadata) {
+        components.ensureCapacity(componentId + 1);
 
-        while (metadata.size() <= componentId) {
-            metadata.add(null);
+        while (components.size() <= componentId) {
+            components.add(null);
         }
 
-        metadata.set(componentId, m);
+        components.set(componentId, metadata);
     }
 }

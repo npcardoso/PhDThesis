@@ -51,12 +51,14 @@ public class MultiListener implements EventListener {
 
     @Override
     public final void endTransaction (int probeId,
-                                      String exception,
+                                      String exceptionClass,
+                                      String exceptionMessage,
                                       boolean[] hitVector) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.endTransaction(probeId,
-                                  exception,
+                                  exceptionClass,
+                                  exceptionMessage,
                                   hitVector);
             }
             catch (Exception e) {

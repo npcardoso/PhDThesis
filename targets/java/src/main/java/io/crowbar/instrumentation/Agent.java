@@ -84,9 +84,9 @@ public class Agent implements ClassFileTransformer {
 
         vl.setPrefix("!!!!!!!! ");
         // vl.setSuffix(" !!!!!!!!");
+        // ml.add(vl);
 
         Client cl = new Client(null, Integer.parseInt(agentArgs));
-        ml.add(vl);
         ml.add(cl);
 
         Collector.start("Workspace-" + cl.getCliendId(), ml);

@@ -26,20 +26,4 @@ public class TreeRebuilder extends AbstractEventListener {
     public final void registerNode (Node node) throws Exception {
         tree.registerNode(node);
     }
-
-    @Override
-    public final void registerProbe (Probe probe) throws Exception {}
-
-    @Override
-    public final void startTransaction (int probeId) {}
-
-    @Override
-    public final void endTransaction (int probeId,
-                                      String exception,
-                                      boolean[] hitVector) {}
-
-    @Override
-    public final void oracle (int probeId,
-                              double error,
-                              double confidence) {}
 }

@@ -17,10 +17,11 @@ import javassist.CtMethod;
 
 
 public class TestNGTestWrapper implements TestWrapper {
+    private static final String ANNOTATION_CLASS = "org.testng.annotations.Test";
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
         	new AndMatcher(
-        		new AnnotationMatcher("org.testng.annotations.Test"),
+        		new AnnotationMatcher(ANNOTATION_CLASS),
         		new ReturnTypeMatcher("void")));
 
     @Override
@@ -45,15 +46,16 @@ public class TestNGTestWrapper implements TestWrapper {
         String expectedMsgRegex = null;
 
         try {
-            Object annotation = m.getAnnotation(Class.forName("org.testng.annotations.Test"));
+            Object annotation = m.getAnnotation(Class.forName(ANNOTATION_CLASS));
             Method method = annotation.getClass().getMethod("expectedExceptions");
             expected = (Class[])method.invoke(annotation);
             method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
             expectedMsgRegex = (String) method.invoke(annotation);
-
-            // expectedStr = expected.getName();
         }
         catch (Throwable e) {}
+
+        if (expected == null || expected.length == 0)
+            return "";
 
         if (expectedMsgRegex == null)
             expectedMsgRegex = ".*";
@@ -82,6 +84,7 @@ public class TestNGTestWrapper implements TestWrapper {
         	code.append("}, ");
         }
         code.append("\"" + expectedMsgRegex + "\")");
+
         return "if(" + code.toString() + ") throw " + exceptionVar + ";";
     }
 
@@ -106,7 +109,7 @@ public class TestNGTestWrapper implements TestWrapper {
         		if (isSameType(e, cls))
         			if (Pattern.matches(expectedMsgRegex, e.getMessage()))
         				return true;
-        
+
         return false;
     }
 }

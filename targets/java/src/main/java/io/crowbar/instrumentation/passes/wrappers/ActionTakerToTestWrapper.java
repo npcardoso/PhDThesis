@@ -4,8 +4,6 @@ import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 
-import java.util.Set;
-
 import javassist.CtClass;
 import javassist.CtMethod;
 

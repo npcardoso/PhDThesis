@@ -1,18 +1,17 @@
-package io.crowbar.instrumentation.events;
+package io.crowbar.instrumentation.spectra;
 
 import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.Tree;
-import io.crowbar.instrumentation.spectra.EditableSpectra;
-import io.crowbar.instrumentation.spectra.HitTransaction;
-import io.crowbar.instrumentation.spectra.Metadata;
-import io.crowbar.instrumentation.spectra.Spectra;
+import io.crowbar.instrumentation.events.AbstractEventListener;
+import io.crowbar.instrumentation.events.TreeRebuilder;
 
 
 public class SpectraBuilder extends AbstractEventListener {
     private boolean error = false;
     private final TreeRebuilder treeRebuilder = new TreeRebuilder();
     private final EditableSpectra spectra = new EditableSpectra();
+
 
     public final Spectra getSpectra () {
         return spectra;
@@ -32,14 +31,21 @@ public class SpectraBuilder extends AbstractEventListener {
         Node n = treeRebuilder.getTree().getNode(probe.getNodeId());
 
 
-        spectra.setMetadata(probe.getId(), new Metadata(probe.getType(), n));
+        spectra.setComponent(probe.getId(),
+                             new Component(
+                                 new ComponentMetadata(probe.getType(), n)));
     }
 
     @Override
     public final void endTransaction (int probeId,
-                                      String exception,
+                                      String exceptionClass,
+                                      String exceptionMessage,
                                       boolean[] hitVector) {
-        HitTransaction t = new HitTransaction(hitVector, error ? 1 : 0, 1, exception);
+        TransactionMetadata m = new TransactionMetadata(exceptionClass,
+                                                        exceptionMessage);
+        HitTransaction t = new HitTransaction(hitVector,
+                                              error ? 1 : 0, 1,
+                                              m);
 
 
         spectra.appendTransaction(t);

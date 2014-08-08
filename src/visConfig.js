@@ -3,16 +3,25 @@ visualizations =
 {
 	displayName : "Sunburst",
 	iconUrl : "",
-	init : sunburstInit
+	obj : Sunburst
 },
 {
 	displayName : "Sunburst No Animation",
 	iconUrl : "",
-	init : sunburstNoAniInit
+	obj : sunburstNoAniInit
 },
 {
 	displayName : "Vertical partition",
 	iconUrl : "",
-	init : verticalInit
+	obj : VerticalPartition
+},
+{
+	displayName : "Nuno Vez",
+	obj : function () {
+			this.render = function()
+			{
+				alert('ok');
+			}
+		}
 }
 ];

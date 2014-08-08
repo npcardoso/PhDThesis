@@ -8,6 +8,10 @@ import java.util.BitSet;
 
 public final class ValidTransactionMatcher
 extends AbstractSpectraMatcher<Activity, Metadata, Metadata> {
+    public ValidTransactionMatcher () {
+        this(true);
+    }
+
     public ValidTransactionMatcher (boolean defaultValueComponents) {
         super(false, defaultValueComponents);
     }

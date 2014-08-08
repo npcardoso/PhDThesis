@@ -50,15 +50,13 @@ implements Spectra<A, TM, CM> {
         this.spectra = spectra;
         this.transactions = toArray(transactions);
         this.components = toArray(components);
-
-        System.out.printf("View has %d tr, %d comp\n", getNumTransactions(), getNumComponents());
     }
 
     private static final int[] toArray (BitSet bs) {
         int[] ret = new int[bs.cardinality()];
         int i = 0;
 
-        for (int el = bs.nextSetBit(0); el >= 0; el = bs.nextSetBit(i + 1)) {
+        for (int el = bs.nextSetBit(0); el >= 0; el = bs.nextSetBit(el + 1)) {
             ret[i++] = el;
         }
 

@@ -13,12 +13,20 @@ implements Iterable<A> {
     Transaction () {}
 
     public abstract A get (int id);
+
+    public boolean isError () {
+        return getError() >= 1;
+    };
+
     public abstract double getError ();
+
     public abstract double getConfidence ();
+
     public abstract TM getMetadata ();
 
     public abstract Iterator<A> iterator ();
 
     public abstract int numActive ();
+
     public abstract int size ();
 }

@@ -3,11 +3,10 @@ package io.crowbar.diagnosis.spectra.matcher;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.spectra.Activity;
 import io.crowbar.diagnosis.spectra.Metadata;
-import io.crowbar.diagnosis.spectra.Transaction;
 import java.util.BitSet;
 
 
-public class IdMatcher
+public final class IdMatcher
 implements SpectraMatcher<Activity, Metadata, Metadata> {
     private final BitSet transactions = new BitSet();
     private final BitSet components = new BitSet();
@@ -20,11 +19,13 @@ implements SpectraMatcher<Activity, Metadata, Metadata> {
 
     public IdMatcher (int[] transactions,
                       int[] components) {
-        for (int t : transactions)
+        for (int t : transactions) {
             this.transactions.set(t);
+        }
 
-        for (int c : components)
+        for (int c : components) {
             this.components.set(c);
+        }
     }
 
     @Override

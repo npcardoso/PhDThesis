@@ -14,7 +14,7 @@ implements Iterable<A> {
 
     public abstract A get (int id);
 
-    public boolean isError () {
+    public final boolean isError () {
         return getError() >= 1;
     };
 

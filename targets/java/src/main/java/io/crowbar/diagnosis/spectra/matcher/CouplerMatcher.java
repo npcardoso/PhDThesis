@@ -3,14 +3,13 @@ package io.crowbar.diagnosis.spectra.matcher;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.spectra.Activity;
 import io.crowbar.diagnosis.spectra.Metadata;
-import io.crowbar.diagnosis.spectra.Transaction;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.BitSet;
 
-public class CouplerMatcher<A extends Activity,
-                            TM extends Metadata,
-                            CM extends Metadata>
+public final class CouplerMatcher<A extends Activity,
+                                  TM extends Metadata,
+                                  CM extends Metadata>
 implements SpectraMatcher<A, TM, CM> {
     public interface Coupler {
         void couple (BitSet ret, BitSet operand);

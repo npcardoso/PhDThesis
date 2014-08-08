@@ -2,7 +2,6 @@ package io.crowbar.instrumentation.events;
 
 import io.crowbar.instrumentation.runtime.AbstractTree;
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.AbstractList;
 
 
-public class Factory {
+public final class Factory {
     private Factory () {}
 
     private static class ActivityListAdaptor extends AbstractList<Hit> {

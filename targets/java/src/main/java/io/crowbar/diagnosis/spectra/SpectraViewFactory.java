@@ -3,9 +3,9 @@ package io.crowbar.diagnosis.spectra;
 import io.crowbar.diagnosis.spectra.matcher.SpectraMatcher;
 import java.util.BitSet;
 
-public class SpectraViewFactory<A extends Activity,
-                                TM extends Metadata,
-                                CM extends Metadata> {
+public final  class SpectraViewFactory<A extends Activity,
+                                       TM extends Metadata,
+                                       CM extends Metadata> {
     private final Spectra<A, TM, CM> spectra;
 
     private final BitSet transactions = new BitSet();
@@ -31,7 +31,7 @@ public class SpectraViewFactory<A extends Activity,
         assert (retTr.length() < view.getNumTransactions());
 
         for (int i = 0; i < view.getNumTransactions(); i++) {
-            if (retTr.get(i) == false) {
+            if (!retTr.get(i)) {
                 int original = view.getTransactionMapping(i);
                 transactions.clear(original);
             }
@@ -41,7 +41,7 @@ public class SpectraViewFactory<A extends Activity,
         assert (retComp.length() < view.getNumComponents());
 
         for (int i = 0; i < view.getNumComponents(); i++) {
-            if (retComp.get(i) == false) {
+            if (!retComp.get(i)) {
                 int original = view.getComponentMapping(i);
                 components.clear(original);
             }

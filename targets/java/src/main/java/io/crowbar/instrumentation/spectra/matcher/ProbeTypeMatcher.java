@@ -3,7 +3,6 @@ package io.crowbar.instrumentation.spectra.matcher;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.spectra.Activity;
 import io.crowbar.diagnosis.spectra.Metadata;
-import io.crowbar.diagnosis.spectra.Transaction;
 import io.crowbar.diagnosis.spectra.matcher.AbstractSpectraMatcher;
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.spectra.CmpM;

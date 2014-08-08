@@ -6,7 +6,6 @@ import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.events.TreeRebuilder;
 import io.crowbar.diagnosis.spectra.activity.Hit;
-import io.crowbar.diagnosis.spectra.Component;
 import io.crowbar.diagnosis.spectra.EditableSpectra;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.spectra.Transaction;

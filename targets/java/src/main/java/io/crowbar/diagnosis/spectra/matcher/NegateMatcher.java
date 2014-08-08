@@ -3,13 +3,12 @@ package io.crowbar.diagnosis.spectra.matcher;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.spectra.Activity;
 import io.crowbar.diagnosis.spectra.Metadata;
-import io.crowbar.diagnosis.spectra.Transaction;
 
 import java.util.BitSet;
 
-public class NegateMatcher<A extends Activity,
-                           TM extends Metadata,
-                           CM extends Metadata>
+public final class NegateMatcher<A extends Activity,
+                                 TM extends Metadata,
+                                 CM extends Metadata>
 implements SpectraMatcher<A, TM, CM> {
     private final SpectraMatcher< ? super A, ? super TM, ? super CM> matcher;
 

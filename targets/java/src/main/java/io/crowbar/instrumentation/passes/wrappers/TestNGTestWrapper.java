@@ -20,9 +20,9 @@ public class TestNGTestWrapper implements TestWrapper {
     private static final String ANNOTATION_CLASS = "org.testng.annotations.Test";
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
-        	new AndMatcher(
-        		new AnnotationMatcher(ANNOTATION_CLASS),
-        		new ReturnTypeMatcher("void")));
+            new AndMatcher(
+                new AnnotationMatcher(ANNOTATION_CLASS),
+                new ReturnTypeMatcher("void")));
 
     @Override
     public final Action getAction (CtClass c) {
@@ -65,24 +65,25 @@ public class TestNGTestWrapper implements TestWrapper {
         code.append(collectorVar + ", ");
         code.append(p.getId() + ", ");
         code.append(exceptionVar + ", ");
-        
-        if(expected.length == 0) {
-        	code.append("null, ");
+
+        if (expected.length == 0) {
+            code.append("null, ");
         }
         else {
-        	code.append("new String[]{");
-        	boolean first = true;
+            code.append("new String[]{");
+            boolean first = true;
 
-        	for (Class cls : expected) {
-            	if (!first)
-                	code.append(", ");
+            for (Class cls : expected) {
+                if (!first)
+                    code.append(", ");
 
-            	code.append("\"" + cls.getName() + "\"");
-            	first = false;
-        	}
+                code.append("\"" + cls.getName() + "\"");
+                first = false;
+            }
 
-        	code.append("}, ");
+            code.append("}, ");
         }
+
         code.append("\"" + expectedMsgRegex + "\")");
 
         return "if(" + code.toString() + ") throw " + exceptionVar + ";";
@@ -104,11 +105,12 @@ public class TestNGTestWrapper implements TestWrapper {
                                         Throwable e,
                                         String[] expected,
                                         String expectedMsgRegex) {
-        if(expected != null)
-        	for (String cls : expected)
-        		if (isSameType(e, cls))
-        			if (Pattern.matches(expectedMsgRegex, e.getMessage()))
-        				return true;
+        if (expected != null)
+            for (String cls : expected) {
+                if (isSameType(e, cls) &&
+                    Pattern.matches(expectedMsgRegex, e.getMessage()))
+                    return true;
+            }
 
         return false;
     }

@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class TransactionFactory<A extends Activity,
-                                TM extends Metadata> {
-    private static class Tr<A extends Activity,
-                            TM extends Metadata>
+public final class TransactionFactory<A extends Activity,
+                                      TM extends Metadata> {
+    private static final class Tr<A extends Activity,
+                                  TM extends Metadata>
     extends Transaction<A, TM> {
         private final List<A> activity = new ArrayList<A> ();
         private final TM metadata;
@@ -36,7 +36,7 @@ public class TransactionFactory<A extends Activity,
         }
 
         @Override
-        public final A get (int id) {
+        public A get (int id) {
             if (id >= activity.size())
                 return null;
 
@@ -44,32 +44,32 @@ public class TransactionFactory<A extends Activity,
         }
 
         @Override
-        public final double getError () {
+        public double getError () {
             return error;
         }
 
         @Override
-        public final double getConfidence () {
+        public double getConfidence () {
             return confidence;
         }
 
         @Override
-        public final TM getMetadata () {
+        public TM getMetadata () {
             return metadata;
         }
 
         @Override
-        public final Iterator<A> iterator () {
+        public Iterator<A> iterator () {
             return activity.iterator();
         }
 
         @Override
-        public final int numActive () {
+        public int numActive () {
             return active;
         }
 
         @Override
-        public final int size () {
+        public int size () {
             return activity.size();
         }
     }

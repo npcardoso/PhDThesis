@@ -3,7 +3,6 @@ package io.crowbar.diagnosis.spectra.matcher;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.spectra.Activity;
 import io.crowbar.diagnosis.spectra.Metadata;
-import io.crowbar.diagnosis.spectra.Transaction;
 import java.util.BitSet;
 
 public abstract class AbstractSpectraMatcher<A extends Activity,
@@ -28,7 +27,7 @@ implements SpectraMatcher<A, TM, CM> {
         BitSet ret = new BitSet();
 
 
-        if (defaultValueComponents == true) {
+        if (defaultValueComponents) {
             ret.set(0, spectra.getNumComponents());
         }
 
@@ -40,7 +39,7 @@ implements SpectraMatcher<A, TM, CM> {
         BitSet ret = new BitSet();
 
 
-        if (defaultValueTransactions == true) {
+        if (defaultValueTransactions) {
             ret.set(0, spectra.getNumTransactions());
         }
 

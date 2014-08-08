@@ -2,7 +2,7 @@ package io.crowbar.instrumentation.spectra;
 
 import io.crowbar.diagnosis.spectra.Metadata;
 
-public class TrM implements Metadata {
+public final class TrM implements Metadata {
     private final String exceptionClass;
     private final String exceptionMessage;
 

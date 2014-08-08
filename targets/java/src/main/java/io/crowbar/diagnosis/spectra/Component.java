@@ -1,5 +1,7 @@
 package io.crowbar.diagnosis.spectra;
 
-public interface Component<Metadata> {
-    Metadata getMetadata ();
+public abstract class Component<Metadata> {
+    Component () {}
+
+    public abstract Metadata getMetadata ();
 }

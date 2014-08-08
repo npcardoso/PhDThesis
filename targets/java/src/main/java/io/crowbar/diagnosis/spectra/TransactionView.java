@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 class TransactionView<A extends Activity,
                       TM extends Metadata>
-implements Transaction<A, TM> {
+extends Transaction<A, TM> {
     private class TransactionIterator implements Iterator<A> {
         private int i = 0;
 

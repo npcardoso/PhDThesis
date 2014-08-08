@@ -2,20 +2,23 @@ package io.crowbar.diagnosis.spectra;
 
 import java.util.Iterator;
 
-public interface Transaction<A extends Activity,
-                             TM extends Metadata>
-extends Iterable<A> {
+public abstract class Transaction<A extends Activity,
+                                  TM extends Metadata>
+implements Iterable<A> {
     /*!
      * \brief Returns the activity of component "id".
      * Should *not* raise any exceptions if the activity does not exist but instead return null.
      */
-    A get (int id);
-    double getError ();
-    double getConfidence ();
-    TM getMetadata ();
 
-    Iterator<A> iterator ();
+    Transaction () {}
 
-    int numActive ();
-    int size ();
+    public abstract A get (int id);
+    public abstract double getError ();
+    public abstract double getConfidence ();
+    public abstract TM getMetadata ();
+
+    public abstract Iterator<A> iterator ();
+
+    public abstract int numActive ();
+    public abstract int size ();
 }

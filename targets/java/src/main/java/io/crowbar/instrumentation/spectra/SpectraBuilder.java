@@ -5,15 +5,21 @@ import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.instrumentation.runtime.Tree;
 import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.events.TreeRebuilder;
+import io.crowbar.diagnosis.spectra.activity.Hit;
+import io.crowbar.diagnosis.spectra.Component;
+import io.crowbar.diagnosis.spectra.EditableSpectra;
+import io.crowbar.diagnosis.spectra.Spectra;
+import io.crowbar.diagnosis.spectra.Transaction;
 
 
 public class SpectraBuilder extends AbstractEventListener {
     private boolean error = false;
     private final TreeRebuilder treeRebuilder = new TreeRebuilder();
-    private final EditableSpectra spectra = new EditableSpectra();
+    private final EditableSpectra<Hit, TrM, CmpM> spectra =
+        new EditableSpectra<Hit, TrM, CmpM> ();
 
 
-    public final Spectra getSpectra () {
+    public final Spectra<Hit, TrM, CmpM> getSpectra () {
         return spectra;
     }
 
@@ -32,8 +38,7 @@ public class SpectraBuilder extends AbstractEventListener {
 
 
         spectra.setComponent(probe.getId(),
-                             new Component(
-                                 new ComponentMetadata(probe.getType(), n)));
+                             Factory.createComponent(new CmpM(probe.getType(), n)));
     }
 
     @Override
@@ -41,11 +46,13 @@ public class SpectraBuilder extends AbstractEventListener {
                                       String exceptionClass,
                                       String exceptionMessage,
                                       boolean[] hitVector) {
-        TransactionMetadata m = new TransactionMetadata(exceptionClass,
-                                                        exceptionMessage);
-        HitTransaction t = new HitTransaction(hitVector,
-                                              error ? 1 : 0, 1,
-                                              m);
+        TrM m = new TrM(exceptionClass,
+                        exceptionMessage);
+
+
+        Transaction<Hit, TrM> t = Factory.createTransaction(hitVector,
+                                                            error ? 1 : 0,
+                                                            1, m);
 
 
         spectra.appendTransaction(t);

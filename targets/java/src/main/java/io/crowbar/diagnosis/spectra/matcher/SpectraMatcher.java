@@ -4,11 +4,11 @@ import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.spectra.Activity;
 import io.crowbar.diagnosis.spectra.Metadata;
 
+import java.util.BitSet;
+
 public interface SpectraMatcher<A extends Activity,
                                 TM extends Metadata,
                                 CM extends Metadata> {
-    boolean matchComponent (Spectra< ? extends A, ? extends TM, ? extends CM> spectra,
-                            int componentId);
-    boolean matchTransaction (Spectra< ? extends A, ? extends TM, ? extends CM> spectra,
-                              int transactionId);
+    BitSet matchComponents (Spectra< ? extends A, ? extends TM, ? extends CM> spectra);
+    BitSet matchTransactions (Spectra< ? extends A, ? extends TM, ? extends CM> spectra);
 }

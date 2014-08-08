@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.BitSet;
 
 /*!
  * This class creates a view of an arbitrary spectra with some components/transactions ommited.
@@ -37,44 +38,27 @@ implements Spectra<A, TM, CM> {
         public void remove () {
             throw new UnsupportedOperationException();
         }
-    };
+    }
 
     private final Spectra<A, TM, CM> spectra;
     private final int[] components;
     private final int[] transactions;
 
     public SpectraView (Spectra<A, TM, CM> spectra,
-                        SpectraMatcher< ? super A, ? super TM, ? super CM> matcher) {
-        List<Integer> tmp;
-
+                        BitSet transactions,
+                        BitSet components) {
         this.spectra = spectra;
+        this.transactions = toArray(transactions);
+        this.components = toArray(components);
 
-        tmp = new LinkedList<Integer> ();
-
-        for (int c = 0; c < spectra.getNumComponents(); c++) {
-            if (matcher.matchComponent(spectra, c))
-                tmp.add(c);
-        }
-
-        this.components = toArray(tmp);
-
-
-        tmp = new LinkedList<Integer> ();
-
-        for (int t = 0; t < spectra.getNumTransactions(); t++) {
-            if (matcher.matchTransaction(spectra, t))
-                tmp.add(t);
-        }
-
-        this.transactions = toArray(tmp);
         System.out.printf("View has %d tr, %d comp\n", getNumTransactions(), getNumComponents());
     }
 
-    private static final int[] toArray (List<Integer> l) {
-        int[] ret = new int[l.size()];
+    private static final int[] toArray (BitSet bs) {
+        int[] ret = new int[bs.cardinality()];
         int i = 0;
 
-        for (Integer el : l) {
+        for (int el = bs.nextSetBit(0); el >= 0; el = bs.nextSetBit(i + 1)) {
             ret[i++] = el;
         }
 

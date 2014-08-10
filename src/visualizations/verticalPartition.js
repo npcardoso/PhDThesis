@@ -1,8 +1,8 @@
-function VerticalPartition(data, elementID, gradiante, events) {
+function VerticalPartition(data, elementID, configuration, events) {
     var self = this;
 
     this.data = data;
-    this.gradiante = gradiante;
+    this.configuration = configuration;
     this.events = events;
 
     var dimensions = getDimensions();
@@ -32,7 +32,7 @@ function VerticalPartition(data, elementID, gradiante, events) {
         .attr("width", rect_render.width)
         .attr("height", rect_render.height)
         .style("stroke", "#fff")
-        .attr("fill",self.gradiante.normal)
+        .attr("fill",self.configuration.gradiante.normal)
         .on("click", self.click);
     }
 
@@ -85,7 +85,7 @@ function RectRender(width,height){
         y.domain([node.y, 1]).range([node.y ? 20 : 0, height]);
 
         rect.transition()
-        .duration(750)
+        .duration(self.configuration.currentConfig.animationTransitionTime)
         .attr("x", function(node) { return x(node.x); })
         .attr("y", function(node) { return y(node.y); })
         .attr("width", function(node) { return x(node.x + node.dx) - x(node.x); })

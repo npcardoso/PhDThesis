@@ -1,7 +1,7 @@
-function Visualizations(){
+function Visualizations(configuration){
 	var self = this;
 
-	var gradiante = new Gradiant();
+
 	var events = {
 		click: visClickEv
 	};
@@ -9,7 +9,7 @@ function Visualizations(){
 
 
 	this.createVisualization = function(visN){
-		return new visualizations[visN].obj(data_ex[0],getVizID(visN),gradiante,events);
+		return new visualizations[visN].obj(data_ex[0],getVizID(visN),configuration,events);
 	}
 
 	this.setVisualization = function(visN){
@@ -25,7 +25,7 @@ function Visualizations(){
 	}
 
 	this.init = function(){
-		self.setVisualization(0);
+		self.setVisualization(configuration.currentConfig.defaultView);
 	}
 
 

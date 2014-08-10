@@ -1,12 +1,13 @@
 //Program entry point
 function init(){
+	var configuration = new Configuration();
 	//prepare data
 	dataInlining(data_ex);
 	probabilityCalculator(data_ex[0]);
 
 
-	var visualization = new Visualizations();
-	renderButtonsHtml(visualization.setVisualization);
+	var visualization = new Visualizations(configuration);
+	renderButtonsHtml(visualization.setVisualization,configuration.currentConfig.defaultView);
 
 	visualization.init();
 
@@ -18,7 +19,7 @@ function getVizID(vizNo){
 }
 
 //Render html of the buttons
-function renderButtonsHtml(visActivationCallBack){
+function renderButtonsHtml(visActivationCallBack,defaultTab){
 	$("body").append('<div id="tabs"><ul></ul></div>');
 	$.each(visualizations, function(index, visualization) {
 		$("#tabs ul").append('<li><a href="#'+getVizID(index)+'">'+visualization.displayName+'</a></li>');
@@ -29,7 +30,8 @@ function renderButtonsHtml(visActivationCallBack){
 		activate: function( event, ui ) {
 			var visualizationIndex = ui.newTab.children("a").attr("href").replace("#tabs-","");
 			visActivationCallBack(visualizationIndex);
-		}
+		},
+		active: defaultTab
 	});
 }
 

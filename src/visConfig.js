@@ -16,12 +16,16 @@ visualizations =
 	obj : VerticalPartition
 },
 {
-	displayName : "Nuno Vez",
+	displayName : "Example Viz",
 	obj : function () {
 			this.render = function()
 			{
 				alert('ok');
 			}
 		}
+},
+{
+	displayName : "Configuration",
+	obj: ConfigurationView
 }
 ];

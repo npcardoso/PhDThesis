@@ -1,8 +1,8 @@
-function Sunburst(data, elementID, gradiante, events) {
+function Sunburst(data, elementID, configuration, events) {
     var self = this;
 
     this.data = data;
-    this.gradiante = gradiante;
+    this.configuration = configuration;
     this.events = events;  
 
     var dimensions = getDimensions();
@@ -34,7 +34,7 @@ function Sunburst(data, elementID, gradiante, events) {
         .enter().append("path")
         .attr("d", arc_render.arc)
         .style("stroke", "#fff")
-        .style("fill", self.gradiante.normal)
+        .style("fill", self.configuration.gradiante.normal)
         .style("fill-rule", "evenodd")
         .on("click", self.click);
     }
@@ -53,7 +53,7 @@ function Sunburst(data, elementID, gradiante, events) {
     this.click = function(node) {
         self.events.click(node);
         path.transition()
-        .duration(750)
+        .duration(self.configuration.currentConfig.animationTransitionTime)
         .attrTween("d", arc_render.arcTween(node));
     }
 

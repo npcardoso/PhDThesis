@@ -1,15 +1,10 @@
-function Gradiant(){
-	var NOMAL_GRADIANT = {
-		stops: [0, 0.5, 1],
-		colors: [rgba(0, 255, 0, 1), rgba(255, 255, 0, 1), rgba(255, 0, 0, 1)]
-	}
-
-
-	var normalGradiant = this.gradiantInit(NOMAL_GRADIANT);
+var xas;
+function Gradiant(normal){
+	var normalGradiante = this.gradianteInit(normal);
 
     this.normal = function(node){
         if(node.properties.p >= 0){
-            return normalGradiant[Math.floor(node.properties.p*100)];
+            return normalGradiante[Math.floor(node.properties.p*100)];
         }
         return "grey";
     }
@@ -17,18 +12,29 @@ function Gradiant(){
 
 
 
-Gradiant.prototype.gradiantInit = function(gradiant){
-	var grandiantComputed = new Array(101);
-	var gradiantObj = this.gradientCalc(gradiant.stops,gradiant.colors);
-	var colors;
-	for (var i = grandiantComputed.length - 1; i >= 0; i--) {
-		colors = gradiantObj.get(i/100);
-		grandiantComputed[i] = "rgba(" + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3] + ")";
-	}
-	return grandiantComputed;
+function convertGradType(gradiante){
+        xas = ret;
+    var ret = [];
+    var len = gradiante.length;
+    for (var i = 0; i < len; i++) {
+        ret[i] = rgba(gradiante[i].r,gradiante[i].g,gradiante[i].b,1);
+    };
+
+    return ret;
 }
 
-Gradiant.prototype.gradientCalc = function(stops,colors) {
+Gradiant.prototype.gradianteInit = function(gradiante){
+	var grandianteComputed = new Array(101);
+	var gradianteObj = this.gradienteCalc([0, 0.5, 1],convertGradType(gradiante));
+	var colors;
+	for (var i = grandianteComputed.length - 1; i >= 0; i--) {
+		colors = gradianteObj.get(i/100);
+		grandianteComputed[i] = "rgba(" + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3] + ")";
+	}
+	return grandianteComputed;
+}
+
+Gradiant.prototype.gradienteCalc = function(stops,colors) {
     obj = new Object();
     obj.stops = stops;
     obj.colors = colors;

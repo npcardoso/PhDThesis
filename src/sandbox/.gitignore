@@ -1,6 +1,0 @@
-*
-!.gitignore
-!make_sandbox.sh
-!templates
-!templates/*
-!SConscript

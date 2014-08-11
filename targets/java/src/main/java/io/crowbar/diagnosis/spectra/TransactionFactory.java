@@ -17,12 +17,13 @@ public final class TransactionFactory<A extends Activity,
         private final double error;
         private final double confidence;
 
-        Tr (List< ? extends A> activity,
+        Tr (int id,
+            List< ? extends A> activity,
             double error,
             double confidence,
             TM metadata) {
+            super(id);
             int active = 0;
-
 
             for (A a : activity) {
                 this.activity.add(a);
@@ -59,11 +60,6 @@ public final class TransactionFactory<A extends Activity,
         }
 
         @Override
-        public Iterator<A> iterator () {
-            return activity.iterator();
-        }
-
-        @Override
         public int numActive () {
             return active;
         }
@@ -74,10 +70,11 @@ public final class TransactionFactory<A extends Activity,
         }
     }
 
-    public Transaction<A, TM> create (List< ? extends A> activity,
+    public Transaction<A, TM> create (int id,
+                                      List< ? extends A> activity,
                                       double error,
                                       double confidence,
                                       TM metadata) {
-        return new Tr<A, TM> (activity, error, confidence, metadata);
+        return new Tr<A, TM> (id, activity, error, confidence, metadata);
     }
 }

@@ -39,8 +39,8 @@ public final class SpectraSerializer {
 
         for (Transaction< ? extends Activity, TrM> t : spectra) {
             str.append(HitSpectraSerializer.serialize(t, numComp));
-            str.append(" # exceptionClass: " + t.getMetadata().getExceptionClass());
-            str.append(", exceptionMessage: " + t.getMetadata().getExceptionMessage());
+            str.append(" # exceptionClass: " + t == null ? "null" : t.getMetadata().getExceptionClass());
+            str.append(", exceptionMessage: " + t == null ? "null" : t.getMetadata().getExceptionMessage());
             str.append("\n");
         }
 

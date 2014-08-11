@@ -32,9 +32,11 @@ public final class HitSpectraSerializer {
         int i = 0;
 
 
-        for (i = 0; i < transaction.size(); i++) {
-            str.append(transaction.get(i).isActive() ? "1" : "0");
-            str.append(" ");
+        if (transaction != null) {
+            for (i = 0; i < transaction.size(); i++) {
+                str.append(transaction.get(i).isActive() ? "1" : "0");
+                str.append(" ");
+            }
         }
 
         for (; i < numComponents; i++) {
@@ -42,9 +44,9 @@ public final class HitSpectraSerializer {
             str.append(" ");
         }
 
-        str.append(transaction.getError());
+        str.append(transaction == null ? 0 : transaction.getError());
         str.append(" ");
-        str.append(transaction.getConfidence());
+        str.append(transaction == null ? 0 : transaction.getConfidence());
 
         return str.toString();
     }

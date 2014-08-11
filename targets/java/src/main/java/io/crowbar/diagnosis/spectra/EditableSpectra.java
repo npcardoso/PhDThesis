@@ -1,12 +1,11 @@
 package io.crowbar.diagnosis.spectra;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class EditableSpectra<A extends Activity,
                              TM extends Metadata,
                              CM extends Metadata>
-implements Spectra<A, TM, CM> {
+extends Spectra<A, TM, CM> {
     private final ArrayList<Transaction<A, TM> > transactions = new ArrayList();
     private final ArrayList<Component<CM> > components = new ArrayList();
 
@@ -38,37 +37,25 @@ implements Spectra<A, TM, CM> {
         return components.get(componentId);
     }
 
-    @Override
-    public final Iterator<Transaction<A, TM> > iterator () {
-        return transactions.iterator();
-    }
+    public final void setTransaction (Transaction<A, TM> transaction) {
+        transactions.ensureCapacity(transaction.getId() + 1);
 
-    public final void appendTransaction (Transaction<A, TM> transaction) {
-        setTransaction(transactions.size(),
-                       transaction);
-    }
-
-    public final void setTransaction (int transactionId,
-                                      Transaction<A, TM> transaction) {
-        transactions.ensureCapacity(transactionId + 1);
-
-        while (transactions.size() <= transactionId) {
+        while (transactions.size() <= transaction.getId()) {
             transactions.add(null);
         }
 
-        transactions.set(transactionId, transaction);
+        transactions.set(transaction.getId(), transaction);
 
         numComponents = Math.max(numComponents, transaction.size());
     }
 
-    public final void setComponent (int componentId,
-                                    Component<CM> metadata) {
-        components.ensureCapacity(componentId + 1);
+    public final void setComponent (Component<CM> component) {
+        components.ensureCapacity(component.getId() + 1);
 
-        while (components.size() <= componentId) {
+        while (components.size() <= component.getId()) {
             components.add(null);
         }
 
-        components.set(componentId, metadata);
+        components.set(component.getId(), component);
     }
 }

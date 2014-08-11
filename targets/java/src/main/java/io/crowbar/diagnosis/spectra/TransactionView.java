@@ -1,40 +1,17 @@
 package io.crowbar.diagnosis.spectra;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 class TransactionView<A extends Activity,
                       TM extends Metadata>
 extends Transaction<A, TM> {
-    private class TransactionIterator implements Iterator<A> {
-        private int i = 0;
-
-        @Override
-        public boolean hasNext () {
-            return i < spectraView.getNumComponents();
-        }
-
-        @Override
-        public A next () {
-            if (!hasNext())
-                throw new NoSuchElementException();
-
-            return get(i++);
-        }
-
-        @Override
-        public void remove () {
-            throw new UnsupportedOperationException();
-        }
-    };
-
     private final Transaction<A, TM> transaction;
     private final SpectraView<A, TM, ? > spectraView;
     private final int active;
     private final int sze;
 
-    TransactionView (SpectraView<A, TM, ? > spectraView,
+    TransactionView (int id,
+                     SpectraView<A, TM, ? > spectraView,
                      Transaction<A, TM> transaction) {
+        super(id);
         this.spectraView = spectraView;
         this.transaction = transaction;
         int size;
@@ -76,11 +53,6 @@ extends Transaction<A, TM> {
     @Override
     public TM getMetadata () {
         return transaction.getMetadata();
-    }
-
-    @Override
-    public Iterator<A> iterator () {
-        return new TransactionIterator();
     }
 
     @Override

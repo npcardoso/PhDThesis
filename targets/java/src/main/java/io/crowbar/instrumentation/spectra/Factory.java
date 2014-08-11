@@ -31,7 +31,8 @@ public final class Factory {
     }
 
 
-    public static Transaction<Hit, TrM> createTransaction (boolean[] hitVector,
+    public static Transaction<Hit, TrM> createTransaction (int id,
+                                                           boolean[] hitVector,
                                                            double error,
                                                            double confidence,
                                                            TrM metadata) {
@@ -41,12 +42,13 @@ public final class Factory {
             new TransactionFactory<Hit, TrM> ();
 
 
-        return tf.create(adaptor, error, confidence, metadata);
+        return tf.create(id, adaptor, error, confidence, metadata);
     }
 
-    public static Component<CmpM> createComponent (CmpM metadata) {
+    public static Component<CmpM> createComponent (int id,
+                                                   CmpM metadata) {
         ComponentFactory<CmpM> cf =
             new ComponentFactory<CmpM> ();
-        return cf.create(metadata);
+        return cf.create(id, metadata);
     }
 }

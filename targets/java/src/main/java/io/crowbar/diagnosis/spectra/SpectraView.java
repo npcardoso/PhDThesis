@@ -12,29 +12,7 @@ import java.util.BitSet;
 final class SpectraView<A extends Activity,
                         TM extends Metadata,
                         CM extends Metadata>
-implements Spectra<A, TM, CM> {
-    private class SpectraIterator implements Iterator<Transaction<A, TM> > {
-        private int i = 0;
-
-        @Override
-        public boolean hasNext () {
-            return i < getNumTransactions();
-        }
-
-        @Override
-        public Transaction<A, TM> next () {
-            if (!hasNext())
-                throw new NoSuchElementException();
-
-            return getTransaction(i++);
-        }
-
-        @Override
-        public void remove () {
-            throw new UnsupportedOperationException();
-        }
-    }
-
+extends Spectra<A, TM, CM> {
     private final Spectra<A, TM, CM> spectra;
     private final int[] components;
     private final int[] transactions;
@@ -83,16 +61,11 @@ implements Spectra<A, TM, CM> {
         if (t == null)
             return null;
 
-        return new TransactionView<A, TM> (this, t);
+        return new TransactionView<A, TM> (transactionId, this, t);
     }
 
     @Override
     public Component<CM> getComponent (int componentId) {
         return spectra.getComponent(components[componentId]);
-    }
-
-    @Override
-    public Iterator<Transaction<A, TM> > iterator () {
-        return new SpectraIterator();
     }
 }

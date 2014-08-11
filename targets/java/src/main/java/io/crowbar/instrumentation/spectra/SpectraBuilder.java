@@ -36,8 +36,9 @@ public class SpectraBuilder extends AbstractEventListener {
         Node n = treeRebuilder.getTree().getNode(probe.getNodeId());
 
 
-        spectra.setComponent(probe.getId(),
-                             Factory.createComponent(new CmpM(probe.getType(), n)));
+        spectra.setComponent(
+            Factory.createComponent(probe.getId(),
+                                    new CmpM(probe.getType(), n)));
     }
 
     @Override
@@ -49,12 +50,14 @@ public class SpectraBuilder extends AbstractEventListener {
                         exceptionMessage);
 
 
-        Transaction<Hit, TrM> t = Factory.createTransaction(hitVector,
-                                                            error ? 1 : 0,
-                                                            1, m);
+        Transaction<Hit, TrM> t =
+            Factory.createTransaction(spectra.getNumTransactions(),
+                                      hitVector,
+                                      error ? 1 : 0,
+                                      1, m);
 
 
-        spectra.appendTransaction(t);
+        spectra.setTransaction(t);
         error = false;
     }
 

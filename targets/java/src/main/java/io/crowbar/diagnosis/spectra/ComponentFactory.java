@@ -4,7 +4,9 @@ package io.crowbar.diagnosis.spectra;
 public final class ComponentFactory<CM extends Metadata> {
     private class C extends Component<CM> {
         private final CM metadata;
-        C (CM metadata) {
+        C (int id,
+           CM metadata) {
+            super(id);
             this.metadata = metadata;
         }
 
@@ -14,7 +16,8 @@ public final class ComponentFactory<CM extends Metadata> {
         }
     }
 
-    public Component<CM> create (CM metadata) {
-        return new C(metadata);
+    public Component<CM> create (int id,
+                                 CM metadata) {
+        return new C(id, metadata);
     }
 }

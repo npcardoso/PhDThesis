@@ -10,6 +10,8 @@ import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.bytecode.CodeAttribute;
+import javassist.bytecode.MethodInfo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,18 +33,30 @@ public final class TestWrapperPass extends AbstractPass {
     @Override
     public Outcome transform (CtClass c) throws Exception {
         for (CtMethod m : c.getDeclaredMethods()) {
+            MethodInfo info = m.getMethodInfo();
+            CodeAttribute ca = info.getCodeAttribute();
+
+            if (ca == null)
+                continue;
+
             for (TestWrapper tw : testWrappers) {
                 Action ret = tw.getAction(c, m);
 
                 if (ret == Action.ACCEPT) {
+                    ca.computeMaxStack();
                     Node n = getNode(c, m);
                     HitProbe sp = registerProbe(c, n, ProbeType.TRANSACTION_START);
                     HitProbe ep = registerProbe(c, n, ProbeType.TRANSACTION_END);
 
                     m.insertBefore(getTransactionCode(sp, false));
+                    ca.computeMaxStack();
+
                     injectOracles(c, m, n, tw, ep);
+                    ca.computeMaxStack();
+
                     m.insertAfter(getTransactionCode(ep, true),
                                   false /* asFinally */);
+                    ca.computeMaxStack();
                 }
                 else if (ret == Action.REJECT) {
                     return Outcome.CONTINUE;
@@ -103,7 +117,7 @@ public final class TestWrapperPass extends AbstractPass {
 
     private String getTransactionCode (HitProbe p,
                                        boolean hitFirst) throws RegistrationException {
-        String ret = "Collector c = Collector.instance();";
+        String ret = "{Collector c = Collector.instance();";
         String hit = "c.hit(" + p.getId() + ");";
 
 
@@ -118,6 +132,7 @@ public final class TestWrapperPass extends AbstractPass {
         if (!hitFirst)
             ret += hit;
 
+        ret += "}";
         return ret;
     }
 }

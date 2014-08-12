@@ -15,7 +15,8 @@ public class StackSizePass extends AbstractPass {
             if (ca == null)
                 continue;
 
-            ca.setMaxStack(ca.computeMaxStack());
+            int ss = ca.computeMaxStack();
+            ca.setMaxStack(ss);
         }
 
         return Outcome.CONTINUE;

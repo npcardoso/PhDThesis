@@ -17,6 +17,8 @@ import io.crowbar.instrumentation.passes.wrappers.JUnit3TestWrapper;
 import io.crowbar.instrumentation.passes.wrappers.JUnit4TestWrapper;
 import io.crowbar.instrumentation.runtime.Collector;
 
+
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -105,6 +107,8 @@ public class Agent implements ClassFileTransformer {
         ClassPool cp = null;
 
 
+        byte[] ret = null;
+
         if (classLoader == null)
             return null;
 
@@ -113,9 +117,11 @@ public class Agent implements ClassFileTransformer {
             cp = ClassPool.getDefault();
             c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return bytes;
+        catch (IOException e) {
+            return null;
+        }
+        catch (RuntimeException e) {
+            return null;
         }
 
 
@@ -123,13 +129,12 @@ public class Agent implements ClassFileTransformer {
             cp.importPackage("io.crowbar.instrumentation.runtime");
 
             for (Pass p : passes) {
-                Pass.Outcome ret = p.transform(c);
-
-                switch (ret) {
+                switch (p.transform(c)) {
                 case CONTINUE:
                     continue;
 
                 case ABORT:
+                    c.detach();
                     // System.err.println("Ignoring Class: " + c.getName());
                     return null;
 
@@ -139,16 +144,17 @@ public class Agent implements ClassFileTransformer {
                 }
             }
 
+            ret = c.toBytecode();
 
             // System.err.println("Instrumented Class: " + c.getName());
-            return c.toBytecode();
         }
-        catch (Exception ex) {
+        catch (Throwable ex) {
             System.err.println("Error in Class: " + c.getName());
             ex.printStackTrace();
         }
 
-        return null;
+        c.detach();
+        return ret;
     }
 
     private List<Pass> passes = new LinkedList<Pass> ();

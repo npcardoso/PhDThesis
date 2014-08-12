@@ -40,9 +40,8 @@ public:
                          const structs::t_spectra_filter & filter_first,
                          const structs::t_spectra_filter & filter_second);
 
-    inline virtual std::string to_string() const {
-        return "t_mhs";
-    }
+    virtual std::string to_string() const;
+
 
 protected:
     t_const_ptr<t_similarity> similarity;

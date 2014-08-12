@@ -5,11 +5,14 @@
 #include <boost/foreach.hpp>
 #include <thread>
 #include <list>
+#include <sstream>
+
+using namespace std;
+using namespace diagnostic::structs;
 
 
 namespace diagnostic {
 namespace algorithms {
-using namespace diagnostic::structs;
 t_mhs::t_mhs (const t_const_ptr<t_similarity> similarity) {
     set_cutoff(t_ptr<t_cutoff> ());
     set_parallelization(t_ptr<t_parallelization> ());
@@ -27,7 +30,7 @@ void t_mhs::set_cutoff (const t_const_ptr<t_basic_cutoff> cutoff) {
     if (cutoff.get())
         this->cutoff = cutoff;
     else
-        this->cutoff = t_const_ptr<t_basic_cutoff> (new t_basic_cutoff());
+        this->cutoff = t_const_ptr<t_basic_cutoff> (new t_no_cutoff());
 }
 
 void t_mhs::set_parallelization (const t_const_ptr<t_parallelization> parallelization) {
@@ -121,7 +124,7 @@ void t_mhs::update (const t_spectra & spectra,
                     t_ret_type & D,
                     const t_ret_type & old_D,
                     const t_spectra_filter & filter) const {
-    std::list<t_candidate> candidates;
+    list<t_candidate> candidates;
 
 
     BOOST_FOREACH(const t_candidate &candidate,
@@ -147,7 +150,7 @@ void t_mhs::combine (const t_spectra & spectra,
                      const t_ret_type & D_second,
                      const t_spectra_filter & filter_first,
                      const t_spectra_filter & filter_second) {
-    std::list<t_candidate> c_first, c_second;
+    list<t_candidate> c_first, c_second;
 
     {
         t_ret_type::iterator it = D_first.begin();
@@ -173,10 +176,10 @@ void t_mhs::combine (const t_spectra & spectra,
         }
     }
     {
-        std::list<t_candidate>::iterator first_it = c_first.begin();
+        list<t_candidate>::iterator first_it = c_first.begin();
 
         while (first_it != c_first.end()) {
-            std::list<t_candidate>::iterator second_it = c_second.begin();
+            list<t_candidate>::iterator second_it = c_second.begin();
 
             while (second_it != c_second.end()) {
                 t_candidate tmp = *first_it;
@@ -189,6 +192,17 @@ void t_mhs::combine (const t_spectra & spectra,
         }
     }
 }
+
+string t_mhs::to_string() const {
+    stringstream ss;
+
+    ss << "t_mhs[" <<
+        "similarity:" << similarity->to_string() << ", " <<
+        "cutoff:" << cutoff->to_string() << "]";
+    return ss.str();
+}
+
+
 
 t_mhs_parallel::t_mhs_parallel (const t_const_ptr<t_parallelization_factory> pf,
                                 t_count n_threads) {
@@ -206,8 +220,8 @@ void t_mhs_parallel::map (t_args * args) {
 void t_mhs_parallel::operator () (const structs::t_spectra & spectra,
                                   t_ret_type & D,
                                   const structs::t_spectra_filter * filter) const {
-    std::list<std::thread> threads;
-    std::list<t_args> args;
+    list<thread> threads;
+    list<t_args> args;
 
 
     for (t_id i = 0; i < n_threads; i++) {
@@ -222,11 +236,11 @@ void t_mhs_parallel::operator () (const structs::t_spectra & spectra,
         a.spectra = &spectra;
         a.filter = filter;
 
-        threads.push_back(std::thread(&t_mhs_parallel::map, &a));
+        threads.push_back(thread(&t_mhs_parallel::map, &a));
     }
 
     t_candidate_pool pool;
-    BOOST_FOREACH(std::thread & t,
+    BOOST_FOREACH(thread & t,
                   threads) {
         t.join();
     }

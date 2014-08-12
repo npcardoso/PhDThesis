@@ -1,5 +1,9 @@
 #include "cutoff.h"
 
+#include <sstream>
+
+using namespace std;
+
 namespace diagnostic {
 namespace algorithms {
 bool t_basic_cutoff::stop (t_count depth) const {
@@ -46,5 +50,17 @@ bool t_cutoff::stop (const t_rank & rank,
 
     return false;
 }
+
+std::string t_cutoff::to_string() const {
+    stringstream ss;
+    ss << "t_cutoff[" <<
+        "max_depth:" << max_depth << ", " <<
+        "max_candidates:" << max_candidates << ", " <<
+        "max_time:" << max_time << ", "<<
+        "lambda:" << lambda << ", "<<
+        "min_score:" << min_score << "]";
+    return ss.str();
+}
+
 }
 }

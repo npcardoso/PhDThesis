@@ -22,6 +22,9 @@ class t_algorithm_creator {
     inline virtual ~t_algorithm_creator() {}
 
     protected:
+
+    const std::string * get(const t_algorithm & a,
+                            const std::string & key) const;
     inline t_algorithm_creator() {}
 };
 }

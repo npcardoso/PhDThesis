@@ -52,12 +52,17 @@ public:
                                  t_component_id comp,
                                  const structs::t_spectra_filter * filter=NULL) const;
 
+
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const = 0;
 };
 
 
 class t_ochiai : public t_similarity {
+    public:
+    inline virtual std::string to_string() const {
+        return "t_ochiai";
+    }
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
 
@@ -65,6 +70,10 @@ protected:
 };
 
 class t_tarantula : public t_similarity {
+public:
+    inline virtual std::string to_string() const {
+        return "t_tarantula";
+    }
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
 
@@ -72,6 +81,10 @@ protected:
 };
 
 class t_jaccard : public t_similarity {
+public:
+    inline virtual std::string to_string() const {
+        return "t_jaccard";
+    }
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
 
@@ -79,6 +92,10 @@ protected:
 };
 
 class t_random : public t_similarity {
+public:
+    inline virtual std::string to_string() const {
+        return "t_random";
+    }
     // Calculates rank for a single components in the spectra
     virtual t_score operator () (const structs::t_spectra & spectra,
                                  t_component_id comp,

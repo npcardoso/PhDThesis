@@ -9,6 +9,7 @@
 #include "utils/boost.h"
 
 #include <list>
+#include <ostream>
 
 namespace diagnosis {
 class t_candidate_generator {
@@ -18,6 +19,7 @@ public:
     virtual void operator () (const structs::t_spectra & spectra,
                               t_ret_type & D,
                               const structs::t_spectra_filter * filter=NULL) const = 0;
+    virtual std::string to_string() const = 0;
     inline virtual ~t_candidate_generator () {}
 };
 
@@ -32,25 +34,18 @@ public:
                               const structs::t_trie & D,
                               t_ret_type & probs,
                               const structs::t_spectra_filter * filter=NULL) const = 0;
+    virtual std::string to_string() const = 0;
     inline virtual ~t_candidate_ranker () {}
 };
 
 
-class t_diagnosis_system {
-public:
-    inline t_diagnosis_system (const t_ptr<t_candidate_generator> & gen,
-                               const t_ptr<t_candidate_ranker> & rank) : generator(gen), ranker(rank) {}
+}
 
-    virtual void operator () (const structs::t_spectra & spectra,
-                              t_candidate_generator::t_ret_type & D,
-                              t_candidate_ranker::t_ret_type & probs,
-                              const structs::t_spectra_filter * filter=NULL) const;
-
-    inline virtual ~t_diagnosis_system () {}
-protected:
-    t_ptr<t_candidate_generator> generator;
-    t_ptr<t_candidate_ranker> ranker;
-};
+namespace std {
+std::ostream& operator<<(std::ostream & s,
+                         const diagnosis::t_candidate_generator & c);
+std::ostream& operator<<(std::ostream & s,
+                         const diagnosis::t_candidate_ranker & c);
 }
 
 #endif

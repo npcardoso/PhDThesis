@@ -40,6 +40,10 @@ public:
                          const structs::t_spectra_filter & filter_first,
                          const structs::t_spectra_filter & filter_second);
 
+    inline virtual std::string to_string() const {
+        return "t_mhs";
+    }
+
 protected:
     t_const_ptr<t_similarity> similarity;
     t_const_ptr<t_basic_cutoff> cutoff;
@@ -55,6 +59,10 @@ public:
     virtual void operator () (const structs::t_spectra & spectra,
                               t_ret_type & D,
                               const structs::t_spectra_filter * filter=NULL) const;
+
+    inline virtual std::string to_string() const {
+        return "t_mhs_parallel";
+    }
 private:
     class t_args {
 public:

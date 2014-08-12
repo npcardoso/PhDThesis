@@ -32,6 +32,11 @@ for i in ['prefix', 'build_dir']:
 for i in ['include', 'lib', 'bin']:
     env['%s_dir' % i] = join(env['prefix'], i)
 
+env.Append(CPPPATH =  env['include_dir'])
+env.Append(LIBPATH =  env['lib_dir'])
+env.Append(PATH=  env['bin_dir'])
+
+
 # Paths
 for i in ['PATH', 'LIBPATH', 'CPPPATH']:
     if not isinstance(env[i], list):
@@ -47,6 +52,9 @@ if(env['debug']):
 else:
     env['CCFLAGS'] = "-O3 -DNDEBUG"
 env['CCFLAGS'] += " -std=c++11  -Wall -pedantic"
+
+# Link Flags
+env.Append(LINKFLAGS = "-Wl,-rpath,'$$ORIGIN/../lib'")
 
 Export('env')
 SConscript('SConscript', variant_dir=env['build_dir'])

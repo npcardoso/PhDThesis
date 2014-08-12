@@ -1,0 +1,29 @@
+import os
+from os.path import join
+from util import findFiles
+Import('env')
+env = env.Clone()
+
+env.Append(LINKFLAGS = " ".join(["-ldiag",
+                                 "-lboost_system",
+                                 "-lmpfr"]))
+
+# Collect files
+wildcards = ""
+headers = findFiles(env, "", "h", 4)
+sources = findFiles(env, "", "cpp", 4)
+
+# Compile stuff
+#common_objects = env.SharedObject(sources)
+#env.Default(common_objects)
+libdiagJNI = env.Program(target = "diagjni", source = sources)
+env.Default(env.Install(env['bin_dir'], libdiagJNI))
+
+# Build shared lib
+#libdiagJNI = env.SharedLibrary(target = 'libdiagjni', source=common_objects)
+#libdiagJNI = env.Install(env['lib_dir'], libdiag)
+env.Default(libdiagJNI)
+
+# Build static lib
+#libdiagJNIstatic = env.StaticLibrary(target = 'libdiagjni', source=common_objects)
+#libdiagJNIstatic = env.Install(env['lib_dir'], libdiagJNIstatic)

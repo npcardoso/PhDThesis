@@ -60,6 +60,9 @@ public:
     virtual void prior (const structs::t_candidate & candidate,
                         t_goodness_mp & ret) const;
 
+    inline virtual std::string to_string() const {
+        return "t_barinel";
+    }
 public:
     t_goodness_mp g_j;
     double epsilon;

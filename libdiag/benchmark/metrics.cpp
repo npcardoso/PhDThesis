@@ -5,7 +5,7 @@
 using namespace boost;
 using namespace std;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 string t_Cd::__KEY__("Cd");
 string t_wasted_effort::__KEY__("wasted_effort");
@@ -37,7 +37,7 @@ string t_Cd::operator () (const structs::t_spectra & spectra,
                           const structs::t_candidate & correct,
                           const t_candidate_generator::t_ret_type & D,
                           const t_candidate_ranker::t_ret_type & probs,
-                          const structs::t_diagnosis_report & dr,
+                          const structs::t_diagnostic_report & dr,
                           const t_metric::t_arguments & arguments) const {
     t_candidate_ranker::t_ret_type::value_type current = NAN;
     t_count total_elements = 0, elements = 0;
@@ -72,7 +72,7 @@ string t_wasted_effort::operator () (const structs::t_spectra & spectra,
                                      const structs::t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnosis_report & dr,
+                                     const structs::t_diagnostic_report & dr,
                                      const t_metric::t_arguments & arguments) const {
     t_count elements = 0;
     t_candidate_ranker::t_ret_type::value_type current = NAN;
@@ -112,7 +112,7 @@ string t_entropy::operator () (const structs::t_spectra & spectra,
                                const structs::t_candidate & correct,
                                const t_candidate_generator::t_ret_type & D,
                                const t_candidate_ranker::t_ret_type & probs,
-                               const structs::t_diagnosis_report & dr,
+                               const structs::t_diagnostic_report & dr,
                                const t_metric::t_arguments & arguments) const {
     return lexical_cast<string> (dr.get_entropy());
 }
@@ -123,7 +123,7 @@ string t_quality::operator () (const structs::t_spectra & spectra,
                                const structs::t_candidate & correct,
                                const t_candidate_generator::t_ret_type & D,
                                const t_candidate_ranker::t_ret_type & probs,
-                               const structs::t_diagnosis_report & dr,
+                               const structs::t_diagnostic_report & dr,
                                const t_metric::t_arguments & arguments) const {
     double metric_value = get_argument<double> (target_metric, arguments);
     t_count remaining_components = (spectra.get_component_count() - correct.size());
@@ -141,7 +141,7 @@ string t_quality_fair::operator () (const structs::t_spectra & spectra,
                                     const structs::t_candidate & correct,
                                     const t_candidate_generator::t_ret_type & D,
                                     const t_candidate_ranker::t_ret_type & probs,
-                                    const structs::t_diagnosis_report & dr,
+                                    const structs::t_diagnostic_report & dr,
                                     const t_metric::t_arguments & arguments) const {
     double metric_value = get_argument<double> (target_metric, arguments);
     t_count remaining_components = (spectra.get_suspicious_components_count() - correct.size());

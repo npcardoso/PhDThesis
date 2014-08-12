@@ -1,12 +1,12 @@
 #ifndef __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
 #define __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
 
-#include "../diagnosis_system.h"
+#include "../diagnostic_system.h"
 #include "../types.h"
 
 #include <map>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 typedef std::vector<t_goodness_mp> t_barinel_goodnesses;
 

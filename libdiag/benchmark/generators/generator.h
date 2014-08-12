@@ -5,7 +5,7 @@
 #include "../../utils/boost.h"
 #include "../../exceptions.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_spectra_generator {
 public:
@@ -60,6 +60,6 @@ t_ptr<t_spectra_generator> generate_generators (t_count generator_count,
 }
 
 namespace std {
-ostream & operator << (ostream & out, const diagnosis::benchmark::t_spectra_generator & system);
+ostream & operator << (ostream & out, const diagnostic::benchmark::t_spectra_generator & system);
 }
 #endif

@@ -7,7 +7,7 @@
 #include <cmath>
 #include <iomanip>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 t_probability t_spectra::get_activation_rate (const t_spectra_filter * filter) const {
     t_spectra_iterator it(get_component_count(),
@@ -464,11 +464,11 @@ t_confidence t_basic_spectra::set_confidence (t_transaction_id transaction,
 }
 
 namespace std {
-std::istream & operator >> (std::istream & in, diagnosis::structs::t_spectra & spectra) {
+std::istream & operator >> (std::istream & in, diagnostic::structs::t_spectra & spectra) {
     return spectra.read(in);
 }
 
-std::ostream & operator << (std::ostream & out, const diagnosis::structs::t_spectra & spectra) {
+std::ostream & operator << (std::ostream & out, const diagnostic::structs::t_spectra & spectra) {
     return spectra.write(out);
 }
 }

@@ -1,6 +1,6 @@
 #include "cutoff.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 bool t_basic_cutoff::stop (t_count depth) const {
     return false;

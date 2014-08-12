@@ -5,7 +5,7 @@
 #include <list>
 #include <vector>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_candidate_pool {
 public:

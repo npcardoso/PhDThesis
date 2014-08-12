@@ -1,5 +1,5 @@
 #include "flusher.h"
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 void t_flusher_hook::trigger_event (t_collector & collector,
                                     const t_status_iteration_init & status) const {

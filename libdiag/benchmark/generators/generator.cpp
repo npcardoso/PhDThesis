@@ -1,9 +1,9 @@
 #include "generator.h"
 
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 using namespace std;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_generator_repeater::t_generator_repeater (t_ptr<t_spectra_generator> generator,
                                             t_count count) : generator(generator), count(count) {}
@@ -39,7 +39,7 @@ structs::t_spectra * t_generator_combiner::operator () (std::mt19937 & gen,
 
 
 namespace std {
-ostream & operator << (ostream & out, const diagnosis::benchmark::t_spectra_generator & system) {
+ostream & operator << (ostream & out, const diagnostic::benchmark::t_spectra_generator & system) {
     return system.write(out);
 }
 }

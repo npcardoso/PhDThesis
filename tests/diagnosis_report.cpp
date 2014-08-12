@@ -1,11 +1,11 @@
 #include <boost/test/unit_test.hpp>
-#include <libdiag/structs/diagnosis_report.h>
+#include <libdiag/structs/diagnostic_report.h>
 
 #include <fstream>
-using namespace diagnosis;
-using namespace diagnosis::structs;
+using namespace diagnostic;
+using namespace diagnostic::structs;
 
-BOOST_AUTO_TEST_SUITE(Diagnosis_Report)
+BOOST_AUTO_TEST_SUITE(Diagnostic_Report)
 typedef t_candidate_generator::t_ret_type t_D;
 typedef t_candidate_ranker::t_ret_type t_probs;
 

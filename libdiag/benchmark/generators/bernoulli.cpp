@@ -4,9 +4,9 @@
 #include "../../structs/count_spectra.h"
 
 using boost::bernoulli_distribution;
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 using namespace structs;
 

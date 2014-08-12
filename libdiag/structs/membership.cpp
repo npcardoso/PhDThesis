@@ -1,6 +1,6 @@
 #include "membership.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 t_membership::t_membership () {}
 

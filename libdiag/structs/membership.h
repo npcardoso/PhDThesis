@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 typedef double t_membership_value;
 typedef boost::shared_ptr<t_membership_value[]> t_membership_value_ptr;

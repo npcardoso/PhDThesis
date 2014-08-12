@@ -5,9 +5,9 @@
 #include <cmath>
 #include <boost/foreach.hpp>
 
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_generator_job : public t_job {
 public:

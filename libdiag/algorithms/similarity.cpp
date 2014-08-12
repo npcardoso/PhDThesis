@@ -11,7 +11,7 @@
 #include <functional>
 #include <boost/random/uniform_real_distribution.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 using namespace structs;
 
@@ -171,7 +171,7 @@ t_score t_random::operator () (const structs::t_spectra & spectra,
 }
 }
 namespace std {
-ostream & operator << (ostream & out, const diagnosis::algorithms::t_rank & r) {
+ostream & operator << (ostream & out, const diagnostic::algorithms::t_rank & r) {
     for (t_id i = 0; i < r.size(); i++)
         out << r.get_score(i) << ", " << r.get_component(i) << "\n";
 

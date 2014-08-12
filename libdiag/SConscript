@@ -31,7 +31,7 @@ libdiagstatic = env.StaticLibrary(target = 'libdiag', source=common_objects)
 libdiagstatic = env.Install(env['lib_dir'], libdiagstatic)
 
 # Install include files
-header_install_dir = join(env['include_dir'], "crowbar/diagnosis/")
+header_install_dir = join(env['include_dir'], "crowbar/diagnostic/")
 for h in headers:
   install = join(header_install_dir, os.path.dirname(str(h)))
   install = env.Install(install, h)

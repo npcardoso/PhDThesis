@@ -5,10 +5,10 @@
 
 #include <boost/random/bernoulli_distribution.hpp>
 
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 using namespace boost::random;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_fuzzy_bernoulli::t_fuzzy_bernoulli  (t_count component_count,
                                        float activation_rate,

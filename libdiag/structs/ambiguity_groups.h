@@ -9,7 +9,7 @@
 #include <map>
 #include <set>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_ambiguity_groups {
 public:
@@ -38,7 +38,7 @@ private:
 }
 
 namespace std {
-ostream & operator << (ostream & out, const diagnosis::structs::t_ambiguity_groups & ag);
+ostream & operator << (ostream & out, const diagnostic::structs::t_ambiguity_groups & ag);
 }
 
 #endif

@@ -5,9 +5,9 @@
 #include <fstream>
 
 using namespace std;
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_spectra * t_replay::operator () (std::mt19937 & gen,
                                    t_candidate & correct_candidate) {

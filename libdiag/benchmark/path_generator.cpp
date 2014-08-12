@@ -4,7 +4,7 @@
 
 #include <boost/foreach.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_path_generator::t_path_generator (std::string root_dir) : root_dir(root_dir) {
     relevant_keys.push_back(STATUS_KEY_ITERATION);

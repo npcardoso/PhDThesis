@@ -10,7 +10,7 @@
 #include <set>
 #include <boost/random/mersenne_twister.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_fault {
 public:

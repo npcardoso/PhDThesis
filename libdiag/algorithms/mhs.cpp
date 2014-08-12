@@ -7,9 +7,9 @@
 #include <list>
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 t_mhs::t_mhs (const t_const_ptr<t_similarity> similarity) {
     set_cutoff(t_ptr<t_cutoff> ());
     set_parallelization(t_ptr<t_parallelization> ());

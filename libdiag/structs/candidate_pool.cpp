@@ -3,7 +3,7 @@
 #include <boost/foreach.hpp>
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 void t_candidate_pool::add (const t_trie & trie) {
     BOOST_FOREACH(const t_candidate &c, trie) {

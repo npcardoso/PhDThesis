@@ -1,8 +1,8 @@
-#include "diagnosis_report.h"
+#include "diagnostic_report.h"
 
 #include <boost/foreach.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 template <class InputIterator1, class InputIterator2>
 bool intersects (InputIterator1 first1, InputIterator1 last1,
@@ -17,12 +17,12 @@ bool intersects (InputIterator1 first1, InputIterator1 last1,
     return false;
 }
 
-t_diagnosis_report::t_diagnosis_report (const t_diagnosis_report::t_D & D,
-                                        const t_diagnosis_report::t_probs & probs) {
+t_diagnostic_report::t_diagnostic_report (const t_diagnostic_report::t_D & D,
+                                        const t_diagnostic_report::t_probs & probs) {
     add(D, probs);
 }
 
-t_id t_diagnosis_report::next (t_id current,
+t_id t_diagnostic_report::next (t_id current,
                                const t_candidate & healthy_comps) const {
     while (current++ < rank.size()) {
         if (!intersects(healthy_comps.begin(), healthy_comps.end(),
@@ -33,23 +33,23 @@ t_id t_diagnosis_report::next (t_id current,
     return 0;
 }
 
-const t_diagnosis_report::t_D::value_type & t_diagnosis_report::get_candidate (t_id i) const {
+const t_diagnostic_report::t_D::value_type & t_diagnostic_report::get_candidate (t_id i) const {
     assert(i > 0);
     assert(i <= rank.size());
     return *(rank[i - 1].second);
 }
 
-double t_diagnosis_report::get_probability (t_id i) const {
+double t_diagnostic_report::get_probability (t_id i) const {
     assert(i > 0);
     assert(i <= rank.size());
     return rank[i - 1].first;
 }
 
-t_count t_diagnosis_report::size () const {
+t_count t_diagnostic_report::size () const {
     return D.size();
 }
 
-void t_diagnosis_report::add (const t_D & candidates,
+void t_diagnostic_report::add (const t_D & candidates,
                               const t_probs & probs) {
     assert(candidates.size() == probs.size());
 
@@ -68,7 +68,7 @@ void t_diagnosis_report::add (const t_D & candidates,
     sort(rank.begin(), rank.end(), std::greater<t_rank_element> ());
 }
 
-t_diagnosis_report::t_entropy t_diagnosis_report::get_entropy () const {
+t_diagnostic_report::t_entropy t_diagnostic_report::get_entropy () const {
     t_entropy ret = 0;
 
 
@@ -84,7 +84,7 @@ t_diagnosis_report::t_entropy t_diagnosis_report::get_entropy () const {
 }
 }
 namespace std {
-std::ostream & operator << (std::ostream & out, const diagnosis::structs::t_diagnosis_report & dr) {
+std::ostream & operator << (std::ostream & out, const diagnostic::structs::t_diagnostic_report & dr) {
     for (t_id i = 1; i <= dr.size(); i++)
         out << (dr.get_probability(i)) << ": " << dr.get_candidate(i) << std::endl;
 

@@ -6,7 +6,7 @@
 using namespace boost;
 using namespace boost::assign;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_status_iteration_init::t_status_iteration_init (t_id iteration_id,
                                                   t_time_interval start,

@@ -5,7 +5,7 @@
 #include "../collector.h"
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_benchmark_hook {
 public:

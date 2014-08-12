@@ -3,8 +3,8 @@
 #include <libdiag/structs/count_spectra.h>
 
 #include <fstream>
-using namespace diagnosis;
-using namespace diagnosis::structs;
+using namespace diagnostic;
+using namespace diagnostic::structs;
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(AMBIGUITY_GROUPS)

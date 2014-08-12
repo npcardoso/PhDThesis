@@ -3,7 +3,7 @@
 
 #include "benchmark_hook.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_hook_combiner : public t_benchmark_hook, public std::list<t_const_ptr<t_benchmark_hook> > {
 public:

@@ -2,7 +2,7 @@
 
 #include <boost/foreach.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 std::istream & t_candidate::read (std::istream & in) {
     while (true) {

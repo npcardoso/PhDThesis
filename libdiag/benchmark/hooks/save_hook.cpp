@@ -1,12 +1,12 @@
 #include "save_hook.h"
 
-#include "../../structs/diagnosis_report.h"
+#include "../../structs/diagnostic_report.h"
 #include "../../utils/iostream.h"
 
 #include <boost/lexical_cast.hpp>
 #include <fstream>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 void t_save_hook::trigger_event (t_collector & collector,
                                  const t_status_iteration_init & status) const {
@@ -53,7 +53,7 @@ void t_save_hook::trigger_event (t_collector & collector,
                         ss.str());
 
     ss.str("");
-    ss << structs::t_diagnosis_report(status.get_candidates(), status.get_probs());
+    ss << structs::t_diagnostic_report(status.get_candidates(), status.get_probs());
     collector.save_file(collector.local_path(entry, "report.txt"),
                         ss.str());
 }

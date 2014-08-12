@@ -3,7 +3,7 @@
 #include <sstream>
 #include <cstring>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 t_count t_count_spectra::get_activations (t_component_id component,
                                           t_transaction_id transaction) const {

@@ -5,7 +5,7 @@
 #include "../utils/boost.h"
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_path_generator {
 public:

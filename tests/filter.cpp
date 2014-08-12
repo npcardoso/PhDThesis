@@ -5,8 +5,8 @@
 #include <boost/foreach.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
-using namespace diagnosis;
-using namespace diagnosis::structs;
+using namespace diagnostic;
+using namespace diagnostic::structs;
 
 
 void randomize (t_filter & f, t_count count, t_count min, t_count max) {

@@ -1,6 +1,6 @@
 #include "single_fault.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 void t_single_fault::operator () (const structs::t_spectra & spectra,
                                   t_ret_type & D,

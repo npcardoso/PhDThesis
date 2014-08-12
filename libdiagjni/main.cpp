@@ -1,4 +1,4 @@
-#include <crowbar/diagnosis/diag.h>
+#include <crowbar/diagnostic/diag.h>
 
 #include <sstream>
 #include <boost/property_tree/ptree.hpp>
@@ -6,11 +6,12 @@
 #include <boost/foreach.hpp>
 
 using boost::property_tree::ptree;
+using boost::property_tree::ptree_bad_path;
 using boost::property_tree::read_json;
 using boost::property_tree::write_json;
 using namespace std;
-using namespace diagnosis;
-using namespace diagnosis::algorithms;
+using namespace diagnostic;
+using namespace diagnostic::algorithms;
 
 
 void print(ptree pt, string prefix=""){
@@ -20,7 +21,7 @@ void print(ptree pt, string prefix=""){
     }
 }
 
-class t_diagnostic_job {
+class t_diagnostic_system {
 public:
     typedef std::pair<t_id, t_id> t_connection;
     typedef std::vector<t_connection> t_connections;
@@ -45,9 +46,13 @@ public:
 
 
     void add_connection (t_id generator_id,
-                         t_id ranker_id);
+                         t_id ranker_id) {
+        assert(generator_id >= 0 && generator_id < generators.size());
+        assert(ranker_id >= 0 && ranker_id < rankers.size());
+        connections.push_back(t_connection(generator_id, ranker_id));
+    }
 
-    friend std::ostream& operator<<(std::ostream& s, const t_diagnostic_job & dj);
+    friend std::ostream& operator<<(std::ostream& s, const t_diagnostic_system & ds);
 
 protected:
     std::vector < t_const_ptr < t_candidate_generator > > generators;
@@ -55,10 +60,10 @@ protected:
     t_connections connections;
 };
 
-std::ostream& operator<<(std::ostream& s, const t_diagnostic_job & dj){
-    s << "t_diagnostic_job[generators:" << dj.generators << ", ";
-    s << "rankers:" << dj.rankers << ", ";
-    s << "connections:" << dj.connections << "]";
+std::ostream& operator<<(std::ostream& s, const t_diagnostic_system& ds){
+    s << "t_diagnostic_system[generators:" << ds.generators << ", ";
+    s << "rankers:" << ds.rankers << ", ";
+    s << "connections:" << ds.connections << "]";
     return s;
 }
 
@@ -67,7 +72,9 @@ class t_algorithm {
     typedef std::map<std::string, std::string> t_configs;
 
     t_algorithm (std::string name,
-                 t_const_ptr<t_configs> configs):name(name), configs(configs) {}
+                 t_const_ptr<t_configs> configs):name(name), configs(configs) {
+        assert(configs.get() != NULL);
+    }
 
     const std::string & get_name() const {
         return name;
@@ -133,18 +140,36 @@ class t_algorithm_creator_combiner: public t_algorithm_creator {
 
 class t_similarity_creator : public t_algorithm_creator {
     virtual t_const_ptr<t_candidate_ranker> ranker(const t_algorithm & a) const {
+        t_const_ptr<t_candidate_ranker> ret;
         const t_algorithm::t_configs & configs = a.get_configs();
 
-        t_algorithm::t_configs::const_iterator it = configs.find("type");
-        if(it != configs.end()) {
-            string type = it->second;
-            if(type == "ochiai")
-                return t_const_ptr<t_candidate_ranker>(new t_ochiai());
-            else if(type == "jaccard")
-                return t_const_ptr<t_candidate_ranker>(new t_jaccard());
-        }
+        if(a.get_name() != "similarity")
+            return ret;
 
-        return t_const_ptr<t_candidate_ranker>();
+        t_algorithm::t_configs::const_iterator it = configs.find("type");
+        if(it == configs.end())
+            return ret;
+
+        string type = it->second;
+        if(type == "ochiai")
+            ret = t_const_ptr<t_candidate_ranker>(new t_ochiai());
+        else if(type == "jaccard")
+            ret = t_const_ptr<t_candidate_ranker>(new t_jaccard());
+
+        return ret;
+    }
+};
+
+class t_mhs_creator: public t_algorithm_creator {
+    virtual t_const_ptr<t_candidate_generator> generator (const t_algorithm & a) const {
+        t_const_ptr<t_candidate_generator> ret;
+        const t_algorithm::t_configs & configs = a.get_configs();
+
+        if(a.get_name() != "mhs")
+            return ret;
+        ret = t_const_ptr<t_candidate_generator>(new t_mhs());
+        //! TODO: Add all options
+        return ret;
     }
 };
 
@@ -161,16 +186,23 @@ t_const_ptr<t_algorithm::t_configs> parse_configs(const ptree & pt){
 
 
 t_const_ptr<t_algorithm> parse_algorithm (const ptree & pt){
-    string name = pt.get<string>("name", "");
-    t_const_ptr<t_algorithm::t_configs> configs = parse_configs(pt.get_child("configs"));
+    string name = pt.get<string>("name");
+
+    t_const_ptr<t_algorithm::t_configs> configs;
+    try {
+        configs = parse_configs(pt.get_child("configs"));
+    }
+    catch(ptree_bad_path e) {
+        configs = t_const_ptr<t_algorithm::t_configs>(new t_algorithm::t_configs());
+    }
 
     return t_const_ptr<t_algorithm>(new t_algorithm(name, configs));
 }
 
 
-t_const_ptr<t_diagnostic_job> parse_diagnostic_job (const ptree & pt,
-                                                    const t_algorithm_creator & ac) {
-    t_ptr<t_diagnostic_job> dj(new t_diagnostic_job());
+t_const_ptr<t_diagnostic_system> parse_diagnostic_system (const ptree & pt,
+                                                          const t_algorithm_creator & ac) {
+    t_ptr<t_diagnostic_system> dj(new t_diagnostic_system());
 
     BOOST_FOREACH(const ptree::value_type & e, pt.get_child("generators")) {
         print(e.second);
@@ -190,6 +222,13 @@ t_const_ptr<t_diagnostic_job> parse_diagnostic_job (const ptree & pt,
         dj->add_ranker(cr);
     }
 
+    BOOST_FOREACH(const ptree::value_type & e, pt.get_child("connections")) {
+        int from = e.second.get("from", -1);
+        int to = e.second.get("to", -1);
+        dj->add_connection(from, to);
+    }
+
+
     return dj;
 }
 
@@ -200,7 +239,11 @@ int main() {
   read_json (std::cin, pt);
   print(pt);
   cout << std::endl;
-  t_const_ptr<t_diagnostic_job> dj = parse_diagnostic_job(pt, t_similarity_creator());
+  t_algorithm_creator_combiner acc;
+  acc.add(t_const_ptr<t_algorithm_creator>(new t_mhs_creator()));
+  acc.add(t_const_ptr<t_algorithm_creator>(new t_similarity_creator()));
+
+  t_const_ptr<t_diagnostic_system> dj = parse_diagnostic_system(pt, acc);
   cout << *dj;
   return 0;
 }

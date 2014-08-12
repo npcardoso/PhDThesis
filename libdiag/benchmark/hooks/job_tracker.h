@@ -4,7 +4,7 @@
 #include "benchmark_hook.h"
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_job_tracker_hook : public t_benchmark_hook {
 public:

@@ -7,8 +7,8 @@
 #include <sstream>
 
 using namespace std;
-using namespace diagnosis;
-using namespace diagnosis::structs;
+using namespace diagnostic;
+using namespace diagnostic::structs;
 
 void check_equal (t_count_spectra & spectra, t_count_spectra & spectra2, t_count n_comp, t_count n_tran) {
     for (t_transaction_id t = 1; t <= n_tran; t++) {

@@ -2,13 +2,13 @@
 #include <libdiag/benchmark/metrics.h>
 
 #include <fstream>
-using namespace diagnosis;
-using namespace diagnosis::benchmark;
+using namespace diagnostic;
+using namespace diagnostic::benchmark;
 
 BOOST_AUTO_TEST_SUITE(Metrics)
 /*
  * BOOST_AUTO_TEST_CASE(C_d) {
- *  typedef diagnosis::t_rank_element<float, t_component_id> t_rank_element;
+ *  typedef diagnostic::t_rank_element<float, t_component_id> t_rank_element;
  *  std::list<t_rank_element> l;
  *
  *  l.push_back(t_rank_element(1, -1));

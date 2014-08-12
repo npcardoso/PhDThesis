@@ -1,6 +1,6 @@
 #include "benchmark_settings.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_benchmark_settings::t_benchmark_settings (const t_ptr<t_collector> & collector,
                                             const t_const_ptr<t_benchmark_hook> & hook,

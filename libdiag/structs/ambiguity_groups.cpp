@@ -5,7 +5,7 @@
 #include <boost/uuid/sha1.hpp>
 
 using boost::uuids::detail::sha1;
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 std::string sha1_to_string (sha1 & s) {
     unsigned int digest[5];
@@ -90,7 +90,7 @@ const t_ambiguity_groups::t_group * t_ambiguity_groups::group (t_component_id c_
 }
 }
 
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 
 std::ostream & std::operator << (std::ostream & out, const t_ambiguity_groups & ag) {
     const t_spectra_filter & f = ag.filter();

@@ -4,9 +4,9 @@
 #include <stack>
 
 using namespace boost::random;
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_topology_based_generator::t_topology_based_generator () {
     stack_size = 0;

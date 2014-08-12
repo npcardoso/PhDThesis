@@ -5,7 +5,7 @@
 #include "../../structs/topology.h"
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_fuzzy_bernoulli : public t_spectra_generator {
 public:

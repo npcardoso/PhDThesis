@@ -3,7 +3,7 @@
 
 #include "benchmark_hook.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_statistics_hook : public t_benchmark_hook {
 public:

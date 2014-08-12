@@ -3,7 +3,7 @@
 
 #include <boost/foreach.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 using namespace structs;
 

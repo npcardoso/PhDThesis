@@ -5,7 +5,7 @@
 #include "../metrics.h"
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_metrics_hook : public t_benchmark_hook, public std::list<t_const_ptr<t_metric> > {
 public:

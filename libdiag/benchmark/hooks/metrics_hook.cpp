@@ -3,11 +3,11 @@
 #include <boost/foreach.hpp>
 #include <fstream>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 void t_metrics_hook::trigger_event (t_collector & collector,
                                     const t_status_post_rank & status) const {
-    structs::t_diagnosis_report dr(status.get_candidates(),
+    structs::t_diagnostic_report dr(status.get_candidates(),
                                    status.get_probs());
 
     t_entry entry;

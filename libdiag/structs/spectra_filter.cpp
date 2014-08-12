@@ -2,7 +2,7 @@
 
 #include <boost/foreach.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 void t_spectra_filter::strip (const t_candidate & candidate,
                               const t_spectra & spectra) {

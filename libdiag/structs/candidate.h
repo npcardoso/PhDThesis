@@ -7,7 +7,7 @@
 #include <iostream>
 #include <set>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 #define CANDIDATE_NORMAL_PREFIX ""
 #define CANDIDATE_NORMAL_SUFFIX " 0"
@@ -60,11 +60,11 @@ public:
 }
 }
 namespace std {
-inline std::istream & operator >> (std::istream & in, diagnosis::structs::t_candidate & candidate) {
+inline std::istream & operator >> (std::istream & in, diagnostic::structs::t_candidate & candidate) {
     return candidate.read(in);
 }
 
-inline std::ostream & operator << (std::ostream & out, const diagnosis::structs::t_candidate & candidate) {
+inline std::ostream & operator << (std::ostream & out, const diagnostic::structs::t_candidate & candidate) {
     return candidate.print(out);
 }
 }

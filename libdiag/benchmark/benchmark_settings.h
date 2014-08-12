@@ -10,7 +10,7 @@
 #include <list>
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_benchmark_settings {
 public:

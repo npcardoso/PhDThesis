@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 typedef std::map<std::string, std::string> t_entry;
 }

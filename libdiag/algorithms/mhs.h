@@ -4,10 +4,10 @@
 #include "similarity.h"
 #include "mhs/cutoff.h"
 #include "mhs/parallelization.h"
-#include "../diagnosis_system.h"
+#include "../diagnostic_system.h"
 #include "../utils/time.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 class t_mhs : public t_candidate_generator {
 public:

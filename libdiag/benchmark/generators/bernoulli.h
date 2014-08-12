@@ -3,7 +3,7 @@
 
 #include "generator.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_bernoulli : public t_spectra_generator {
 public:

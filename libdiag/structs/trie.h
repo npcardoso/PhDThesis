@@ -9,7 +9,7 @@
 #include <iterator>
 #include <map>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_trie_iterator;
 

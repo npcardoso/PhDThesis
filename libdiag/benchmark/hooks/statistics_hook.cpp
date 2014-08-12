@@ -7,7 +7,7 @@
 using namespace boost;
 using namespace boost::posix_time;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 void t_statistics_hook::trigger_event (t_collector & collector,
                                        const t_status_iteration_init & status) const {

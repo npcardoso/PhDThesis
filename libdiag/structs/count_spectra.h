@@ -5,7 +5,7 @@
 #include "../structs/spectra.h"
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_count_spectra : public t_basic_spectra {
 public:

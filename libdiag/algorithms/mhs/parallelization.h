@@ -7,7 +7,7 @@
 
 #include <random>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 class t_parallelization {
 public:

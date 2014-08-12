@@ -7,7 +7,7 @@
 
 using namespace boost;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 void t_hook_combiner::trigger_event (t_collector & collector,
                                      const t_status_iteration_init & status) const {

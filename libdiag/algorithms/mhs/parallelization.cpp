@@ -2,9 +2,9 @@
 
 #include <boost/random/uniform_int_distribution.hpp>
 
-using namespace diagnosis::structs;
+using namespace diagnostic::structs;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 bool t_parallelization::skip (t_id rank_pos,
                               const t_candidate & candidate) const {

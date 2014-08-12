@@ -6,7 +6,7 @@
 #include "../../structs/count_spectra.h"
 #include "../../structs/topology.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_topology_based_generator : public t_spectra_generator {
 public:

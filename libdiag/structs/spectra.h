@@ -11,7 +11,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_spectra {
 public:
@@ -161,12 +161,12 @@ const T & t_spectra::requires () const {
 }
 
 namespace std {
-std::istream & operator >> (std::istream & in, diagnosis::structs::t_spectra & spectra);
-std::ostream & operator << (std::ostream & out, const diagnosis::structs::t_spectra & spectra);
+std::istream & operator >> (std::istream & in, diagnostic::structs::t_spectra & spectra);
+std::ostream & operator << (std::ostream & out, const diagnostic::structs::t_spectra & spectra);
 }
 
 #else
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_spectra;
 }

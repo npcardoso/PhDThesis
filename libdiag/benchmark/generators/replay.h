@@ -7,7 +7,7 @@
 #include <string>
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_replay : public t_spectra_generator, public std::list<std::pair<std::string, std::string> > {
 public:

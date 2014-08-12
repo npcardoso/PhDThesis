@@ -4,7 +4,7 @@
 #include "benchmark_settings.h"
 #include "generators/generator.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 void run_benchmark (const t_benchmark_settings & settings,
                     t_spectra_generator & generator,

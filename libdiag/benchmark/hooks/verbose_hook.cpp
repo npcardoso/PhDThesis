@@ -1,7 +1,7 @@
 #include "verbose_hook.h"
 #include <sstream>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 void t_verbose_hook::trigger_event (t_collector & collector,
                                     const t_status_iteration_init & status) const {

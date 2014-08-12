@@ -1,9 +1,9 @@
 #ifndef __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 #define __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 
-#include "../diagnosis_system.h"
+#include "../diagnostic_system.h"
 #include "../structs/candidate.h"
-#include "../structs/diagnosis_report.h"
+#include "../structs/diagnostic_report.h"
 #include "../utils/boost.h"
 #include "../utils/iostream.h"
 
@@ -12,7 +12,7 @@
 #include <cmath>
 #include <vector>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_metric {
 public:
@@ -24,7 +24,7 @@ public:
                                      const structs::t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnosis_report & dr,
+                                     const structs::t_diagnostic_report & dr,
                                      const t_arguments & arguments) const = 0;
     template <class T>
     T get_argument (std::string name, const t_arguments & arguments) const {
@@ -47,7 +47,7 @@ public:
                                      const structs::t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnosis_report & dr,
+                                     const structs::t_diagnostic_report & dr,
                                      const t_arguments & ret) const;
 private:
     static std::string __KEY__;
@@ -61,7 +61,7 @@ public:
                                      const structs::t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnosis_report & dr,
+                                     const structs::t_diagnostic_report & dr,
                                      const t_arguments & ret) const;
 private:
     static std::string __KEY__;
@@ -75,7 +75,7 @@ public:
                                      const structs::t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnosis_report & dr,
+                                     const structs::t_diagnostic_report & dr,
                                      const t_arguments & ret) const;
 private:
     static std::string __KEY__;
@@ -91,7 +91,7 @@ public:
                                      const structs::t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnosis_report & dr,
+                                     const structs::t_diagnostic_report & dr,
                                      const t_arguments & ret) const;
 private:
     std::string target_metric;
@@ -109,7 +109,7 @@ public:
                                      const structs::t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnosis_report & dr,
+                                     const structs::t_diagnostic_report & dr,
                                      const t_arguments & ret) const;
 private:
     std::string target_metric;

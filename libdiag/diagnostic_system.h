@@ -1,5 +1,5 @@
-#ifndef __DIAGNOSIS_SYSTEM_H_2d027fe833f058443bd53e5b08fdd5e63b74e055__
-#define __DIAGNOSIS_SYSTEM_H_2d027fe833f058443bd53e5b08fdd5e63b74e055__
+#ifndef __DIAGNOSTIC_SYSTEM_H_2d027fe833f058443bd53e5b08fdd5e63b74e055__
+#define __DIAGNOSTIC_SYSTEM_H_2d027fe833f058443bd53e5b08fdd5e63b74e055__
 
 #include "types.h"
 #include "structs/spectra.h"
@@ -11,7 +11,7 @@
 #include <list>
 #include <ostream>
 
-namespace diagnosis {
+namespace diagnostic {
 class t_candidate_generator {
 public:
     typedef structs::t_trie t_ret_type;
@@ -43,9 +43,9 @@ public:
 
 namespace std {
 std::ostream& operator<<(std::ostream & s,
-                         const diagnosis::t_candidate_generator & c);
+                         const diagnostic::t_candidate_generator & c);
 std::ostream& operator<<(std::ostream & s,
-                         const diagnosis::t_candidate_ranker & c);
+                         const diagnostic::t_candidate_ranker & c);
 }
 
 #endif

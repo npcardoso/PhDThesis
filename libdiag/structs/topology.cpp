@@ -10,7 +10,7 @@
 
 using namespace boost::random;
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 t_fault::t_fault () {
     this->pass_prob = 0.5;

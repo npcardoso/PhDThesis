@@ -5,7 +5,7 @@
 #include "../../utils/time.h"
 #include "../../structs/trie.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace algorithms {
 class t_basic_cutoff {
 public:

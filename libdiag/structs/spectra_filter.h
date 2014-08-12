@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_spectra_filter {
 public:
@@ -46,7 +46,7 @@ public:
 }
 }
 #else
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 class t_spectra_filter;
 }

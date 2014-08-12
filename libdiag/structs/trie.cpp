@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <boost/foreach.hpp>
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 std::ostream & operator << (std::ostream & out, const t_trie & trie) {
     return trie.print(out);

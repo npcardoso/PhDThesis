@@ -1,6 +1,6 @@
 #include "filter.h"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace structs {
 t_filter::t_filter () {
     filtered_count = 0;

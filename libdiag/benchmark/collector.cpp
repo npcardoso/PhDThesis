@@ -12,7 +12,7 @@
 using namespace std;
 
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 t_file::t_file (const t_path & path) {
     this->path = path;

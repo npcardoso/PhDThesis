@@ -2,7 +2,7 @@
 #define __STATUS_H_002ec00416d0bb9fe059ff731dccb22e60e633a2__
 
 #include "types.h"
-#include "../diagnosis_system.h"
+#include "../diagnostic_system.h"
 #include "../utils/time.h"
 
 
@@ -10,7 +10,7 @@
 #define STATUS_KEY_GENERATOR "generator"
 #define STATUS_KEY_RANKER "ranker"
 
-namespace diagnosis {
+namespace diagnostic {
 namespace benchmark {
 class t_status {
 public:

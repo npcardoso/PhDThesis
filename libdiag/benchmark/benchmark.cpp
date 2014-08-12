@@ -44,8 +44,9 @@ t_generator_job::t_generator_job (t_id generator_id,
                                   const t_const_ptr<t_status_iteration_init> & status) : generator_id(generator_id), settings(settings), status(status) {}
 
 void t_generator_job::operator () () const {
-    const t_const_ptr<t_candidate_generator> & generator = settings.get_generator(generator_id);
-    const t_benchmark_settings::t_ranker_list & connections = settings.get_connections(generator_id);
+    const t_diagnostic_system & diag = settings.get_diagnostic_system();
+    const t_const_ptr<t_candidate_generator> & generator = diag.get_generator(generator_id);
+    const t_diagnostic_system::t_ranker_list & connections = diag.get_connections(generator_id);
 
 
     if (connections.size() == 0)
@@ -62,7 +63,7 @@ void t_generator_job::operator () () const {
     // Hook: Post-gen
     t_const_ptr<t_status_post_gen> gen_status
         (new t_status_post_gen(*status,
-                               settings.get_generator_name(generator_id),
+                               diag.get_generator_name(generator_id),
                                start_time,
                                time_interval(),
                                candidates));
@@ -93,7 +94,8 @@ t_ranker_job::t_ranker_job (t_id ranker_id,
 
 
 void t_ranker_job::operator () () const {
-    const t_const_ptr<t_candidate_ranker> & ranker = settings.get_ranker(ranker_id);
+    const t_diagnostic_system & diag = settings.get_diagnostic_system();
+    const t_const_ptr<t_candidate_ranker> & ranker = diag.get_ranker(ranker_id);
 
     t_candidate_ranker::t_ret_type * probs_ptr(new t_candidate_ranker::t_ret_type());
 
@@ -110,7 +112,7 @@ void t_ranker_job::operator () () const {
 
     // Hook: Post-rank
     t_status_post_rank rank_status(*status,
-                                   settings.get_ranker_name(ranker_id),
+                                   diag.get_ranker_name(ranker_id),
                                    start_time,
                                    time_interval(),
                                    probs);
@@ -129,6 +131,7 @@ void run_benchmark (const t_benchmark_settings & settings,
                     t_spectra_generator & generator,
                     std::mt19937 & gen,
                     t_execution_controller & controller) {
+    const t_diagnostic_system & diag = settings.get_diagnostic_system();
     t_id iteration_id = 1;
 
 
@@ -150,7 +153,7 @@ void run_benchmark (const t_benchmark_settings & settings,
                                           *it_status);
 
         for (t_id gen_id = 1;
-             gen_id <= settings.get_generator_count();
+             gen_id <= diag.get_generator_count();
              gen_id++) {
             t_const_ptr<t_job> job(new t_generator_job(gen_id,
                                                        settings,

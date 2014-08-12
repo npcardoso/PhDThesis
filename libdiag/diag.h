@@ -36,5 +36,9 @@
 // Structs
 #include "structs/count_spectra.h"
 
+// Configuration
+#include "configuration/configuration.h"
+
+
 
 #endif

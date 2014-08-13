@@ -1,10 +1,19 @@
 //Program entry point
 function init(){
 	var configuration = new Configuration();
+	$.each(configuration.currentConfig.scriptsLoad, function(index, script) {
+		$.ajax({
+			async: false,
+			url: script,
+			dataType: "script"
+		});
+	});
 	//prepare data
-	dataInlining(data_ex);
+	dataInlining(window.data_ex);
 	probabilityCalculator(data_ex[0]);
-
+	if(configuration.currentConfig.filterMostRelevamtNodes > 0){
+		filterToNMostRelevant(data_ex,configuration.currentConfig.filterMostRelevamtNodes);
+	}
 
 	var visualization = new Visualizations(configuration);
 	renderButtonsHtml(visualization.setVisualization,configuration.currentConfig.defaultView);

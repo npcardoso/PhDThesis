@@ -16,6 +16,10 @@ visualizations =
 	obj : VerticalPartition
 },
 {
+	displayName : "Table",
+	obj : Table
+},
+{
 	displayName : "Example Viz",
 	obj : function () {
 			this.render = function()

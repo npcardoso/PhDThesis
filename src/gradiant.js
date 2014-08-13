@@ -1,4 +1,3 @@
-var xas;
 function Gradiant(normal){
 	var normalGradiante = this.gradianteInit(normal);
 
@@ -13,7 +12,6 @@ function Gradiant(normal){
 
 
 function convertGradType(gradiante){
-        xas = ret;
     var ret = [];
     var len = gradiante.length;
     for (var i = 0; i < len; i++) {

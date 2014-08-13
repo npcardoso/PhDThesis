@@ -18,6 +18,35 @@ function getAncestors(node){
 	return new Array(0);
 }
 
+  function removeArray(arr, item) {
+      for(var i = arr.length; i--;) {
+          if(arr[i].id == item) {
+              arr.splice(i, 1);
+          }
+      }
+  }
+
+function filterToNMostRelevant(data,N){
+	var tmp = data.slice();
+	tmp.sort(function(a,b){
+		return b.properties.p - a.properties.p;
+	});
+	var maxProb = tmp[Math.min(tmp.length-1,N)].properties.p;
+	probabilityFilter(data,maxProb);
+}
+
+function probabilityFilter(data,pFilter){
+		for (var i = data.length - 1; i >= 0; i--) {
+			if(data[i].properties.p < pFilter)
+			{
+				var parent = data[data[i].parent_id];
+				if(parent != null && parent.hasOwnProperty('children')){
+					removeArray(parent.children,data[i].id);
+				}
+				data.splice(i, 1);
+			}
+		}
+}
 
 function probabilityCalculator(node) {
 	if(node.hasOwnProperty('properties') && node.properties.hasOwnProperty('p'))

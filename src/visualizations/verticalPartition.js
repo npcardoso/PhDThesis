@@ -1,5 +1,6 @@
 function VerticalPartition(data, elementID, configuration, events) {
     var self = this;
+    data = data[0];
 
     this.data = data;
     this.configuration = configuration;
@@ -7,7 +8,7 @@ function VerticalPartition(data, elementID, configuration, events) {
 
     var dimensions = getDimensions();
 
-    var rect_render = new RectRender(dimensions.width,dimensions.height);
+    var rect_render = new RectRender(dimensions.width,dimensions.height,configuration);
 
 
     var partition = d3.layout.partition()
@@ -32,18 +33,18 @@ function VerticalPartition(data, elementID, configuration, events) {
         .attr("width", rect_render.width)
         .attr("height", rect_render.height)
         .style("stroke", "#fff")
-        .attr("fill",self.configuration.gradiante.normal)
+        .attr("fill",configuration.gradiante.normal)
         .on("click", self.click);
     }
 
     this.click = function(node) {
-        self.events.click(node)
+        events.click(node)
         rect_render.rectAnimation(rect,node);
     }
 
     this.resize = function(){
         dimensions = getDimensions();
-        arc_render = new ArcRender(dimensions.width,dimensions.height);
+        arc_render = new ArcRender(dimensions.width,dimensions.height,self.configuration);
         this.render();
     }
 
@@ -57,7 +58,7 @@ function VerticalPartition(data, elementID, configuration, events) {
 }
 
 
-function RectRender(width,height){
+function RectRender(width,height,configuration){
     var x = d3.scale.linear()
     .range([0, width]);
 
@@ -85,7 +86,7 @@ function RectRender(width,height){
         y.domain([node.y, 1]).range([node.y ? 20 : 0, height]);
 
         rect.transition()
-        .duration(self.configuration.currentConfig.animationTransitionTime)
+        .duration(configuration.currentConfig.animationTransitionTime)
         .attr("x", function(node) { return x(node.x); })
         .attr("y", function(node) { return y(node.y); })
         .attr("width", function(node) { return x(node.x + node.dx) - x(node.x); })

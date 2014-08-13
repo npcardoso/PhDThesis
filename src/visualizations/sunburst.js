@@ -1,5 +1,6 @@
 function Sunburst(data, elementID, configuration, events) {
     var self = this;
+        data = data[0];
 
     this.data = data;
     this.configuration = configuration;

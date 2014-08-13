@@ -1,24 +1,35 @@
-var tableData,dataWithNoChildren;
+alert('pas');
 function Table(data, elementID, configuration, events) {
     var self = this;
-    dataWithNoChildren = jQuery.grep(data, function( node, index ) {
-        return (!node.hasOwnProperty('children') || node.children == null || node.children.length == 0);
-    });
-    var parent, gParent;
-    tableData = jQuery.map(dataWithNoChildren, function( node, index ) {
-        if(node != null){
-            parent = data[node.parent_id];
-            if(parent  != null){
-                gParent = data[parent.parent_id];
-                if(gParent != null){
-                    return [[gParent.name,parent.name,node.name,node.properties.p,node]];
+    
+    
+
+    this.getTableRows = function(){
+        var ret = [];
+        for (len = data.length, i = 0; i < len; i++) {
+            var node = data[i];
+            if(!node.hasOwnProperty('children') || node.children == null || node.children.length == 0)
+            {
+                if(node != null){
+                    parent = data[node.parent_id];
+                    if(parent  != null){
+                        gParent = data[parent.parent_id];
+                        if(gParent != null){
+                            ret.push([gParent.name,parent.name,node.name,node.properties.p,node.id]);
+                        }
+                    }
                 }
             }
         }
-    });
+        return ret;
+    }
 
+
+    var tableData = this.getTableRows();
     this.render = function(){
+
         $('#'+elementID).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="tableData"></table>');
+
         table = $('#tableData').dataTable({
             "retrieve" : true,
             "data" : tableData,
@@ -36,7 +47,7 @@ function Table(data, elementID, configuration, events) {
             "order" : [3, "desc"],
         });
 
-        $('#tableData tbody').on('click', 'tr', function() {
+        table.on('click', 'tr', function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {
@@ -46,5 +57,5 @@ function Table(data, elementID, configuration, events) {
             location.hash = "asa";
         });
     }
-    
+
 }

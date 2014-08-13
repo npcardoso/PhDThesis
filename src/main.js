@@ -42,6 +42,7 @@ function renderButtonsHtml(visActivationCallBack,defaultTab){
 		},
 		active: defaultTab
 	});
+
 }
 
 

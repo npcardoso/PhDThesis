@@ -43,20 +43,25 @@ function ConfigurationView(data, elementID, configuration, events) {
     this.renderFilterNodes = function() {
         $('#' + elementID).append('<p><label for="nnodes">Filter to most relevant nodes:</label><input type="text" id="nnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-nnodes"></div>');
 
+        function renderValue(value){
+            if(value > 0){
+                return value;
+            }   
+            return "Disabled"
+        }
+
         $("#slider-nnodes").slider({
             range: "min",
-            value: configuration.currentConfig.filterMostRelevamtNodes,
+            value: 0,
             min: 0,
             max: Math.max(configuration.currentConfig.filterMostRelevamtNodes*2,10000),
             slide: function(event, ui) {
-                if(ui.value == 0){
-                    $("#nnodes").val("Function disabled");
-                }
+                $("#nnodes").val(renderValue(ui.value));   
                 configuration.currentConfig.filterMostRelevamtNodes = ui.value;
                 configuration.saveConfig();
             }
         });
-        $("#nnodes").val($("#slider-nnodes").slider("value"));
+        $("#nnodes").val(renderValue($("#slider-nnodes").slider("value")));
     }
 
     this.renderGradiante = function() {

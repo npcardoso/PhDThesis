@@ -3,9 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.crowbar.instrumentation</groupId>
-  <artifactId>javassist</artifactId>
+  <artifactId>crowbar</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1</version>
   <name>javassist</name>
   <url>http://crowbar.io</url>
   <inceptionYear>2014</inceptionYear>
@@ -13,7 +13,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>1.6</jdk.version>
-    <checkstyle.config.location>${project.basedir}/../../configs/checkstyle.xml</checkstyle.config.location>
+    <checkstyle.config.location>${project.basedir}/../configs/checkstyle.xml</checkstyle.config.location>
   </properties>
 
   <dependencies>
@@ -41,6 +41,14 @@
 
   <build>
     <defaultGoal>package</defaultGoal>
+    <resources>
+      <resource>
+        <directory>target/volatile-resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

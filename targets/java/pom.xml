@@ -32,6 +32,11 @@
       <artifactId>flexjson</artifactId>
       <version>3.2</version>
     </dependency>
+    <dependency>
+	  <groupId>net.java.dev.jna</groupId>
+	  <artifactId>jna</artifactId>
+	  <version>4.1.0</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -79,6 +84,7 @@
               <goal>single</goal>
               <!-- goals == mojos -->
             </goals>
+
           </execution>
         </executions>
       </plugin>

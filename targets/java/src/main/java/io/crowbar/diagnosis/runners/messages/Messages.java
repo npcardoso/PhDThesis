@@ -33,7 +33,7 @@ public final class Messages {
         String json = new JSONSerializer()
                       .transform(new ExcludeTransformer(), void.class) // Remove null(optional) stuff
                       .exclude("*.class")
-                      .prettyPrint(true)
+                      // .prettyPrint(true)
                       .deepSerialize(m);
 
 

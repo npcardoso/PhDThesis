@@ -2,8 +2,6 @@ package io.crowbar.diagnosis;
 
 
 import flexjson.JSON;
-import flexjson.JSONSerializer;
-import flexjson.transformer.AbstractTransformer;
 
 import java.util.ArrayList;
 import java.util.List;

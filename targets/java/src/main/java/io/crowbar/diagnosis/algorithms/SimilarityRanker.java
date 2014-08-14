@@ -1,27 +1,33 @@
 package io.crowbar.diagnosis.algorithms;
 
-public final class SimilarityRanker {
-    public enum Type {
-        OCHIAI("ochiai"),
-        JACCARD("jaccard");
-
-        private final String name;
-        private Type(String name) {
-            this.name = name;
-        }
-
-        public final String getName () {
-            return name;
+public final class SimilarityRanker extends Ranker {
+    private static class Similarity extends Algorithm {
+        Similarity (String name) {
+            super(name);
         }
     }
 
-    private SimilarityRanker () {}
+    public static enum Type {
+        OCHIAI("ochiai"),
+        JACCARD("jaccard");
 
-    public static AlgorithmFactory.Algorithm create (Type type) {
-        AlgorithmFactory af = new AlgorithmFactory();
+        private final Algorithm algorithm = new Similarity("similarity");
+        private Type(String name) {
+            algorithm.setConfig("type", name);
+        }
 
+        final Algorithm getAlgorithm () {
+            return algorithm;
+        }
+    }
 
-        af.addConfig("type", type.getName());
-        return af.create("similarity");
+    private final Type type;
+    public SimilarityRanker (Type type) {
+        this.type = type;
+    }
+
+    @Override
+    Algorithm getAlgorithm () {
+        return type.getAlgorithm();
     }
 }

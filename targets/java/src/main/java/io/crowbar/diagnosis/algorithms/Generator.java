@@ -1,7 +1,9 @@
 package io.crowbar.diagnosis.algorithms;
 
+import io.crowbar.diagnosis.Algorithm;
+
 public abstract class Generator {
     Generator () {}
 
-    abstract Algorithm getAlgorithm ();
+    public abstract Algorithm getAlgorithm ();
 }

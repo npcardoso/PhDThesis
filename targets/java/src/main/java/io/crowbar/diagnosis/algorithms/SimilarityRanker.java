@@ -1,23 +1,31 @@
 package io.crowbar.diagnosis.algorithms;
 
-public final class SimilarityRanker extends Ranker {
-    private static class Similarity extends Algorithm {
-        Similarity (String name) {
-            super(name);
-        }
-    }
+import io.crowbar.diagnosis.Algorithm;
+import io.crowbar.diagnosis.AlgorithmFactory;
 
+public final class SimilarityRanker extends Ranker {
     public static enum Type {
         OCHIAI("ochiai"),
         JACCARD("jaccard");
 
-        private final Algorithm algorithm = new Similarity("similarity");
+        private final String name;
+        private final Algorithm algorithm;
+
         private Type(String name) {
-            algorithm.setConfig("type", name);
+            AlgorithmFactory af = new AlgorithmFactory();
+
+
+            af.setConfig("type", name);
+            algorithm = af.create("similarity");
+            this.name = name;
         }
 
         final Algorithm getAlgorithm () {
             return algorithm;
+        }
+
+        final String getName () {
+            return name;
         }
     }
 
@@ -27,7 +35,7 @@ public final class SimilarityRanker extends Ranker {
     }
 
     @Override
-    Algorithm getAlgorithm () {
+    public Algorithm getAlgorithm () {
         return type.getAlgorithm();
     }
 }

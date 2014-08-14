@@ -8,6 +8,11 @@ import io.crowbar.diagnosis.spectra.Spectra;
 
 public final class HitSpectraSerializer {
     public static String serialize (Spectra< ? extends Activity, ? , ? > spectra) {
+        return HitSpectraSerializer.serialize(spectra, "\n");
+    }
+
+    public static String serialize (Spectra< ? extends Activity, ? , ? > spectra,
+                                    String separator) {
         int numComp = spectra.getNumComponents();
         int numTran = spectra.getNumTransactions();
         StringBuilder str = new StringBuilder();
@@ -16,11 +21,11 @@ public final class HitSpectraSerializer {
         str.append(numComp);
         str.append(" ");
         str.append(numTran);
-        str.append("\n");
+        str.append(separator);
 
         for (Transaction t : spectra) {
             str.append(serialize(t, numComp));
-            str.append("\n");
+            str.append(separator);
         }
 
         return str.toString();

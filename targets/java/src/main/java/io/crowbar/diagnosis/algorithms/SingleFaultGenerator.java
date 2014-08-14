@@ -1,16 +1,19 @@
 package io.crowbar.diagnosis.algorithms;
 
+import io.crowbar.diagnosis.Algorithm;
+import io.crowbar.diagnosis.AlgorithmFactory;
+
 public final class SingleFaultGenerator extends Generator {
-    private static class SingleFault extends Algorithm {
-        SingleFault () {
-            super("single_fault");
-        }
+    private static final Algorithm algorithm;
+
+    static {
+        AlgorithmFactory af = new AlgorithmFactory();
+        algorithm = af.create("single_fault");
     }
 
-    private static final Algorithm algorithm = new SingleFault();
 
     @Override
-    Algorithm getAlgorithm () {
+    public Algorithm getAlgorithm () {
         return algorithm;
     }
 }

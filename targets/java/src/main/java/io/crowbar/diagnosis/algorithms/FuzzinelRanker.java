@@ -1,25 +1,22 @@
 package io.crowbar.diagnosis.algorithms;
 
-public final class FuzzinelRanker extends Ranker {
-    private static class Fuzzinel extends Algorithm {
-        Fuzzinel () {
-            super("fuzzinel");
-        }
-    }
+import io.crowbar.diagnosis.Algorithm;
+import io.crowbar.diagnosis.AlgorithmFactory;
 
-    private final Algorithm algorithm = new Fuzzinel();
+public final class FuzzinelRanker extends Ranker {
+    private final AlgorithmFactory af = new AlgorithmFactory();
 
 
     public void useConfidence (boolean val) {
-        algorithm.setConfig("confidence", "" + val);
+        af.setConfig("confidence", "" + val);
     }
 
     public void useFuzzyError (boolean val) {
-        algorithm.setConfig("fuzzy_error", "" + val);
+        af.setConfig("fuzzy_error", "" + val);
     }
 
     @Override
-    Algorithm getAlgorithm () {
-        return algorithm;
+    public Algorithm getAlgorithm () {
+        return af.create("fuzzinel");
     }
 }

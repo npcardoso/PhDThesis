@@ -1,19 +1,16 @@
 package io.crowbar.diagnosis.runners;
 
-import io.crowbar.diagnosis.algorithms.*;
-import io.crowbar.diagnosis.spectra.*;
-import io.crowbar.diagnosis.Connection;
 
 import io.crowbar.diagnosis.DiagnosticRequest;
 import io.crowbar.diagnosis.DiagnosticSystem;
 import io.crowbar.diagnosis.DiagnosticSystemRunner;
-import io.crowbar.diagnosis.DiagnosticSystemFactory;
+
+import flexjson.transformer.AbstractTransformer;
+import flexjson.JSONSerializer;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import flexjson.transformer.AbstractTransformer;
-import flexjson.JSONSerializer;
 
 public class StreamRunner implements DiagnosticSystemRunner {
     private static class ExcludeTransformer extends AbstractTransformer {
@@ -47,29 +44,5 @@ public class StreamRunner implements DiagnosticSystemRunner {
 
 
         out.println(jsonRequest);
-    }
-
-    public static void main (String[] args) {
-        try {
-            DiagnosticSystemFactory j = new DiagnosticSystemFactory();
-
-            j.addGenerator(new SingleFaultGenerator());
-            j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
-            j.addConnection(new Connection(0, 0));
-
-            j.addGenerator(new MHSGenerator());
-            j.addRanker(new FuzzinelRanker());
-            j.addConnection(new Connection(0, 1));
-            j.addConnection(new Connection(1, 1));
-
-            DiagnosticRequest dr = new DiagnosticRequest(j.create(),
-                                                         new EditableSpectra());
-
-            StreamRunner sr = new StreamRunner(System.in,
-                                               System.out);
-
-            sr.run(dr);
-        }
-        catch (Throwable e) {e.printStackTrace();}
     }
 }

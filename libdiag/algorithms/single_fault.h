@@ -10,6 +10,11 @@ public:
     virtual void operator () (const structs::t_spectra & spectra,
                               t_ret_type & D,
                               const structs::t_spectra_filter * filter=NULL) const;
+
+    inline virtual std::string to_string() const {
+        return "t_single_fault";
+    }
+
 };
 }
 }

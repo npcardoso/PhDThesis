@@ -25,7 +25,7 @@ t_mhs_creator::t_mhs_creator():
 t_const_ptr<t_candidate_generator> t_mhs_creator::generator(const t_algorithm & a) const {
     t_const_ptr<t_candidate_generator> ret;
 
-    if(a.get_name() != "mhs")
+    if(a.get_name() != "mhs2")
         return ret;
 
     t_const_ptr<t_similarity> similarity = default_similarity;

@@ -1,0 +1,26 @@
+.scons.conf
+.sconsign.dblite
+obj
+doc
+gmon.out
+core
+.deps
+a.out
+*~
+~.tmp
+.DS_Store
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+*.pyc

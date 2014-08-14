@@ -1,0 +1,38 @@
+import os
+from os.path import join
+from util import findFiles
+Import('env')
+env = env.Clone()
+
+env.Append(LINKFLAGS = "   ".join(["-lboost_filesystem",
+                                   "-lboost_system",
+                                   "-lboost_thread",
+                                   "-lboost_date_time",
+                                   "-lgmp",
+                                   "-lmpfr",]))
+
+
+# Collect files
+wildcards = ""
+headers = findFiles(env, "", "h", 4)
+sources = findFiles(env, "", "cpp", 4)
+
+# Compile stuff
+common_objects = env.SharedObject(sources)
+env.Default(common_objects)
+
+# Build shared lib
+libdiag = env.SharedLibrary(target = 'libdiag', source=common_objects)
+libdiag = env.Install(env['lib_dir'], libdiag)
+env.Default(libdiag)
+
+# Build static lib
+libdiagstatic = env.StaticLibrary(target = 'libdiag', source=common_objects)
+libdiagstatic = env.Install(env['lib_dir'], libdiagstatic)
+
+# Install include files
+header_install_dir = join(env['include_dir'], "crowbar/diagnostic/")
+for h in headers:
+  install = join(header_install_dir, os.path.dirname(str(h)))
+  install = env.Install(install, h)
+  env.Default(install)

@@ -8,8 +8,21 @@ import java.util.HashMap;
 
 
 public final class Algorithm {
-    private final String name;
-    private Map<String, String> configs;
+    private String name = null;
+    private Map<String, String> configs = null;
+
+    /*! Used for JSON deserialization */
+    private Algorithm () {}
+
+    /*! Used for JSON deserialization */
+    private void setName (String name) {
+        this.name = name;
+    }
+
+    /*! Used for JSON deserialization */
+    private void setConfigs (Map<String, String> configs) {
+        this.configs = configs;
+    }
 
     Algorithm (String name,
                Map<String, String> configs) {
@@ -23,16 +36,16 @@ public final class Algorithm {
     }
 
     @JSON
-    public final String getName () {
+    public String getName () {
         return name;
     }
 
     @JSON
-    private final Map<String, String> getConfigs () {
+    private Map<String, String> getConfigs () {
         return configs;
     }
 
-    public final String getConfig (String name) {
+    public String getConfig (String name) {
         return configs.get(name);
     }
 

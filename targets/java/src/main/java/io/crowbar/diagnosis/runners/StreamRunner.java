@@ -1,26 +1,18 @@
 package io.crowbar.diagnosis.runners;
 
 
-import io.crowbar.diagnosis.DiagnosticRequest;
 import io.crowbar.diagnosis.DiagnosticSystem;
 import io.crowbar.diagnosis.DiagnosticSystemRunner;
+import io.crowbar.diagnosis.spectra.Spectra;
+import io.crowbar.diagnosis.runners.messages.DiagnosticMessages;
+import io.crowbar.diagnosis.runners.messages.Messages;
 
-import flexjson.transformer.AbstractTransformer;
-import flexjson.JSONSerializer;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
 public class StreamRunner implements DiagnosticSystemRunner {
-    private static class ExcludeTransformer extends AbstractTransformer {
-        @Override
-        public Boolean isInline () {return true;}
-
-        @Override
-        public void transform (Object object) {}
-    }
-
     private final InputStream in;
     private final PrintStream out;
 
@@ -36,11 +28,9 @@ public class StreamRunner implements DiagnosticSystemRunner {
     }
 
     @Override
-    public final void run (DiagnosticRequest request) throws ExecutionError {
-        String jsonRequest = new JSONSerializer()
-                             .transform(new ExcludeTransformer(), void.class) // Remove null(optional) stuff
-                             .exclude("*.class")
-                             .deepSerialize(request);
+    public final void run (DiagnosticSystem system,
+                           Spectra spectra) throws ExecutionError {
+        String jsonRequest = Messages.serialize(DiagnosticMessages.issueRequest(system, spectra));
 
 
         out.println(jsonRequest);

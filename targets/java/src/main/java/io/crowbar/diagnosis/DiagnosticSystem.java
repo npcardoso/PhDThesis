@@ -9,9 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class DiagnosticSystem {
-    private final List<Algorithm> generators;
-    private final List<Algorithm> rankers;
-    private final List<Connection> connections;
+    private List<Algorithm> generators = null;
+    private List<Algorithm> rankers = null;
+    private List<Connection> connections = null;
+
+    /*! Used for JSON deserialization */
+    private DiagnosticSystem () {}
+
+    /*! Used for JSON deserialization */
+    private void setGenerators (List<Algorithm> generators) {
+        this.generators = generators;
+    }
+
+    /*! Used for JSON deserialization */
+    private void setRankers (List<Algorithm> rankers) {
+        this.rankers = rankers;
+    }
+
+    /*! Used for JSON deserialization */
+    private void setConnections (List<Connection> connections) {
+        this.connections = connections;
+    }
 
     DiagnosticSystem (List<Algorithm> generators,
                       List<Algorithm> rankers,

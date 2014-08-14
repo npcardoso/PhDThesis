@@ -12,5 +12,6 @@ public interface DiagnosticSystemRunner {
     /*! Gets the server interpretation of the diagnostic system serialization (with imposed cutoffs, etc..) */
     public DiagnosticSystem getServerInterpretation (DiagnosticSystem system) throws ExecutionError;
 
-    public void run (DiagnosticRequest request) throws ExecutionError;
+    public void run (DiagnosticSystem system,
+                     Spectra spectra) throws ExecutionError;
 }

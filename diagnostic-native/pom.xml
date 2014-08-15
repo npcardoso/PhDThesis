@@ -18,9 +18,9 @@
     <defaultGoal>package</defaultGoal>
     <resources>
       <resource>
-        <directory>target/build/libdiag</directory>
+        <directory>target/install/lib/</directory>
         <includes>
-          <include>libdiag.*</include>
+          <include>**</include>
         </includes>
       </resource>
     </resources>
@@ -30,7 +30,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <groupId>org.codehaus.mojo</groupId>
         <executions>
-          <execution><!-- Run our version calculation script -->
+          <execution>
             <id>diagnostic-native Compile</id>
             <phase>generate-sources</phase>
             <goals>

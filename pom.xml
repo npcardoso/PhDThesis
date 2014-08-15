@@ -10,6 +10,15 @@
   <url>http://crowbar.io</url>
   <inceptionYear>2014</inceptionYear>
 
+  <properties>
+    <crowbar-version>1.0.0</crowbar-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jdk.version>1.6</jdk.version>
+    <checkstyle.config.location>
+      ${basedir}/configs/checkstyle.xml
+    </checkstyle.config.location>
+  </properties>
+
 
   <organization>
     <name>Crowbar</name>
@@ -31,41 +40,20 @@
 
 
 
-  <properties>
-    <crowbar-version>1.1.1</crowbar-version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jdk.version>1.6</jdk.version>
-    <checkstyle.config.location>
-      ${project.basedir}configs/checkstyle.xml
-    </checkstyle.config.location>
-  </properties>
-
   <modules>
     <module>diagnostic-native</module>
     <module>glue-java</module>
     <module>instrumentation-java</module>
   </modules>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>exec-maven-plugin</artifactId>
-        <groupId>org.codehaus.mojo</groupId>
-        <executions>
-          <execution><!-- Run our version calculation script -->
-            <id>diagnostic-native Compile</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <!--goal>exec</goal-->
-            </goals>
-            <configuration>
-              <executable>scons</executable>
-              <workingDirectory>${basedir}/diagnostic-native</workingDirectory>
-              <commandlineArgs></commandlineArgs>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+  <profiles>
+    <profile>
+      <activation>
+        <os>
+          <family>Linux</family>
+          <arch>x64</arch>
+        </os>
+      </activation>
+    </profile>
+  </profiles>
 </project>

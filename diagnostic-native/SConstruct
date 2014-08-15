@@ -1,6 +1,8 @@
 import os
 from os.path import join
 import subprocess
+import sys
+import platform
 
 env = Environment()
 env['ENV']['TERM'] = os.environ['TERM']
@@ -10,7 +12,7 @@ vars.Add('PATH', '', '')
 vars.Add('LIBPATH', '', '')
 vars.Add('CPPPATH', '', '')
 
-vars.Add('prefix', '', '#/install/')
+vars.Add('prefix', '', '#/target/install/')
 vars.Add('build_dir', '', '#/target/build/')
 
 vars.Add('debug', '', False)
@@ -25,12 +27,15 @@ if env['colors']:
     except ImportError:
         pass
 
+# Platform
+env['PLATFORM'] = (platform.system() + "_" + platform.machine()).replace("_", "-").lower()
+print env['PLATFORM']
 
 # Install/Build Dirs
 for i in ['prefix', 'build_dir']:
     env[i]  = env.Dir(env[i]).abspath
 for i in ['include', 'lib', 'bin']:
-    env['%s_dir' % i] = join(env['prefix'], i)
+    env['%s_dir' % i] = join(env['prefix'], i, env['PLATFORM'])
 
 env.Append(CPPPATH =  env['include_dir'])
 env.Append(LIBPATH =  env['lib_dir'])
@@ -55,6 +60,8 @@ env['CCFLAGS'] += " -std=c++11  -Wall -pedantic"
 
 # Link Flags
 env.Append(LINKFLAGS = "-Wl,-rpath,'$$ORIGIN/../lib'")
+
+
 
 Export('env')
 SConscript('SConscript', variant_dir=env['build_dir'])

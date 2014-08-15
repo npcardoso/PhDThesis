@@ -4,10 +4,10 @@ function Sunburst(data, elementID, configuration, events) {
 
     this.data = data;
     this.configuration = configuration;
-    this.events = events;  
+    this.events = events;
 
     var dimensions = getDimensions();
-    
+
     var arc_render = new ArcRender(dimensions.width,dimensions.height);
 
     //Partion layout preparion (Create of the function that computes elements relative size)
@@ -28,7 +28,16 @@ function Sunburst(data, elementID, configuration, events) {
         .attr("height", dimensions.height)
         .append("g")
         .attr("transform", centerTranslation())
-        .call(d3.behavior.zoom().on("zoom",  self.zoom));
+        .call(d3.behavior.zoom().scaleExtent([1, 10]).on("zoom",  self.zoom))
+        .append("g");
+
+        svg.append("rect")
+            .attr("class", "overlay")
+            .attr("width", dimensions.width)
+            .attr("height", dimensions.height)
+            .attr("transform", "translate(" + (-dimensions.width/2) + "," + (-dimensions.height/2) + ")")
+            .attr("fill", "none")
+            .attr("pointer-events", "all");
 
         path = svg.selectAll("path")
         .data(partition.nodes(self.data))
@@ -42,7 +51,7 @@ function Sunburst(data, elementID, configuration, events) {
 
     this.zoom = function(){
         if (d3.event) {
-            svg.attr("transform", centerTranslation()+"translate(" + d3.event.translate + ")"+"scale(" + d3.event.scale + ")");
+            svg.attr("transform", "translate(" + d3.event.translate + ")"+"scale(" + d3.event.scale + ")");
         }
     }
 

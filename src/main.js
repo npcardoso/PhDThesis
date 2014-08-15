@@ -16,7 +16,7 @@ function init(){
 	}
 
 	var visualization = new Visualizations(configuration);
-	renderButtonsHtml(visualization.setVisualization,configuration.currentConfig.defaultView);
+	renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
 
 	visualization.init();
 

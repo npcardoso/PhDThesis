@@ -14,6 +14,7 @@ function ConfigurationView(data, elementID, configuration, events) {
         $.each(visualizations, function(index, visualization) {
             $("#defaultVis").append('<option id="defaultVis_' + index + '" value="' + index + '">' + visualization.displayName + '</option>');
         });
+        $("#defaultVis").append('<option id="defaultVis_last_viewed" value="last_viewed">Last Viewed</option>');
         $('#defaultVis_' + configuration.currentConfig.defaultView).attr("selected", "selected");
         $("#defaultVis").selectmenu({
             change: function(event, data) {

@@ -13,9 +13,18 @@ function Visualizations(configuration){
 	}
 
 	this.setVisualization = function(visN){
+		configuration.currentConfig.lastViewed = visN;
+		configuration.saveConfig();
 		currentVisualizationN = visN;
 		currentVisualization = self.createVisualization(visN);
 		currentVisualization.render();
+	}
+
+	this.getInitVisN = function(){
+		if(configuration.currentConfig.defaultView >= 0){
+		  return configuration.currentConfig.defaultView;
+		}
+		return configuration.currentConfig.lastViewed;
 	}
 
 	this.resize = function(){
@@ -25,7 +34,7 @@ function Visualizations(configuration){
 	}
 
 	this.init = function(){
-		self.setVisualization(configuration.currentConfig.defaultView);
+		self.setVisualization(self.getInitVisN());
 	}
 
 

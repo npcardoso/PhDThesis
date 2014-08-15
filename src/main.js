@@ -63,5 +63,5 @@ function visClickEv(node) {
 		str += anscestors[i].name + " -> ";
 	};
 	str += node.name;
-	alert(str);
+	//alert(str);
 }

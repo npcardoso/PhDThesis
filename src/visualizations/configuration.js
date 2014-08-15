@@ -71,7 +71,7 @@ function ConfigurationView(data, elementID, configuration, events) {
             type: "linear",
             change: function(sliders,styles) {
                configuration.currentConfig.normalGradiante = convertGradRepresentation(sliders);
-               configuration.saveConfig();
+               configuration.saveGradiante();
             },
             sliders: configuration.currentConfig.normalGradiante
 

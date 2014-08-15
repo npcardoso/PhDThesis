@@ -9,23 +9,40 @@
     <version>${crowbar-version}</version>
   </parent>
 
-  <artifactId>instrumentation-java</artifactId>
+
+  <artifactId>libcrowbarglue</artifactId>
   <packaging>jar</packaging>
-  <name>instrumentation-java</name>
-  <inceptionYear>2014</inceptionYear>
+  <name>libcrowbarglue</name>
 
-
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jdk.version>1.6</jdk.version>
+    <checkstyle.config.location>${project.basedir}/../configs/checkstyle.xml</checkstyle.config.location>
+  </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.18.2-GA</version>
-    </dependency>
-    <dependency>
       <groupId>io.crowbar</groupId>
-      <artifactId>libcrowbarglue</artifactId>
+      <artifactId>diagnostic-native</artifactId>
       <version>${crowbar-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.flexjson</groupId>
+      <artifactId>flexjson</artifactId>
+      <version>3.2</version>
+    </dependency>
+
+    <dependency>
+	  <groupId>net.java.dev.jna</groupId>
+	  <artifactId>jna</artifactId>
+	  <version>4.1.0</version>
     </dependency>
   </dependencies>
 
@@ -44,7 +61,6 @@
           <fork>true</fork>
         </configuration>
       </plugin>
-
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.2</version>

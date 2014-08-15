@@ -11,7 +11,7 @@ vars.Add('LIBPATH', '', '')
 vars.Add('CPPPATH', '', '')
 
 vars.Add('prefix', '', '#/install/')
-vars.Add('build_dir', '', '#/build/')
+vars.Add('build_dir', '', '#/target/build/')
 
 vars.Add('debug', '', False)
 vars.Add('colors', '', True)

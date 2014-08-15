@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.crowbar</groupId>
+  <artifactId>libcrowbar</artifactId>
+  <packaging>pom</packaging>
+  <version>${crowbar-version}</version>
+  <name>libcrowbar</name>
+  <url>http://crowbar.io</url>
+  <inceptionYear>2014</inceptionYear>
+
+
+  <organization>
+    <name>Crowbar</name>
+    <url>http://crowbar.io</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>nc</id>
+      <name>Nuno Cardoso</name>
+      <email>nunopcardoso@gmail.com</email>
+      <organization>Crowbar</organization>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
+  </developers>
+
+
+
+  <properties>
+    <crowbar-version>1.1.1</crowbar-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jdk.version>1.6</jdk.version>
+    <checkstyle.config.location>
+      ${project.basedir}configs/checkstyle.xml
+    </checkstyle.config.location>
+  </properties>
+
+  <modules>
+    <module>diagnostic-native</module>
+    <module>glue-java</module>
+    <module>instrumentation-java</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
+        <executions>
+          <execution><!-- Run our version calculation script -->
+            <id>diagnostic-native Compile</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <!--goal>exec</goal-->
+            </goals>
+            <configuration>
+              <executable>scons</executable>
+              <workingDirectory>${basedir}/diagnostic-native</workingDirectory>
+              <commandlineArgs></commandlineArgs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

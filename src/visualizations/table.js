@@ -1,4 +1,3 @@
-alert('pas');
 function Table(data, elementID, configuration, events) {
     var self = this;
     

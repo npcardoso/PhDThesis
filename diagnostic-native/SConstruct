@@ -28,7 +28,11 @@ if env['colors']:
         pass
 
 # Platform
-env['PLATFORM'] = (platform.system() + "_" + platform.machine()).replace("_", "-").lower()
+plat = platform.system().lower()
+if plat == 'darwin':
+  env['PLATFORM'] = plat
+else:
+  env['PLATFORM'] = (plat + "_" + platform.machine()).replace("_", "-").lower()
 print env['PLATFORM']
 
 # Install/Build Dirs
@@ -37,16 +41,13 @@ for i in ['prefix', 'build_dir']:
 for i in ['include', 'lib', 'bin']:
     env['%s_dir' % i] = join(env['prefix'], i, env['PLATFORM'])
 
-env.Append(CPPPATH =  env['include_dir'])
-env.Append(LIBPATH =  env['lib_dir'])
-env.Append(PATH=  env['bin_dir'])
-
-
 # Paths
 for i in ['PATH', 'LIBPATH', 'CPPPATH']:
     if not isinstance(env[i], list):
       env[i] = [env[i]]
-env['PATH'].extend(['/usr/local/bin', '/bin', '/usr/bin'])
+env['PATH'].extend([env['bin_dir'],'/usr/local/bin', '/bin', '/usr/bin'])
+env['LIBPATH'].extend([env['lib_dir']])
+env['CPPPATH'].extend([env['include_dir']])
 env['ENV']['PATH'] = env['PATH']
 env['ENV']['LD_LIBRARY_PATH'] = env['LIBPATH']
 

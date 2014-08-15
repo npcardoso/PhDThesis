@@ -5,6 +5,8 @@
 #include "../../utils/boost.h"
 #include "../../exceptions.h"
 
+#include <random>
+
 namespace diagnostic {
 namespace benchmark {
 class t_spectra_generator {

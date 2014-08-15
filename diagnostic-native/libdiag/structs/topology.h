@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <random>
 #include <boost/random/mersenne_twister.hpp>
 
 namespace diagnostic {

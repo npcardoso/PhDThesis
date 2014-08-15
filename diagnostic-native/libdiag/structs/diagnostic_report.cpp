@@ -1,5 +1,6 @@
 #include "diagnostic_report.h"
 
+#include <numeric>
 #include <boost/foreach.hpp>
 
 namespace diagnostic {

@@ -4,12 +4,18 @@ from util import findFiles
 Import('env')
 env = env.Clone()
 
-env.Append(LINKFLAGS = "   ".join(["-lboost_filesystem",
-                                   "-lboost_system",
-                                   "-lboost_thread",
-                                   "-lboost_date_time",
-                                   "-lgmp",
-                                   "-lmpfr",]))
+link_flags = ["-lboost_filesystem",
+              "-lboost_system",
+              "-lboost_date_time",
+              "-lgmp",
+              "-lmpfr",]
+
+if env['PLATFORM'] == 'darwin':
+  link_flags.append("-lboost_thread-mt")
+else:
+  link_flags.append("-lboost_thread")
+
+env.Append(LINKFLAGS = "   ".join(link_flags))
 
 
 # Collect files

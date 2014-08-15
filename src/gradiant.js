@@ -10,24 +10,24 @@ function Gradiant(normal){
 }
 
 
-
-function convertGradType(gradiante){
-    var ret = [];
-    var len = gradiante.length;
-    for (var i = 0; i < len; i++) {
-        ret[i] = rgba(gradiante[i].r,gradiante[i].g,gradiante[i].b,1);
-    };
-
-    return ret;
+function colorToRga(color){
+    colorObj = tinycolor(color).toRgb();
+    return [colorObj.r,colorObj.g,colorObj.b,colorObj.a];
 }
 
-Gradiant.prototype.gradianteInit = function(gradiante){
-	var grandianteComputed = new Array(101);
-	var gradianteObj = this.gradienteCalc([0, 0.5, 1],convertGradType(gradiante));
-	var colors;
-	for (var i = grandianteComputed.length - 1; i >= 0; i--) {
-		colors = gradianteObj.get(i/100);
-		grandianteComputed[i] = "rgba(" + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3] + ")";
+Gradiant.prototype.gradianteInit = function(gradiente){
+	var stops = [];
+    var colors = [];
+    for (i = 0, len = gradiente.length; i < len; i++) {
+        stops.push(gradiente[i].position/100);
+        colors.push(colorToRga(gradiente[i].color));
+    };
+	var gradianteObj = this.gradienteCalc(stops,colors);
+    var grandianteComputed = [];
+	var rgba;
+	for (var i = 0; i <= 100; i++) {
+		rgba = gradianteObj.get(i/100);
+		grandianteComputed.push("rgba(" + rgba[0] + ", " + rgba[1] + ", " + rgba[2] + ", " + rgba[3] + ")");
 	}
 	return grandianteComputed;
 }
@@ -63,3 +63,58 @@ Gradiant.prototype.gradienteCalc = function(stops,colors) {
 function rgba(r, g, b, a) {
     return new Array(r, g, b, a);
 };
+
+
+function inputToRGB(color) {
+
+    var rgb = { r: 0, g: 0, b: 0 };
+    var a = 1;
+    var ok = false;
+    var format = false;
+
+    if (typeof color == "string") {
+        color = stringInputToObject(color);
+    }
+
+    if (typeof color == "object") {
+        if (color.hasOwnProperty("r") && color.hasOwnProperty("g") && color.hasOwnProperty("b")) {
+            rgb = rgbToRgb(color.r, color.g, color.b);
+            ok = true;
+            format = String(color.r).substr(-1) === "%" ? "prgb" : "rgb";
+        }
+        else if (color.hasOwnProperty("h") && color.hasOwnProperty("s") && color.hasOwnProperty("v")) {
+            color.s = convertToPercentage(color.s);
+            color.v = convertToPercentage(color.v);
+            rgb = hsvToRgb(color.h, color.s, color.v);
+            ok = true;
+            format = "hsv";
+        }
+        else if (color.hasOwnProperty("h") && color.hasOwnProperty("s") && color.hasOwnProperty("l")) {
+            color.s = convertToPercentage(color.s);
+            color.l = convertToPercentage(color.l);
+            rgb = hslToRgb(color.h, color.s, color.l);
+            ok = true;
+            format = "hsl";
+        }
+
+        if (color.hasOwnProperty("a")) {
+            a = color.a;
+        }
+    }
+
+    a = parseFloat(a);
+
+            // Handle invalid alpha characters by setting to 1
+            if (isNaN(a) || a < 0 || a > 1) {
+                a = 1;
+            }
+
+            return {
+                ok: ok,
+                format: color.format || format,
+                r: mathMin(255, mathMax(rgb.r, 0)),
+                g: mathMin(255, mathMax(rgb.g, 0)),
+                b: mathMin(255, mathMax(rgb.b, 0)),
+                a: a
+            };
+        }

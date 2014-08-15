@@ -1,21 +1,22 @@
 function Configuration() {
     this.DEFAULT_CONFIG = {
         defaultView: 0,
-        animationTransitionTime: 750,
-        filterMostRelevamtNodes: 0,
-        normalGradiante: [{
-            r: 0,
-            g: 255,
-            b: 0
-        }, {
-            r: 255,
-            g: 255,
-            b: 0
-        }, {
-            r: 255,
-            g: 0,
-            b: 0
-        }],
+        animationTransitionTime: 700,
+        filterMostRelevamtNodes: 700,
+        normalGradiante: [
+        {
+           color: "green",
+           position: 1
+       },
+        {
+           color: "yellow",
+           position: 50
+       },
+       {
+           color: "rgba(255,0,0,1)",
+           position: 99
+       }
+       ],
         scriptsLoad: ["data_ex.js"],
         scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"]
     };

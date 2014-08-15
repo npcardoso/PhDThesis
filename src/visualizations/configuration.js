@@ -47,12 +47,12 @@ function ConfigurationView(data, elementID, configuration, events) {
             if(value > 0){
                 return value;
             }   
-            return "Disabled"
+            return "Disabled";
         }
 
         $("#slider-nnodes").slider({
             range: "min",
-            value: 0,
+            value: configuration.currentConfig.filterMostRelevamtNodes,
             min: 0,
             max: Math.max(configuration.currentConfig.filterMostRelevamtNodes*2,10000),
             slide: function(event, ui) {
@@ -61,25 +61,23 @@ function ConfigurationView(data, elementID, configuration, events) {
                 configuration.saveConfig();
             }
         });
-        $("#nnodes").val(renderValue($("#slider-nnodes").slider("value")));
+        $("#nnodes").val(renderValue(configuration.currentConfig.filterMostRelevamtNodes));
     }
 
-    this.renderGradiante = function() {
-        $('#' + elementID).append('<div><label>Gradient:</label><div><div id="color-box0" class="color-box"></div><div id="color-box1" class="color-box"></div><div id="color-box2" class="color-box"></div></div></div>');
+        this.renderGradiante = function() {
+        $('#' + elementID).append('<label>Gradient: </label><div id="gradX" ></div>');
 
-        $.each(configuration.currentConfig.normalGradiante, function(index, value) {
-            $('#color-box' + index).colpick({
-                    layout: 'hex',
-                    color: $.colpick.rgbToHex(value),
-                    onSubmit: function(hsb, hex, rgb, el) {
-                        $(el).css('background-color', '#' + hex);
-                        $(el).colpickHide();
-                        configuration.currentConfig.normalGradiante[index] = rgb;
-                        configuration.saveGradiante();
-                    }
-                })
-                .css('background-color', '#' + $.colpick.rgbToHex(value));
-        });
+        gradX("#gradX", {
+            type: "linear",
+            change: function(sliders,styles) {
+               configuration.currentConfig.normalGradiante = convertGradRepresentation(sliders);
+               configuration.saveConfig();
+            },
+            sliders: configuration.currentConfig.normalGradiante
+
+     });
+
+        $("#gradx_gradient_type, #gradx_gradient_subtype, #gradx_show_code").remove();
     }
 
     this.renderChosenScript = function() {
@@ -98,8 +96,8 @@ function ConfigurationView(data, elementID, configuration, events) {
                 if (event.keyCode === $.ui.keyCode.TAB &&
                     $(this).autocomplete("instance").menu.active) {
                     event.preventDefault();
-                }
-            })
+            }
+        })
             .autocomplete({
                 minLength: 0,
                 source: function(request, response) {
@@ -147,13 +145,13 @@ function ConfigurationView(data, elementID, configuration, events) {
                     return false;
                 }
             });
-    }
+}
 }
 
 
 Array.prototype.unique = function() {
     var tmp = {},
-        out = [];
+    out = [];
     for (var i = 0, n = this.length; i < n; ++i) {
         if (!tmp[this[i]]) {
             tmp[this[i]] = true;
@@ -161,6 +159,18 @@ Array.prototype.unique = function() {
         }
     }
     return out;
+}
+
+function convertGradStep(gradStep){
+    return {color: gradStep[0], position: gradStep[1]};
+}
+
+function convertGradRepresentation(grad){
+    ret = [];
+    for (var i = grad.length - 1; i >= 0; i--) {
+        ret[i] = convertGradStep(grad[i]);
+    };
+    return ret;
 }
 
 function urlExists(testUrl) {

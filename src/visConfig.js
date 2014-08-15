@@ -6,11 +6,6 @@ visualizations =
 	obj : Sunburst
 },
 {
-	displayName : "Sunburst No Animation",
-	iconUrl : "",
-	obj : sunburstNoAniInit
-},
-{
 	displayName : "Vertical partition",
 	iconUrl : "",
 	obj : VerticalPartition
@@ -18,15 +13,6 @@ visualizations =
 {
 	displayName : "Table",
 	obj : Table
-},
-{
-	displayName : "Example Viz",
-	obj : function () {
-			this.render = function()
-			{
-				alert('ok');
-			}
-		}
 },
 {
 	displayName : "Configuration",

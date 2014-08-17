@@ -1,7 +1,7 @@
-function ConfigurationView(data, elementID, configuration, events) {
+function ConfigurationView(data,elementSel, configuration, events) {
     var self = this;
     this.render = function() {
-        $('#' + elementID).html("");
+        $(elementSel).html("");
         self.renderDefualtVis();
         self.renderAnimationTime();
         self.renderFilterNodes();
@@ -10,7 +10,7 @@ function ConfigurationView(data, elementID, configuration, events) {
     }
 
     this.renderDefualtVis = function() {
-        $('#' + elementID).append('<p><label for="defaultVis">Select the default visualization:</label></p><select name="defaultVis" id="defaultVis"></select>');
+        $(elementSel).append('<p><label for="defaultVis">Select the default visualization:</label></p><select name="defaultVis" id="defaultVis"></select>');
         $.each(visualizations, function(index, visualization) {
             $("#defaultVis").append('<option id="defaultVis_' + index + '" value="' + index + '">' + visualization.displayName + '</option>');
         });
@@ -25,7 +25,7 @@ function ConfigurationView(data, elementID, configuration, events) {
     }
 
     this.renderAnimationTime = function() {
-        $('#' + elementID).append('<p><label for="anitime">Animation time (ms):</label><input type="text" id="anitime" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-anitime"></div>');
+        $(elementSel).append('<p><label for="anitime">Animation time (ms):</label><input type="text" id="anitime" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-anitime"></div>');
 
         $("#slider-anitime").slider({
             range: "min",
@@ -42,7 +42,7 @@ function ConfigurationView(data, elementID, configuration, events) {
     }
 
     this.renderFilterNodes = function() {
-        $('#' + elementID).append('<p><label for="nnodes">Filter to most relevant nodes:</label><input type="text" id="nnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-nnodes"></div>');
+        $(elementSel).append('<p><label for="nnodes">Filter to most relevant nodes:</label><input type="text" id="nnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-nnodes"></div>');
 
         function renderValue(value){
             if(value > 0){
@@ -66,7 +66,7 @@ function ConfigurationView(data, elementID, configuration, events) {
     }
 
         this.renderGradiante = function() {
-        $('#' + elementID).append('<label>Gradient: </label><div id="gradX" ></div>');
+        $(elementSel).append('<label>Gradient: </label><div id="gradX" ></div>');
 
         gradX("#gradX", {
             type: "linear",
@@ -82,7 +82,7 @@ function ConfigurationView(data, elementID, configuration, events) {
     }
 
     this.renderChosenScript = function() {
-        $('#' + elementID).append('<br /><br/><div class="ui-widget"><label for="tags">Additional scripts to load: </label><br /><input id="tags" size="50"></div>');
+        $(elementSel).append('<br /><br/><div class="ui-widget"><label for="tags">Additional scripts to load: </label><br /><input id="tags" size="50"></div>');
 
         function split(val) {
             return val.split(/,\s*/);

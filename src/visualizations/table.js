@@ -1,4 +1,4 @@
-function Table(data, elementID, configuration, events) {
+function Table(data, elementSel, configuration, events) {
     var self = this;
     
     
@@ -27,7 +27,7 @@ function Table(data, elementID, configuration, events) {
     var tableData = this.getTableRows();
     this.render = function(){
 
-        $('#'+elementID).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="tableData"></table>');
+        $(elementSel).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="tableData"></table>');
 
         table = $('#tableData').dataTable({
             "retrieve" : true,

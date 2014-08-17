@@ -1,4 +1,4 @@
-function VerticalPartition(data, elementID, configuration, events) {
+function VerticalPartition(data, elementSel, configuration, events) {
     var self = this;
     data = data[0];
 
@@ -14,10 +14,13 @@ function VerticalPartition(data, elementID, configuration, events) {
     var partition = d3.layout.partition()
     .value(function(node) {  return 1; });
 
-    var element = d3.select('#'+elementID);
+    
+
+    var element = d3.select(elementSel);
     var svg,rect;
     this.render = function() {
         element.html("");
+        ZoomController(elementSel);
         svg = element.append("svg")
         .attr("width", dimensions.width)
         .attr("height", dimensions.height)
@@ -92,10 +95,4 @@ function RectRender(width,height,configuration){
         .attr("width", function(node) { return x(node.x + node.dx) - x(node.x); })
         .attr("height", function(node) { return y(node.y + node.dy) - y(node.y); });
     }
-}
-
-
-function verticalInit(elementID,width,height){
-    var vertical = new VerticalPartition(data_ex[0],d3.select(elementID),width,height,calculateColor,visClickEv);
-    vertical.render();
 }

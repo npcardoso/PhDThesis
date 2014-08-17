@@ -1,4 +1,4 @@
-function Sunburst(data, elementID, configuration, events) {
+function Sunburst(data, elementSel, configuration, events) {
     var self = this;
         data = data[0];
 
@@ -16,20 +16,74 @@ function Sunburst(data, elementID, configuration, events) {
         return 1;
     });
 
+
+
+
     var svg, path;
 
-    var element = d3.select('#'+elementID);
-
+    var element = d3.select(elementSel);
+    var zoomListener,zoomElement;
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
-        element.html("");
-        svg = element.append("svg")
+
+        zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", self.zoom);
+        element.html('');
+        ZoomController(elementSel,{
+            up: function(){
+                //alert('ok');
+                var curTranslate = zoomListener.translate();
+                curTranslate[1] -= 100;
+                zoomListener.translate(curTranslate);
+                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
+            },
+            down: function(){
+                //alert('ok');
+                var curTranslate = zoomListener.translate();
+                curTranslate[1] += 100;
+                zoomListener.translate(curTranslate);
+                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
+            },
+            right: function(){
+                //alert('ok');
+                var curTranslate = zoomListener.translate();
+                curTranslate[0] += 100;
+                zoomListener.translate(curTranslate);
+                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
+            },
+            left: function(){
+                //alert('ok');
+                var curTranslate = zoomListener.translate();
+                curTranslate[0] -= 100;
+                zoomListener.translate(curTranslate);
+                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
+            },            
+            zoomIn: function(){
+                var curScale = zoomListener.scale();
+                ++curScale
+                if(curScale <= 10){
+                zoomListener.scale(curScale);
+                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
+                }
+            },
+            zoomOut: function(){
+                var curScale = zoomListener.scale();
+                --curScale;
+                if(curScale < 1){
+                    curScale = 1;
+                }
+                zoomListener.scale(curScale);
+                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
+            },
+        });
+
+        zoomElement = element.append("svg")
         .attr("width", dimensions.width)
         .attr("height", dimensions.height)
         .append("g")
-        .attr("transform", centerTranslation())
-        .call(d3.behavior.zoom().scaleExtent([1, 10]).on("zoom",  self.zoom))
-        .append("g");
+        .attr("transform", centerTranslation());
+
+        zoomListener(zoomElement);
+        svg = zoomElement.append("g");
 
         svg.append("rect")
             .attr("class", "overlay")
@@ -47,6 +101,9 @@ function Sunburst(data, elementID, configuration, events) {
         .style("fill", self.configuration.gradiante.normal)
         .style("fill-rule", "evenodd")
         .on("click", self.click);
+
+
+        zoomListener.event(zoomElement);
     }
 
     this.zoom = function(){

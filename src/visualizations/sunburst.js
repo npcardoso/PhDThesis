@@ -17,64 +17,16 @@ function Sunburst(data, elementSel, configuration, events) {
     });
 
 
-
-
     var svg, path;
 
     var element = d3.select(elementSel);
     var zoomListener,zoomElement;
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
-
         zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", self.zoom);
         element.html('');
-        ZoomController(elementSel,{
-            up: function(){
-                //alert('ok');
-                var curTranslate = zoomListener.translate();
-                curTranslate[1] -= 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
-            },
-            down: function(){
-                //alert('ok');
-                var curTranslate = zoomListener.translate();
-                curTranslate[1] += 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
-            },
-            right: function(){
-                //alert('ok');
-                var curTranslate = zoomListener.translate();
-                curTranslate[0] += 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
-            },
-            left: function(){
-                //alert('ok');
-                var curTranslate = zoomListener.translate();
-                curTranslate[0] -= 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
-            },            
-            zoomIn: function(){
-                var curScale = zoomListener.scale();
-                ++curScale
-                if(curScale <= 10){
-                zoomListener.scale(curScale);
-                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
-                }
-            },
-            zoomOut: function(){
-                var curScale = zoomListener.scale();
-                --curScale;
-                if(curScale < 1){
-                    curScale = 1;
-                }
-                zoomListener.scale(curScale);
-                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
-            },
-        });
+
+        ZoomController(elementSel,zoomListener,zoomElement,self.configuration);
 
         zoomElement = element.append("svg")
         .attr("width", dimensions.width)

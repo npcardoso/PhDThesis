@@ -23,25 +23,19 @@ function Sunburst(data, elementSel, configuration, events) {
     var svg, path;
 
     var element = d3.select(elementSel);
-    var zoomListener,zoomElement;
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
-        zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", self.zoom);
-        element.html('');
-
-       
+        element.html('');       
 
         initializeBreadcrumbTrail(elementSel);
-         updateBreadcrumbs(getAncestors(clickedNode),self.click,configuration);
+        updateBreadcrumbs(getAncestors(clickedNode),self.click,configuration);
 
 
-        zoomElement = element.append("svg")
+        var zoomElement = element.append("svg")
         .attr("width", dimensions.width)
         .attr("height", dimensions.height)
         .append("g")
         .attr("transform", centerTranslation());
-
-
 
         svg = zoomElement.append("g");
 
@@ -64,9 +58,7 @@ function Sunburst(data, elementSel, configuration, events) {
         .on("mouseover", self.mouseover)
         .on("mouseleave", self.mouseleave);
 
-        ZoomController(elementSel,zoomListener,zoomElement,self.configuration);
-        zoomListener(zoomElement);
-        zoomListener.event(zoomElement);
+        ZoomController(elementSel,zoomElement,svg,self.configuration);
     }
 
     this.mouseover = function(node){
@@ -92,13 +84,6 @@ function Sunburst(data, elementSel, configuration, events) {
         .each("end", function() {
           d3.select(this).on("mouseover", self.mouseover);
       });
-
-    }
-
-    this.zoom = function(){
-        if (d3.event) {
-            svg.attr("transform", "translate(" + d3.event.translate + ")"+"scale(" + d3.event.scale + ")");
-        }
     }
 
     var centerTranslation = function(){

@@ -20,12 +20,12 @@ function VerticalPartition(data, elementSel, configuration, events) {
     var svg,rect;
     this.render = function() {
         element.html("");
-        ZoomController(elementSel);
-        svg = element.append("svg")
+        var zoomElement = element.append("svg")
         .attr("width", dimensions.width)
         .attr("height", dimensions.height)
-        .append("g")
-        .call(d3.behavior.zoom().on("zoom",  self.zoom));
+        .append("g");
+
+        svg = zoomElement.append("g");
 
 
         rect = svg.selectAll("rect")
@@ -38,6 +38,8 @@ function VerticalPartition(data, elementSel, configuration, events) {
         .style("stroke", "#fff")
         .attr("fill",configuration.gradiante.normal)
         .on("click", self.click);
+
+        ZoomController(elementSel,zoomElement,svg,self.configuration);
     }
 
     this.click = function(node) {

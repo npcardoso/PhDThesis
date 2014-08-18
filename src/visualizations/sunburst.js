@@ -1,6 +1,7 @@
 function Sunburst(data, elementSel, configuration, events) {
     var self = this;
-        data = data[0];
+    var datatest = data[24];
+    data = data[0];
 
     this.data = data;
     this.configuration = configuration;
@@ -16,7 +17,9 @@ function Sunburst(data, elementSel, configuration, events) {
         return 1;
     });
 
+    var clickedNode  = data;
 
+    var partitionLayoutData = partition.nodes(self.data);
     var svg, path;
 
     var element = d3.select(elementSel);
@@ -28,6 +31,10 @@ function Sunburst(data, elementSel, configuration, events) {
 
         ZoomController(elementSel,zoomListener,zoomElement,self.configuration);
 
+        initializeBreadcrumbTrail(elementSel);
+         updateBreadcrumbs(getAncestors(clickedNode),self.click,configuration);
+
+
         zoomElement = element.append("svg")
         .attr("width", dimensions.width)
         .attr("height", dimensions.height)
@@ -38,24 +45,52 @@ function Sunburst(data, elementSel, configuration, events) {
         svg = zoomElement.append("g");
 
         svg.append("rect")
-            .attr("class", "overlay")
-            .attr("width", dimensions.width)
-            .attr("height", dimensions.height)
-            .attr("transform", "translate(" + (-dimensions.width/2) + "," + (-dimensions.height/2) + ")")
-            .attr("fill", "none")
-            .attr("pointer-events", "all");
+        .attr("class", "overlay")
+        .attr("width", dimensions.width)
+        .attr("height", dimensions.height)
+        .attr("transform", "translate(" + (-dimensions.width/2) + "," + (-dimensions.height/2) + ")")
+        .attr("fill", "none")
+        .attr("pointer-events", "all");
 
         path = svg.selectAll("path")
         .data(partition.nodes(self.data))
-        .enter().append("path")
+        .enter(partitionLayoutData).append("path")
         .attr("d", arc_render.arc)
         .style("stroke", "#fff")
         .style("fill", self.configuration.gradiante.normal)
         .style("fill-rule", "evenodd")
-        .on("click", self.click);
+        .on("click", self.click)
+        .on("mouseover", self.mouseover)
+        .on("mouseleave", self.mouseleave);
 
 
         zoomListener.event(zoomElement);
+    }
+
+    this.mouseover = function(node){
+        updateBreadcrumbs(getAncestors(node),self.click,configuration);
+        var sequenceArray = getAncestors(node);
+        path.style("opacity", 0.3);
+
+        path.filter(function(node) {
+            return (sequenceArray.indexOf(node) >= 0);
+        })
+        .style("opacity", 1);
+    }
+
+
+    this.mouseleave = function(node){
+        updateBreadcrumbs(getAncestors(clickedNode),self.click,configuration);
+        //path.on("mouseover", null);
+        path.style("opacity", 1);
+        return;
+        path.transition()
+        .duration(1000)
+        .style("opacity", 1)
+        .each("end", function() {
+          d3.select(this).on("mouseover", self.mouseover);
+      });
+
     }
 
     this.zoom = function(){
@@ -70,11 +105,16 @@ function Sunburst(data, elementSel, configuration, events) {
 
     //Function called when a node is clicked call the click event and applicates the animation
     this.click = function(node) {
+        clickedNode = node;
+        updateBreadcrumbs(getAncestors(node),self.click,configuration);
         self.events.click(node);
         path.transition()
         .duration(self.configuration.currentConfig.animationTransitionTime)
         .attrTween("d", arc_render.arcTween(node));
     }
+
+
+    this.mouse
 
 
     this.resize = function(){

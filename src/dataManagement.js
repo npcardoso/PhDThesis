@@ -12,10 +12,10 @@ function dataInlining (data) {
 function getAncestors(node){
 	if(node.hasOwnProperty('parent')){
 		var parentAncestors = getAncestors(node.parent);
-		parentAncestors.push(node.parent);
+		parentAncestors.push(node);
 		return parentAncestors;
 	}
-	return new Array(0);
+	return new Array(node);
 }
 
   function removeArray(arr, item) {

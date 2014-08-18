@@ -3,10 +3,10 @@
 #include <iostream>
 
 int main() {
-    const char * json = "{\"class\":\"io.crowbar.diagnosis.DiagnosticSystem\",\"connections\":[{\"class\":\"io.crowbar.diagnosis.Connection\",\"from\":0,\"to\":0},{\"class\":\"io.crowbar.diagnosis.Connection\",\"from\":0,\"to\":1},{\"class\":\"io.crowbar.diagnosis.Connection\",\"from\":1,\"to\":1}],\"generators\":[{\"class\":\"io.crowbar.diagnosis.Algorithm\",\"configs\":null,\"name\":\"single_fault\"},{\"class\":\"io.crowbar.diagnosis.Algorithm\",\"configs\":null,\"name\":\"mhs2\"}],\"rankers\":[{\"class\":\"io.crowbar.diagnosis.Algorithm\",\"configs\":{\"type\":\"ochiai\"},\"name\":\"similarity\"},{\"class\":\"io.crowbar.diagnosis.Algorithm\",\"configs\":{\"type\":\"ochiai\"},\"name\":\"similarity\"},{\"class\":\"io.crowbar.diagnosis.Algorithm\",\"configs\":{\"type\":\"ochiai\"},\"name\":\"similarity\"},{\"class\":\"io.crowbar.diagnosis.Algorithm\",\"configs\":null,\"name\":\"fuzzinel\"}]}";
+    const char * json = "{\"spectra\":\"0 0 \",\"system\":{\"connections\":[{\"from\":0,\"to\":0},{\"from\":0,\"to\":1},{\"from\":1,\"to\":1}],\"generators\":[{\"name\":\"single_fault\"},{\"name\":\"mhs2\"}],\"rankers\":[{\"configs\":{\"type\":\"ochiai\"},\"name\":\"similarity\"},{\"name\":\"fuzzinel\"}]},\"type\":\"diagnostic\"}";
 
     char * response = NULL;
-    run_diagnostic(json, &response);
+    run(json, &response);
 
     std::cout << response << std::endl;
 

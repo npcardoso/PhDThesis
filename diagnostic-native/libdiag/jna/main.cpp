@@ -21,15 +21,10 @@ using namespace diagnostic;
 using namespace diagnostic::configuration;
 
 
-void run_diagnostic(const char * request, char ** response) {
+void run_diagnostic (const ptree & pt,
+                     char ** response) {
 
-    ptree pt;
-    stringstream ss (request);
-    cout << request << std::endl;
-
-    read_json (ss, pt);
-
-    t_const_ptr<t_diagnostic_system> dj = construct_diagnostic_system (pt);
+    t_const_ptr<t_diagnostic_system> dj = construct_diagnostic_system (pt.get_child("system"));
     cout << *dj << std::endl;
 
 
@@ -58,13 +53,29 @@ void run_diagnostic(const char * request, char ** response) {
     dr.add(1, scores);
     dr.add(2, scores);
 
+    stringstream ss;
+    json_write(ss, dr) << std::endl << "-------------" << std::endl;
 
-    json_write(std::cout, dr) << std::endl << "-------------" << std::endl;
-
-    *response = strdup("hello world");
+    *response = strdup(ss.str().c_str());
 }
 
-void cleanup_diagnostic(char * response)
-{
+
+void run (const char * request,
+          char ** response) {
+
+    ptree pt;
+    stringstream ss (request);
+
+    read_json (ss, pt);
+
+    string request_type = pt.get<string>("type", string());
+    cout << request << std::endl;
+
+    if(request_type == "diagnostic")
+        return run_diagnostic(pt, response);
+
+}
+
+void cleanup(char * response) {
     free(response);
 }

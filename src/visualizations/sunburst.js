@@ -29,7 +29,7 @@ function Sunburst(data, elementSel, configuration, events) {
         zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", self.zoom);
         element.html('');
 
-        ZoomController(elementSel,zoomListener,zoomElement,self.configuration);
+       
 
         initializeBreadcrumbTrail(elementSel);
          updateBreadcrumbs(getAncestors(clickedNode),self.click,configuration);
@@ -41,7 +41,8 @@ function Sunburst(data, elementSel, configuration, events) {
         .append("g")
         .attr("transform", centerTranslation());
 
-        zoomListener(zoomElement);
+
+
         svg = zoomElement.append("g");
 
         svg.append("rect")
@@ -63,7 +64,8 @@ function Sunburst(data, elementSel, configuration, events) {
         .on("mouseover", self.mouseover)
         .on("mouseleave", self.mouseleave);
 
-
+        ZoomController(elementSel,zoomListener,zoomElement,self.configuration);
+        zoomListener(zoomElement);
         zoomListener.event(zoomElement);
     }
 

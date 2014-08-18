@@ -43,10 +43,10 @@ function ZoomController(elementSel,zoomListener,zoomElement,configuration){
                     curScale = 1;
                 }
                 zoomListener.scale(curScale);
-                zoomListener.event(zoomElement.transition().duration(self.configuration.currentConfig.animationTransitionTime));
+                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime));
             }
-        }
-	$(elementSel).append(ZoomController_HTML);
+        };
+	$(elementSel).prepend(ZoomController_HTML);
 	$('#panUp').click(events.up);
 	$('#panDown').click(events.down);
 	$('#panLeft').click(events.left);

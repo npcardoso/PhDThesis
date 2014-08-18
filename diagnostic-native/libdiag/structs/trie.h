@@ -23,9 +23,6 @@ class t_trie_iterator;
 #define TRIE_LATEX_PREFIX "\\{"
 #define TRIE_LATEX_SUFFIX "\\}"
 #define TRIE_LATEX_SEP ", "
-#define TRIE_JSON_PREFIX "["
-#define TRIE_JSON_SUFFIX "]"
-#define TRIE_JSON_SEP ", "
 
 
 class t_trie {
@@ -91,16 +88,6 @@ public:
                              CANDIDATE_LATEX_PREFIX,
                              CANDIDATE_LATEX_SUFFIX,
                              CANDIDATE_LATEX_SEP);
-    }
-
-    inline std::ostream & json_write (std::ostream & out) const {
-        return generic_write(out,
-                             TRIE_JSON_PREFIX,
-                             TRIE_JSON_SUFFIX,
-                             TRIE_JSON_SEP,
-                             CANDIDATE_JSON_PREFIX,
-                             CANDIDATE_JSON_SUFFIX,
-                             CANDIDATE_JSON_SEP);
     }
 
     iterator begin () const;

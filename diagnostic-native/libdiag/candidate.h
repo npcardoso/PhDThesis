@@ -1,7 +1,6 @@
 #ifndef __CANDIDATE_H_edf867e97cb99b12f0025a979426b18b2db6b361__
 #define __CANDIDATE_H_edf867e97cb99b12f0025a979426b18b2db6b361__
 
-#include "serializable.h"
 #include "types.h"
 #include "utils/boost.h"
 
@@ -17,14 +16,10 @@
 #define CANDIDATE_LATEX_PREFIX "\\{c_{"
 #define CANDIDATE_LATEX_SUFFIX "}\\}"
 #define CANDIDATE_LATEX_SEP "}, c_{"
-#define CANDIDATE_JSON_PREFIX "["
-#define CANDIDATE_JSON_SUFFIX "]"
-#define CANDIDATE_JSON_SEP "], ["
 
 namespace diagnostic {
 class t_candidate :
-        public std::set<t_component_id>,
-        public json_serializable {
+        public std::set<t_component_id> {
     public:
     inline t_candidate () {}
 
@@ -68,13 +63,6 @@ class t_candidate :
                              CANDIDATE_LATEX_PREFIX,
                              CANDIDATE_LATEX_SUFFIX,
                              CANDIDATE_LATEX_SEP);
-    }
-
-    virtual inline std::ostream & json_write (std::ostream & out) const {
-        return generic_write(out,
-                             CANDIDATE_JSON_PREFIX,
-                             CANDIDATE_JSON_SUFFIX,
-                             CANDIDATE_JSON_SEP);
     }
 
 };

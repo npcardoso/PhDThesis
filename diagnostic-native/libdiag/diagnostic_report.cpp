@@ -8,52 +8,57 @@
 namespace diagnostic {
 
 t_diagnostic_report::t_diagnostic_report(const t_const_ptr<t_diagnostic_system> & diagnostic_system) :
-    diagnostic_system(diagnostic_system) {}
+    diagnostic_system(diagnostic_system),
+    gen_results(diagnostic_system->get_generators().size()),
+    rank_results(diagnostic_system->get_connections().size()) {
+}
 
-t_ranking * t_diagnostic_report::create_ranking(t_connection c) const {
-    auto it_score = scores.find(c);
-    if(it_score == scores.end())
+t_ranking * t_diagnostic_report::create_ranking(t_id connection_id) const {
+    auto & c = diagnostic_system->get_connections()[connection_id];
+
+    if(rank_results[c.get_to()] == NULL)
         return NULL;
-    auto it_candidate_set = candidate_sets.find(c.get_from());
-    if(it_candidate_set == candidate_sets.end())
+    if(gen_results[c.get_from()] == NULL)
         return NULL;
-    return new t_ranking(*it_candidate_set->second,
-                         *it_score->second,
+    return new t_ranking(*gen_results[c.get_from()],
+                         *rank_results[c.get_to()],
                          diagnostic_system->get_rankers()[c.get_to()]->get_score_type());
 }
 
 void t_diagnostic_report::add(t_id generator_id,
-                              t_const_ptr<t_candidate_generator::t_ret_type> D) {
-    assert(D.get() != NULL);
-    assert(diagnostic_system->get_generators()[generator_id] != NULL);
-    assert(candidate_sets.count(generator_id) == false);
+                              t_const_ptr<t_candidate_generator::t_ret_type> result) {
+    assert(result.get() != NULL);
+    assert(generator_id >= 0 );
+    assert(generator_id < diagnostic_system->get_generators().size());
+    assert(gen_results[generator_id].get() == NULL);
 
-    candidate_sets[generator_id] = D;
+    gen_results[generator_id] = result;
 }
 
-void t_diagnostic_report::add (const t_connection & c,
-                               t_const_ptr<t_candidate_ranker::t_ret_type> scores) {
-    assert(scores.get() != NULL);
-    assert(diagnostic_system->get_generators()[c.get_from()] != NULL);
-    assert(diagnostic_system->get_rankers()[c.get_to()] != NULL);
-    assert(candidate_sets.count(c.get_from()));
-    assert(this->scores.count(c) == 0);
+void t_diagnostic_report::add (t_id connection_id,
+                               t_const_ptr<t_candidate_ranker::t_ret_type> result) {
+    assert(result.get() != NULL);
+    assert(connection_id >= 0 );
+    assert(connection_id < diagnostic_system->get_connections().size());
 
-    auto candidate_set = candidate_sets[c.get_from()];
-    auto & ranker = *diagnostic_system->get_rankers()[c.get_to()];
-    this->scores[c] = scores;
+    t_connection c = diagnostic_system->get_connections()[connection_id];
+
+    assert(gen_results[c.get_from()].get() != NULL);
+    assert(rank_results[connection_id].get() == NULL);
+
+    rank_results[connection_id] = result;
 }
 
-std::ostream & t_diagnostic_report::json_write(std::ostream & out) const {
-    return out;
+t_const_ptr<t_diagnostic_system> t_diagnostic_report::get_diagnostic_system() const {
+    return diagnostic_system;
 }
 
+const t_diagnostic_report::t_gen_results & t_diagnostic_report::get_generator_results () const {
+    return gen_results;
 }
 
-
-namespace std {
-std::ostream & operator << (std::ostream & out,
-                            const diagnostic::t_diagnostic_report & dr) {
-    return dr.json_write(out);
+const t_diagnostic_report::t_rank_results & t_diagnostic_report::get_ranker_results() const {
+    return rank_results;
 }
+
 }

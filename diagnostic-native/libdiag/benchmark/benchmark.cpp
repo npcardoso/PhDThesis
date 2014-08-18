@@ -113,7 +113,7 @@ void t_ranker_job::operator () () const {
 
     // Hook: Post-rank
     t_status_post_rank rank_status(*status,
-                                   diag.get_ranker_name(ranker_id),
+                                   std::to_string(ranker_id),
                                    start_time,
                                    time_interval(),
                                    probs);

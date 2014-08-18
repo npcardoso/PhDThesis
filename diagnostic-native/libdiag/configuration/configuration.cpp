@@ -38,6 +38,7 @@ t_const_ptr<t_algorithm> parse_algorithm (const ptree & pt){
 
 t_const_ptr<t_diagnostic_system> construct_diagnostic_system (const ptree & pt,
                                                               const t_algorithm_creator & ac) {
+//TODO: perform input sanitization
     t_ptr<t_diagnostic_system> dj(new t_diagnostic_system());
 
     BOOST_FOREACH(const ptree::value_type & e, pt.get_child("generators")) {
@@ -59,7 +60,7 @@ t_const_ptr<t_diagnostic_system> construct_diagnostic_system (const ptree & pt,
     BOOST_FOREACH(const ptree::value_type & e, pt.get_child("connections")) {
         int from = e.second.get("from", -1);
         int to = e.second.get("to", -1);
-        dj->add_connection(from + 1, to + 1);
+        dj->add_connection(from, to);
     }
 
 

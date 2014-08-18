@@ -10,7 +10,7 @@
 #include <set>
 
 namespace diagnostic {
-namespace structs {
+
 class t_ambiguity_groups {
 public:
     typedef std::set<t_component_id> t_group;
@@ -35,10 +35,9 @@ private:
             transaction_count;
 };
 }
-}
 
 namespace std {
-ostream & operator << (ostream & out, const diagnostic::structs::t_ambiguity_groups & ag);
+ostream & operator << (ostream & out, const diagnostic::t_ambiguity_groups & ag);
 }
 
 #endif

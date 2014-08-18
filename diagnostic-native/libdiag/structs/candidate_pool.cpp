@@ -4,7 +4,7 @@
 
 
 namespace diagnostic {
-namespace structs {
+
 void t_candidate_pool::add (const t_trie & trie) {
     BOOST_FOREACH(const t_candidate &c, trie) {
         add(c);
@@ -24,6 +24,5 @@ void t_candidate_pool::trie (t_trie & trie) const {
             trie.add(c, false, true);
         }
     }
-}
 }
 }

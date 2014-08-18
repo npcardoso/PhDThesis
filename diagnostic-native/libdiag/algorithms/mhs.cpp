@@ -8,7 +8,6 @@
 #include <sstream>
 
 using namespace std;
-using namespace diagnostic::structs;
 
 
 namespace diagnostic {
@@ -217,9 +216,9 @@ void t_mhs_parallel::map (t_args * args) {
                  args->filter);
 }
 
-void t_mhs_parallel::operator () (const structs::t_spectra & spectra,
+void t_mhs_parallel::operator () (const t_spectra & spectra,
                                   t_ret_type & D,
-                                  const structs::t_spectra_filter * filter) const {
+                                  const t_spectra_filter * filter) const {
     list<thread> threads;
     list<t_args> args;
 

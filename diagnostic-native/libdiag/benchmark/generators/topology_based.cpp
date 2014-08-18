@@ -4,7 +4,6 @@
 #include <stack>
 
 using namespace boost::random;
-using namespace diagnostic::structs;
 
 namespace diagnostic {
 namespace benchmark {
@@ -14,18 +13,18 @@ t_topology_based_generator::t_topology_based_generator () {
     until_nerrors = 0;
 }
 
-t_topology_based_generator::t_topology_based_generator (const t_const_ptr<structs::t_topology> & topology) : topology(topology) {
+t_topology_based_generator::t_topology_based_generator (const t_const_ptr<t_topology> & topology) : topology(topology) {
     stack_size = 0;
     max_transactions = 0;
     until_nerrors = 0;
 }
 
-void t_topology_based_generator::set_topology (const t_const_ptr<structs::t_topology> & topology) {
+void t_topology_based_generator::set_topology (const t_const_ptr<t_topology> & topology) {
     this->topology = topology;
 }
 
-void t_topology_based_generator::set_topology (const structs::t_topology * topology) {
-    this->topology = t_const_ptr<structs::t_topology> (topology);
+void t_topology_based_generator::set_topology (const t_topology * topology) {
+    this->topology = t_const_ptr<t_topology> (topology);
 }
 
 void t_topology_based_generator::set_stack_size (t_count size) {
@@ -44,7 +43,7 @@ void t_topology_based_generator::set_until_nerrors (t_count nerrors) {
     until_nerrors = nerrors;
 }
 
-void t_topology_based_generator::operator () (structs::t_count_spectra & spectra,
+void t_topology_based_generator::operator () (t_count_spectra & spectra,
                                               t_candidate & correct_candidate,
                                               std::mt19937 & gen,
                                               t_transaction_id tran) const {
@@ -98,8 +97,8 @@ void t_topology_based_generator::operator () (structs::t_count_spectra & spectra
     } while (!fail && stack.size());
 }
 
-structs::t_spectra * t_topology_based_generator::operator () (std::mt19937 & gen,
-                                                              structs::t_candidate & correct_candidate) {
+t_spectra * t_topology_based_generator::operator () (std::mt19937 & gen,
+                                                              t_candidate & correct_candidate) {
     assert(topology);
     assert(until_nerrors || max_transactions);
 

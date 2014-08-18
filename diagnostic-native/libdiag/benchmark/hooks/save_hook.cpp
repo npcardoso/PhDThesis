@@ -1,6 +1,6 @@
 #include "save_hook.h"
 
-#include "../../structs/diagnostic_report.h"
+#include "../../ranking.h"
 #include "../../utils/iostream.h"
 
 #include <boost/lexical_cast.hpp>
@@ -53,7 +53,10 @@ void t_save_hook::trigger_event (t_collector & collector,
                         ss.str());
 
     ss.str("");
-    ss << structs::t_diagnostic_report(status.get_candidates(), status.get_probs());
+    t_ranking r (status.get_candidates(),
+                 status.get_probs(),
+                 HEURISTIC); //!FIXME: add something like status.get_ranker().get_score_type();
+    ss << r;
     collector.save_file(collector.local_path(entry, "report.txt"),
                         ss.str());
 }

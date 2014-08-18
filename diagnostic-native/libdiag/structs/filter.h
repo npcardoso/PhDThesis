@@ -2,12 +2,12 @@
 #define __FILTER_H_ef75ff09aa82fe17c4c49924c355abeab72d7b87__
 
 #include "../types.h"
-#include "candidate.h"
+#include "../candidate.h"
 
 #include <vector>
 
 namespace diagnostic {
-namespace structs {
+
 class t_filter {
 public:
     t_filter ();
@@ -55,7 +55,6 @@ private:
     t_id id;
     const t_filter * filter;
 };
-}
 }
 
 #endif

@@ -2,8 +2,8 @@
 #define __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 
 #include "../diagnostic_system.h"
-#include "../structs/candidate.h"
-#include "../structs/diagnostic_report.h"
+#include "../candidate.h"
+#include "../ranking.h"
 #include "../utils/boost.h"
 #include "../utils/iostream.h"
 
@@ -20,11 +20,11 @@ public:
 
     virtual const std::string & key () const = 0;
 
-    virtual std::string operator () (const structs::t_spectra & spectra,
-                                     const structs::t_candidate & correct,
+    virtual std::string operator () (const t_spectra & spectra,
+                                     const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnostic_report & dr,
+                                     const t_ranking & r,
                                      const t_arguments & arguments) const = 0;
     template <class T>
     T get_argument (std::string name, const t_arguments & arguments) const {
@@ -43,11 +43,11 @@ class t_Cd : public t_metric {
 public:
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const structs::t_spectra & spectra,
-                                     const structs::t_candidate & correct,
+    virtual std::string operator () (const t_spectra & spectra,
+                                     const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnostic_report & dr,
+                                     const t_ranking & r,
                                      const t_arguments & ret) const;
 private:
     static std::string __KEY__;
@@ -57,11 +57,11 @@ class t_wasted_effort : public t_metric {
 public:
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const structs::t_spectra & spectra,
-                                     const structs::t_candidate & correct,
+    virtual std::string operator () (const t_spectra & spectra,
+                                     const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnostic_report & dr,
+                                     const t_ranking & r,
                                      const t_arguments & ret) const;
 private:
     static std::string __KEY__;
@@ -71,11 +71,11 @@ class t_entropy : public t_metric {
 public:
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const structs::t_spectra & spectra,
-                                     const structs::t_candidate & correct,
+    virtual std::string operator () (const t_spectra & spectra,
+                                     const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnostic_report & dr,
+                                     const t_ranking & r,
                                      const t_arguments & ret) const;
 private:
     static std::string __KEY__;
@@ -87,11 +87,11 @@ public:
 
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const structs::t_spectra & spectra,
-                                     const structs::t_candidate & correct,
+    virtual std::string operator () (const t_spectra & spectra,
+                                     const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnostic_report & dr,
+                                     const t_ranking & r,
                                      const t_arguments & ret) const;
 private:
     std::string target_metric;
@@ -105,11 +105,11 @@ public:
 
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const structs::t_spectra & spectra,
-                                     const structs::t_candidate & correct,
+    virtual std::string operator () (const t_spectra & spectra,
+                                     const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
-                                     const structs::t_diagnostic_report & dr,
+                                     const t_ranking & r,
                                      const t_arguments & ret) const;
 private:
     std::string target_metric;

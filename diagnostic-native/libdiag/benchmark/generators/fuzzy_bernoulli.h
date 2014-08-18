@@ -9,16 +9,16 @@ namespace diagnostic {
 namespace benchmark {
 class t_fuzzy_bernoulli : public t_spectra_generator {
 public:
-    typedef std::vector<structs::t_fault> t_faults;
+    typedef std::vector<t_fault> t_faults;
 
     t_fuzzy_bernoulli  (t_count component_count,
                         float activation_rate,
                         t_count error_count);
 
-    virtual structs::t_spectra * operator () (std::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate);
+    virtual t_spectra * operator () (std::mt19937 & gen,
+                                              t_candidate & correct_candidate);
 
-    t_fuzzy_bernoulli & operator << (const structs::t_fault & comp);
+    t_fuzzy_bernoulli & operator << (const t_fault & comp);
 
     virtual std::ostream & write (std::ostream & out) const;
 

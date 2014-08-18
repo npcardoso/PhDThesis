@@ -99,7 +99,7 @@ public:
         return *verbose;
     }
 
-    virtual std::ostream & print (std::ostream & out) const;
+    virtual std::ostream & write (std::ostream & out) const;
     std::ofstream devnull;
 
 protected:

@@ -3,7 +3,7 @@
 #include <boost/foreach.hpp>
 
 namespace diagnostic {
-namespace structs {
+
 void t_spectra_filter::strip (const t_candidate & candidate,
                               const t_spectra & spectra) {
     t_spectra_iterator it(spectra.get_component_count(),
@@ -76,6 +76,5 @@ bool t_spectra_iterator::next (bool transaction_oriented) {
     }
 
     return true;
-}
 }
 }

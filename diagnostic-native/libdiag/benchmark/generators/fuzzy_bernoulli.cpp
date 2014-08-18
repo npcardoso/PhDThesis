@@ -5,7 +5,6 @@
 
 #include <boost/random/bernoulli_distribution.hpp>
 
-using namespace diagnostic::structs;
 using namespace boost::random;
 
 namespace diagnostic {
@@ -14,8 +13,8 @@ t_fuzzy_bernoulli::t_fuzzy_bernoulli  (t_count component_count,
                                        float activation_rate,
                                        t_count error_count) : activation_rate(activation_rate), component_count(component_count), error_count(error_count) {}
 
-structs::t_spectra * t_fuzzy_bernoulli::operator () (std::mt19937 & gen,
-                                                     structs::t_candidate & correct_candidate) {
+t_spectra * t_fuzzy_bernoulli::operator () (std::mt19937 & gen,
+                                                     t_candidate & correct_candidate) {
     assert(!(error_count > 0 && faulty_components.size() == 0));
 
     bernoulli_distribution<> activation(activation_rate);
@@ -50,7 +49,7 @@ structs::t_spectra * t_fuzzy_bernoulli::operator () (std::mt19937 & gen,
     return &spectra;
 }
 
-t_fuzzy_bernoulli & t_fuzzy_bernoulli::operator << (const structs::t_fault & comp) {
+t_fuzzy_bernoulli & t_fuzzy_bernoulli::operator << (const t_fault & comp) {
     faulty_components.push_back(comp);
     component_count++;
     return *this;

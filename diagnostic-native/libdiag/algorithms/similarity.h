@@ -36,21 +36,25 @@ private:
 class t_similarity : public t_candidate_ranker {
 public:
     // From t_candidate_ranker
-    virtual void operator () (const structs::t_spectra & spectra,
-                              const structs::t_trie & D,
+    virtual void operator () (const t_spectra & spectra,
+                              const t_trie & D,
                               t_ret_type & probs,
-                              const structs::t_spectra_filter * filter=NULL) const;
+                              const t_spectra_filter * filter=NULL) const;
 
 
     // Calculates rank for all components in the spectra (does not sort nor normalize rank)
-    virtual t_ptr<t_rank> operator () (const structs::t_spectra & spectra,
-                                       const structs::t_spectra_filter * filter=NULL) const;
+    virtual t_ptr<t_rank> operator () (const t_spectra & spectra,
+                                       const t_spectra_filter * filter=NULL) const;
 
 
     // Calculates rank for a single components in the spectra
-    virtual t_score operator () (const structs::t_spectra & spectra,
+    virtual t_score operator () (const t_spectra & spectra,
                                  t_component_id comp,
-                                 const structs::t_spectra_filter * filter=NULL) const;
+                                 const t_spectra_filter * filter=NULL) const;
+
+    inline virtual t_score_type get_score_type () const {
+        return HEURISTIC;
+    }
 
 
 protected:
@@ -66,7 +70,7 @@ class t_ochiai : public t_similarity {
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
 
-    virtual std::ostream & print (std::ostream & out) const;
+    virtual std::ostream & write (std::ostream & out) const;
 };
 
 class t_tarantula : public t_similarity {
@@ -77,7 +81,7 @@ public:
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
 
-    virtual std::ostream & print (std::ostream & out) const;
+    virtual std::ostream & write (std::ostream & out) const;
 };
 
 class t_jaccard : public t_similarity {
@@ -88,7 +92,7 @@ public:
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
 
-    virtual std::ostream & print (std::ostream & out) const;
+    virtual std::ostream & write (std::ostream & out) const;
 };
 
 class t_random : public t_similarity {
@@ -97,9 +101,9 @@ public:
         return "t_random";
     }
     // Calculates rank for a single components in the spectra
-    virtual t_score operator () (const structs::t_spectra & spectra,
+    virtual t_score operator () (const t_spectra & spectra,
                                  t_component_id comp,
-                                 const structs::t_spectra_filter * filter=NULL) const;
+                                 const t_spectra_filter * filter=NULL) const;
 
 protected:
     inline virtual t_score similarity_coefficient (const t_count n[2][2]) const {return 0;}

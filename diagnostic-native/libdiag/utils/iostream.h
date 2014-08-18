@@ -13,7 +13,7 @@ std::ostream & operator << (std::ostream & out, const std::pair<C, D> & p) {
 }
 
 template <class C>
-std::ostream & printContainer (std::ostream & out, const C & container, std::string lbracket="", std::string rbracket="") {
+std::ostream & writeContainer (std::ostream & out, const C & container, std::string lbracket="", std::string rbracket="") {
     out << lbracket;
 
     if (container.size()) {
@@ -30,22 +30,22 @@ std::ostream & printContainer (std::ostream & out, const C & container, std::str
 
 template <class C>
 std::ostream & operator << (std::ostream & out, const std::set<C> & container) {
-    return printContainer(out, container, "(", ")");
+    return writeContainer(out, container, "(", ")");
 }
 
 template <class K, class V>
 std::ostream & operator << (std::ostream & out, const std::map<K, V> & container) {
-    return printContainer(out, container, "{", "}");
+    return writeContainer(out, container, "{", "}");
 }
 
 template <class C>
 std::ostream & operator << (std::ostream & out, const std::vector<C> & container) {
-    return printContainer(out, container, "[", "]");
+    return writeContainer(out, container, "[", "]");
 }
 
 template <class C>
 std::ostream & operator << (std::ostream & out, const std::list<C> & container) {
-    return printContainer(out, container, "[", "]");
+    return writeContainer(out, container, "[", "]");
 }
 }
 #endif

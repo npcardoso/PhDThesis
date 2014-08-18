@@ -12,8 +12,8 @@ public:
                  t_count n_tran,
                  t_count n_comp);
 
-    virtual structs::t_spectra * operator () (std::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate);
+    virtual t_spectra * operator () (std::mt19937 & gen,
+                                              t_candidate & correct_candidate);
 
     virtual std::ostream & write (std::ostream & out) const;
 

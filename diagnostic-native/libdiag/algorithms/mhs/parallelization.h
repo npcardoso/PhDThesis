@@ -2,7 +2,7 @@
 #define __PARALLELIZATION_H_5932959307b5185825a79718965aed2491de5b43__
 
 #include "../../types.h"
-#include "../../structs/candidate.h"
+#include "../../candidate.h"
 #include "../../utils/boost.h"
 
 #include <random>
@@ -13,7 +13,7 @@ class t_parallelization {
 public:
     inline virtual ~t_parallelization () {}
     virtual bool skip (t_id rank_pos,
-                       const structs::t_candidate & candidate) const;
+                       const t_candidate & candidate) const;
 };
 
 class t_basic_parallelization : public t_parallelization {
@@ -22,7 +22,7 @@ public:
                              t_count division_count,
                              t_count depth);
     virtual bool skip (t_id rank_pos,
-                       const structs::t_candidate & candidate) const;
+                       const t_candidate & candidate) const;
 
 protected:
     virtual bool skip (t_id rank_pos) const = 0;

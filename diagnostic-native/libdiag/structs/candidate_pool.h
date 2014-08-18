@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace diagnostic {
-namespace structs {
+
 class t_candidate_pool {
 public:
 
@@ -20,6 +20,5 @@ private:
     typedef std::vector<t_inner_storage> t_storage;
     t_storage storage;
 };
-}
 }
 #endif

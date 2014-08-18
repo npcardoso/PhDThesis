@@ -10,8 +10,8 @@ namespace diagnostic {
 namespace benchmark {
 t_status_iteration_init::t_status_iteration_init (t_id iteration_id,
                                                   t_time_interval start,
-                                                  const t_const_ptr<structs::t_spectra> & spectra,
-                                                  const t_const_ptr<structs::t_candidate> & correct) {
+                                                  const t_const_ptr<t_spectra> & spectra,
+                                                  const t_const_ptr<t_candidate> & correct) {
     assert(spectra.get() != NULL);
     assert(correct.get() != NULL);
 
@@ -29,11 +29,11 @@ t_time_interval t_status_iteration_init::get_iteration_start () const {
     return start;
 }
 
-const structs::t_spectra & t_status_iteration_init::get_spectra () const {
+const t_spectra & t_status_iteration_init::get_spectra () const {
     return *spectra;
 }
 
-const structs::t_candidate & t_status_iteration_init::get_correct () const {
+const t_candidate & t_status_iteration_init::get_correct () const {
     return *correct;
 }
 

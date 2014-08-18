@@ -3,9 +3,9 @@
 #include <cassert>
 #include <boost/foreach.hpp>
 namespace diagnostic {
-namespace structs {
+
 std::ostream & operator << (std::ostream & out, const t_trie & trie) {
-    return trie.print(out);
+    return trie.write(out);
 }
 
 std::istream & operator >> (std::istream & in, t_trie & trie) {
@@ -113,7 +113,7 @@ bool t_trie::add (const t_value_type & candidate,
     return add(candidate, candidate.begin(), check_composite);
 }
 
-std::ostream & t_trie::generic_print (std::ostream & out,
+std::ostream & t_trie::generic_write (std::ostream & out,
                                       std::string prefix,
                                       std::string suffix,
                                       std::string separator,
@@ -130,7 +130,7 @@ std::ostream & t_trie::generic_print (std::ostream & out,
         if (!first)
             out << separator;
 
-        d.generic_print(out, cand_prefix, cand_suffix, cand_separator);
+        d.generic_write(out, cand_prefix, cand_suffix, cand_separator);
         first = false;
     }
     return out << suffix;
@@ -230,6 +230,5 @@ const t_trie::t_value_type * t_trie_iterator::operator -> () const {
 const t_trie::t_value_type & t_trie_iterator::operator * () const {
     assert(level);
     return current;
-}
 }
 }

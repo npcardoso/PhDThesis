@@ -1,11 +1,11 @@
 #ifndef __STATISTICS_HOOK_H__9ef8a1ba45feaff2724b5ce2e9bc7b4a111b52b5__
 #define __STATISTICS_HOOK_H__9ef8a1ba45feaff2724b5ce2e9bc7b4a111b52b5__
 
-#include "benchmark_hook.h"
+#include "hook.h"
 
 namespace diagnostic {
 namespace benchmark {
-class t_statistics_hook : public t_benchmark_hook {
+class t_statistics_hook : public t_hook {
 public:
     virtual void trigger_event (t_collector & collector,
                                 const t_status_iteration_init & status) const;

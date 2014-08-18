@@ -1,2 +1,9 @@
+Import("env")
+
 libdiag = SConscript('libdiag/SConscript')
-libdiagjni = SConscript('libdiagjni/SConscript')
+
+
+env.Append(CPPFLAGS=" -I%s" % env['include_dir'])
+sandox = SConscript('sandbox/SConscript')
+
+Depends(sandox, libdiag)

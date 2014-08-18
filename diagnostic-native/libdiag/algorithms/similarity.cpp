@@ -13,7 +13,6 @@
 
 namespace diagnostic {
 namespace algorithms {
-using namespace structs;
 
 t_rank::t_rank (t_count size) : rank(size) {}
 
@@ -57,10 +56,10 @@ t_count t_rank::size () const {
     return rank.size();
 }
 
-void t_similarity::operator () (const structs::t_spectra & spectra,
-                                const structs::t_trie & D,
+void t_similarity::operator () (const t_spectra & spectra,
+                                const t_trie & D,
                                 t_ret_type & probs,
-                                const structs::t_spectra_filter * filter) const {
+                                const t_spectra_filter * filter) const {
     BOOST_FOREACH(auto & d,
                   D) {
         t_score score = NAN;
@@ -75,8 +74,8 @@ void t_similarity::operator () (const structs::t_spectra & spectra,
     }
 }
 
-t_ptr<t_rank> t_similarity::operator () (const structs::t_spectra & spectra,
-                                         const structs::t_spectra_filter * filter) const {
+t_ptr<t_rank> t_similarity::operator () (const t_spectra & spectra,
+                                         const t_spectra_filter * filter) const {
     t_spectra_iterator it(spectra.get_component_count(),
                           spectra.get_transaction_count(),
                           filter);
@@ -96,9 +95,9 @@ t_ptr<t_rank> t_similarity::operator () (const structs::t_spectra & spectra,
     return rank;
 }
 
-t_score t_similarity::operator () (const structs::t_spectra & spectra,
+t_score t_similarity::operator () (const t_spectra & spectra,
                                    t_component_id comp,
-                                   const structs::t_spectra_filter * filter) const {
+                                   const t_spectra_filter * filter) const {
     t_spectra_iterator it(spectra.get_component_count(),
                           spectra.get_transaction_count(),
                           filter);
@@ -126,7 +125,7 @@ t_score t_ochiai::similarity_coefficient (const t_count n[2][2]) const {
     return n[1][1] / sqrt(tmp);
 }
 
-std::ostream & t_ochiai::print (std::ostream & out) const {
+std::ostream & t_ochiai::write (std::ostream & out) const {
     return out << "t_ochiai";
 }
 
@@ -143,7 +142,7 @@ t_score t_tarantula::similarity_coefficient (const t_count n[2][2]) const {
     return tmp1 / (tmp1 + tmp2);
 }
 
-std::ostream & t_tarantula::print (std::ostream & out) const {
+std::ostream & t_tarantula::write (std::ostream & out) const {
     return out << "t_tarantula";
 }
 
@@ -155,13 +154,13 @@ t_score t_jaccard::similarity_coefficient (const t_count n[2][2]) const {
     return n[1][1] / tmp;
 }
 
-std::ostream & t_jaccard::print (std::ostream & out) const {
+std::ostream & t_jaccard::write (std::ostream & out) const {
     return out << "t_jaccard";
 }
 
-t_score t_random::operator () (const structs::t_spectra & spectra,
+t_score t_random::operator () (const t_spectra & spectra,
                                t_component_id comp,
-                               const structs::t_spectra_filter * filter) const {
+                               const t_spectra_filter * filter) const {
     std::mt19937 gen;
     boost::random::uniform_real_distribution<t_error> rand(0, 1);
 

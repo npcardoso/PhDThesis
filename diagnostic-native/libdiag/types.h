@@ -30,16 +30,13 @@ typedef double t_score;
 typedef double t_probability;
 typedef double t_weight;
 typedef double t_density;
+typedef t_probability t_entropy;
 
-//#include "utils/mpreal.h"
-#include <boost/multiprecision/mpfr.hpp>
+enum t_score_type {
+    PROBABILITY,
+    HEURISTIC
+};
 
-// Arbitrary Precision
-namespace mp = boost::multiprecision;
-typedef mp::number<mp::mpfr_float_backend<300>, mp::et_off>  t_probability_mp;
-typedef t_probability_mp t_goodness_mp;
 
-// Double Precision
-typedef t_probability t_goodness;
 
 #endif

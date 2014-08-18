@@ -12,7 +12,7 @@ public:
     virtual bool stop (t_count depth) const;
     virtual bool stop (const t_rank & rank,
                        t_id pos,
-                       const structs::t_trie & D,
+                       const t_trie & D,
                        t_time_interval time_elapsed) const;
 
     virtual std::string to_string() const = 0;
@@ -36,7 +36,7 @@ public:
 
     virtual bool stop (const t_rank & rank,
                        t_id pos,
-                       const structs::t_trie & D,
+                       const t_trie & D,
                        t_time_interval time_elapsed) const;
 
     virtual std::string to_string() const;

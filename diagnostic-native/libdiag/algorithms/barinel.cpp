@@ -5,7 +5,6 @@
 
 namespace diagnostic {
 namespace algorithms {
-using namespace structs;
 
 t_barinel_model::t_barinel_model (const t_spectra & spectra,
                                   const t_candidate & candidate,
@@ -107,16 +106,16 @@ t_barinel::t_barinel (size_t precision) {
     use_confidence = true;
 }
 
-void t_barinel::operator () (const structs::t_spectra & spectra,
-                             const structs::t_trie & D,
+void t_barinel::operator () (const t_spectra & spectra,
+                             const t_trie & D,
                              t_ret_type & probs,
-                             const structs::t_spectra_filter * filter) const {
+                             const t_spectra_filter * filter) const {
     BOOST_FOREACH(auto & candidate, D) {
         t_probability_mp ret;
 
 
         (* this)(spectra, candidate, ret);
-        probs.push_back(ret);
+        probs.push_back((t_ret_type::value_type) ret);
     }
 }
 
@@ -169,8 +168,8 @@ void t_barinel::operator () (const t_spectra & spectra,
     ret = prior_pr * pr;
 }
 
-void t_barinel::probability (const structs::t_spectra & spectra,
-                             const structs::t_candidate & candidate,
+void t_barinel::probability (const t_spectra & spectra,
+                             const t_candidate & candidate,
                              const t_barinel_goodnesses & goodnesses,
                              t_probability_mp & ret,
                              const t_spectra_filter * filter,
@@ -189,7 +188,7 @@ void t_barinel::probability (const structs::t_spectra & spectra,
 
     while (it.transaction.next()) {
         tmp = 1;
-        structs::t_candidate::const_iterator c_it = candidate.begin();
+        t_candidate::const_iterator c_it = candidate.begin();
         t_id comp = 0;
 
         while (c_it != candidate.end()) {

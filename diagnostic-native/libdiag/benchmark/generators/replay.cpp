@@ -5,7 +5,6 @@
 #include <fstream>
 
 using namespace std;
-using namespace diagnostic::structs;
 
 namespace diagnostic {
 namespace benchmark {

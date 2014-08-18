@@ -132,7 +132,7 @@ void test_parallelization (F::t_spectras & spectras,
             for (t_count n_threads = 1; n_threads < max_threads; n_threads++) {
                 t_ptr<t_parallelization_factory> pf(new T(depth));
                 algorithms::t_mhs_parallel mhs(pf, n_threads);
-                diagnostic::structs::t_trie D;
+                diagnostic::t_trie D;
 
                 mhs(spectra, D);
                 BOOST_CHECK_EQUAL(D.size(), D_ref->size());

@@ -1,7 +1,6 @@
 #ifndef __SPECTRA_H_14c9fb7ba96542f0d3780a3886d24ff0ff4ff469__
 #define __SPECTRA_H_14c9fb7ba96542f0d3780a3886d24ff0ff4ff469__
 
-#include "candidate.h"
 #include "spectra_filter.h"
 #include "../types.h"
 #include "../utils/boost.h"
@@ -12,7 +11,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace diagnostic {
-namespace structs {
+
 class t_spectra {
 public:
     typedef std::set<t_transaction_id> t_invalid_transactions;
@@ -58,10 +57,10 @@ public:
 
     virtual bool is_error (t_transaction_id transaction) const = 0;
 
-    virtual bool is_candidate (const structs::t_candidate & candidate,
+    virtual bool is_candidate (const t_candidate & candidate,
                                const t_spectra_filter * filter=NULL) const;
 
-    virtual bool is_minimal_candidate (const structs::t_candidate & candidate,
+    virtual bool is_minimal_candidate (const t_candidate & candidate,
                                        const t_spectra_filter * filter=NULL) const;
 
 
@@ -158,17 +157,15 @@ const T & t_spectra::requires () const {
     throw;
 }
 }
-}
 
 namespace std {
-std::istream & operator >> (std::istream & in, diagnostic::structs::t_spectra & spectra);
-std::ostream & operator << (std::ostream & out, const diagnostic::structs::t_spectra & spectra);
+std::istream & operator >> (std::istream & in, diagnostic::t_spectra & spectra);
+std::ostream & operator << (std::ostream & out, const diagnostic::t_spectra & spectra);
 }
 
 #else
 namespace diagnostic {
-namespace structs {
+
 class t_spectra;
-}
 }
 #endif

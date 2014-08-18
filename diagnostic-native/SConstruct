@@ -59,8 +59,21 @@ else:
     env['CCFLAGS'] = "-O3 -DNDEBUG"
 env['CCFLAGS'] += " -std=c++11  -Wall -pedantic"
 
+
 # Link Flags
-env.Append(LINKFLAGS = "-Wl,-rpath,'$$ORIGIN/../lib'")
+link_flags = ["-Wl,-rpath,'$$ORIGIN/../../lib/%s'" % env['PLATFORM'],
+              "-lboost_filesystem",
+              "-lboost_system",
+              "-lboost_date_time",
+              "-lgmp",
+              "-lmpfr",]
+
+if env['PLATFORM'] == 'darwin':
+  link_flags.append("-lboost_thread-mt")
+else:
+  link_flags.append("-lboost_thread")
+
+env.Append(LINKFLAGS = "   ".join(link_flags))
 
 
 

@@ -1,6 +1,5 @@
 #include "generator.h"
 
-using namespace diagnostic::structs;
 using namespace std;
 
 namespace diagnostic {
@@ -21,8 +20,8 @@ ostream & t_generator_repeater::write (ostream & out) const {
     return generator->write(out);
 }
 
-structs::t_spectra * t_generator_combiner::operator () (std::mt19937 & gen,
-                                                        structs::t_candidate & correct_candidate) {
+t_spectra * t_generator_combiner::operator () (std::mt19937 & gen,
+                                                        t_candidate & correct_candidate) {
     while (begin() != end()) {
         t_spectra * spectra = (**begin())(gen, correct_candidate);
 

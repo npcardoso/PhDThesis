@@ -21,6 +21,7 @@ std::ostream& operator<<(std::ostream& s, const t_const_ptr<T>& c)
     return s;
 }
 }
+
 #include <boost/filesystem/path.hpp>
 
 typedef boost::filesystem::path t_path;

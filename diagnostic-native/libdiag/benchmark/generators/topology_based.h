@@ -11,13 +11,13 @@ namespace benchmark {
 class t_topology_based_generator : public t_spectra_generator {
 public:
     t_topology_based_generator ();
-    t_topology_based_generator (const t_const_ptr<structs::t_topology> & topology);
+    t_topology_based_generator (const t_const_ptr<t_topology> & topology);
 
-    virtual structs::t_spectra * operator () (std::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate);
+    virtual t_spectra * operator () (std::mt19937 & gen,
+                                              t_candidate & correct_candidate);
 
-    void set_topology (const structs::t_topology * topology);
-    void set_topology (const t_const_ptr<structs::t_topology> & topology);
+    void set_topology (const t_topology * topology);
+    void set_topology (const t_const_ptr<t_topology> & topology);
 
     void set_stack_size (t_count size);
     void set_max_transactions (t_count max_transactions);
@@ -27,12 +27,12 @@ public:
     virtual std::ostream & write (std::ostream & out) const;
 
 protected:
-    void operator () (structs::t_count_spectra & spectra,
-                      structs::t_candidate & correct_candidate,
+    void operator () (t_count_spectra & spectra,
+                      t_candidate & correct_candidate,
                       std::mt19937 & gen,
                       t_transaction_id tran) const;
 private:
-    t_const_ptr<structs::t_topology> topology;
+    t_const_ptr<t_topology> topology;
 
     t_count stack_size;
     t_count max_activations;

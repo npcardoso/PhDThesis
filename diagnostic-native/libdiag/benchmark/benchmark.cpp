@@ -5,7 +5,6 @@
 #include <cmath>
 #include <boost/foreach.hpp>
 
-using namespace diagnostic::structs;
 
 namespace diagnostic {
 namespace benchmark {
@@ -44,8 +43,9 @@ t_generator_job::t_generator_job (t_id generator_id,
                                   const t_const_ptr<t_status_iteration_init> & status) : generator_id(generator_id), settings(settings), status(status) {}
 
 void t_generator_job::operator () () const {
-    const t_diagnostic_system & diag = settings.get_diagnostic_system();
-    const t_const_ptr<t_candidate_generator> & generator = diag.get_generator(generator_id);
+    assert("TODO: Implement this!!" == NULL);
+/*    const t_diagnostic_system & diag = settings.get_diagnostic_system();
+    const t_const_ptr<t_candidate_generator> & generator = diag.get_generators[generator_id];
     const t_diagnostic_system::t_ranker_list & connections = diag.get_connections(generator_id);
 
 
@@ -79,6 +79,7 @@ void t_generator_job::operator () () const {
 
         settings.get_job_queue().add_job(job);
     }
+*/
 }
 
 bool t_generator_job::operator < (const t_job & job) const {
@@ -95,7 +96,7 @@ t_ranker_job::t_ranker_job (t_id ranker_id,
 
 void t_ranker_job::operator () () const {
     const t_diagnostic_system & diag = settings.get_diagnostic_system();
-    const t_const_ptr<t_candidate_ranker> & ranker = diag.get_ranker(ranker_id);
+    const t_const_ptr<t_candidate_ranker> & ranker = diag.get_rankers()[ranker_id];
 
     t_candidate_ranker::t_ret_type * probs_ptr(new t_candidate_ranker::t_ret_type());
 
@@ -153,7 +154,7 @@ void run_benchmark (const t_benchmark_settings & settings,
                                           *it_status);
 
         for (t_id gen_id = 1;
-             gen_id <= diag.get_generator_count();
+             gen_id <= diag.get_generators().size();
              gen_id++) {
             t_const_ptr<t_job> job(new t_generator_job(gen_id,
                                                        settings,

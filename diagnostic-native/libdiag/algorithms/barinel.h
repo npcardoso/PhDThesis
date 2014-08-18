@@ -1,22 +1,31 @@
 #ifndef __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
 #define __BARINEL_H_711a21f02fd5adb38c911bf85cb43da48da2a32a__
 
+
 #include "../diagnostic_system.h"
 #include "../types.h"
+
+#include <boost/multiprecision/mpfr.hpp>
 
 #include <map>
 
 namespace diagnostic {
 namespace algorithms {
+
+// Arbitrary Precision
+namespace mp = boost::multiprecision;
+typedef mp::number<mp::mpfr_float_backend<300>, mp::et_off>  t_probability_mp;
+typedef t_probability_mp t_goodness_mp;
 typedef std::vector<t_goodness_mp> t_barinel_goodnesses;
+
 
 class t_barinel_model {
 public:
-    t_barinel_model (const structs::t_spectra & spectra,
-                     const structs::t_candidate & candidate,
+    t_barinel_model (const t_spectra & spectra,
+                     const t_candidate & candidate,
                      bool use_fuzzy_error=true,
                      bool use_confidence=true,
-                     const structs::t_spectra_filter * filter=NULL);
+                     const t_spectra_filter * filter=NULL);
 
     virtual void gradient (const t_barinel_goodnesses & goodnesses,
                            t_barinel_goodnesses & ret) const;
@@ -36,29 +45,33 @@ class t_barinel : public t_candidate_ranker {
 public:
     t_barinel (size_t precision=128);
 
-    virtual void operator () (const structs::t_spectra & spectra,
-                              const structs::t_trie & D,
+    virtual void operator () (const t_spectra & spectra,
+                              const t_trie & D,
                               t_ret_type & probs,
-                              const structs::t_spectra_filter * filter=NULL) const;
+                              const t_spectra_filter * filter=NULL) const;
 
-    virtual void operator () (const structs::t_spectra & spectra,
-                              const structs::t_candidate & candidate,
+    virtual void operator () (const t_spectra & spectra,
+                              const t_candidate & candidate,
                               t_probability_mp & ret,
-                              const structs::t_spectra_filter * filter=NULL) const;
+                              const t_spectra_filter * filter=NULL) const;
 
 
-    virtual void probability (const structs::t_spectra & spectra,
-                              const structs::t_candidate & candidate,
+    virtual void probability (const t_spectra & spectra,
+                              const t_candidate & candidate,
                               const t_barinel_goodnesses & goodnesses,
                               t_probability_mp & ret,
-                              const structs::t_spectra_filter * filter=NULL,
+                              const t_spectra_filter * filter=NULL,
                               bool use_confidence=true,
                               bool use_fuzzy_error=true,
                               bool use_count=false) const;
 
 
-    virtual void prior (const structs::t_candidate & candidate,
+    virtual void prior (const t_candidate & candidate,
                         t_goodness_mp & ret) const;
+
+    inline virtual t_score_type get_score_type () const {
+        return PROBABILITY;
+    }
 
     inline virtual std::string to_string() const {
         return "t_barinel";

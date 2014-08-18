@@ -1,11 +1,11 @@
 #ifndef __FLUSHER_H_40804107857bfa70caee529936a3415e4bedd0ca__
 #define __FLUSHER_H_40804107857bfa70caee529936a3415e4bedd0ca__
 
-#include "benchmark_hook.h"
+#include "hook.h"
 
 namespace diagnostic {
 namespace benchmark {
-class t_flusher_hook : public t_benchmark_hook {
+class t_flusher_hook : public t_hook {
 public:
     virtual void trigger_event (t_collector & collector,
                                 const t_status_iteration_init & status) const;

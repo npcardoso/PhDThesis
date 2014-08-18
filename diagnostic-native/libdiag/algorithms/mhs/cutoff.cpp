@@ -12,7 +12,7 @@ bool t_basic_cutoff::stop (t_count depth) const {
 
 bool t_basic_cutoff::stop (const t_rank & rank,
                            t_id pos,
-                           const structs::t_trie & D,
+                           const t_trie & D,
                            t_time_interval time_elapsed) const {
     return false;
 }
@@ -34,7 +34,7 @@ bool t_cutoff::stop (t_count depth) const {
 
 bool t_cutoff::stop (const t_rank & rank,
                      t_id pos,
-                     const structs::t_trie & D,
+                     const t_trie & D,
                      t_time_interval time_elapsed) const {
     if (max_candidates && D.size() >= max_candidates)
         return true;

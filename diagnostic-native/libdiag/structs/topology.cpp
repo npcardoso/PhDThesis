@@ -11,7 +11,7 @@
 using namespace boost::random;
 
 namespace diagnostic {
-namespace structs {
+
 t_fault::t_fault () {
     this->pass_prob = 0.5;
     this->soft_prob = 0;
@@ -19,7 +19,7 @@ t_fault::t_fault () {
     this->fail_prob = 0;
 }
 
-t_fault::t_fault (t_goodness goodness,
+t_fault::t_fault (t_probability goodness,
                   t_probability fail_prob) {
     assert(goodness >= 0);
     assert(goodness <= 1);
@@ -264,6 +264,5 @@ std::ostream & t_topology::graphviz_links (std::ostream & out, t_component_id co
 
 t_component_id t_topology::gen_entry_point (std::mt19937 & gen) const {
     return entry_points.gen_destination(gen);
-}
 }
 }

@@ -1,7 +1,7 @@
 #include "filter.h"
 
 namespace diagnostic {
-namespace structs {
+
 t_filter::t_filter () {
     filtered_count = 0;
 }
@@ -41,8 +41,8 @@ bool t_filter::is_filtered (t_id c) const {
     return _filter[c - 1] != c;
 }
 
-void t_filter::filter_all (const structs::t_candidate & candidate) {
-    structs::t_candidate::const_reverse_iterator it = candidate.rbegin();
+void t_filter::filter_all (const t_candidate & candidate) {
+    t_candidate::const_reverse_iterator it = candidate.rbegin();
 
 
     while (it != candidate.rend())
@@ -159,6 +159,5 @@ t_id t_filter_iterator::next () {
         id = 0;
 
     return id;
-}
 }
 }

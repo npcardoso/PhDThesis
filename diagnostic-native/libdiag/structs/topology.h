@@ -12,11 +12,11 @@
 #include <boost/random/mersenne_twister.hpp>
 
 namespace diagnostic {
-namespace structs {
+
 class t_fault {
 public:
     t_fault ();
-    t_fault (t_goodness goodness, t_probability failure);
+    t_fault (t_probability goodness, t_probability failure);
     t_fault (t_probability pass_prob,
              t_probability soft_prob,
              t_probability hard_prob,
@@ -97,7 +97,6 @@ private:
 
     t_link entry_points;
 };
-}
 }
 
 #endif

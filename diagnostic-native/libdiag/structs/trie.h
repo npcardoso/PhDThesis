@@ -1,7 +1,7 @@
 #ifndef __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
 #define __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
 
-#include "candidate.h"
+#include "../candidate.h"
 #include "../types.h"
 #include "../utils/boost.h"
 
@@ -10,7 +10,7 @@
 #include <map>
 
 namespace diagnostic {
-namespace structs {
+
 class t_trie_iterator;
 
 
@@ -23,6 +23,9 @@ class t_trie_iterator;
 #define TRIE_LATEX_PREFIX "\\{"
 #define TRIE_LATEX_SUFFIX "\\}"
 #define TRIE_LATEX_SEP ", "
+#define TRIE_JSON_PREFIX "["
+#define TRIE_JSON_SUFFIX "]"
+#define TRIE_JSON_SEP ", "
 
 
 class t_trie {
@@ -52,7 +55,7 @@ public:
         return elements;
     }
 
-    std::ostream & generic_print (std::ostream & out,
+    std::ostream & generic_write (std::ostream & out,
                                   std::string prefix,
                                   std::string suffix,
                                   std::string separator,
@@ -60,8 +63,8 @@ public:
                                   std::string cand_suffix,
                                   std::string cand_separator) const;
 
-    inline std::ostream & print (std::ostream & out) const {
-        return generic_print(out,
+    inline std::ostream & write (std::ostream & out) const {
+        return generic_write(out,
                              TRIE_NORMAL_PREFIX,
                              TRIE_NORMAL_SUFFIX,
                              TRIE_NORMAL_SEP,
@@ -70,8 +73,8 @@ public:
                              CANDIDATE_NORMAL_SEP);
     }
 
-    inline std::ostream & pretty_print (std::ostream & out) const {
-        return generic_print(out,
+    inline std::ostream & pretty_write (std::ostream & out) const {
+        return generic_write(out,
                              TRIE_PRETTY_PREFIX,
                              TRIE_PRETTY_SUFFIX,
                              TRIE_PRETTY_SEP,
@@ -80,14 +83,24 @@ public:
                              CANDIDATE_PRETTY_SEP);
     }
 
-    inline std::ostream & latex_print (std::ostream & out) const {
-        return generic_print(out,
+    inline std::ostream & latex_write (std::ostream & out) const {
+        return generic_write(out,
                              TRIE_LATEX_PREFIX,
                              TRIE_LATEX_SUFFIX,
                              TRIE_LATEX_SEP,
                              CANDIDATE_LATEX_PREFIX,
                              CANDIDATE_LATEX_SUFFIX,
                              CANDIDATE_LATEX_SEP);
+    }
+
+    inline std::ostream & json_write (std::ostream & out) const {
+        return generic_write(out,
+                             TRIE_JSON_PREFIX,
+                             TRIE_JSON_SUFFIX,
+                             TRIE_JSON_SEP,
+                             CANDIDATE_JSON_PREFIX,
+                             CANDIDATE_JSON_SUFFIX,
+                             CANDIDATE_JSON_SEP);
     }
 
     iterator begin () const;
@@ -146,7 +159,6 @@ private:
     t_trie::t_value_type current;
     const t_trie * level;
 };
-}
 }
 
 #endif

@@ -176,7 +176,7 @@ bool t_options::long_opt (char * opt, char * param) {
     return false;
 }
 
-std::ostream & t_options::print (std::ostream & out) const {
+std::ostream & t_options::write (std::ostream & out) const {
     out << "Input: ";
 
     if (input_str.size())
@@ -207,7 +207,7 @@ void t_options::add (const t_opt & option) {
 
 std::ostream & operator << (std::ostream & out, const t_options & opts) {
     out << '(';
-    opts.print(out);
+    opts.write(out);
     out << ')';
     return out;
 }

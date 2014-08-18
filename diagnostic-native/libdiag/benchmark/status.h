@@ -24,26 +24,24 @@ class t_status_iteration_init : public t_status {
 public:
     t_status_iteration_init (t_id iteration_id,
                              t_time_interval start,
-                             const t_const_ptr<structs::t_spectra> & spectra,
-                             const t_const_ptr<structs::t_candidate> & correct);
+                             const t_const_ptr<t_spectra> & spectra,
+                             const t_const_ptr<t_candidate> & correct);
 
     t_id get_iteration_id () const;
 
     t_time_interval get_iteration_start () const;
 
-    const structs::t_spectra & get_spectra () const;
-    const structs::t_candidate & get_correct () const;
+    const t_spectra & get_spectra () const;
+    const t_candidate & get_correct () const;
 
     virtual void prepare_entry (t_entry & entry) const;
-    inline virtual ~t_status_iteration_init () {
-        // std::cout << "Deleted t_status_iteration_init: " << get_iteration_id() << std::endl;
-    }
+    inline virtual ~t_status_iteration_init () {}
 
 private:
     t_id iteration_id;
     t_time_interval start;
-    t_const_ptr<structs::t_spectra> spectra;
-    t_const_ptr<structs::t_candidate> correct;
+    t_const_ptr<t_spectra> spectra;
+    t_const_ptr<t_candidate> correct;
 };
 
 class t_status_post_gen : public t_status_iteration_init {
@@ -63,9 +61,7 @@ public:
     virtual const t_candidate_generator::t_ret_type & get_candidates () const;
 
     virtual void prepare_entry (t_entry & entry) const;
-    inline virtual ~t_status_post_gen () {
-        // std::cout << "Deleted t_status_post_gen: " << get_iteration_id() << ", " << get_gen_name() << ", " << std::endl;
-    }
+    inline virtual ~t_status_post_gen () {}
 
 private:
     std::string name;
@@ -92,9 +88,7 @@ public:
     virtual const t_candidate_ranker::t_ret_type & get_probs () const;
 
     virtual void prepare_entry (t_entry & entry) const;
-    inline virtual ~t_status_post_rank () {
-        // std::cout << "Deleted t_status_post_rank" << get_iteration_id() << ", " << get_gen_name() << ", "<< get_rank_name()<< std::endl;
-    }
+    inline virtual ~t_status_post_rank () {}
 
 private:
     std::string name;

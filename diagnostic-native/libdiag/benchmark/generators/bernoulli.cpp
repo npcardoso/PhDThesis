@@ -4,11 +4,9 @@
 #include "../../structs/count_spectra.h"
 
 using boost::bernoulli_distribution;
-using namespace diagnostic::structs;
 
 namespace diagnostic {
 namespace benchmark {
-using namespace structs;
 
 t_bernoulli::t_bernoulli (float activation_rate,
                           float error_rate,
@@ -21,7 +19,7 @@ t_bernoulli::t_bernoulli (float activation_rate,
 }
 
 t_spectra * t_bernoulli::operator () (std::mt19937 & gen,
-                                      structs::t_candidate & correct_candidate) {
+                                      t_candidate & correct_candidate) {
     t_count_spectra & spectra = *(new t_count_spectra(n_comp, n_tran));
 
 

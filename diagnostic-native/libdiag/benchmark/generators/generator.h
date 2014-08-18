@@ -11,8 +11,8 @@ namespace diagnostic {
 namespace benchmark {
 class t_spectra_generator {
 public:
-    virtual structs::t_spectra * operator () (std::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate) = 0;
+    virtual t_spectra * operator () (std::mt19937 & gen,
+                                              t_candidate & correct_candidate) = 0;
 
     inline virtual std::ostream & write (std::ostream & out) const {
         throw e_not_implemented();
@@ -26,8 +26,8 @@ public:
     t_generator_repeater (t_ptr<t_spectra_generator> generator,
                           t_count count);
 
-    virtual structs::t_spectra * operator () (std::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate);
+    virtual t_spectra * operator () (std::mt19937 & gen,
+                                              t_candidate & correct_candidate);
     virtual std::ostream & write (std::ostream & out) const;
 private:
     t_ptr<t_spectra_generator> generator;
@@ -36,8 +36,8 @@ private:
 
 class t_generator_combiner : public t_spectra_generator, public std::list<t_ptr<t_spectra_generator> > {
 public:
-    virtual structs::t_spectra * operator () (std::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate);
+    virtual t_spectra * operator () (std::mt19937 & gen,
+                                              t_candidate & correct_candidate);
 };
 
 

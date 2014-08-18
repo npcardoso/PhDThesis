@@ -12,8 +12,8 @@ namespace benchmark {
 class t_replay : public t_spectra_generator, public std::list<std::pair<std::string, std::string> > {
 public:
 
-    virtual structs::t_spectra * operator () (std::mt19937 & gen,
-                                              structs::t_candidate & correct_candidate);
+    virtual t_spectra * operator () (std::mt19937 & gen,
+                                              t_candidate & correct_candidate);
 };
 }
 }

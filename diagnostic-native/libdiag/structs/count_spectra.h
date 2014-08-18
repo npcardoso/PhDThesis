@@ -6,7 +6,7 @@
 
 
 namespace diagnostic {
-namespace structs {
+
 class t_count_spectra : public t_basic_spectra {
 public:
 
@@ -47,7 +47,6 @@ private:
     typedef boost::shared_ptr<t_count[]> t_activity_ptr;
     t_activity_ptr activity;
 };
-}
 }
 
 #endif

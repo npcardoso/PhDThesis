@@ -80,12 +80,17 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
 
 
 
-function NodeInfoDisplay(elementSel,clickedNode,clickFunction,configuration){
+function NodeInfoDisplay(elementSel,clickFunction,configuration){
   var self = this;
   initializeBreadcrumbTrail(elementSel);
 
   this.updataBreadcumb = function(node){
     updateBreadcrumbs(getAncestors(node),clickFunction,configuration);
+  }
+
+  this.setClicked = function(node){
+    self.clickedNode = node;
+    self.updataBreadcumb(node);
   }
 
   this.setPath = function(path){
@@ -105,7 +110,7 @@ function NodeInfoDisplay(elementSel,clickedNode,clickFunction,configuration){
 
 
   this.mouseleave = function(node){
-    self.updataBreadcumb(clickedNode);
+    self.updataBreadcumb(self.clickedNode);
         //path.on("mouseover", null);
         self.path.style("opacity", 1);
         return;
@@ -117,5 +122,4 @@ function NodeInfoDisplay(elementSel,clickedNode,clickFunction,configuration){
         });
       }
 
-     self.updataBreadcumb(clickedNode); 
     }

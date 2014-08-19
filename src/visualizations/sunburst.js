@@ -17,7 +17,7 @@ function Sunburst(data, elementSel, configuration, events) {
         return 1;
     });
 
-    var clickedNode  = data;
+
 
     var partitionLayoutData = partition.nodes(self.data);
     var svg;
@@ -30,7 +30,7 @@ function Sunburst(data, elementSel, configuration, events) {
     this.render = function() {
         element.html('');       
 
-        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,clickedNode,self.click,configuration);
+        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.click,configuration);
 
 
         var zoomElement = element.append("svg")
@@ -60,6 +60,7 @@ function Sunburst(data, elementSel, configuration, events) {
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
+        self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(path);
         ZoomController(elementSel,zoomElement,svg,self.configuration);
     }
@@ -70,8 +71,7 @@ function Sunburst(data, elementSel, configuration, events) {
 
     //Function called when a node is clicked call the click event and applicates the animation
     this.click = function(node) {
-        clickedNode = node;
-        self.nodeInfoDisplay.updataBreadcumb(node);
+        self.nodeInfoDisplay.setClicked(node);
         self.events.click(node);
         path.transition()
         .duration(self.configuration.currentConfig.animationTransitionTime)
@@ -79,7 +79,6 @@ function Sunburst(data, elementSel, configuration, events) {
     }
 
 
-    this.mouse
 
 
     this.resize = function(){

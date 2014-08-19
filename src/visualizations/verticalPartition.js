@@ -14,14 +14,13 @@ function VerticalPartition(data, elementSel, configuration, events) {
     var partition = d3.layout.partition()
     .value(function(node) {  return 1; });
 
-    var clickedNode  = data;
 
     var element = d3.select(elementSel);
     var svg,rect;
     this.render = function() {
         element.html("");
 
-        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,clickedNode,self.click,configuration);
+        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.click,configuration);
 
         var zoomElement = element.append("svg")
         .attr("width", dimensions.width)
@@ -44,12 +43,13 @@ function VerticalPartition(data, elementSel, configuration, events) {
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
+        self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(rect);
         ZoomController(elementSel,zoomElement,svg,self.configuration);
     }
 
     this.click = function(node) {
-        self.nodeInfoDisplay.updataBreadcumb(node);
+        self.nodeInfoDisplay.setClicked(node);
         events.click(node)
         rect_render.rectAnimation(rect,node);
     }

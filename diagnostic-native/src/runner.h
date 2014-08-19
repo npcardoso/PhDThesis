@@ -50,8 +50,6 @@ class t_basic_runner : public t_runner {
                 dr->add(i, t_ptr<t_candidate_ranker::t_ret_type> (tmp));
             }
 
-            std::cout << rank_results[i] << std::endl;
-
         }
         return dr;
     }

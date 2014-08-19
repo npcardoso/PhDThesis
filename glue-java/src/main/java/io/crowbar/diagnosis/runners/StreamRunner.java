@@ -2,7 +2,8 @@ package io.crowbar.diagnosis.runners;
 
 
 import io.crowbar.diagnosis.DiagnosticSystem;
-import io.crowbar.diagnosis.DiagnosticSystemRunner;
+import io.crowbar.diagnosis.DiagnosticReport;
+import io.crowbar.diagnosis.Runner;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.runners.messages.DiagnosticMessages;
 import io.crowbar.diagnosis.runners.messages.Messages;
@@ -12,7 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-public class StreamRunner implements DiagnosticSystemRunner {
+public class StreamRunner implements Runner {
     private final InputStream in;
     private final PrintStream out;
 
@@ -28,11 +29,12 @@ public class StreamRunner implements DiagnosticSystemRunner {
     }
 
     @Override
-    public final void run (DiagnosticSystem system,
-                           Spectra spectra) throws ExecutionError {
+    public final DiagnosticReport run (DiagnosticSystem system,
+                                       Spectra spectra) throws ExecutionError {
         String jsonRequest = Messages.serialize(DiagnosticMessages.issueRequest(system, spectra));
 
 
         out.println(jsonRequest);
+        return null;
     }
 }

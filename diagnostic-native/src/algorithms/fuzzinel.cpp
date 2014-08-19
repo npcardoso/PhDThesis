@@ -2,6 +2,7 @@
 #include "../utils/iostream.h"
 
 #include <boost/foreach.hpp>
+#include <list>
 
 namespace diagnostic {
 namespace algorithms {
@@ -189,7 +190,7 @@ void t_fuzzinel_model::update (const t_fuzzinel_goodnesses & g,
 t_fuzzinel::t_fuzzinel (size_t precision) {
     epsilon = 0.0001;
     lambda = 1;
-    iterations = 0;
+    iterations = 100;
     use_fuzzy_error = true;
     use_confidence = true;
 }
@@ -198,12 +199,19 @@ void t_fuzzinel::operator () (const t_spectra & spectra,
                              const t_trie & D,
                              t_ret_type & probs,
                              const t_spectra_filter * filter) const {
+    std::list<t_probability_mp> probs_mp;
+    t_probability_mp total = 0;
+
     BOOST_FOREACH(auto & candidate, D) {
         t_probability_mp ret;
-
-
         (* this)(spectra, candidate, ret);
-        probs.push_back((t_ret_type::value_type) ret);
+        total += ret;
+        probs_mp.push_back((t_ret_type::value_type) ret);
+    }
+
+    BOOST_FOREACH(auto & prob, probs_mp) {
+        t_ret_type::value_type ret = (prob / total).convert_to<t_ret_type::value_type>();
+        probs.push_back(ret);
     }
 }
 

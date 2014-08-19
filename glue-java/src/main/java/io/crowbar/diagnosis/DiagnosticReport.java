@@ -16,7 +16,6 @@ public final class DiagnosticReport {
     public static class JSONObjectFactory implements ObjectFactory {
         private final static String GEN_RESULTS="gen_results";
         private final static String RANK_RESULTS="rank_results";
-        private final static String CONNECTIONS="connections";
 
 
         public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
@@ -26,8 +25,7 @@ public final class DiagnosticReport {
 
             Map valueMap = (Map) value;
             for (String k : new String[] {GEN_RESULTS,
-                                          RANK_RESULTS,
-                                          CONNECTIONS}) {
+                                          RANK_RESULTS}) {
                 if(!valueMap.containsKey(k))
                     throw new JSONException("Missing key: " + k);
             }
@@ -38,10 +36,6 @@ public final class DiagnosticReport {
 
             for(Object o : getList(context, valueMap.get(RANK_RESULTS))) {
                 dr.rankerResults.add(parseRankerResult(context, o));
-            }
-
-            for(Object o : getList(context, valueMap.get(CONNECTIONS))) {
-                dr.connections.add((Connection)new ObjectBinder().bind(o, Connection.class));
             }
 
             return dr;
@@ -96,12 +90,6 @@ public final class DiagnosticReport {
         return rankerResults;
     }
 
-    @JSON
-    private List<Connection> getConnections () {
-        return connections;
-    }
-
     private List<List<Candidate> > generatorResults = new ArrayList<List<Candidate> > ();
     private List<List<Double> > rankerResults = new ArrayList<List<Double> > ();
-    private List<Connection> connections = new ArrayList<Connection> ();
 }

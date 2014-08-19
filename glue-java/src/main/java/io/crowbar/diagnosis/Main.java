@@ -29,13 +29,15 @@ public class Main {
 
 
         j.addGenerator(new SingleFaultGenerator());
+        j.addGenerator(new MHSGenerator());
+
+
         j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
         j.addConnection(new Connection(0, 0));
-
-        j.addGenerator(new MHSGenerator());
-        j.addRanker(new FuzzinelRanker());
-        j.addConnection(new Connection(0, 1));
         j.addConnection(new Connection(1, 0));
+
+        j.addRanker(new FuzzinelRanker());
+        j.addConnection(new Connection(1, 1));
 
 
         try {

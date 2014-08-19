@@ -134,10 +134,6 @@ inline std::ostream & json_write (std::ostream & out,
 
     out << "rank_results: " ;
     json_write(out, dr.get_ranker_results());
-    out << ", ";
-
-    out << "connections: " ;
-    json_write(out, dr.get_diagnostic_system()->get_connections());
     out << "}";
 
     return out;

@@ -58,15 +58,13 @@ void run (const char * request,
         run_diagnostic(pt, response);
 
 
+
     std::cout << " -----Request----- " << std::endl;
     std::cout << request << std::endl;
     std::cout << " -----Request----- " << std::endl;
     std::cout << " -----Response----- " << std::endl;
     std::cout << *response << std::endl;
     std::cout << " -----Response----- " << std::endl;
-
-
-
 }
 
 void cleanup(char * response) {

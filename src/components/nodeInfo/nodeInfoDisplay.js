@@ -1,5 +1,5 @@
 var ARROW_DIMENSIONS = {
-  w: 175, h: 30, s: 3, t: 10
+  w: 195, h: 30, s: 3, t: 10
 };
 
 
@@ -105,7 +105,7 @@ function NodeInfoDisplay(elementSel,clickedNode,clickFunction,configuration){
 
 
   this.mouseleave = function(node){
-    self.updataBreadcumb(node);
+    self.updataBreadcumb(clickedNode);
         //path.on("mouseover", null);
         self.path.style("opacity", 1);
         return;

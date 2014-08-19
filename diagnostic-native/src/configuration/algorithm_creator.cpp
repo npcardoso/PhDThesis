@@ -8,7 +8,7 @@ namespace configuration {
 
 static t_algorithm_creator_combiner DEFAULT;
 
-t_algorithm_creator::t_register::t_register(const t_const_ptr<t_algorithm_creator> & ac) {
+t_algorithm_creator::t_register::t_register(const t_const_ptr<t_algorithm_creator> ac) {
     DEFAULT.add(ac);
 }
 

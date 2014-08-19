@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "structs/trie.h"
 #include "candidate.h"
 #include "diagnostic_report.h"
+#include "structs/trie.h"
 
 #include <boost/foreach.hpp>
 
@@ -55,7 +55,7 @@ std::ostream & json_write_container (std::ostream & out,
 
         while (++i != container.end()) {
             out << ", ";
-            json_write(out, *(container.begin()));
+            json_write(out, *i);
         }
     }
 
@@ -144,7 +144,6 @@ inline std::ostream & json_write (std::ostream & out,
             out << "null";
         else
             json_write(out, *result);
-
         first = false;
     }
     out << "], ";

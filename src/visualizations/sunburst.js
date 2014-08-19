@@ -20,15 +20,17 @@ function Sunburst(data, elementSel, configuration, events) {
     var clickedNode  = data;
 
     var partitionLayoutData = partition.nodes(self.data);
-    var svg, path;
+    var svg;
+
+    var path = {};
 
     var element = d3.select(elementSel);
+
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
         element.html('');       
 
-        initializeBreadcrumbTrail(elementSel);
-        updateBreadcrumbs(getAncestors(clickedNode),self.click,configuration);
+        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,clickedNode,self.click,configuration);
 
 
         var zoomElement = element.append("svg")
@@ -55,35 +57,11 @@ function Sunburst(data, elementSel, configuration, events) {
         .style("fill", self.configuration.gradiante.normal)
         .style("fill-rule", "evenodd")
         .on("click", self.click)
-        .on("mouseover", self.mouseover)
-        .on("mouseleave", self.mouseleave);
+        .on("mouseover", self.nodeInfoDisplay.mouseover)
+        .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
+        self.nodeInfoDisplay.setPath(path);
         ZoomController(elementSel,zoomElement,svg,self.configuration);
-    }
-
-    this.mouseover = function(node){
-        updateBreadcrumbs(getAncestors(node),self.click,configuration);
-        var sequenceArray = getAncestors(node);
-        path.style("opacity", 0.3);
-
-        path.filter(function(node) {
-            return (sequenceArray.indexOf(node) >= 0);
-        })
-        .style("opacity", 1);
-    }
-
-
-    this.mouseleave = function(node){
-        updateBreadcrumbs(getAncestors(clickedNode),self.click,configuration);
-        //path.on("mouseover", null);
-        path.style("opacity", 1);
-        return;
-        path.transition()
-        .duration(1000)
-        .style("opacity", 1)
-        .each("end", function() {
-          d3.select(this).on("mouseover", self.mouseover);
-      });
     }
 
     var centerTranslation = function(){
@@ -93,7 +71,7 @@ function Sunburst(data, elementSel, configuration, events) {
     //Function called when a node is clicked call the click event and applicates the animation
     this.click = function(node) {
         clickedNode = node;
-        updateBreadcrumbs(getAncestors(node),self.click,configuration);
+        self.nodeInfoDisplay.updataBreadcumb(node);
         self.events.click(node);
         path.transition()
         .duration(self.configuration.currentConfig.animationTransitionTime)

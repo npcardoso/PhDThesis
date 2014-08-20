@@ -49,3 +49,14 @@ std::ostream & t_candidate::generic_write (std::ostream & out,
     return out << suffix;
 }
 }
+namespace std {
+istream & operator >> (istream & in,
+                       t_candidate & candidate) {
+    return candidate.read(in);
+}
+
+ostream & operator << (ostream & out,
+                       const t_candidate & candidate) {
+    return candidate.write(out);
+}
+}

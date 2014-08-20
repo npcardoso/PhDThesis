@@ -1,8 +1,7 @@
 #ifndef __RANKING_H_9122f5d28fe5cbf4669865eae3fb40687848669c__
 #define __RANKING_H_9122f5d28fe5cbf4669865eae3fb40687848669c__
 
-#include "candidate.h"
-#include "diagnostic_system.h"
+#include "../diagnostic_system.h"
 #include "rank_element.h"
 
 #include <vector>

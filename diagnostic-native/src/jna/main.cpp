@@ -3,7 +3,7 @@
 #include "../structs/count_spectra.h"
 #include "../configuration/configuration.h"
 #include "../diagnostic_report.h"
-#include "../json.h"
+#include "../json/json.h"
 #include "../runner.h"
 
 #include <cstdio>

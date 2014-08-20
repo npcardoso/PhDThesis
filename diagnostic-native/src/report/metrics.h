@@ -1,9 +1,9 @@
 #ifndef __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 #define __METRICS_H_d89493d817d7ef64219d0d614f7ef3b07eb21297__
 
+#include "ranking.h"
 #include "../diagnostic_system.h"
 #include "../candidate.h"
-#include "../ranking.h"
 #include "../utils/boost.h"
 #include "../utils/iostream.h"
 

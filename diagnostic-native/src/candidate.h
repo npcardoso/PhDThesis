@@ -23,9 +23,9 @@ class t_candidate :
     public:
     inline t_candidate () {}
 
-    /*!
-      \brief Creates a candidate using va_args. The list must be terminated with a 0
-    */
+    /**
+     * \brief Creates a candidate using va_args. The list must be terminated with a 0.
+     */
     t_candidate (int c, ...);
 
     template <class InputIterator>
@@ -69,12 +69,10 @@ class t_candidate :
 }
 
 namespace std {
-inline std::istream & operator >> (std::istream & in, diagnostic::t_candidate & candidate) {
-    return candidate.read(in);
-}
-
-inline std::ostream & operator << (std::ostream & out, const diagnostic::t_candidate & candidate) {
-    return candidate.write(out);
-}
+using diagnostic::t_candidate;
+istream & operator >> (istream & in,
+                       t_candidate & candidate);
+ostream & operator << (ostream & out,
+                       const t_candidate & candidate);
 }
 #endif

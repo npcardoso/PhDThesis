@@ -2,7 +2,7 @@
 #define __METRICS_HOOK_H_0b0885703861f344448f13adf9cea1633b73bc5c__
 
 #include "hook.h"
-#include "../metrics.h"
+#include "../../report/metrics.h"
 
 
 namespace diagnostic {

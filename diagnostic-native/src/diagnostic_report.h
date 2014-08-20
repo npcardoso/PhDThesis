@@ -2,7 +2,7 @@
 #define __DIAGNOSTIC_REPORT_H_132a205ec90bbf9374e48a44e208119ba72231fa__
 
 #include "diagnostic_system.h"
-#include "ranking.h"
+#include "report/ranking.h"
 
 #include <vector>
 

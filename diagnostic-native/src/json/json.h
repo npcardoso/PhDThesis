@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "candidate.h"
-#include "diagnostic_report.h"
-#include "structs/trie.h"
+#include "../candidate.h"
+#include "../diagnostic_report.h"
+#include "../structs/trie.h"
 
 #include <boost/foreach.hpp>
 

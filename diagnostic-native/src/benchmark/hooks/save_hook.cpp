@@ -1,6 +1,6 @@
 #include "save_hook.h"
 
-#include "../../ranking.h"
+#include "../../report/ranking.h"
 #include "../../utils/iostream.h"
 
 #include <boost/lexical_cast.hpp>

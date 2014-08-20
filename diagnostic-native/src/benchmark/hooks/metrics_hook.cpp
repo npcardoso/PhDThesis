@@ -1,7 +1,5 @@
 #include "metrics_hook.h"
 
-#include "../../ranking.h"
-
 #include <boost/foreach.hpp>
 #include <fstream>
 

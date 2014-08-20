@@ -1,6 +1,6 @@
 Import("env")
 
-libdiag = SConscript('libdiag/SConscript')
+libdiag = SConscript('src/SConscript')
 
 
 env.Append(CPPFLAGS=" -I%s" % env['include_dir'])

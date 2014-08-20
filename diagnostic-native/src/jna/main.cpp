@@ -1,8 +1,10 @@
 #include "main.h"
 
+#include "../structs/count_spectra.h"
 #include "../configuration/configuration.h"
 #include "../diagnostic_report.h"
 #include "../json.h"
+#include "../runner.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -23,38 +25,20 @@ using namespace diagnostic::configuration;
 
 void run_diagnostic (const ptree & pt,
                      char ** response) {
-
-    t_const_ptr<t_diagnostic_system> dj = construct_diagnostic_system (pt.get_child("system"));
-    cout << *dj << std::endl;
-
-
-    t_diagnostic_report dr(dj);
-    t_trie * D;
-
-    D = new t_trie();
-    D->add(t_candidate(1,2,3,45,0));
-    D->add(t_candidate(2,3,4,0));
-    D->add(t_candidate(8,3,4,0));
-    dr.add(0, t_const_ptr<t_trie> (D));
-
-
-    D = new t_trie();
-    D->add(t_candidate(1,9,3,4,0));
-    D->add(t_candidate(4,3,5,0));
-    D->add(t_candidate(8,7,4,0));
-    dr.add(1, t_const_ptr<t_trie> (D));
-
-    t_ptr<t_candidate_ranker::t_ret_type> scores(new t_candidate_ranker::t_ret_type()) ;
-    scores->push_back(0.25);
-    scores->push_back(0.25);
-    scores->push_back(0.5);
-
-    dr.add(0, scores);
-    dr.add(1, scores);
-    dr.add(2, scores);
-
     stringstream ss;
-    json_write(ss, dr) << std::endl << "-------------" << std::endl;
+
+    t_const_ptr<t_diagnostic_system> ds = construct_diagnostic_system (pt.get_child("system"));
+
+    t_count_spectra spectra;
+    ss << pt.get<std::string>("spectra");
+    ss >> spectra;
+
+    t_basic_runner runner;
+
+    auto dr = runner.run(spectra, ds);
+
+    ss.str("");
+    json_write(ss, *dr);
 
     *response = strdup(ss.str().c_str());
 }
@@ -69,11 +53,18 @@ void run (const char * request,
     read_json (ss, pt);
 
     string request_type = pt.get<string>("type", string());
-    cout << request << std::endl;
 
     if(request_type == "diagnostic")
-        return run_diagnostic(pt, response);
+        run_diagnostic(pt, response);
 
+
+
+    std::cout << " -----Request----- " << std::endl;
+    std::cout << request << std::endl;
+    std::cout << " -----Request----- " << std::endl;
+    std::cout << " -----Response----- " << std::endl;
+    std::cout << *response << std::endl;
+    std::cout << " -----Response----- " << std::endl;
 }
 
 void cleanup(char * response) {

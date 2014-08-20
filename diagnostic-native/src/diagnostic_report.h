@@ -14,7 +14,7 @@ class t_diagnostic_report {
     typedef std::vector<t_const_ptr<t_candidate_generator::t_ret_type>> t_gen_results;
     typedef std::vector<t_const_ptr<t_candidate_ranker::t_ret_type> > t_rank_results;
 
-    t_diagnostic_report(const t_const_ptr<t_diagnostic_system> & diagnostic_system);
+    t_diagnostic_report(t_const_ptr<t_diagnostic_system> diagnostic_system);
 
     t_ranking * create_ranking(t_id connection_id) const;
 

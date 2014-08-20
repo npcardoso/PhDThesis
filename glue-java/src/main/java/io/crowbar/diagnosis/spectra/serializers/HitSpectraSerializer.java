@@ -50,8 +50,8 @@ public final class HitSpectraSerializer {
         }
 
         str.append(transaction == null ? 0 : transaction.getError());
-        str.append(" ");
-        str.append(transaction == null ? 0 : transaction.getConfidence());
+//        str.append(" ");
+//        str.append(transaction == null ? 0 : transaction.getConfidence());
 
         return str.toString();
     }

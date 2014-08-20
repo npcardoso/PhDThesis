@@ -6,7 +6,7 @@
     <relativePath>../pom.xml</relativePath>
     <groupId>io.crowbar</groupId>
     <artifactId>libcrowbar</artifactId>
-    <version>${crowbar-version}</version>
+    <version>1.0.0</version>
   </parent>
 
 
@@ -19,7 +19,7 @@
     <dependency>
       <groupId>io.crowbar</groupId>
       <artifactId>diagnostic-native</artifactId>
-      <version>${crowbar-version}</version>
+      <version>1.0.0</version>
     </dependency>
 
     <dependency>
@@ -33,7 +33,7 @@
 	  <artifactId>jna</artifactId>
 	  <version>4.1.0</version>
     </dependency>
-    
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

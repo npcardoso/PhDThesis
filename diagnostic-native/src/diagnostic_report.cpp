@@ -7,7 +7,7 @@
 
 namespace diagnostic {
 
-t_diagnostic_report::t_diagnostic_report(const t_const_ptr<t_diagnostic_system> & diagnostic_system) :
+t_diagnostic_report::t_diagnostic_report(t_const_ptr<t_diagnostic_system> diagnostic_system) :
     diagnostic_system(diagnostic_system),
     gen_results(diagnostic_system->get_generators().size()),
     rank_results(diagnostic_system->get_connections().size()) {

@@ -10,7 +10,7 @@ class t_algorithm_creator {
     public:
     class t_register {
         public:
-        t_register(const t_const_ptr<t_algorithm_creator> & ac);
+        t_register(t_const_ptr<t_algorithm_creator> ac);
     };
 
     static const t_algorithm_creator & get_default();

@@ -2,6 +2,7 @@
 #define __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
 
 #include "../candidate.h"
+#include "../serialization/json.h"
 #include "../types.h"
 #include "../utils/boost.h"
 
@@ -25,7 +26,7 @@ class t_trie_iterator;
 #define TRIE_LATEX_SEP ", "
 
 
-class t_trie {
+class t_trie : public t_json_writable {
 public:
     typedef t_candidate t_value_type;
     typedef t_value_type value_type; // Compatibility with stl
@@ -89,6 +90,8 @@ public:
                              CANDIDATE_LATEX_SUFFIX,
                              CANDIDATE_LATEX_SEP);
     }
+
+    virtual std::ostream & json (std::ostream & out) const;
 
     iterator begin () const;
     iterator end () const;

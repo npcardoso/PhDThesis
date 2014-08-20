@@ -20,6 +20,15 @@ bool t_connection::operator < (const t_connection & c) const {
         return to < c.to;
     return from < c.from;
 }
+
+std::ostream & t_connection::json (std::ostream & out) const {
+    out << '{';
+    diagnostic::json_write(out, "from") << ':';
+    json_write(out, (int)get_from()) << ',';
+    json_write(out, "to") << ':';
+    json_write(out, (int)get_to()) << "}";
+    return out;
+}
 }
 
 namespace std {

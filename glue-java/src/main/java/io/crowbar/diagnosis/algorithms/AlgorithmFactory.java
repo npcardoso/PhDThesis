@@ -1,10 +1,10 @@
-package io.crowbar.diagnosis;
+package io.crowbar.diagnosis.algorithms;
 
 import java.util.Map;
 import java.util.HashMap;
 
 
-public final class AlgorithmFactory {
+final class AlgorithmFactory {
     private Map<String, String> configs = null;
 
     public void setConfig (String name, String value) {

@@ -1,5 +1,6 @@
 package io.crowbar.diagnosis;
 
+import io.crowbar.diagnosis.algorithms.Algorithm;
 
 import flexjson.JSON;
 

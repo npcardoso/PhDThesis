@@ -117,6 +117,12 @@ t_score t_similarity::operator () (const t_spectra & spectra,
     return similarity_coefficient(n);
 }
 
+
+void t_similarity::json_configs (t_configs & out) const {
+    out["type"] = get_similarity_type();
+}
+
+
 t_score t_ochiai::similarity_coefficient (const t_count n[2][2]) const {
     if (!n[1][1])
         return 0;

@@ -61,4 +61,14 @@ const t_diagnostic_report::t_rank_results & t_diagnostic_report::get_ranker_resu
     return rank_results;
 }
 
+std::ostream & t_diagnostic_report::json (std::ostream & out) const {
+    out << '{';
+    json_write(out, "gen_results") << ':';
+    json_write(out, get_generator_results()) << ',';
+    json_write(out, "rank_results") << ':';
+    json_write(out, get_ranker_results()) << "}";
+    return out;
+}
+
+
 }

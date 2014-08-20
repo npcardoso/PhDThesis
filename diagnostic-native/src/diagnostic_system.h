@@ -3,14 +3,14 @@
 
 #include "candidate_generator.h"
 #include "candidate_ranker.h"
-
 #include "connection.h"
+#include "serialization/json.h"
 #include "utils/boost.h"
 
 #include <ostream>
 
 namespace diagnostic {
-class t_diagnostic_system {
+class t_diagnostic_system : public t_json_writable {
 public:
 
     typedef std::vector<t_connection> t_connections;
@@ -31,6 +31,8 @@ public:
                          t_id ranker_id);
     const t_connections & get_connections () const;
 
+    virtual std::ostream & json (std::ostream & out) const;
+
 private:
     t_generators generators;
     t_rankers rankers;
@@ -39,10 +41,6 @@ private:
 }
 
 namespace std {
-std::ostream& operator<<(std::ostream & s,
-                         const diagnostic::t_candidate_generator & cg);
-std::ostream& operator<<(std::ostream & s,
-                         const diagnostic::t_candidate_ranker & cr);
 std::ostream& operator<<(std::ostream& s,
                          const diagnostic::t_diagnostic_system & ds);
 }

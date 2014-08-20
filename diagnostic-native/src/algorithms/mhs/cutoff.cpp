@@ -51,16 +51,12 @@ bool t_cutoff::stop (const t_rank & rank,
     return false;
 }
 
-std::string t_cutoff::to_string() const {
-    stringstream ss;
-    ss << "t_cutoff[" <<
-        "max_depth:" << max_depth << ", " <<
-        "max_candidates:" << max_candidates << ", " <<
-        "max_time:" << max_time << ", "<<
-        "lambda:" << lambda << ", "<<
-        "min_score:" << min_score << "]";
-    return ss.str();
+void t_cutoff::json_configs (t_configs & out) const {
+    out["max_depth"] = std::to_string(max_depth);
+    out["max_candidates"] = std::to_string(max_candidates);
+    out["max_time"] = std::to_string(max_time);
+    out["lambda"] = std::to_string(lambda);
+    out["min_score"] = std::to_string(min_score);
 }
-
 }
 }

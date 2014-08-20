@@ -264,5 +264,12 @@ void t_fuzzinel::operator () (const t_spectra & spectra,
     ret = prior_pr * pr;
 }
 
+
+void t_fuzzinel::json_configs (t_configs & out) const {
+    out["use_fuzzy_error"] = std::to_string(use_fuzzy_error);
+    out["use_confidence"] = std::to_string(use_confidence);
+}
+
+
 }
 }

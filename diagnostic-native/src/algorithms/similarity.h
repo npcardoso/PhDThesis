@@ -56,16 +56,24 @@ public:
         return HEURISTIC;
     }
 
+    virtual void json_configs (t_configs & out) const;
 
 protected:
+    inline virtual std::string get_name() const {
+        return "similarity";
+    }
+
+    virtual std::string get_similarity_type() const = 0;
+
+
     virtual t_score similarity_coefficient (const t_count n[2][2]) const = 0;
 };
 
 
 class t_ochiai : public t_similarity {
     public:
-    inline virtual std::string to_string() const {
-        return "t_ochiai";
+    inline virtual std::string get_similarity_type() const {
+        return "ochiai";
     }
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
@@ -75,8 +83,8 @@ protected:
 
 class t_tarantula : public t_similarity {
 public:
-    inline virtual std::string to_string() const {
-        return "t_tarantula";
+    inline virtual std::string get_similarity_type() const {
+        return "tarantula";
     }
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
@@ -86,8 +94,8 @@ protected:
 
 class t_jaccard : public t_similarity {
 public:
-    inline virtual std::string to_string() const {
-        return "t_jaccard";
+    inline virtual std::string get_similarity_type() const {
+        return "jaccard";
     }
 protected:
     virtual t_score similarity_coefficient (const t_count n[2][2]) const;
@@ -97,8 +105,8 @@ protected:
 
 class t_random : public t_similarity {
 public:
-    inline virtual std::string to_string() const {
-        return "t_random";
+    inline virtual std::string get_similarity_type() const {
+        return "random";
     }
     // Calculates rank for a single components in the spectra
     virtual t_score operator () (const t_spectra & spectra,

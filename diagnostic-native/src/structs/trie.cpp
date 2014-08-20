@@ -136,6 +136,11 @@ std::ostream & t_trie::generic_write (std::ostream & out,
     return out << suffix;
 }
 
+std::ostream & t_trie::json (std::ostream & out) const {
+    return json_write_container(out, *this, "[", "]");
+}
+
+
 t_trie::iterator t_trie::begin () const {
     return iterator(this);
 }

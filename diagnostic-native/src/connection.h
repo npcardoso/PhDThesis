@@ -2,11 +2,12 @@
 #define __CONNECTION_H_db26b5a9e36de709ca3f5fa2f2ec2c699526d355__
 
 #include "types.h"
+#include "serialization/json.h"
 
 #include <iostream>
 
 namespace diagnostic {
-class t_connection {
+class t_connection : public t_json_writable {
     public:
     t_connection (t_id from, t_id to);
 
@@ -14,6 +15,8 @@ class t_connection {
     t_id get_to () const;
 
     bool operator < (const t_connection & c) const;
+
+    virtual std::ostream & json (std::ostream & out) const;
 
     private:
     t_id from;

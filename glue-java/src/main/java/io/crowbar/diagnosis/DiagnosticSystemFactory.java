@@ -1,6 +1,6 @@
 package io.crowbar.diagnosis;
 
-
+import io.crowbar.diagnosis.algorithms.Algorithm;
 import io.crowbar.diagnosis.algorithms.Generator;
 import io.crowbar.diagnosis.algorithms.Ranker;
 
@@ -14,7 +14,10 @@ public final class DiagnosticSystemFactory {
     private final List<Algorithm> rankers = new ArrayList<Algorithm> ();
     private final List<Connection> connections = new ArrayList<Connection> ();
 
-    /*! Adds a generator to the diagnostic system. (Note: makes a copy of the generator so its safe to reuse it.)
+    /**
+     * \brief Adds a generator to the diagnostic system.  (Note:
+     * makes a copy of the generator so its safe to reuse it.)
+     *
      * \return: Returns the number of generators
      */
     public int addGenerator (Generator g) {
@@ -22,17 +25,24 @@ public final class DiagnosticSystemFactory {
         return generators.size() - 1;
     }
 
-    /*!Adds a ranker to the diagnostic system. (Note: makes a copy of the ranker so its safe to reuse it.)
+    /**
+     * \brief Adds a ranker to the diagnostic system. (Note: makes a
+     * copy of the ranker so its safe to reuse it.)
+     *
      * \return: Returns the number of rankers
      */
+
     public int addRanker (Ranker r) {
         rankers.add(r.getAlgorithm());
         return rankers.size() - 1;
     }
 
-    /*! Adds a connection from a generator to a ranker.
+    /**
+     * \brief Adds a connection from a generator to a ranker.
+     *
      * \return: Returns the number of connections
      */
+
     public int addConnection (Connection c) {
         if (c.getFrom() < 0 || c.getFrom() >= generators.size())
             throw new IndexOutOfBoundsException();

@@ -3,13 +3,14 @@
 
 #include "diagnostic_system.h"
 #include "report/ranking.h"
+#include "serialization/json.h"
 
 #include <vector>
 
 
 namespace diagnostic {
 
-class t_diagnostic_report {
+class t_diagnostic_report : public t_json_writable {
     public:
     typedef std::vector<t_const_ptr<t_candidate_generator::t_ret_type>> t_gen_results;
     typedef std::vector<t_const_ptr<t_candidate_ranker::t_ret_type> > t_rank_results;
@@ -28,6 +29,8 @@ class t_diagnostic_report {
     t_const_ptr<t_diagnostic_system> get_diagnostic_system() const;
     const t_gen_results & get_generator_results () const;
     const t_rank_results & get_ranker_results() const;
+
+    virtual std::ostream & json (std::ostream & out) const;
 
     private:
     t_const_ptr<t_diagnostic_system> diagnostic_system;

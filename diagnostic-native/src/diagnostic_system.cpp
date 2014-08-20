@@ -37,27 +37,27 @@ void t_diagnostic_system::add_connection (t_id generator_id, t_id ranker_id) {
 const t_diagnostic_system::t_connections & t_diagnostic_system::get_connections () const {
     return connections;
 }
+
+std::ostream & t_diagnostic_system::json (std::ostream & out) const {
+    out << '{';
+    json_write(out, "generators")<< ':';
+    json_write(out, get_generators()) << ',';
+    json_write(out, "rankers")<< ':';
+    json_write(out, get_rankers()) << ',';
+    json_write(out, "connections")<< ':';
+    json_write(out, get_connections()) << '}';
+    return out;
+}
+
 }
 
 namespace std {
-
-std::ostream& operator<<(std::ostream & s,
-                         const diagnostic::t_candidate_generator& cg) {
-    s << cg.to_string();
-    return s;
-}
-
-std::ostream& operator<<(std::ostream & s,
-                         const diagnostic::t_candidate_ranker & cr) {
-    s << cr.to_string();
-    return s;
-}
-
 std::ostream& operator<<(std::ostream& s,
                          const diagnostic::t_diagnostic_system & ds){
     s << "t_diagnostic_system[generators:" << ds.get_generators() << ", ";
     s << "rankers:" << ds.get_rankers() << ", ";
     s << "connections:" << ds.get_connections() << "]";
     return s;
+
 }
 }

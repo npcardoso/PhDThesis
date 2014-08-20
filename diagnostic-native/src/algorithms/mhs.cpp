@@ -192,13 +192,9 @@ void t_mhs::combine (const t_spectra & spectra,
     }
 }
 
-string t_mhs::to_string() const {
-    stringstream ss;
 
-    ss << "t_mhs[" <<
-        "similarity:" << similarity->to_string() << ", " <<
-        "cutoff:" << cutoff->to_string() << "]";
-    return ss.str();
+void t_mhs::json_configs (t_configs & out) const{
+    cutoff->json_configs(out);
 }
 
 

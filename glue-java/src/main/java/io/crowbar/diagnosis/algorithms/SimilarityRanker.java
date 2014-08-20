@@ -1,8 +1,5 @@
 package io.crowbar.diagnosis.algorithms;
 
-import io.crowbar.diagnosis.Algorithm;
-import io.crowbar.diagnosis.AlgorithmFactory;
-
 public final class SimilarityRanker extends Ranker {
     public static enum Type {
         OCHIAI("ochiai"),

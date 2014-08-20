@@ -11,9 +11,11 @@ public:
                               t_ret_type & D,
                               const t_spectra_filter * filter=NULL) const;
 
-    inline virtual std::string to_string() const {
-        return "t_single_fault";
+    inline virtual std::string get_name() const {
+        return "single_fault";
     }
+
+    inline virtual void json_configs (t_configs & out) const {}
 
 };
 }

@@ -1,5 +1,7 @@
 package io.crowbar.diagnosis.runners.messages;
 
+import io.crowbar.diagnosis.DiagnosticReport;
+
 import flexjson.JSON;
 import flexjson.JSONSerializer;
 import flexjson.JSONDeserializer;
@@ -7,6 +9,9 @@ import flexjson.locators.TypeLocator;
 import flexjson.transformer.AbstractTransformer;
 
 public final class Messages {
+    /**
+       This class is used to filter null elements from json serialization
+    */
     private static class ExcludeTransformer extends AbstractTransformer {
         @Override
         public Boolean isInline () {return true;}
@@ -41,10 +46,14 @@ public final class Messages {
     }
 
     public static JSONDeserializer<Response> getResponseDeserializer () {
-        return new JSONDeserializer<Response> ().use(null, responseBinder);
+        return new JSONDeserializer<Response> ()
+            .use(null, responseBinder)
+            .use(DiagnosticReport.class, new DiagnosticReport.JSONObjectFactory());
     }
 
     public static JSONDeserializer<Request> getRequestDeserializer () {
-        return new JSONDeserializer<Request> ().use(null, requestBinder);
+        return new JSONDeserializer<Request> ()
+            .use(null, requestBinder)
+            .use(DiagnosticReport.class, new DiagnosticReport.JSONObjectFactory());
     }
 }

@@ -41,7 +41,9 @@ public class JNARunner implements Runner {
             e.printStackTrace();
         }
 
-        JSONDeserializer<DiagnosticReport> dejson = new JSONDeserializer<DiagnosticReport>();
-        return dejson.deserialize(jsonResponse, new DiagnosticReport.JSONObjectFactory());
+        DiagnosticMessages.Response response = (DiagnosticMessages.Response)
+            Messages.getResponseDeserializer().deserialize(jsonResponse);
+
+        return response.getReport();
     }
 }

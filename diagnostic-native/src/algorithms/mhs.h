@@ -40,10 +40,12 @@ public:
                          const t_spectra_filter & filter_first,
                          const t_spectra_filter & filter_second);
 
-    virtual std::string to_string() const;
+    inline virtual std::string get_name () const { return "mhs2"; }
 
 
 protected:
+    virtual void json_configs (t_configs & out) const;
+
     t_const_ptr<t_similarity> similarity;
     t_const_ptr<t_basic_cutoff> cutoff;
     t_const_ptr<t_parallelization> parallelization;

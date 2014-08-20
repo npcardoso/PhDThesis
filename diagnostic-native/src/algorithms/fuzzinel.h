@@ -36,9 +36,12 @@ public:
         return PROBABILITY;
     }
 
-    inline virtual std::string to_string() const {
-        return "t_fuzzinel";
+    inline virtual std::string get_name() const {
+        return "fuzzinel";
     }
+
+    virtual void json_configs (t_configs & out) const;
+
 public:
     double epsilon;
     double lambda;

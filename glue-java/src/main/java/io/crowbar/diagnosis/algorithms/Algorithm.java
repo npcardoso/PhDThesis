@@ -1,4 +1,4 @@
-package io.crowbar.diagnosis;
+package io.crowbar.diagnosis.algorithms;
 
 import flexjson.JSON;
 import flexjson.JSONSerializer;

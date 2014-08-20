@@ -3,7 +3,7 @@
 #include "../structs/count_spectra.h"
 #include "../configuration/configuration.h"
 #include "../diagnostic_report.h"
-#include "../json/json.h"
+#include "../serialization/json.h"
 #include "../runner.h"
 
 #include <cstdio>
@@ -22,6 +22,22 @@ using namespace std;
 using namespace diagnostic;
 using namespace diagnostic::configuration;
 
+#define MSG_TYPE_DIAGNOSTIC "diagnostic"
+
+
+
+std::ostream & json_write_diagnostic_response (std::ostream & out,
+                                               const t_diagnostic_system & ds,
+                                               const t_diagnostic_report & dr) {
+    out << '{';
+    json_write(out, "type") << ':';
+    json_write(out, MSG_TYPE_DIAGNOSTIC) << ',';
+    json_write(out, "system") << ':';
+    json_write(out, ds) << ',';
+    json_write(out, "report") << ':';
+    json_write(out, dr) << '}';
+    return out;
+}
 
 void run_diagnostic (const ptree & pt,
                      char ** response) {
@@ -38,7 +54,7 @@ void run_diagnostic (const ptree & pt,
     auto dr = runner.run(spectra, ds);
 
     ss.str("");
-    json_write(ss, *dr);
+    json_write_diagnostic_response(ss, *ds, *dr);
 
     *response = strdup(ss.str().c_str());
 }
@@ -54,7 +70,7 @@ void run (const char * request,
 
     string request_type = pt.get<string>("type", string());
 
-    if(request_type == "diagnostic")
+    if(request_type == MSG_TYPE_DIAGNOSTIC)
         run_diagnostic(pt, response);
 
 

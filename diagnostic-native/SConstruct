@@ -11,21 +11,13 @@ vars = Variables('.scons.conf')
 vars.Add('PATH', '', '')
 vars.Add('LIBPATH', '', '')
 vars.Add('CPPPATH', '', '')
+vars.Add('CXX', '', '')
 
 vars.Add('prefix', '', '#/target/install/')
 vars.Add('build_dir', '', '#/target/build/')
 
 vars.Add('debug', '', False)
-vars.Add('colors', '', True)
 vars.Update(env)
-
-
-if env['colors']:
-    try:
-        from colorizer import colorizer
-        colorizer().colorize(env)
-    except ImportError:
-        pass
 
 # Platform
 plat = platform.system().lower()
@@ -65,6 +57,7 @@ link_flags = ["-Wl,-rpath,'$$ORIGIN/../../lib/%s'" % env['PLATFORM'],
               "-lboost_filesystem",
               "-lboost_system",
               "-lboost_date_time",
+              "-lpthread",
               "-lgmp",
               "-lmpfr",]
 

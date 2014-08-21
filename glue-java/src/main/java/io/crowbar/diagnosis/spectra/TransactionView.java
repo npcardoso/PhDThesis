@@ -17,7 +17,7 @@ extends Transaction<A, TM> {
         int size;
 
         // compute correct size for transaction + view
-        for (size = spectraView.getNumComponents(); size > 0; size--) {
+        for (size = spectraView.getComponentCount(); size > 0; size--) {
             if (spectraView.getComponentMapping(size - 1) < transaction.size())
                 break;
         }

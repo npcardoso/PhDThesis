@@ -43,12 +43,12 @@ extends Spectra<A, TM, CM> {
     }
 
     @Override
-    public int getNumComponents () {
+    public int getComponentCount () {
         return components.length;
     }
 
     @Override
-    public int getNumTransactions () {
+    public int getTransactionCount () {
         return transactions.length;
     }
 

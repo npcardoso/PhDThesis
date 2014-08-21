@@ -6,6 +6,9 @@ import io.crowbar.diagnosis.spectra.Metadata;
 import io.crowbar.diagnosis.spectra.Transaction;
 import java.util.BitSet;
 
+/**
+ * \brief This class matches transactions that have at least one component activation.
+ */
 public final class ValidTransactionMatcher
 extends AbstractSpectraMatcher<Activity, Metadata, Metadata> {
     public ValidTransactionMatcher () {
@@ -23,7 +26,7 @@ extends AbstractSpectraMatcher<Activity, Metadata, Metadata> {
         int i = 0;
 
 
-        for (Transaction< ? extends Activity, ? extends Metadata> t : spectra) {
+        for (Transaction< ? extends Activity, ? extends Metadata> t : spectra.byTransaction()) {
             boolean valid = false;
 
             for (Activity a : t) {

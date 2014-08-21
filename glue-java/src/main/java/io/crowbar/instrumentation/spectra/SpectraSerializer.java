@@ -7,8 +7,8 @@ import io.crowbar.diagnosis.spectra.serializers.HitSpectraSerializer;
 
 public final class SpectraSerializer {
     public static String serialize (Spectra< ? extends Activity, TrM, CmpM> spectra) {
-        int numComp = spectra.getNumComponents();
-        int numTran = spectra.getNumTransactions();
+        int numComp = spectra.getComponentCount();
+        int numTran = spectra.getTransactionCount();
         StringBuilder str = new StringBuilder();
         boolean first = true;
 
@@ -37,7 +37,7 @@ public final class SpectraSerializer {
         str.append(numTran);
         str.append("\n");
 
-        for (Transaction< ? extends Activity, TrM> t : spectra) {
+        for (Transaction< ? extends Activity, TrM> t : spectra.byTransaction()) {
             str.append(HitSpectraSerializer.serialize(t, numComp));
             str.append(" # exceptionClass: " + (t == null ? "null" : t.getMetadata().getExceptionClass()));
             str.append(", exceptionMessage: " + (t == null ? "null" : t.getMetadata().getExceptionMessage()));

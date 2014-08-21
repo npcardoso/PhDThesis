@@ -31,7 +31,7 @@ public final class ProbeTypeMatcher extends AbstractSpectraMatcher<Activity, Met
         BitSet ret = new BitSet();
 
 
-        for (int i = 0; i < spectra.getNumComponents(); i++) {
+        for (int i = 0; i < spectra.getComponentCount(); i++) {
             ProbeType type = spectra.getComponent(i).getMetadata().getType();
 
             if (types.contains(type))

@@ -13,8 +13,8 @@ public final  class SpectraViewFactory<A extends Activity,
 
     public SpectraViewFactory (Spectra<A, TM, CM> spectra) {
         this.spectra = spectra;
-        transactions.set(0, spectra.getNumTransactions());
-        components.set(0, spectra.getNumComponents());
+        transactions.set(0, spectra.getTransactionCount());
+        components.set(0, spectra.getComponentCount());
     }
 
     public SpectraView<A, TM, CM> getView () {
@@ -28,9 +28,9 @@ public final  class SpectraViewFactory<A extends Activity,
 
 
         BitSet retTr = matcher.matchTransactions(view);
-        assert (retTr.length() < view.getNumTransactions());
+        assert (retTr.length() < view.getTransactionCount());
 
-        for (int i = 0; i < view.getNumTransactions(); i++) {
+        for (int i = 0; i < view.getTransactionCount(); i++) {
             if (!retTr.get(i)) {
                 int original = view.getTransactionMapping(i);
                 transactions.clear(original);
@@ -38,9 +38,9 @@ public final  class SpectraViewFactory<A extends Activity,
         }
 
         BitSet retComp = matcher.matchComponents(view);
-        assert (retComp.length() < view.getNumComponents());
+        assert (retComp.length() < view.getComponentCount());
 
-        for (int i = 0; i < view.getNumComponents(); i++) {
+        for (int i = 0; i < view.getComponentCount(); i++) {
             if (!retComp.get(i)) {
                 int original = view.getComponentMapping(i);
                 components.clear(original);

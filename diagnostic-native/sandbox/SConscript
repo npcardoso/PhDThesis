@@ -5,4 +5,5 @@ env.Append(LINKFLAGS = " -L%s -ldiag" % env['lib_dir'] )
 sources = Glob('*.cpp')
 
 obj = env.Program(target = "sandox", source = sources)
-env.Default(env.Install(env['bin_dir'], obj))
+obj = env.Install(env['bin_dir'], obj)
+env.Default(obj)

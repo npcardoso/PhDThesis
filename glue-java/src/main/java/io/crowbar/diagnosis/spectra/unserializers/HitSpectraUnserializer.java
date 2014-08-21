@@ -26,9 +26,9 @@ public final class HitSpectraUnserializer {
 
     public static Transaction<Hit, ?> unserialize (Scanner s,
                                                       int id,
-                                                      int numComponents) {
+                                                      int componentCount) {
         List<Hit> activity = new ArrayList<Hit> ();
-        for (int i = 0; i < numComponents; i++) {
+        for (int i = 0; i < componentCount; i++) {
             int a = s.nextInt();
             activity.add(new Hit(a != 0));
         }

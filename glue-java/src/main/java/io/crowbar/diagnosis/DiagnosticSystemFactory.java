@@ -7,16 +7,18 @@ import io.crowbar.diagnosis.algorithms.Ranker;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to create DiagnosticSystem instances.
+ */
 public final class DiagnosticSystemFactory {
     private final List<Algorithm> generators = new ArrayList<Algorithm> ();
     private final List<Algorithm> rankers = new ArrayList<Algorithm> ();
     private final List<Connection> connections = new ArrayList<Connection> ();
 
     /**
-     * \brief Adds a generator to the diagnostic system.  (Note:
-     * makes a copy of the generator so its safe to reuse it.)
-     *
-     * \return: Returns the number of generators
+     * \brief Adds a generator to the diagnostic system.
+     * \note The generator is copied so its safe to reuse it.
+     * \return Returns the number of generators
      */
     public int addGenerator (Generator g) {
         generators.add(g.getAlgorithm());
@@ -24,12 +26,10 @@ public final class DiagnosticSystemFactory {
     }
 
     /**
-     * \brief Adds a ranker to the diagnostic system. (Note: makes a
-     * copy of the ranker so its safe to reuse it.)
-     *
-     * \return: Returns the number of rankers
+     * \brief Adds a ranker to the diagnostic system.
+     * \note The ranker is copied so its safe to reuse it.
+     * \return Returns the number of rankers
      */
-
     public int addRanker (Ranker r) {
         rankers.add(r.getAlgorithm());
         return rankers.size() - 1;
@@ -37,10 +37,8 @@ public final class DiagnosticSystemFactory {
 
     /**
      * \brief Adds a connection from a generator to a ranker.
-     *
-     * \return: Returns the number of connections
+     * \return Returns the number of connections
      */
-
     public int addConnection (Connection c) {
         if (c.getFrom() < 0 || c.getFrom() >= generators.size())
             throw new IndexOutOfBoundsException();

@@ -6,6 +6,9 @@ import io.crowbar.diagnosis.spectra.Metadata;
 import java.util.BitSet;
 
 
+/**
+ * \brief This class matches components/transactions by id.
+ */
 public final class IdMatcher
 implements SpectraMatcher<Activity, Metadata, Metadata> {
     private final BitSet transactions = new BitSet();

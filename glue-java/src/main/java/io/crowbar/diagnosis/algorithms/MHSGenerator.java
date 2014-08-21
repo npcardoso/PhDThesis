@@ -4,40 +4,57 @@ public final class MHSGenerator extends Generator {
     private final AlgorithmFactory af = new AlgorithmFactory();
 
 
-    // ! Maximum depth of exploration ([1;+inf[)
+    /**
+     * \brief Sets the maximum depth of exploration.
+     * \pre val >= 1
+     */
     public void setMaxDepth (int val) {
         assert (val >= 1);
         af.setConfig("max_depth", "" + val);
     }
 
-    // ! Maximum number of computed candidates ([1;+inf[)
+    /**
+     * \brief Sets the maximum number of computed candidates.
+     * \pre val >= 1
+     */
     public void setMaxCandidates (int val) {
         assert (val >= 1);
         af.setConfig("max_candidates", "" + val);
     }
 
-    // ! Maximum execution time in microseconds ([1;+inf[)
+    /**
+     * \brief Sets the maximum execution time in microseconds.
+     * \pre val >= 1
+     */
     public void setMaxTime (int val) {
         assert (val >= 1);
         af.setConfig("max_time", "" + val);
     }
 
-    // ! Percentage of exploration for each branch ([0;1])
+    /**
+     * \brief Sets the percentage of exploration for each branch.
+     * \pre 0 <= val <= 1
+     */
     public void setLambda (float val) {
-        assert (val >= 0 && val <= 1);
-        af.setConfig("lambda", "" + val);
-    }
+         assert (val >= 0 && val <= 1);
+         af.setConfig("lambda", "" + val);
+     }
 
-    // ! Minimum heuristic score cutoff ([0;1])
+    /**
+     * \brief Sets the minimum heuristic score cutoff.
+     * \pre 0 <= val <= 1
+     */
     public void setMinScore (float val) {
-        assert (val >= 0 && val <= 1);
-        af.setConfig("lambda", "" + val);
-    }
+         assert (val >= 0 && val <= 1);
+         af.setConfig("lambda", "" + val);
+     }
 
-    // ! Minimum heuristic score cutoff ([0;1])
+    /**
+     * \brief Sets the heuristic type.
+     */
     public void setHeuristic (SimilarityRanker.Type type) {
-        af.setConfig("heuristic", type.getName());
-    }
+         af.setConfig("heuristic", type.getName());
+     }
 
     @Override
     public Algorithm getAlgorithm () {

@@ -6,6 +6,9 @@ import io.crowbar.diagnosis.spectra.Metadata;
 import io.crowbar.diagnosis.spectra.Transaction;
 import java.util.BitSet;
 
+/**
+ * \brief This class matches all active components in a spectra.
+ */
 public final class ActiveComponentMatcher extends AbstractSpectraMatcher<Activity, Metadata, Metadata> {
     public ActiveComponentMatcher () {
         this(true);
@@ -20,7 +23,7 @@ public final class ActiveComponentMatcher extends AbstractSpectraMatcher<Activit
         BitSet ret = new BitSet();
 
 
-        for (Transaction< ? extends Activity, ? extends Metadata> t : spectra) {
+        for (Transaction< ? extends Activity, ? extends Metadata> t : spectra.byTransaction()) {
             int i = 0;
 
             for (Activity a : t) {

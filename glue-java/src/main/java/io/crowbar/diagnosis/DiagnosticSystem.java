@@ -7,6 +7,11 @@ import flexjson.JSON;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents a diagnostic system.  As this class is
+ * immutable, a DiagnosticSystemFactory should be used to create
+ * instances of this class.
+ */
 public final class DiagnosticSystem {
     private List<Algorithm> generators = null;
     private List<Algorithm> rankers = null;
@@ -33,23 +38,36 @@ public final class DiagnosticSystem {
     DiagnosticSystem (List<Algorithm> generators,
                       List<Algorithm> rankers,
                       List<Connection> connections) {
-        this.generators = new ArrayList<Algorithm> (generators);
-        this.rankers = new ArrayList<Algorithm> (rankers);
-        this.connections = new ArrayList<Connection> (connections);
+        setGenerators(new ArrayList<Algorithm> (generators));
+        setRankers(new ArrayList<Algorithm> (rankers));
+        setConnections(new ArrayList<Connection> (connections));
     }
 
+    /**
+     * \brief Returns the list of generators.
+     * \return An unmodifiable List containing all generators.
+     */
     @JSON
-    private List<Algorithm> getGenerators () {
-        return generators;
+    public List<Algorithm> getGenerators () {
+        return java.util.Collections.unmodifiableList(generators);
     }
 
+    /**
+     * \brief Returns the list of rankers.
+     * \return An unmodifiable List containing all rankers.
+     */
     @JSON
-    private List<Algorithm> getRankers () {
-        return rankers;
+    public List<Algorithm> getRankers () {
+        return java.util.Collections.unmodifiableList(rankers);
     }
 
+
+    /**
+     * \brief Returns the list of connections.
+     * \return An unmodifiable List containing all connections.
+     */
     @JSON
-    private List<Connection> getConnections () {
-        return connections;
+    public List<Connection> getConnections () {
+        return java.util.Collections.unmodifiableList(connections);
     }
 }

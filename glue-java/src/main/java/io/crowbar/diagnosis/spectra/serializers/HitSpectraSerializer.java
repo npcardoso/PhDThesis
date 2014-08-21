@@ -13,8 +13,8 @@ public final class HitSpectraSerializer {
 
     public static String serialize (Spectra< ? extends Activity, ? , ? > spectra,
                                     String separator) {
-        int numComp = spectra.getNumComponents();
-        int numTran = spectra.getNumTransactions();
+        int numComp = spectra.getComponentCount();
+        int numTran = spectra.getTransactionCount();
         StringBuilder str = new StringBuilder();
 
 
@@ -23,7 +23,7 @@ public final class HitSpectraSerializer {
         str.append(numTran);
         str.append(separator);
 
-        for (Transaction t : spectra) {
+        for (Transaction t : spectra.byTransaction()) {
             str.append(serialize(t, numComp));
             str.append(separator);
         }
@@ -32,7 +32,7 @@ public final class HitSpectraSerializer {
     }
 
     public static String serialize (Transaction< ? extends Activity, ? > transaction,
-                                    int numComponents) {
+                                    int componentCount) {
         StringBuilder str = new StringBuilder();
         int i = 0;
 
@@ -44,7 +44,7 @@ public final class HitSpectraSerializer {
             }
         }
 
-        for (; i < numComponents; i++) {
+        for (; i < componentCount; i++) {
             str.append(0);
             str.append(" ");
         }

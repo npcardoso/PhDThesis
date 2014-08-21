@@ -51,7 +51,7 @@ public class SpectraBuilder extends AbstractEventListener {
 
 
         Transaction<Hit, TrM> t =
-            Factory.createTransaction(spectra.getNumTransactions(),
+            Factory.createTransaction(spectra.getTransactionCount(),
                                       hitVector,
                                       error ? 1 : 0,
                                       1, m);

@@ -6,6 +6,9 @@ import io.crowbar.diagnosis.spectra.Metadata;
 
 import java.util.BitSet;
 
+/**
+ * \brief This class negates the output of some matcher.
+ */
 public final class NegateMatcher<A extends Activity,
                                  TM extends Metadata,
                                  CM extends Metadata>
@@ -21,7 +24,7 @@ implements SpectraMatcher<A, TM, CM> {
         BitSet ret = matcher.matchComponents(spectra);
 
 
-        ret.flip(0, spectra.getNumComponents());
+        ret.flip(0, spectra.getComponentCount());
 
         return ret;
     }
@@ -31,7 +34,7 @@ implements SpectraMatcher<A, TM, CM> {
         BitSet ret = matcher.matchTransactions(spectra);
 
 
-        ret.flip(0, spectra.getNumTransactions());
+        ret.flip(0, spectra.getTransactionCount());
         return ret;
     }
 }

@@ -1,6 +1,4 @@
-package io.crowbar.instrumentation.runtime;
-
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
+package io.crowbar.diagnostic.spectrum;
 
 public class WritableTree extends AbstractTree {
     public WritableTree (String name) {
@@ -8,7 +6,7 @@ public class WritableTree extends AbstractTree {
     }
 
     public final Node addNode (String name,
-                               Node parent) throws RegistrationException {
+                               Node parent) throws Tree.RegistrationException {
         Node n = new Node(name,
                           size(),
                           parent.getId());

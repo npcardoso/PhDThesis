@@ -1,9 +1,9 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.instrumentation.runtime.Node;
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.Tree;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -104,7 +104,7 @@ public class InjectPass extends AbstractPass {
 
     private Bytecode getInstrumentationCode (CtClass c,
                                              Node n,
-                                             ConstPool pool) throws RegistrationException {
+                                             ConstPool pool) throws Tree.RegistrationException {
         Bytecode b = new Bytecode(pool);
         HitProbe p = registerProbe(c, n, ProbeType.HIT_PROBE);
 

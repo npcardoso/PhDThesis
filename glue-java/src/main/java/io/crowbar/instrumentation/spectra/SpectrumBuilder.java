@@ -1,13 +1,13 @@
 package io.crowbar.instrumentation.spectrum;
 
-import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.instrumentation.runtime.Tree;
+import io.crowbar.diagnostic.spectrum.Tree;
 import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.events.TreeRebuilder;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.Spectrum;
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Transaction;
 
 

@@ -1,7 +1,7 @@
 package io.crowbar.messages;
 
-import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.Tree;
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.Tree;
 
 import flexjson.JSON;
 import java.util.List;

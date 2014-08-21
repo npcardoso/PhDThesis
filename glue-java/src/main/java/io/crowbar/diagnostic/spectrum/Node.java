@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation.runtime;
+package io.crowbar.diagnostic.spectrum;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -140,6 +140,11 @@ public final class Node implements java.io.Serializable {
             return null;
 
         return getNode(childId);
+    }
+
+    @JSON(include=false)
+    private Tree getTree() {
+        return tree;
     }
 
     @Override

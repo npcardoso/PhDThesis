@@ -4,7 +4,7 @@ import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.messaging.Messages.ByeMessage;
 import io.crowbar.instrumentation.messaging.Messages.Message;
 import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
-import io.crowbar.instrumentation.runtime.Node;
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 
 import java.io.ObjectOutputStream;

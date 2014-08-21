@@ -1,17 +1,17 @@
 package io.crowbar.instrumentation.passes;
 
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.Tree;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
 
 import javassist.CtClass;
 import javassist.CtMethod;
 
 
 public abstract class AbstractPass implements Pass {
-    protected final Node getNode (CtClass cls) throws RegistrationException {
+    protected final Node getNode (CtClass cls) throws Tree.RegistrationException {
         Collector c = Collector.instance();
         Node root = c.getRootNode();
         Node n = root.getChild(cls.getName());
@@ -25,7 +25,7 @@ public abstract class AbstractPass implements Pass {
     }
 
     protected final Node getNode (CtClass cls,
-                                  CtMethod m) throws RegistrationException {
+                                  CtMethod m) throws Tree.RegistrationException {
         Collector c = Collector.instance();
         Node parent = getNode(cls);
         Node n = parent.getChild(m.getName());
@@ -39,7 +39,7 @@ public abstract class AbstractPass implements Pass {
 
     protected final Node getNode (CtClass cls,
                                   CtMethod m,
-                                  int line) throws RegistrationException {
+                                  int line) throws Tree.RegistrationException {
         Collector c = Collector.instance();
         Node parent = getNode(cls, m);
         Node n = parent.getChild("" + line);
@@ -53,7 +53,7 @@ public abstract class AbstractPass implements Pass {
 
     protected final HitProbe registerProbe (CtClass cls,
                                             Node n,
-                                            ProbeType type) throws RegistrationException {
+                                            ProbeType type) throws Tree.RegistrationException {
         Collector c = Collector.instance();
 
 

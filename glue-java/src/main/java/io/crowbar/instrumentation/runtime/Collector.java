@@ -1,9 +1,11 @@
 package io.crowbar.instrumentation.runtime;
 
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
-
 import io.crowbar.instrumentation.events.EventListener;
+
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.Tree;
+import io.crowbar.diagnostic.spectrum.WritableTree;
 
 public final class Collector {
     private static Collector collector = null;
@@ -34,36 +36,34 @@ public final class Collector {
         try {
             listener.registerNode(n);
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
     public HitProbe registerProbe (String groupName,
                                    int nodeId,
-                                   ProbeType type) throws RegistrationException {
-        HitProbe p = hitVector.registerProbe(groupName,
-                                             nodeId,
-                                             type);
-
-
+                                   ProbeType type) {
+            HitProbe p = hitVector.registerProbe(groupName,
+                                                 nodeId,
+                                                 type);
         try {
             listener.registerProbe(p);
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             e.printStackTrace();
         }
         return p;
     }
 
     public void transactionStart (int probeId) {
-        if (resetOnTransactionStart)
-            hitVector.reset();
-
         try {
+            if (resetOnTransactionStart)
+                hitVector.reset();
+
             listener.startTransaction(probeId);
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -72,11 +72,15 @@ public final class Collector {
         try {
             listener.endTransaction(probeId, null, null, hitVector.get());
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             e.printStackTrace();
         }
-
-        hitVector.reset();
+        try {
+            hitVector.reset();
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     public void transactionEnd (int probeId,
@@ -95,11 +99,15 @@ public final class Collector {
                                     exceptionMessage,
                                     hitVector.get());
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             e.printStackTrace();
         }
-
-        hitVector.reset();
+        try {
+            hitVector.reset();
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     public void oracle (int probeId,
@@ -108,7 +116,7 @@ public final class Collector {
         try {
             listener.oracle(probeId, error, confidence);
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -118,7 +126,12 @@ public final class Collector {
     }
 
     public void hit (int globalProbeId) {
-        hitVector.hit(globalProbeId);
+        try {
+            hitVector.hit(globalProbeId);
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     public Node getRootNode () {
@@ -126,7 +139,7 @@ public final class Collector {
     }
 
     public Node addNode (String name,
-                         Node parent) throws RegistrationException {
+                         Node parent) throws Tree.RegistrationException {
         Node n = tree.addNode(name, parent);
 
 

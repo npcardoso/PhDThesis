@@ -1,7 +1,7 @@
 package io.crowbar.instrumentation.passes.wrappers;
 
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
-import io.crowbar.instrumentation.runtime.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 
 import javassist.CtClass;

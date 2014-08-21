@@ -1,8 +1,8 @@
 package io.crowbar.instrumentation.runtime;
 
-import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.WritableTree;
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.WritableTree;
+import io.crowbar.diagnostic.spectrum.Tree.RegistrationException;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -74,3 +74,5 @@ public class TreeTest {
         }
     }
 }
+
+malabar finished at Thu Aug 21 20:21:53

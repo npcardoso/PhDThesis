@@ -1,16 +1,15 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.instrumentation.runtime.AbstractTree;
-import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.instrumentation.runtime.Tree;
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
+import io.crowbar.diagnostic.spectrum.AbstractTree;
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.Tree;
 
 public class TreeRebuilder extends AbstractEventListener {
     /*!
      * This class is needed to have direct access to protected method addNode(Node n).
      */
     private static class TreeBuilder extends AbstractTree {
-        public void registerNode (Node n) throws RegistrationException {
+        public void registerNode (Node n) throws Tree.RegistrationException {
             super.addNode(n);
         }
     }

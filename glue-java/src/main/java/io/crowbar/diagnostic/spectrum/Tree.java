@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation.runtime;
+package io.crowbar.diagnostic.spectrum;
 
 import java.util.Iterator;
 import java.util.List;

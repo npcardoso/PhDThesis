@@ -1,6 +1,4 @@
-package io.crowbar.instrumentation.runtime;
-
-import io.crowbar.instrumentation.runtime.Tree.RegistrationException;
+package io.crowbar.diagnostic.spectrum;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +15,7 @@ public abstract class AbstractTree implements Tree {
         try {
             addNode(new Node(rootName, 0, -1));
         }
-        catch (RegistrationException e) {
+        catch (Tree.RegistrationException e) {
             e.printStackTrace(); // ! Should never happen
         }
     }
@@ -50,7 +48,7 @@ public abstract class AbstractTree implements Tree {
         return nodes.iterator();
     }
 
-    /*!
+    /**
      * \brief Registers a node as a child of another node.
      * This method should be called in order to bind a node to a Tree.
      * The Node should be properly initialized.
@@ -59,12 +57,12 @@ public abstract class AbstractTree implements Tree {
      *  - Set the child's tree equal to "this".
      *  - Add the node to nodes list at correct position (extending the list
      * with null references if needed).
-     * @throws AlreadyBoundException: if the node is already bound to some tree.
-     * @throws AlreadyRegisteredException: if the a node with same id exists in the tree.
-     * @throws InvalidRootNodeException: if the node is a root node but the tree already has one root node.
-     * @throws NoSuchNodeException: if parent node does not exist and the node is not a root node.
+     * \throws AlreadyBoundException: if the node is already bound to some tree.
+     * \throws AlreadyRegisteredException: if the a node with same id exists in the tree.
+     * \throws InvalidRootNodeException: if the node is a root node but the tree already has one root node.
+     * \throws NoSuchNodeException: if parent node does not exist and the node is not a root node.
      */
-    protected final void addNode (Node node) throws RegistrationException {
+    protected final void addNode (Node node) throws Tree.RegistrationException {
         if (node.isBound())
             throw new AlreadyBoundException(node);
 

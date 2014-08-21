@@ -4,13 +4,39 @@ import io.crowbar.diagnostic.runners.*;
 import io.crowbar.diagnostic.algorithms.*;
 import io.crowbar.diagnostic.spectrum.*;
 import io.crowbar.diagnostic.spectrum.unserializers.*;
+import io.crowbar.instrumentation.runtime.*;
+import io.crowbar.messages.*;
 
 import flexjson.JSONSerializer;
 import flexjson.JSONDeserializer;
 import java.util.Scanner;
+import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class Main {
+    static List<Double> randomizeScores(int numNodes){
+        List<Double> l = new ArrayList<Double>();
+        Random r = new Random();
+        while(numNodes-- > 0) {
+            l.add(r.nextDouble());
+        }
+        return l;
+    }
+
+    static Tree randomizeTree(int numNodes){
+        WritableTree t = new WritableTree("asd");
+        Random r = new Random();
+
+        while(numNodes-- > 0) {
+            try {
+                t.addNode(""+r.nextInt(), t.getNode(r.nextInt(t.size())));
+            } catch (Exception e) {}
+        }
+        return t;
+    }
+
     static void foo1() {
         Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner("3 2 1 1 0 1 1 0 1 -"));
         TransactionFactory tf = new TransactionFactory();
@@ -61,8 +87,19 @@ public class Main {
         }
     }
 
+
+    public static void foo3() {
+
+        String jsonRequest = Messages.serialize(
+            VisualizationMessages.issueRequest(
+                randomizeTree(10),
+                randomizeScores(10)));
+
+        System.out.println(jsonRequest);
+    }
     public static void main (String[] args) {
-        foo1();
-        foo2();
+//        foo1();
+//        foo2();
+        foo3();
     }
 }

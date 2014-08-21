@@ -24,6 +24,33 @@ public class TestNGTestWrapper implements TestWrapper {
                 new AnnotationMatcher(ANNOTATION_CLASS),
                 new ReturnTypeMatcher("void")));
 
+    private static boolean isSameType (Object o,
+                                       String type) {
+        try {
+            Class cls = Class.forName(type);
+            return cls.isAssignableFrom(o.getClass());
+        }
+        catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static final boolean isPass (Collector c,
+                                        int probeId,
+                                        Throwable e,
+                                        String[] expected,
+                                        String expectedMsgRegex) {
+        if (expected != null)
+            for (String cls : expected) {
+                if (isSameType(e, cls) &&
+                    Pattern.matches(expectedMsgRegex, e.getMessage()))
+                    return true;
+            }
+
+        return false;
+    }
+
+
     @Override
     public final Action getAction (CtClass c) {
         return ACTION_TAKER.getAction(c);
@@ -89,29 +116,17 @@ public class TestNGTestWrapper implements TestWrapper {
         return "if(" + code.toString() + ") throw " + exceptionVar + ";";
     }
 
-    private static boolean isSameType (Object o,
-                                       String type) {
+    @Override
+    public boolean isDefaultPass(CtClass c,
+                                 CtMethod m) {
+        Class[] expected = null;
         try {
-            Class cls = Class.forName(type);
-            return cls.isAssignableFrom(o.getClass());
+            Object annotation = m.getAnnotation(Class.forName(ANNOTATION_CLASS));
+            Method method = annotation.getClass().getMethod("expectedExceptions");
+            expected = (Class[])method.invoke(annotation);
         }
-        catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
+        catch (Throwable e) {}
 
-    public static final boolean isPass (Collector c,
-                                        int probeId,
-                                        Throwable e,
-                                        String[] expected,
-                                        String expectedMsgRegex) {
-        if (expected != null)
-            for (String cls : expected) {
-                if (isSameType(e, cls) &&
-                    Pattern.matches(expectedMsgRegex, e.getMessage()))
-                    return true;
-            }
-
-        return false;
+        return expected == null;
     }
 }

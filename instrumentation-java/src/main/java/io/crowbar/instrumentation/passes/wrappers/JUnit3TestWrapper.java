@@ -41,4 +41,10 @@ public class JUnit3TestWrapper implements TestWrapper {
                                        String exceptionVar) {
         return null;
     }
+
+    @Override
+    public boolean isDefaultPass(CtClass c,
+                          CtMethod m) {
+        return true;
+    }
 }

@@ -8,7 +8,7 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 
-public class ActionTakerToTestWrapper implements TestWrapper {
+public final class ActionTakerToTestWrapper implements TestWrapper {
     private final ActionTaker actionTaker;
 
     public ActionTakerToTestWrapper (ActionTaker actionTaker) {
@@ -16,18 +16,18 @@ public class ActionTakerToTestWrapper implements TestWrapper {
     }
 
     @Override
-    public final Action getAction (CtClass c) {
+    public Action getAction (CtClass c) {
         return actionTaker.getAction(c);
     }
 
     @Override
-    public final Action getAction (CtClass c,
+    public Action getAction (CtClass c,
                                    CtMethod m) {
         return actionTaker.getAction(c, m);
     }
 
     @Override
-    public final String getOracleCode (CtClass c,
+    public String getOracleCode (CtClass c,
                                        CtMethod m,
                                        Node n,
                                        Probe p,
@@ -35,4 +35,11 @@ public class ActionTakerToTestWrapper implements TestWrapper {
                                        String exceptionVar) {
         return null;
     }
+
+    @Override
+    public boolean isDefaultPass(CtClass c,
+                          CtMethod m) {
+        return true;
+    }
+
 }

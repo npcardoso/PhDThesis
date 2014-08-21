@@ -47,14 +47,15 @@ public final class TestWrapperPass extends AbstractPass {
                     Node n = getNode(c, m);
                     HitProbe sp = registerProbe(c, n, ProbeType.TRANSACTION_START);
                     HitProbe ep = registerProbe(c, n, ProbeType.TRANSACTION_END);
+                    HitProbe op = registerProbe(c, n, ProbeType.ORACLE);
 
-                    m.insertBefore(getTransactionCode(sp, false));
+                    m.insertBefore(getTransactionStartCode(sp));
                     ca.computeMaxStack();
 
-                    injectOracles(c, m, n, tw, ep);
+                    injectOracles(c, m, n, tw, ep, op);
                     ca.computeMaxStack();
 
-                    m.insertAfter(getTransactionCode(ep, true),
+                    m.insertAfter(getTransactionEndCode(ep, op, tw.isDefaultPass(c, m)),
                                   false /* asFinally */);
                     ca.computeMaxStack();
                 }
@@ -71,10 +72,12 @@ public final class TestWrapperPass extends AbstractPass {
                                 CtMethod m,
                                 Node n,
                                 TestWrapper wrapper,
-                                HitProbe transactionEndProbe) throws Exception {
+                                HitProbe transactionEndProbe,
+                                HitProbe oracleProbe) throws Exception {
+        assert(transactionEndProbe.getType() == ProbeType.TRANSACTION_END);
+
         final String exceptionVar = "eeeeeeeeeee";
         final String collectorVar = "ccccccccccc";
-        HitProbe op = registerProbe(c, n, ProbeType.ORACLE);
         StringBuilder code = new StringBuilder();
 
 
@@ -95,12 +98,13 @@ public final class TestWrapperPass extends AbstractPass {
          */
         code.append("{Collector " + collectorVar + " = Collector.instance();");
         code.append("try {");
-        String oracleCode = wrapper.getOracleCode(c, m, n, op, collectorVar, exceptionVar);
+        String oracleCode = wrapper.getOracleCode(c, m, n, oracleProbe, collectorVar, exceptionVar);
         code.append((oracleCode != null) ? oracleCode : "");
 
         // Oracle Fail
-        code.append(collectorVar + ".hit(" + op.getId() + ");");
-        code.append(collectorVar + "." + op.getType().getMethodName() + "(" + op.getId() + ", 1d, 1d);");
+        code.append(collectorVar + ".hit(" + oracleProbe.getId() + ");");
+        code.append(collectorVar + "." + oracleProbe.getType().getMethodName()
+                    + "(" + oracleProbe.getId() + ", 1d, 1d);");
 
         code.append("} finally {");
         // Transaction End
@@ -115,24 +119,34 @@ public final class TestWrapperPass extends AbstractPass {
         m.addCatch(code.toString(), exceptionCls, exceptionVar);
     }
 
-    private String getTransactionCode (HitProbe p,
-                                       boolean hitFirst) throws RegistrationException {
-        String ret = "{Collector c = Collector.instance();";
-        String hit = "c.hit(" + p.getId() + ");";
+    private String getTransactionStartCode (HitProbe p) {
+        assert(p.getType() == ProbeType.TRANSACTION_START);
+
+        StringBuilder code = new StringBuilder();
+        code.append("{Collector c = Collector.instance();");
+        code.append("c.hit(" + p.getId() + ");");
+        code.append("c." + p.getType().getMethodName() + "(" + p.getId() +");");
+        code.append("}");
+        return code.toString();
+    }
 
 
-        if (hitFirst)
-            ret += hit;
+    private String getTransactionEndCode(HitProbe p,
+                                         HitProbe oracleProbe,
+                                         boolean isDefaultPass) {
+        assert(p.getType() == ProbeType.TRANSACTION_END);
 
-        ret += "c." + p.getType().getMethodName() + "(";
-        ret += p.getId();
+        StringBuilder code = new StringBuilder();
+        code.append("{Collector c = Collector.instance();");
 
-        ret += ");";
-
-        if (!hitFirst)
-            ret += hit;
-
-        ret += "}";
-        return ret;
+        if(!isDefaultPass) {
+            code.append("c.hit(" + oracleProbe.getId() + ");");
+            code.append("c." + oracleProbe.getType().getMethodName()
+                        + "(" + oracleProbe.getId() + ", 1d, 1d);");
+        }
+        code.append("c.hit(" + p.getId() + ");");
+        code.append("c." + p.getType().getMethodName() + "(" + p.getId() +");");
+        code.append("}");
+        return code.toString();
     }
 }

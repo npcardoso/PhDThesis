@@ -178,6 +178,12 @@
   top:52px;
 }
 
+.leaflet-control-pan-center-wrap {
+  position:absolute;
+  top:26px;
+  left:26px;
+}
+
 .leaflet-control-pan-up {
   background-image: url(images/pan-up.png);
 }
@@ -189,6 +195,10 @@
 }
 .leaflet-control-pan-down {
   background-image: url(images/pan-down.png);
+}
+
+.leaflet-control-pan-center {
+  background-image: url(images/pan-center.png);
 }
 
 .leaflet-touch .leaflet-control-pan div {

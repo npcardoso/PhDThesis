@@ -68,7 +68,7 @@ implements Iterable<A> {
     public abstract int size ();
 
     @Override
-    public String toString () {
+    public final String toString () {
         StringBuilder str = new StringBuilder();
 
 

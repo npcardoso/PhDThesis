@@ -4,8 +4,6 @@ import io.crowbar.diagnosis.algorithms.Algorithm;
 import io.crowbar.diagnosis.algorithms.Generator;
 import io.crowbar.diagnosis.algorithms.Ranker;
 
-import flexjson.JSON;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -72,7 +72,7 @@ implements Iterable<Transaction<A, TM> > {
     }
 
     @Override
-    public String toString () {
+    public final String toString () {
         StringBuilder str = new StringBuilder();
 
 

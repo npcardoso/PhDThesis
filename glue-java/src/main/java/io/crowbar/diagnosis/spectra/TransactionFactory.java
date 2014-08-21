@@ -2,7 +2,6 @@ package io.crowbar.diagnosis.spectra;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 

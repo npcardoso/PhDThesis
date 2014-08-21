@@ -1,7 +1,6 @@
 package io.crowbar.diagnosis.spectra.unserializers;
 
 
-import io.crowbar.diagnosis.spectra.Activity;
 import io.crowbar.diagnosis.spectra.EditableSpectra;
 import io.crowbar.diagnosis.spectra.Transaction;
 import io.crowbar.diagnosis.spectra.TransactionFactory;

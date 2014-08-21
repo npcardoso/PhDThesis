@@ -13,9 +13,9 @@ import java.util.Map;
 
 
 public final class DiagnosticReport {
-    public static class JSONObjectFactory implements ObjectFactory {
-        private final static String GEN_RESULTS="gen_results";
-        private final static String RANK_RESULTS="rank_results";
+    public static final class JSONObjectFactory implements ObjectFactory {
+        private static final String GEN_RESULTS="gen_results";
+        private static final String RANK_RESULTS="rank_results";
 
 
         public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {

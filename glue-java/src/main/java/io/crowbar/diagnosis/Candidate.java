@@ -1,24 +1,20 @@
 package io.crowbar.diagnosis;
 
 import java.lang.reflect.Type;
-import java.util.AbstractSet;
 import java.util.Set;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import flexjson.JSON;
 import flexjson.ObjectFactory;
 import flexjson.ObjectBinder;
 import flexjson.JsonNumber;
-import flexjson.JSONException;
 
 
 public final class Candidate
     implements Iterable<Integer> {
-    public static class JSONObjectFactory implements ObjectFactory {
+    public static final class JSONObjectFactory implements ObjectFactory {
         public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
             Candidate c = new Candidate();
             if(value instanceof Collection) {
@@ -62,7 +58,7 @@ public final class Candidate
     }
 
     @Override
-    public final String toString () {
+    public String toString () {
         StringBuilder str = new StringBuilder();
 
 

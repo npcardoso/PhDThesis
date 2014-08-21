@@ -6,7 +6,11 @@ import flexjson.JSONSerializer;
 import java.util.Map;
 import java.util.HashMap;
 
-
+/**
+ * \brief This class represents an algorithm with optional configurations.
+ * The class is mainly used for serialization.
+ * The class is immutable.
+ */
 public final class Algorithm {
     private String name = null;
     private Map<String, String> configs = null;
@@ -24,6 +28,11 @@ public final class Algorithm {
         this.configs = configs;
     }
 
+
+    /**
+     * This constructor creates a copy of the configurations to ensure
+     * immutability.
+     */
     Algorithm (String name,
                Map<String, String> configs) {
         if (name == null)

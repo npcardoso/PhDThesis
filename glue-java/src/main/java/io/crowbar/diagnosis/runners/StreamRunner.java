@@ -3,7 +3,6 @@ package io.crowbar.diagnosis.runners;
 
 import io.crowbar.diagnosis.DiagnosticSystem;
 import io.crowbar.diagnosis.DiagnosticReport;
-import io.crowbar.diagnosis.Runner;
 import io.crowbar.diagnosis.spectra.Spectra;
 import io.crowbar.diagnosis.runners.messages.DiagnosticMessages;
 import io.crowbar.diagnosis.runners.messages.Messages;
@@ -21,11 +20,6 @@ public class StreamRunner implements Runner {
                          OutputStream out) {
         this.in = in;
         this.out = new PrintStream(out, true);
-    }
-
-    @Override
-    public DiagnosticSystem getServerInterpretation (DiagnosticSystem system) throws ExecutionError {
-        return system;
     }
 
     @Override

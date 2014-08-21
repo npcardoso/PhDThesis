@@ -73,11 +73,11 @@ public abstract class ThreadedServer extends Thread {
         }
     }
 
-    public synchronized final void setMaxClients (int maxClients) {
+    public final synchronized void setMaxClients (int maxClients) {
         this.maxClients = maxClients;
     }
 
-    public synchronized final void setMaxRequests (int maxRequests) {
+    public final synchronized void setMaxRequests (int maxRequests) {
         this.maxRequests = maxRequests;
     }
 

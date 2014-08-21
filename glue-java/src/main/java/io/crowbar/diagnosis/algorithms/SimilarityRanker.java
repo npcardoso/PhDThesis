@@ -17,11 +17,11 @@ public final class SimilarityRanker extends Ranker {
             this.name = name;
         }
 
-        final Algorithm getAlgorithm () {
+        Algorithm getAlgorithm () {
             return algorithm;
         }
 
-        final String getName () {
+        String getName () {
             return name;
         }
     }

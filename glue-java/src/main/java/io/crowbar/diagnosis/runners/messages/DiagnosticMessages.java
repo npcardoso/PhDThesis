@@ -10,7 +10,7 @@ import flexjson.JSON;
 public class DiagnosticMessages {
     private static final String NAME = "diagnostic";
 
-    public static class Request
+    public static final class Request
         extends io.crowbar.diagnosis.runners.messages.Request {
 
         private DiagnosticSystem system = null;
@@ -51,7 +51,7 @@ public class DiagnosticMessages {
         }
     }
 
-    public static class Response
+    public static final class Response
         extends io.crowbar.diagnosis.runners.messages.Response {
 
         private DiagnosticSystem system = null;

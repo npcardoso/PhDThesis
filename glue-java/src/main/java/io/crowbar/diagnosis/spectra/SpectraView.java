@@ -1,7 +1,5 @@
 package io.crowbar.diagnosis.spectra;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.BitSet;
 
 /*!

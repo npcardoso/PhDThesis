@@ -70,7 +70,7 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
   .attr("y", ARROW_DIMENSIONS.h / 2)
   .attr("dy", "0.35em")
   .attr("text-anchor", "middle")
-  .text(last.properties.p*100 + ' %');
+  .text(d3.round(last.properties.p*100,2) + ' %');
 
   // Make the breadcrumb trail visible, if it's hidden.
   d3.select("#trail")

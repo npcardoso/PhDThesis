@@ -30,19 +30,19 @@ t_ambiguity_groups::t_ambiguity_groups () {
     transaction_count = 0;
 }
 
-t_ambiguity_groups::t_ambiguity_groups (const t_spectra & spectra,
-                                        const t_spectra_filter * f) {
+t_ambiguity_groups::t_ambiguity_groups (const t_spectrum & spectrum,
+                                        const t_spectrum_filter * f) {
     typedef std::map<std::string, t_component_id> t_shas_map;
     t_shas_map shas;
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
+    t_spectrum_iterator it(spectrum.get_component_count(),
+                          spectrum.get_transaction_count(),
                           f);
 
     if (f)
         _filter = *f;
 
-    component_count = spectra.get_component_count();
-    transaction_count = spectra.get_transaction_count();
+    component_count = spectrum.get_component_count();
+    transaction_count = spectrum.get_transaction_count();
 
     while (it.component.next()) {
         sha1 s;
@@ -50,7 +50,7 @@ t_ambiguity_groups::t_ambiguity_groups (const t_spectra & spectra,
 
         // Calculate SHA1
         while (it.transaction.next()) {
-            t_count count = spectra.get_activations(c_id,
+            t_count count = spectrum.get_activations(c_id,
                                                     it.transaction.get());
             s.process_bytes(&count, sizeof(t_count));
         }
@@ -68,13 +68,13 @@ t_ambiguity_groups::t_ambiguity_groups (const t_spectra & spectra,
     }
 }
 
-void t_ambiguity_groups::iterator (t_spectra_iterator & it) const {
-    it = t_spectra_iterator(component_count,
+void t_ambiguity_groups::iterator (t_spectrum_iterator & it) const {
+    it = t_spectrum_iterator(component_count,
                             transaction_count,
                             &_filter);
 }
 
-const t_spectra_filter & t_ambiguity_groups::filter () const {
+const t_spectrum_filter & t_ambiguity_groups::filter () const {
     return _filter;
 }
 
@@ -91,7 +91,7 @@ const t_ambiguity_groups::t_group * t_ambiguity_groups::group (t_component_id c_
 
 std::ostream & std::operator << (std::ostream & out,
                                  const diagnostic::t_ambiguity_groups & ag) {
-    const diagnostic::t_spectra_filter & f = ag.filter();
+    const diagnostic::t_spectrum_filter & f = ag.filter();
 
     t_component_id next_group = 0;
 

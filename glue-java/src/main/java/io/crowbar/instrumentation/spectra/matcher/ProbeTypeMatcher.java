@@ -1,18 +1,18 @@
-package io.crowbar.instrumentation.spectra.matcher;
+package io.crowbar.instrumentation.spectrum.matcher;
 
-import io.crowbar.diagnosis.spectra.Spectra;
-import io.crowbar.diagnosis.spectra.Activity;
-import io.crowbar.diagnosis.spectra.Metadata;
-import io.crowbar.diagnosis.spectra.matcher.AbstractSpectraMatcher;
+import io.crowbar.diagnostic.spectrum.Spectrum;
+import io.crowbar.diagnostic.spectrum.Activity;
+import io.crowbar.diagnostic.spectrum.Metadata;
+import io.crowbar.diagnostic.spectrum.matcher.AbstractSpectrumMatcher;
 import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.instrumentation.spectra.CmpM;
+import io.crowbar.instrumentation.spectrum.CmpM;
 
 
 import java.util.BitSet;
 import java.util.Set;
 import java.util.HashSet;
 
-public final class ProbeTypeMatcher extends AbstractSpectraMatcher<Activity, Metadata, CmpM> {
+public final class ProbeTypeMatcher extends AbstractSpectrumMatcher<Activity, Metadata, CmpM> {
     private final Set<ProbeType> types = new HashSet<ProbeType> ();
     public ProbeTypeMatcher (ProbeType... types) {
         this(true, types);
@@ -27,12 +27,12 @@ public final class ProbeTypeMatcher extends AbstractSpectraMatcher<Activity, Met
     }
 
     @Override
-    public BitSet matchComponents (Spectra< ? extends Activity, ? extends Metadata, ? extends CmpM> spectra) {
+    public BitSet matchComponents (Spectrum< ? extends Activity, ? extends Metadata, ? extends CmpM> spectrum) {
         BitSet ret = new BitSet();
 
 
-        for (int i = 0; i < spectra.getComponentCount(); i++) {
-            ProbeType type = spectra.getComponent(i).getMetadata().getType();
+        for (int i = 0; i < spectrum.getComponentCount(); i++) {
+            ProbeType type = spectrum.getComponent(i).getMetadata().getType();
 
             if (types.contains(type))
                 ret.set(i);

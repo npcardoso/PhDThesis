@@ -81,7 +81,7 @@ def RecursiveScanner(scanner, file):
 
     return list(header_depends)
 
-def Instrument(env, target, source=None, passes="-spectra_instrument", *args, **kw):
+def Instrument(env, target, source=None, passes="-spectrum_instrument", *args, **kw):
     env['LLVM_INSTRUMENT_PASSES'] = passes
 
     source_suffixes = [[env.subst('$INSTR_SOURCE_SUFFIX_C'), _instrument_llvm_builder_c],

@@ -17,28 +17,28 @@ public:
     void set_parallelization (t_const_ptr<t_parallelization> parallelization);
     void set_similarity (t_const_ptr<t_similarity> similarity);
 
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const t_spectrum & spectrum,
                               t_ret_type & D,
-                              const t_spectra_filter * filter=NULL) const;
+                              const t_spectrum_filter * filter=NULL) const;
 
-    virtual void calculate (const t_spectra & spectra,
+    virtual void calculate (const t_spectrum & spectrum,
                             t_ret_type & D,
-                            t_spectra_filter & filter,
+                            t_spectrum_filter & filter,
                             t_candidate & candidate,
                             t_time_interval start_time=time_interval()) const;
 
-    void update (const t_spectra & spectra,
+    void update (const t_spectrum & spectrum,
                  t_ret_type & D,
                  const t_ret_type & old_D,
-                 const t_spectra_filter & filter) const;
+                 const t_spectrum_filter & filter) const;
 
 
-    static void combine (const t_spectra & spectra,
+    static void combine (const t_spectrum & spectrum,
                          t_ret_type & D,
                          const t_ret_type & D_first,
                          const t_ret_type & D_second,
-                         const t_spectra_filter & filter_first,
-                         const t_spectra_filter & filter_second);
+                         const t_spectrum_filter & filter_first,
+                         const t_spectrum_filter & filter_second);
 
     inline virtual std::string get_name () const { return "mhs2"; }
 
@@ -57,9 +57,9 @@ public:
                     t_count n_threads);
 
 
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const t_spectrum & spectrum,
                               t_ret_type & D,
-                              const t_spectra_filter * filter=NULL) const;
+                              const t_spectrum_filter * filter=NULL) const;
 
     inline virtual std::string to_string() const {
         return "t_mhs_parallel";
@@ -68,8 +68,8 @@ private:
     class t_args {
 public:
         t_ptr<t_mhs> mhs;
-        const t_spectra * spectra;
-        const t_spectra_filter * filter;
+        const t_spectrum * spectrum;
+        const t_spectrum_filter * filter;
         t_ret_type D;
     };
 

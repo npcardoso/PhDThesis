@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
 #include <libdiag/algorithms/mhs.h>
-#include <libdiag/structs/count_spectra.h>
+#include <libdiag/structs/count_spectrum.h>
 
 
 #include <boost/foreach.hpp>
@@ -11,29 +11,29 @@ using namespace diagnostic::structs;
 
 
 struct F {
-    F () {BOOST_TEST_MESSAGE("setup fixture");prepare_spectras();prepare_D_refs();}
+    F () {BOOST_TEST_MESSAGE("setup fixture");prepare_spectrums();prepare_D_refs();}
     ~F () {BOOST_TEST_MESSAGE("teardown fixture");}
 
 
-    void prepare_spectras () {
+    void prepare_spectrums () {
         std::ifstream f("io/mhs/in.txt");
 
 
         while (true) {
-            spectras.push_back(t_count_spectra());
-            t_count_spectra & spectra = *spectras.rbegin();
+            spectrums.push_back(t_count_spectrum());
+            t_count_spectrum & spectrum = *spectrums.rbegin();
 
-            f >> spectra;
+            f >> spectrum;
 
             if (f.eof())
                 break;
 
-            BOOST_CHECK(spectra.get_component_count() == 30);
-            BOOST_CHECK(spectra.get_transaction_count() == 30);
+            BOOST_CHECK(spectrum.get_component_count() == 30);
+            BOOST_CHECK(spectrum.get_transaction_count() == 30);
         }
 
-        spectras.pop_back();
-        BOOST_REQUIRE(spectras.size() == 30);
+        spectrums.pop_back();
+        BOOST_REQUIRE(spectrums.size() == 30);
     }
 
     void prepare_D_refs () {
@@ -52,9 +52,9 @@ struct F {
         BOOST_REQUIRE(D_refs.size() == 30);
     }
 
-    typedef std::list<t_count_spectra> t_spectras;
+    typedef std::list<t_count_spectrum> t_spectrums;
     typedef std::list<t_trie> t_D_refs;
-    t_spectras spectras;
+    t_spectrums spectrums;
     t_D_refs D_refs;
 };
 
@@ -68,11 +68,11 @@ BOOST_AUTO_TEST_CASE(cutoff_depth) {
     t_mhs mhs;
     mhs.set_cutoff(cutoff);
 
-    BOOST_FOREACH(const t_count_spectra &spectra, spectras) {
+    BOOST_FOREACH(const t_count_spectrum &spectrum, spectrums) {
         t_trie D;
 
 
-        mhs(spectra, D);
+        mhs(spectrum, D);
 
         BOOST_CHECK(D.size() != 0);
 
@@ -91,11 +91,11 @@ BOOST_AUTO_TEST_CASE(cutoff_max_candidates) {
     t_mhs mhs;
     mhs.set_cutoff(cutoff);
 
-    BOOST_FOREACH(const t_count_spectra &spectra, spectras) {
+    BOOST_FOREACH(const t_count_spectrum &spectrum, spectrums) {
         t_trie D;
 
 
-        mhs(spectra, D);
+        mhs(spectrum, D);
 
         BOOST_CHECK(D.size() != 0);
 
@@ -108,33 +108,33 @@ BOOST_AUTO_TEST_CASE(mhs) {
     t_D_refs::iterator D_ref = D_refs.begin();
 
 
-    BOOST_FOREACH(const t_count_spectra &spectra, spectras) {
+    BOOST_FOREACH(const t_count_spectrum &spectrum, spectrums) {
         algorithms::t_mhs mhs;
         t_trie D;
 
 
-        mhs(spectra, D);
+        mhs(spectrum, D);
         BOOST_CHECK(D == *D_ref);
         D_ref++;
     }
 }
 
 template <class T>
-void test_parallelization (F::t_spectras & spectras,
+void test_parallelization (F::t_spectrums & spectrums,
                            F::t_D_refs & D_refs,
                            t_count max_depth,
                            t_count max_threads) {
     F::t_D_refs::iterator D_ref = D_refs.begin();
 
 
-    BOOST_FOREACH(const t_count_spectra &spectra, spectras) {
+    BOOST_FOREACH(const t_count_spectrum &spectrum, spectrums) {
         for (t_count depth = 1; depth < max_depth; depth++) {
             for (t_count n_threads = 1; n_threads < max_threads; n_threads++) {
                 t_ptr<t_parallelization_factory> pf(new T(depth));
                 algorithms::t_mhs_parallel mhs(pf, n_threads);
                 diagnostic::t_trie D;
 
-                mhs(spectra, D);
+                mhs(spectrum, D);
                 BOOST_CHECK_EQUAL(D.size(), D_ref->size());
                 BOOST_CHECK_MESSAGE(D == *D_ref, "Failed for depth = " << depth << " n_threads = " << n_threads);
             }
@@ -145,11 +145,11 @@ void test_parallelization (F::t_spectras & spectras,
 }
 
 BOOST_AUTO_TEST_CASE(mhs_parallel_random) {
-    test_parallelization<t_parallelization_factory_random> (spectras, D_refs, 4, 4);
+    test_parallelization<t_parallelization_factory_random> (spectrums, D_refs, 4, 4);
 }
 
 BOOST_AUTO_TEST_CASE(mhs_parallel_stride) {
-    test_parallelization<t_parallelization_factory_stride> (spectras, D_refs, 4, 4);
+    test_parallelization<t_parallelization_factory_stride> (spectrums, D_refs, 4, 4);
 }
 
 

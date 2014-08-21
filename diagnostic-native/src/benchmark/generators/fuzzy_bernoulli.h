@@ -7,7 +7,7 @@
 
 namespace diagnostic {
 namespace benchmark {
-class t_fuzzy_bernoulli : public t_spectra_generator {
+class t_fuzzy_bernoulli : public t_spectrum_generator {
 public:
     typedef std::vector<t_fault> t_faults;
 
@@ -15,7 +15,7 @@ public:
                         float activation_rate,
                         t_count error_count);
 
-    virtual t_spectra * operator () (std::mt19937 & gen,
+    virtual t_spectrum * operator () (std::mt19937 & gen,
                                               t_candidate & correct_candidate);
 
     t_fuzzy_bernoulli & operator << (const t_fault & comp);

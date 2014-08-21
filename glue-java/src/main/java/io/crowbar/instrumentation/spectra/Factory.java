@@ -1,10 +1,10 @@
-package io.crowbar.instrumentation.spectra;
+package io.crowbar.instrumentation.spectrum;
 
-import io.crowbar.diagnosis.spectra.Component;
-import io.crowbar.diagnosis.spectra.ComponentFactory;
-import io.crowbar.diagnosis.spectra.Transaction;
-import io.crowbar.diagnosis.spectra.TransactionFactory;
-import io.crowbar.diagnosis.spectra.activity.Hit;
+import io.crowbar.diagnostic.spectrum.Component;
+import io.crowbar.diagnostic.spectrum.ComponentFactory;
+import io.crowbar.diagnostic.spectrum.Transaction;
+import io.crowbar.diagnostic.spectrum.TransactionFactory;
+import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import java.util.List;
 import java.util.AbstractList;

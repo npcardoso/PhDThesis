@@ -2,7 +2,7 @@
 
 namespace diagnostic {
 
-t_const_ptr<t_diagnostic_report> t_basic_runner::run (const t_spectra & spectra,
+t_const_ptr<t_diagnostic_report> t_basic_runner::run (const t_spectrum & spectrum,
                                                       t_const_ptr<t_diagnostic_system> ds) const {
     t_ptr<t_diagnostic_report> dr(new t_diagnostic_report(ds));
     auto & gen_results = dr->get_generator_results();
@@ -23,7 +23,7 @@ t_const_ptr<t_diagnostic_report> t_basic_runner::run (const t_spectra & spectra,
         if(gen_results[c.get_from()].get() == NULL) {
             std::cout << "Running: " << generator->get_name() << std::endl;
             auto * tmp = new t_candidate_generator::t_ret_type();
-            (*generator)(spectra, *tmp);
+            (*generator)(spectrum, *tmp);
             dr->add(c.get_from(), t_ptr<t_candidate_generator::t_ret_type> (tmp));
         }
 
@@ -34,7 +34,7 @@ t_const_ptr<t_diagnostic_report> t_basic_runner::run (const t_spectra & spectra,
         if(rank_results[i].get() == NULL) {
             std::cout << "Running: " << ranker->get_name() << std::endl;
             auto * tmp = new t_candidate_ranker::t_ret_type();
-            (*ranker)(spectra, *D, *tmp);
+            (*ranker)(spectrum, *D, *tmp);
             dr->add(i, t_ptr<t_candidate_ranker::t_ret_type> (tmp));
         }
 

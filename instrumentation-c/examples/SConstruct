@@ -11,7 +11,7 @@ vars = Variables('.scons.conf')
 vars.Add('PATH', '', '')
 vars.Add('LIBPATH', '', Dir('../obj/install/lib'))
 vars.Add('CPPPATH', '', Dir('../obj/install/include'))
-vars.Add('LLVM_MODULE', '', File('../obj/install/lib/libllvm_spectra_instrument.so'))
+vars.Add('LLVM_MODULE', '', File('../obj/install/lib/libllvm_spectrum_instrument.so'))
 
 
 vars.Add('build_dir', '', Dir(join(root, 'obj')))

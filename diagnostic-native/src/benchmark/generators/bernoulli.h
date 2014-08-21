@@ -5,14 +5,14 @@
 
 namespace diagnostic {
 namespace benchmark {
-class t_bernoulli : public t_spectra_generator {
+class t_bernoulli : public t_spectrum_generator {
 public:
     t_bernoulli (float activation_rate,
                  float error_rate,
                  t_count n_tran,
                  t_count n_comp);
 
-    virtual t_spectra * operator () (std::mt19937 & gen,
+    virtual t_spectrum * operator () (std::mt19937 & gen,
                                               t_candidate & correct_candidate);
 
     virtual std::ostream & write (std::ostream & out) const;

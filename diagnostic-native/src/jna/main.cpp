@@ -1,6 +1,6 @@
 #include "main.h"
 
-#include "../structs/count_spectra.h"
+#include "../structs/count_spectrum.h"
 #include "../configuration/configuration.h"
 #include "../diagnostic_report.h"
 #include "../serialization/json.h"
@@ -45,13 +45,13 @@ void run_diagnostic (const ptree & pt,
 
     t_const_ptr<t_diagnostic_system> ds = construct_diagnostic_system (pt.get_child("system"));
 
-    t_count_spectra spectra;
-    ss << pt.get<std::string>("spectra");
-    ss >> spectra;
+    t_count_spectrum spectrum;
+    ss << pt.get<std::string>("spectrum");
+    ss >> spectrum;
 
     t_basic_runner runner;
 
-    auto dr = runner.run(spectra, ds);
+    auto dr = runner.run(spectrum, ds);
 
     ss.str("");
     json_write_diagnostic_response(ss, *ds, *dr);

@@ -20,7 +20,7 @@ public:
 
     virtual const std::string & key () const = 0;
 
-    virtual std::string operator () (const t_spectra & spectra,
+    virtual std::string operator () (const t_spectrum & spectrum,
                                      const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
@@ -43,7 +43,7 @@ class t_Cd : public t_metric {
 public:
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const t_spectra & spectra,
+    virtual std::string operator () (const t_spectrum & spectrum,
                                      const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
@@ -57,7 +57,7 @@ class t_wasted_effort : public t_metric {
 public:
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const t_spectra & spectra,
+    virtual std::string operator () (const t_spectrum & spectrum,
                                      const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
@@ -71,7 +71,7 @@ class t_entropy : public t_metric {
 public:
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const t_spectra & spectra,
+    virtual std::string operator () (const t_spectrum & spectrum,
                                      const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
@@ -87,7 +87,7 @@ public:
 
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const t_spectra & spectra,
+    virtual std::string operator () (const t_spectrum & spectrum,
                                      const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
@@ -105,7 +105,7 @@ public:
 
     virtual const std::string & key () const;
 
-    virtual std::string operator () (const t_spectra & spectra,
+    virtual std::string operator () (const t_spectrum & spectrum,
                                      const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,

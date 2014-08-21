@@ -24,14 +24,14 @@ class t_status_iteration_init : public t_status {
 public:
     t_status_iteration_init (t_id iteration_id,
                              t_time_interval start,
-                             const t_const_ptr<t_spectra> & spectra,
+                             const t_const_ptr<t_spectrum> & spectrum,
                              const t_const_ptr<t_candidate> & correct);
 
     t_id get_iteration_id () const;
 
     t_time_interval get_iteration_start () const;
 
-    const t_spectra & get_spectra () const;
+    const t_spectrum & get_spectrum () const;
     const t_candidate & get_correct () const;
 
     virtual void prepare_entry (t_entry & entry) const;
@@ -40,7 +40,7 @@ public:
 private:
     t_id iteration_id;
     t_time_interval start;
-    t_const_ptr<t_spectra> spectra;
+    t_const_ptr<t_spectrum> spectrum;
     t_const_ptr<t_candidate> correct;
 };
 

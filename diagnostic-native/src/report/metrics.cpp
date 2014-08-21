@@ -33,7 +33,7 @@ const string & t_quality_fair::key () const {
     return result_metric;
 }
 
-string t_Cd::operator () (const t_spectra & spectra,
+string t_Cd::operator () (const t_spectrum & spectrum,
                           const t_candidate & correct,
                           const t_candidate_generator::t_ret_type & D,
                           const t_candidate_ranker::t_ret_type & probs,
@@ -98,7 +98,7 @@ t_id next_unhealhy (t_id current,
 }
 
 
-string t_wasted_effort::operator () (const t_spectra & spectra,
+string t_wasted_effort::operator () (const t_spectrum & spectrum,
                                      const t_candidate & correct,
                                      const t_candidate_generator::t_ret_type & D,
                                      const t_candidate_ranker::t_ret_type & probs,
@@ -139,7 +139,7 @@ string t_wasted_effort::operator () (const t_spectra & spectra,
     return lexical_cast<string> (healthy_components.size() - elements / 2.0);
 }
 
-string t_entropy::operator () (const t_spectra & spectra,
+string t_entropy::operator () (const t_spectrum & spectrum,
                                const t_candidate & correct,
                                const t_candidate_generator::t_ret_type & D,
                                const t_candidate_ranker::t_ret_type & probs,
@@ -150,14 +150,14 @@ string t_entropy::operator () (const t_spectra & spectra,
 
 t_quality::t_quality (string target_metric) : target_metric(target_metric), result_metric(target_metric + __KEY__) {}
 
-string t_quality::operator () (const t_spectra & spectra,
+string t_quality::operator () (const t_spectrum & spectrum,
                                const t_candidate & correct,
                                const t_candidate_generator::t_ret_type & D,
                                const t_candidate_ranker::t_ret_type & probs,
                                const t_ranking & r,
                                const t_metric::t_arguments & arguments) const {
     double metric_value = get_argument<double> (target_metric, arguments);
-    t_count remaining_components = (spectra.get_component_count() - correct.size());
+    t_count remaining_components = (spectrum.get_component_count() - correct.size());
 
 
     if (remaining_components)
@@ -168,14 +168,14 @@ string t_quality::operator () (const t_spectra & spectra,
 
 t_quality_fair::t_quality_fair (string target_metric) : target_metric(target_metric), result_metric(target_metric + __KEY__) {}
 
-string t_quality_fair::operator () (const t_spectra & spectra,
+string t_quality_fair::operator () (const t_spectrum & spectrum,
                                     const t_candidate & correct,
                                     const t_candidate_generator::t_ret_type & D,
                                     const t_candidate_ranker::t_ret_type & probs,
                                     const t_ranking & r,
                                     const t_metric::t_arguments & arguments) const {
     double metric_value = get_argument<double> (target_metric, arguments);
-    t_count remaining_components = (spectra.get_suspicious_components_count() - correct.size());
+    t_count remaining_components = (spectrum.get_suspicious_components_count() - correct.size());
 
 
     if (remaining_components)

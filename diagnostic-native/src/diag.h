@@ -21,7 +21,7 @@
 #include "benchmark/hooks/statistics_hook.h"
 #include "benchmark/metrics.h"
 
-// Spectra Generators
+// Spectrum Generators
 #include "benchmark/generators/bernoulli.h"
 #include "benchmark/generators/fuzzy_bernoulli.h"
 #include "benchmark/generators/replay.h"
@@ -34,7 +34,7 @@
 #include "algorithms/barinel.h"
 
 // Structs
-#include "structs/count_spectra.h"
+#include "structs/count_spectrum.h"
 
 // Configuration
 #include "configuration/configuration.h"

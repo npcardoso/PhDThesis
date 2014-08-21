@@ -58,7 +58,7 @@ void t_generator_job::operator () () const {
     t_const_ptr<t_candidate_generator::t_ret_type> candidates(candidates_tmp);
 
     t_time_interval start_time = time_interval();
-    (* generator)(status->get_spectra(), * candidates_tmp);
+    (* generator)(status->get_spectrum(), * candidates_tmp);
 
     // Hook: Post-gen
     t_const_ptr<t_status_post_gen> gen_status
@@ -107,7 +107,7 @@ void t_ranker_job::operator () () const {
     t_time_interval start_time = time_interval();
 
 
-    (* ranker)(status->get_spectra(),
+    (* ranker)(status->get_spectrum(),
                status->get_candidates(),
                * probs_ptr);
 
@@ -129,7 +129,7 @@ bool t_ranker_job::operator < (const t_job & job) const {
 }
 
 void run_benchmark (const t_benchmark_settings & settings,
-                    t_spectra_generator & generator,
+                    t_spectrum_generator & generator,
                     std::mt19937 & gen,
                     t_execution_controller & controller) {
     const t_diagnostic_system & diag = settings.get_diagnostic_system();
@@ -139,16 +139,16 @@ void run_benchmark (const t_benchmark_settings & settings,
     while (true) {
         t_candidate * correct_tmp = new t_candidate();
         t_const_ptr<t_candidate> correct(correct_tmp);
-        t_const_ptr<t_spectra> spectra(generator(gen, *correct_tmp));
+        t_const_ptr<t_spectrum> spectrum(generator(gen, *correct_tmp));
 
-        if (spectra.get() == NULL)
+        if (spectrum.get() == NULL)
             break;
 
         // Hook: Iteration Init
         t_const_ptr<t_status_iteration_init> it_status
             (new t_status_iteration_init(iteration_id++,
                                          time_interval(),
-                                         spectra,
+                                         spectrum,
                                          correct));
         settings.get_hook().trigger_event(settings.get_collector(),
                                           *it_status);

@@ -1,16 +1,16 @@
-package io.crowbar.instrumentation.spectra.matcher;
+package io.crowbar.instrumentation.spectrum.matcher;
 
-import io.crowbar.diagnosis.spectra.Spectra;
-import io.crowbar.diagnosis.spectra.Activity;
-import io.crowbar.diagnosis.spectra.Metadata;
-import io.crowbar.diagnosis.spectra.Transaction;
-import io.crowbar.diagnosis.spectra.matcher.AbstractSpectraMatcher;
-import io.crowbar.instrumentation.spectra.TrM;
+import io.crowbar.diagnostic.spectrum.Spectrum;
+import io.crowbar.diagnostic.spectrum.Activity;
+import io.crowbar.diagnostic.spectrum.Metadata;
+import io.crowbar.diagnostic.spectrum.Transaction;
+import io.crowbar.diagnostic.spectrum.matcher.AbstractSpectrumMatcher;
+import io.crowbar.instrumentation.spectrum.TrM;
 
 
 import java.util.BitSet;
 
-public final class JUnitAssumeMatcher extends AbstractSpectraMatcher<Activity, TrM, Metadata> {
+public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, TrM, Metadata> {
     public JUnitAssumeMatcher () {
         this(true);
     }
@@ -20,13 +20,13 @@ public final class JUnitAssumeMatcher extends AbstractSpectraMatcher<Activity, T
     }
 
     @Override
-    public BitSet matchTransactions (Spectra< ? extends Activity, ? extends TrM, ? extends Metadata> spectra) {
+    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends TrM, ? extends Metadata> spectrum) {
         BitSet ret = new BitSet();
 
         int i = 0;
 
 
-        for (Transaction< ? extends Activity, ? extends TrM> t : spectra.byTransaction()) {
+        for (Transaction< ? extends Activity, ? extends TrM> t : spectrum.byTransaction()) {
             if ("org.junit.Assume$AssumptionViolatedException".equals(t.getMetadata().getExceptionClass()))
                 ret.set(i);
             else

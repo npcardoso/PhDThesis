@@ -21,15 +21,15 @@ class t_fuzzinel : public t_candidate_ranker {
 public:
     t_fuzzinel (size_t precision=128);
 
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const t_spectrum & spectrum,
                               const t_trie & D,
                               t_ret_type & probs,
-                              const t_spectra_filter * filter=NULL) const;
+                              const t_spectrum_filter * filter=NULL) const;
 
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const t_spectrum & spectrum,
                               const t_candidate & candidate,
                               t_probability_mp & ret,
-                              const t_spectra_filter * filter=NULL) const;
+                              const t_spectrum_filter * filter=NULL) const;
 
 
     inline virtual t_score_type get_score_type () const {

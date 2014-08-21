@@ -1,7 +1,7 @@
 #include "bernoulli.h"
 #include <boost/random/bernoulli_distribution.hpp>
 
-#include "../../structs/count_spectra.h"
+#include "../../structs/count_spectrum.h"
 
 using boost::bernoulli_distribution;
 
@@ -18,9 +18,9 @@ t_bernoulli::t_bernoulli (float activation_rate,
     this->n_tran = n_tran;
 }
 
-t_spectra * t_bernoulli::operator () (std::mt19937 & gen,
+t_spectrum * t_bernoulli::operator () (std::mt19937 & gen,
                                       t_candidate & correct_candidate) {
-    t_count_spectra & spectra = *(new t_count_spectra(n_comp, n_tran));
+    t_count_spectrum & spectrum = *(new t_count_spectrum(n_comp, n_tran));
 
 
     bernoulli_distribution<> activation(activation_rate);
@@ -30,17 +30,17 @@ t_spectra * t_bernoulli::operator () (std::mt19937 & gen,
 
     for (t_transaction_id t = 1; t <= n_tran; t++) {
         bool success = false;
-        spectra.set_error(t, error(gen));
+        spectrum.set_error(t, error(gen));
 
         while (!success)
             for (t_component_id c = 1; c <= n_comp; c++) {
                 bool active = activation(gen);
-                spectra.set_activations(c, t, active);
+                spectrum.set_activations(c, t, active);
                 success = active || success;
             }
     }
 
-    return &spectra;
+    return &spectrum;
 }
 
 std::ostream & t_bernoulli::write (std::ostream & out) const {

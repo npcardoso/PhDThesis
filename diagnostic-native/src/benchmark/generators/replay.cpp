@@ -1,6 +1,6 @@
 #include "replay.h"
 
-#include "../../structs/count_spectra.h"
+#include "../../structs/count_spectrum.h"
 
 #include <fstream>
 
@@ -8,28 +8,28 @@ using namespace std;
 
 namespace diagnostic {
 namespace benchmark {
-t_spectra * t_replay::operator () (std::mt19937 & gen,
+t_spectrum * t_replay::operator () (std::mt19937 & gen,
                                    t_candidate & correct_candidate) {
-    t_spectra * spectra = new t_count_spectra();
+    t_spectrum * spectrum = new t_count_spectrum();
 
 
     while (begin() != end()) {
-        ifstream spectra_in(begin()->first);
+        ifstream spectrum_in(begin()->first);
         ifstream correct_in(begin()->second);
         t_candidate correct;
         std::cerr << "Here!" << std::endl;
-        *spectra = t_count_spectra();
-        spectra_in >> *spectra;
+        *spectrum = t_count_spectrum();
+        spectrum_in >> *spectrum;
         correct_in >> correct;
 
-        std::cerr << *spectra << correct;
-        std::cerr << !spectra_in.fail() << !correct_in.fail();
+        std::cerr << *spectrum << correct;
+        std::cerr << !spectrum_in.fail() << !correct_in.fail();
 
         erase(begin());
 
-        if (!spectra_in.fail() && !correct_in.fail()) {
+        if (!spectrum_in.fail() && !correct_in.fail()) {
             correct_candidate = correct;
-            return spectra;
+            return spectrum;
         }
     }
 

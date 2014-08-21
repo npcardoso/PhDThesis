@@ -56,10 +56,10 @@ t_count t_rank::size () const {
     return rank.size();
 }
 
-void t_similarity::operator () (const t_spectra & spectra,
+void t_similarity::operator () (const t_spectrum & spectrum,
                                 const t_trie & D,
                                 t_ret_type & probs,
-                                const t_spectra_filter * filter) const {
+                                const t_spectrum_filter * filter) const {
     BOOST_FOREACH(auto & d,
                   D) {
         t_score score = NAN;
@@ -67,25 +67,25 @@ void t_similarity::operator () (const t_spectra & spectra,
 
         if (d.size() == 1) {
             t_component_id c = *d.begin();
-            score = (* this)(spectra, c, filter);
+            score = (* this)(spectrum, c, filter);
         }
 
         probs.push_back(score);
     }
 }
 
-t_ptr<t_rank> t_similarity::operator () (const t_spectra & spectra,
-                                         const t_spectra_filter * filter) const {
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
+t_ptr<t_rank> t_similarity::operator () (const t_spectrum & spectrum,
+                                         const t_spectrum_filter * filter) const {
+    t_spectrum_iterator it(spectrum.get_component_count(),
+                          spectrum.get_transaction_count(),
                           filter);
 
 
-    t_ptr<t_rank> rank(new t_rank(spectra.get_component_count(filter)));
+    t_ptr<t_rank> rank(new t_rank(spectrum.get_component_count(filter)));
     t_id i = 0;
 
     while (it.component.next()) {
-        t_score score = (* this)(spectra,
+        t_score score = (* this)(spectrum,
                                  it.component.get(),
                                  filter);
 
@@ -95,11 +95,11 @@ t_ptr<t_rank> t_similarity::operator () (const t_spectra & spectra,
     return rank;
 }
 
-t_score t_similarity::operator () (const t_spectra & spectra,
+t_score t_similarity::operator () (const t_spectrum & spectrum,
                                    t_component_id comp,
-                                   const t_spectra_filter * filter) const {
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
+                                   const t_spectrum_filter * filter) const {
+    t_spectrum_iterator it(spectrum.get_component_count(),
+                          spectrum.get_transaction_count(),
                           filter);
 
     t_count n[2][2];
@@ -108,12 +108,12 @@ t_score t_similarity::operator () (const t_spectra & spectra,
     memset(n, 0, sizeof(t_count) * 4);
 
     while (it.transaction.next()) {
-        bool activity = spectra.is_active(comp, it.transaction.get());
-        bool error = spectra.is_error(it.transaction.get());
+        bool activity = spectrum.is_active(comp, it.transaction.get());
+        bool error = spectrum.is_error(it.transaction.get());
         n[activity ? 1 : 0][error ? 1 : 0]++;
     }
 
-    assert(n[0][0] + n[0][1] + n[1][0] + n[1][1] == spectra.get_transaction_count(filter));
+    assert(n[0][0] + n[0][1] + n[1][0] + n[1][1] == spectrum.get_transaction_count(filter));
     return similarity_coefficient(n);
 }
 
@@ -164,9 +164,9 @@ std::ostream & t_jaccard::write (std::ostream & out) const {
     return out << "t_jaccard";
 }
 
-t_score t_random::operator () (const t_spectra & spectra,
+t_score t_random::operator () (const t_spectrum & spectrum,
                                t_component_id comp,
-                               const t_spectra_filter * filter) const {
+                               const t_spectrum_filter * filter) const {
     std::mt19937 gen;
     boost::random::uniform_real_distribution<t_error> rand(0, 1);
 

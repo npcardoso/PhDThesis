@@ -39,25 +39,25 @@ void t_mhs::set_parallelization (const t_const_ptr<t_parallelization> paralleliz
         this->parallelization = t_const_ptr<t_parallelization> (new t_parallelization());
 }
 
-void t_mhs::operator () (const t_spectra & spectra,
+void t_mhs::operator () (const t_spectrum & spectrum,
                          t_ret_type & D,
-                         const t_spectra_filter * filter) const {
+                         const t_spectrum_filter * filter) const {
     t_candidate candidate;
-    t_spectra_filter tmp_filter;
+    t_spectrum_filter tmp_filter;
 
 
     if (filter)
         tmp_filter = *filter;
 
-    calculate(spectra, D, tmp_filter, candidate);
+    calculate(spectrum, D, tmp_filter, candidate);
 }
 
-void t_mhs::calculate (const t_spectra & spectra,
+void t_mhs::calculate (const t_spectrum & spectrum,
                        t_ret_type & D,
-                       t_spectra_filter & filter,
+                       t_spectrum_filter & filter,
                        t_candidate & candidate,
                        t_time_interval start_time) const {
-    if (spectra.is_all_pass(&filter) && candidate.size()) {
+    if (spectrum.is_all_pass(&filter) && candidate.size()) {
         D.add(candidate);
     }
     /* Creating complex candidates */
@@ -66,10 +66,10 @@ void t_mhs::calculate (const t_spectra & spectra,
             return;
 
         t_count remaining_components =
-            spectra.get_component_count(&filter);
+            spectrum.get_component_count(&filter);
 
         /* Ranking */
-        t_ptr<t_rank> rank = (* similarity)(spectra, & filter);
+        t_ptr<t_rank> rank = (* similarity)(spectrum, & filter);
         rank->sort();
 
         /* Remove components that will not generate new candidates */
@@ -86,7 +86,7 @@ void t_mhs::calculate (const t_spectra & spectra,
             t_component_id component = rank->get_component(i);
 
             // TODO: Optimize this?
-            if (spectra.is_invalid(&filter))
+            if (spectrum.is_invalid(&filter))
                 break;
 
             /* Cutoff */
@@ -100,16 +100,16 @@ void t_mhs::calculate (const t_spectra & spectra,
                 continue;
             }
 
-            /* Strip component from spectra */
-            t_spectra_filter strip_filter = filter;
+            /* Strip component from spectrum */
+            t_spectrum_filter strip_filter = filter;
             filter.components.filter(component);
-            strip_filter.strip(component, spectra);
+            strip_filter.strip(component, spectrum);
 
             /* Insert the component into the candidate */
             auto tmp = candidate.insert(component);
             assert(tmp.second);
 
-            calculate(spectra,
+            calculate(spectrum,
                       D,
                       strip_filter,
                       candidate,
@@ -119,43 +119,43 @@ void t_mhs::calculate (const t_spectra & spectra,
     }
 }
 
-void t_mhs::update (const t_spectra & spectra,
+void t_mhs::update (const t_spectrum & spectrum,
                     t_ret_type & D,
                     const t_ret_type & old_D,
-                    const t_spectra_filter & filter) const {
+                    const t_spectrum_filter & filter) const {
     list<t_candidate> candidates;
 
 
     BOOST_FOREACH(const t_candidate &candidate,
                   old_D) {
-        if (spectra.is_candidate(candidate, &filter))
+        if (spectrum.is_candidate(candidate, &filter))
             D.add(candidate, false, false);
         else
             candidates.push_back(candidate);
     }
     BOOST_FOREACH(t_candidate & candidate,
                   candidates) {
-        t_spectra_filter tmp_filter = filter;
+        t_spectrum_filter tmp_filter = filter;
 
 
-        tmp_filter.strip(candidate, spectra);
-        calculate(spectra, D, tmp_filter, candidate);
+        tmp_filter.strip(candidate, spectrum);
+        calculate(spectrum, D, tmp_filter, candidate);
     }
 }
 
-void t_mhs::combine (const t_spectra & spectra,
+void t_mhs::combine (const t_spectrum & spectrum,
                      t_ret_type & D,
                      const t_ret_type & D_first,
                      const t_ret_type & D_second,
-                     const t_spectra_filter & filter_first,
-                     const t_spectra_filter & filter_second) {
+                     const t_spectrum_filter & filter_first,
+                     const t_spectrum_filter & filter_second) {
     list<t_candidate> c_first, c_second;
 
     {
         t_ret_type::iterator it = D_first.begin();
 
         while (it != D_first.end()) {
-            if (spectra.is_candidate(*it, &filter_second))
+            if (spectrum.is_candidate(*it, &filter_second))
                 D.add(*it);
             else if (!D_second.is_composite(*it, true))
                 c_first.push_back(*it);
@@ -166,7 +166,7 @@ void t_mhs::combine (const t_spectra & spectra,
         it = D_second.begin();
 
         while (it != D_second.end()) {
-            if (spectra.is_candidate(*it, &filter_first))
+            if (spectrum.is_candidate(*it, &filter_first))
                 D.add(*it);
             else if (!D_first.is_composite(*it, true))
                 c_second.push_back(*it);
@@ -207,14 +207,14 @@ t_mhs_parallel::t_mhs_parallel (const t_const_ptr<t_parallelization_factory> pf,
 }
 
 void t_mhs_parallel::map (t_args * args) {
-    (*args->mhs)(*args->spectra,
+    (*args->mhs)(*args->spectrum,
                  args->D,
                  args->filter);
 }
 
-void t_mhs_parallel::operator () (const t_spectra & spectra,
+void t_mhs_parallel::operator () (const t_spectrum & spectrum,
                                   t_ret_type & D,
-                                  const t_spectra_filter * filter) const {
+                                  const t_spectrum_filter * filter) const {
     list<thread> threads;
     list<t_args> args;
 
@@ -228,7 +228,7 @@ void t_mhs_parallel::operator () (const t_spectra & spectra,
 
         t_args & a = *args.rbegin();
         a.mhs = mhs;
-        a.spectra = &spectra;
+        a.spectrum = &spectrum;
         a.filter = filter;
 
         threads.push_back(thread(&t_mhs_parallel::map, &a));

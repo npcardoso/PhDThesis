@@ -3,4 +3,4 @@ Import('env')
 target = "helloworld"
 sources = Glob("*.cpp")
 
-obj = env.Instrument(target, sources, "-spectra_instrument")
+obj = env.Instrument(target, sources, "-spectrum_instrument")

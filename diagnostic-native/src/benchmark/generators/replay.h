@@ -9,10 +9,10 @@
 
 namespace diagnostic {
 namespace benchmark {
-class t_replay : public t_spectra_generator, public std::list<std::pair<std::string, std::string> > {
+class t_replay : public t_spectrum_generator, public std::list<std::pair<std::string, std::string> > {
 public:
 
-    virtual t_spectra * operator () (std::mt19937 & gen,
+    virtual t_spectrum * operator () (std::mt19937 & gen,
                                               t_candidate & correct_candidate);
 };
 }

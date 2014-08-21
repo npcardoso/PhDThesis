@@ -3,17 +3,17 @@
 
 #include "generator.h"
 
-#include "../../structs/count_spectra.h"
+#include "../../structs/count_spectrum.h"
 #include "../../structs/topology.h"
 
 namespace diagnostic {
 namespace benchmark {
-class t_topology_based_generator : public t_spectra_generator {
+class t_topology_based_generator : public t_spectrum_generator {
 public:
     t_topology_based_generator ();
     t_topology_based_generator (const t_const_ptr<t_topology> & topology);
 
-    virtual t_spectra * operator () (std::mt19937 & gen,
+    virtual t_spectrum * operator () (std::mt19937 & gen,
                                               t_candidate & correct_candidate);
 
     void set_topology (const t_topology * topology);
@@ -27,7 +27,7 @@ public:
     virtual std::ostream & write (std::ostream & out) const;
 
 protected:
-    void operator () (t_count_spectra & spectra,
+    void operator () (t_count_spectrum & spectrum,
                       t_candidate & correct_candidate,
                       std::mt19937 & gen,
                       t_transaction_id tran) const;

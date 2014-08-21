@@ -1,8 +1,8 @@
-package io.crowbar.instrumentation.spectra;
+package io.crowbar.instrumentation.spectrum;
 
 import io.crowbar.instrumentation.runtime.ProbeType;
 import io.crowbar.instrumentation.runtime.Node;
-import io.crowbar.diagnosis.spectra.Metadata;
+import io.crowbar.diagnostic.spectrum.Metadata;
 
 public final class CmpM implements Metadata {
     private final ProbeType type;

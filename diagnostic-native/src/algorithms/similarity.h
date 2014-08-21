@@ -2,7 +2,7 @@
 #define __SIMILARITY_H_516cee6798dbd3feb110e449857eb823bcdf0260__
 
 #include "../diagnostic_system.h"
-#include "../structs/spectra.h"
+#include "../structs/spectrum.h"
 #include "../types.h"
 #include "../utils/boost.h"
 
@@ -36,21 +36,21 @@ private:
 class t_similarity : public t_candidate_ranker {
 public:
     // From t_candidate_ranker
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const t_spectrum & spectrum,
                               const t_trie & D,
                               t_ret_type & probs,
-                              const t_spectra_filter * filter=NULL) const;
+                              const t_spectrum_filter * filter=NULL) const;
 
 
-    // Calculates rank for all components in the spectra (does not sort nor normalize rank)
-    virtual t_ptr<t_rank> operator () (const t_spectra & spectra,
-                                       const t_spectra_filter * filter=NULL) const;
+    // Calculates rank for all components in the spectrum (does not sort nor normalize rank)
+    virtual t_ptr<t_rank> operator () (const t_spectrum & spectrum,
+                                       const t_spectrum_filter * filter=NULL) const;
 
 
-    // Calculates rank for a single components in the spectra
-    virtual t_score operator () (const t_spectra & spectra,
+    // Calculates rank for a single components in the spectrum
+    virtual t_score operator () (const t_spectrum & spectrum,
                                  t_component_id comp,
-                                 const t_spectra_filter * filter=NULL) const;
+                                 const t_spectrum_filter * filter=NULL) const;
 
     inline virtual t_score_type get_score_type () const {
         return HEURISTIC;
@@ -108,10 +108,10 @@ public:
     inline virtual std::string get_similarity_type() const {
         return "random";
     }
-    // Calculates rank for a single components in the spectra
-    virtual t_score operator () (const t_spectra & spectra,
+    // Calculates rank for a single components in the spectrum
+    virtual t_score operator () (const t_spectrum & spectrum,
                                  t_component_id comp,
-                                 const t_spectra_filter * filter=NULL) const;
+                                 const t_spectrum_filter * filter=NULL) const;
 
 protected:
     inline virtual t_score similarity_coefficient (const t_count n[2][2]) const {return 0;}

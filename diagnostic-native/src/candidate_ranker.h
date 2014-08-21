@@ -14,10 +14,10 @@ public:
 public:
     };
 
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const t_spectrum & spectrum,
                               const t_candidate_generator::t_ret_type & D,
                               t_ret_type & result,
-                              const t_spectra_filter * filter=NULL) const = 0;
+                              const t_spectrum_filter * filter=NULL) const = 0;
 
     virtual t_score_type get_score_type () const = 0;
     inline virtual ~t_candidate_ranker () {}

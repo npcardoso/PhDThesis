@@ -9,7 +9,7 @@ void t_verbose_hook::trigger_event (t_collector & collector,
 
 
     ss << "---Init Hook---" << std::endl;
-    ss << status.get_spectra() << std::endl;
+    ss << status.get_spectrum() << std::endl;
     ss << "Correct Candidate: " << status.get_correct() << std::endl;
     collector.debug(status, ss.str());
 }

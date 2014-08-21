@@ -7,13 +7,13 @@
 namespace diagnostic {
 namespace benchmark {
 void run_benchmark (const t_benchmark_settings & settings,
-                    t_spectra_generator & generator,
+                    t_spectrum_generator & generator,
                     std::mt19937 & gen,
                     t_execution_controller & controller);
 
 
 inline void run_benchmark (const t_benchmark_settings & settings,
-                           t_spectra_generator & generator,
+                           t_spectrum_generator & generator,
                            std::mt19937 & gen) {
     t_count processors = std::thread::hardware_concurrency();
 
@@ -29,7 +29,7 @@ inline void run_benchmark (const t_benchmark_settings & settings,
 }
 
 inline void run_benchmark (const t_benchmark_settings & settings,
-                           t_spectra_generator & generator,
+                           t_spectrum_generator & generator,
                            std::mt19937 & gen,
                            t_count processors) {
     t_execution_controller * controller = new t_execution_controller(processors);

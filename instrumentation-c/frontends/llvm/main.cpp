@@ -19,11 +19,11 @@
 
 using namespace llvm;
 
-cl::opt<std::string> config_file("si_config", cl::desc("Specify spectra instrumentation configuration file"), cl::value_desc("filename"));
+cl::opt<std::string> config_file("si_config", cl::desc("Specify spectrum instrumentation configuration file"), cl::value_desc("filename"));
 
-class SpectraInstrumentation : public ModulePass {
+class SpectrumInstrumentation : public ModulePass {
 public:
-    inline SpectraInstrumentation () : ModulePass(ID) {}
+    inline SpectrumInstrumentation () : ModulePass(ID) {}
 
     virtual bool runOnModule (Module & M) {
         BlockInjectPass inject_pass;
@@ -48,13 +48,13 @@ public:
 };
 
 
-char SpectraInstrumentation::ID = 1;
+char SpectrumInstrumentation::ID = 1;
 
-static RegisterPass<SpectraInstrumentation> spectra_instrument("spectra_instrument", "Instrumentation for spectra collection");
+static RegisterPass<SpectrumInstrumentation> spectrum_instrument("spectrum_instrument", "Instrumentation for spectrum collection");
 
 static void registerMyPass (const PassManagerBuilder &,
                             PassManagerBase & PM) {
-    PM.add(new SpectraInstrumentation());
+    PM.add(new SpectrumInstrumentation());
 }
 
 static RegisterStandardPasses

@@ -1,7 +1,7 @@
 #ifndef __AMBIGUITY_GROUPS_H_8ee792cbc6e3c1036d8a9adecc7390d05b48e1b6__
 #define __AMBIGUITY_GROUPS_H_8ee792cbc6e3c1036d8a9adecc7390d05b48e1b6__
 
-#include "spectra.h"
+#include "spectrum.h"
 #include "../types.h"
 
 #include <cstring>
@@ -16,11 +16,11 @@ public:
     typedef std::set<t_component_id> t_group;
 
     t_ambiguity_groups ();
-    t_ambiguity_groups (const t_spectra & spectra,
-                        const t_spectra_filter * filter=NULL);
+    t_ambiguity_groups (const t_spectrum & spectrum,
+                        const t_spectrum_filter * filter=NULL);
 
-    void iterator (t_spectra_iterator & it) const;
-    const t_spectra_filter & filter () const;
+    void iterator (t_spectrum_iterator & it) const;
+    const t_spectrum_filter & filter () const;
 
     const t_group * group(t_component_id) const;
 
@@ -30,7 +30,7 @@ public:
 private:
     typedef std::map<t_component_id, t_group> t_group_map;
     t_group_map groups;
-    t_spectra_filter _filter;
+    t_spectrum_filter _filter;
     t_count component_count,
             transaction_count;
 };

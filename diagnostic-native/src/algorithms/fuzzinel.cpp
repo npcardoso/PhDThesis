@@ -9,11 +9,11 @@ namespace algorithms {
 
 typedef std::vector<t_goodness_mp> t_fuzzinel_goodnesses;
 
-void probability (const t_spectra & spectra,
+void probability (const t_spectrum & spectrum,
                   const t_candidate & candidate,
                   const t_fuzzinel_goodnesses & goodnesses,
                   t_probability_mp & ret,
-                  const t_spectra_filter * filter=NULL,
+                  const t_spectrum_filter * filter=NULL,
                   bool use_confidence=true,
                   bool use_fuzzy_error=true,
                   bool use_count=false) {
@@ -23,8 +23,8 @@ void probability (const t_spectra & spectra,
 
     ret = 1;
 
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
+    t_spectrum_iterator it(spectrum.get_component_count(),
+                          spectrum.get_transaction_count(),
                           filter);
 
     while (it.transaction.next()) {
@@ -33,7 +33,7 @@ void probability (const t_spectra & spectra,
         t_id comp = 0;
 
         while (c_it != candidate.end()) {
-            t_count count = spectra.get_activations(*c_it, it.transaction.get());
+            t_count count = spectrum.get_activations(*c_it, it.transaction.get());
 
             assert(goodnesses[comp] >= 0);
             assert(goodnesses[comp] <= 1);
@@ -50,14 +50,14 @@ void probability (const t_spectra & spectra,
         }
 
         // Fuzzy health
-        t_error e = use_fuzzy_error ? spectra.get_error(it.transaction.get()) : spectra.is_error(it.transaction.get());
+        t_error e = use_fuzzy_error ? spectrum.get_error(it.transaction.get()) : spectrum.is_error(it.transaction.get());
 
 
         tmp = e * (1 - tmp) + (1 - e) * tmp;
 
         // Confidence scaling
         if (use_confidence) {
-            t_confidence c = spectra.get_confidence(it.transaction.get());
+            t_confidence c = spectrum.get_confidence(it.transaction.get());
             tmp = (1 - c) + (c * tmp);
         }
 
@@ -75,11 +75,11 @@ void prior (const t_candidate & candidate,
 
 class t_fuzzinel_model {
 public:
-    t_fuzzinel_model (const t_spectra & spectra,
+    t_fuzzinel_model (const t_spectrum & spectrum,
                      const t_candidate & candidate,
                      bool use_fuzzy_error=true,
                      bool use_confidence=true,
-                     const t_spectra_filter * filter=NULL);
+                     const t_spectrum_filter * filter=NULL);
 
     virtual void gradient (const t_fuzzinel_goodnesses & goodnesses,
                            t_fuzzinel_goodnesses & ret) const;
@@ -96,24 +96,24 @@ private:
 
 
 
-t_fuzzinel_model::t_fuzzinel_model (const t_spectra & spectra,
+t_fuzzinel_model::t_fuzzinel_model (const t_spectrum & spectrum,
                                   const t_candidate & candidate,
                                   bool use_fuzzy_error,
                                   bool use_confidence,
-                                  const t_spectra_filter * filter) {
+                                  const t_spectrum_filter * filter) {
     assert(candidate.size() < sizeof(t_component_id) * 8);
 
-    t_spectra_filter tmp_filter;
+    t_spectrum_filter tmp_filter;
 
     if (filter)
         tmp_filter = *filter;
 
     // Init filter
-    tmp_filter.components.resize(spectra.get_component_count());
+    tmp_filter.components.resize(spectrum.get_component_count());
     tmp_filter.components.filter_all_but(candidate);
 
-    t_spectra_iterator it(spectra.get_component_count(),
-                          spectra.get_transaction_count(),
+    t_spectrum_iterator it(spectrum.get_component_count(),
+                          spectrum.get_transaction_count(),
                           &tmp_filter);
 
     // Set container size
@@ -124,14 +124,14 @@ t_fuzzinel_model::t_fuzzinel_model (const t_spectra & spectra,
         t_id symbol = 0;
 
         for (t_id comp = 0; it.component.next(); comp++) {
-            if (spectra.get_activations(it.component.get(),
+            if (spectrum.get_activations(it.component.get(),
                                         it.transaction.get()))
                 symbol += 1 << comp;
         }
 
         if (symbol) {
-            t_confidence conf = use_confidence ? spectra.get_confidence(it.transaction.get()) : 1;
-            t_error err = use_fuzzy_error ? spectra.get_error(it.transaction.get()) : spectra.is_error(it.transaction.get());
+            t_confidence conf = use_confidence ? spectrum.get_confidence(it.transaction.get()) : 1;
+            t_error err = use_fuzzy_error ? spectrum.get_error(it.transaction.get()) : spectrum.is_error(it.transaction.get());
             pass[symbol] += conf * (1 - err);
             fail[symbol] += conf * err;
         }
@@ -195,16 +195,16 @@ t_fuzzinel::t_fuzzinel (size_t precision) {
     use_confidence = true;
 }
 
-void t_fuzzinel::operator () (const t_spectra & spectra,
+void t_fuzzinel::operator () (const t_spectrum & spectrum,
                              const t_trie & D,
                              t_ret_type & probs,
-                             const t_spectra_filter * filter) const {
+                             const t_spectrum_filter * filter) const {
     std::list<t_probability_mp> probs_mp;
     t_probability_mp total = 0;
 
     BOOST_FOREACH(auto & candidate, D) {
         t_probability_mp ret;
-        (* this)(spectra, candidate, ret);
+        (* this)(spectrum, candidate, ret);
         total += ret;
         probs_mp.push_back((t_ret_type::value_type) ret);
     }
@@ -215,11 +215,11 @@ void t_fuzzinel::operator () (const t_spectra & spectra,
     }
 }
 
-void t_fuzzinel::operator () (const t_spectra & spectra,
+void t_fuzzinel::operator () (const t_spectrum & spectrum,
                              const t_candidate & candidate,
                              t_probability_mp & ret,
-                             const t_spectra_filter * filter) const {
-    t_fuzzinel_model m(spectra,
+                             const t_spectrum_filter * filter) const {
+    t_fuzzinel_model m(spectrum,
                       candidate,
                       use_fuzzy_error,
                       use_confidence,
@@ -238,7 +238,7 @@ void t_fuzzinel::operator () (const t_spectra & spectra,
 
 
     // Calculate probability
-    probability(spectra, candidate, g, pr, filter);
+    probability(spectrum, candidate, g, pr, filter);
 
     while (it++ < iterations || !iterations) {
         // Update olds
@@ -251,7 +251,7 @@ void t_fuzzinel::operator () (const t_spectra & spectra,
         m.update(g_old, grad, g, lambda);
 
         // Calculate probability
-        probability(spectra, candidate, g, pr, filter);
+        probability(spectrum, candidate, g, pr, filter);
 
         // Check stop condition
         if (2 * (pr - pr_old) / abs(pr + pr_old) < epsilon)

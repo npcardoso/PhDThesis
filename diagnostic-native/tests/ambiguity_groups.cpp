@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
 #include <libdiag/structs/ambiguity_groups.h>
-#include <libdiag/structs/count_spectra.h>
+#include <libdiag/structs/count_spectrum.h>
 
 #include <fstream>
 using namespace diagnostic;
@@ -10,15 +10,15 @@ using namespace std;
 BOOST_AUTO_TEST_SUITE(AMBIGUITY_GROUPS)
 
 BOOST_AUTO_TEST_CASE(AG1) {
-    t_count_spectra spectra;
-    t_ambiguity_groups ag(spectra);
+    t_count_spectrum spectrum;
+    t_ambiguity_groups ag(spectrum);
     stringstream ss("2 2\
            1 1 1\
            1 1 1");
 
 
-    ss >> spectra;
-    ag = t_ambiguity_groups(spectra);
+    ss >> spectrum;
+    ag = t_ambiguity_groups(spectrum);
 
     BOOST_CHECK(!ag.filter().components.is_filtered(1));
     BOOST_CHECK(ag.filter().components.is_filtered(2));
@@ -30,9 +30,9 @@ BOOST_AUTO_TEST_CASE(AG1) {
            1 1 1 1");
     ss.clear();
 
-    spectra = t_count_spectra();
-    ss >> spectra;
-    ag = t_ambiguity_groups(spectra);
+    spectrum = t_count_spectrum();
+    ss >> spectrum;
+    ag = t_ambiguity_groups(spectrum);
 
 
     BOOST_CHECK(!ag.filter().components.is_filtered(1));
@@ -47,9 +47,9 @@ BOOST_AUTO_TEST_CASE(AG1) {
            1 1 1 0 1 0 1 0 1 1 1");
     ss.clear();
 
-    spectra = t_count_spectra();
-    ss >> spectra;
-    ag = t_ambiguity_groups(spectra);
+    spectrum = t_count_spectrum();
+    ss >> spectrum;
+    ag = t_ambiguity_groups(spectrum);
 
     BOOST_CHECK(!ag.filter().components.is_filtered(1));
     BOOST_CHECK(!ag.filter().components.is_filtered(2));

@@ -7,9 +7,9 @@ namespace diagnostic {
 namespace algorithms {
 class t_single_fault : public t_candidate_generator {
 public:
-    virtual void operator () (const t_spectra & spectra,
+    virtual void operator () (const t_spectrum & spectrum,
                               t_ret_type & D,
-                              const t_spectra_filter * filter=NULL) const;
+                              const t_spectrum_filter * filter=NULL) const;
 
     inline virtual std::string get_name() const {
         return "single_fault";

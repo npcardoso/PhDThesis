@@ -9,7 +9,7 @@ llvm_ldflags = " `%s --ldflags --libs`" % env['llvmconfig']
 env.Append(CCFLAGS = llvm_ccflags,
            LINKFLAGS = llvm_ldflags)
 
-target  = "llvm_spectra_instrument"
+target  = "llvm_spectrum_instrument"
 
 sources = []
 wildcards = ""

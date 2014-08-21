@@ -16,7 +16,7 @@ void t_metrics_hook::trigger_event (t_collector & collector,
 
 
     BOOST_FOREACH(auto & metric, *this) {
-        std::string ret = (* metric)(status.get_spectra(),
+        std::string ret = (* metric)(status.get_spectrum(),
                                      status.get_correct(),
                                      status.get_candidates(),
                                      status.get_probs(),

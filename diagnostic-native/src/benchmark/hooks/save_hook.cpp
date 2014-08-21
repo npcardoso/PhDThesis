@@ -17,8 +17,8 @@ void t_save_hook::trigger_event (t_collector & collector,
     status.prepare_entry(entry);
 
 
-    ss << status.get_spectra();
-    collector.save_file(collector.local_path(entry, "spectra.txt"),
+    ss << status.get_spectrum();
+    collector.save_file(collector.local_path(entry, "spectrum.txt"),
                         ss.str());
 
     ss.str("");

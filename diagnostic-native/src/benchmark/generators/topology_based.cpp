@@ -43,7 +43,7 @@ void t_topology_based_generator::set_until_nerrors (t_count nerrors) {
     until_nerrors = nerrors;
 }
 
-void t_topology_based_generator::operator () (t_count_spectra & spectra,
+void t_topology_based_generator::operator () (t_count_spectrum & spectrum,
                                               t_candidate & correct_candidate,
                                               std::mt19937 & gen,
                                               t_transaction_id tran) const {
@@ -57,19 +57,19 @@ void t_topology_based_generator::operator () (t_count_spectra & spectra,
     assert(comp);
 
     bool fail = false;
-    spectra.set_error(tran, 0);
-    spectra.set_confidence(tran, 1);
+    spectrum.set_error(tran, 0);
+    spectrum.set_confidence(tran, 1);
 
     do {
         const t_topology::t_interface * iface = topology->get_interface(comp);
         const t_fault * fault = topology->get_fault(comp);
 
-        spectra.hit(comp, tran);
+        spectrum.hit(comp, tran);
         activations++;
 
         if (fault) {
             t_error e = fault->gen_error(gen);
-            spectra.set_error(tran, std::max(e, spectra.get_error(tran)));
+            spectrum.set_error(tran, std::max(e, spectrum.get_error(tran)));
 
             if (e == 1)
                 correct_candidate.insert(comp);
@@ -97,25 +97,25 @@ void t_topology_based_generator::operator () (t_count_spectra & spectra,
     } while (!fail && stack.size());
 }
 
-t_spectra * t_topology_based_generator::operator () (std::mt19937 & gen,
+t_spectrum * t_topology_based_generator::operator () (std::mt19937 & gen,
                                                               t_candidate & correct_candidate) {
     assert(topology);
     assert(until_nerrors || max_transactions);
 
-    t_count_spectra & spectra = *(new t_count_spectra(*topology->get_components().rbegin(), 0));
+    t_count_spectrum & spectrum = *(new t_count_spectrum(*topology->get_components().rbegin(), 0));
 
     while (true) {
-        spectra.new_transaction();
-        (* this)(spectra, correct_candidate, gen, spectra.get_transaction_count());
+        spectrum.new_transaction();
+        (* this)(spectrum, correct_candidate, gen, spectrum.get_transaction_count());
 
-        if (until_nerrors && spectra.get_error_count() == until_nerrors)
+        if (until_nerrors && spectrum.get_error_count() == until_nerrors)
             break;
 
-        if (max_transactions && spectra.get_transaction_count() == max_transactions)
+        if (max_transactions && spectrum.get_transaction_count() == max_transactions)
             break;
     }
 
-    return &spectra;
+    return &spectrum;
 }
 
 std::ostream & t_topology_based_generator::write (std::ostream & out) const {

@@ -3,8 +3,8 @@ package io.crowbar.diagnostic.runners;
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.DiagnosticSystem;
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.runners.messages.DiagnosticMessages;
-import io.crowbar.diagnostic.runners.messages.Messages;
+import io.crowbar.messages.DiagnosticMessages;
+import io.crowbar.messages.Messages;
 
 import com.sun.jna.Library;
 import com.sun.jna.Pointer;

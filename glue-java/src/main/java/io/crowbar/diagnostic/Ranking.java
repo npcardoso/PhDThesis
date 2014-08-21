@@ -2,22 +2,23 @@ package io.crowbar.diagnostic;
 
 import flexjson.JSON;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public final class Ranking {
     public final class Element implements Comparable<Element> {
-        private final int candidateId;
+        private final Candidate candidate;
         private final double score;
 
-        public Element (int candidateId,
+        public Element (Candidate candidate,
                         double score) {
-            this.candidateId = candidateId;
+            this.candidate = candidate;
             this.score = score;
         }
 
-        public int getCandidateId () {
-            return candidateId;
+        public Candidate getCandidate () {
+            return candidate;
         }
 
         public double getScore () {
@@ -25,42 +26,35 @@ public final class Ranking {
         }
 
         @Override
-        public int compareTo (Element o) {
-            return (int) ((o.score - score) * 1e6); // compare with 1e6 precision
+        public int compareTo (Element e) {
+            return (int) ((e.score - score) * 1e6); // compare with 1e6 precision
         }
     }
 
-
-    private Connection connection = null;
     private List<Element> elements = null;
-    private List<Double> scores = null;
 
-    /*! Used for JSON deserialization */
-    private Ranking () {}
-
-    /*! Used for JSON deserialization */
-    private void setConnection (Connection connection) {
-        this.connection = connection;
-    }
-
-    /*! Used for JSON deserialization */
-    private void setScores (List<Double> scores) {
+    /**
+     * \brief Creates a ranking.
+     * \pre candidates.size () == scores.size()
+     */
+    public Ranking (List<Candidate> candidates,
+                    List<Double> scores) {
+        assert(candidates.size() == scores.size());
         elements = new ArrayList<Element> (scores.size());
-        scores = new ArrayList<Double> (scores);
 
         for (int id = 0; id < scores.size(); id++) {
-            elements.add(new Element(id, scores.get(id)));
+            elements.add(new Element(candidates.get(id), scores.get(id)));
         }
+
+        Collections.sort(elements);
     }
 
-    public Ranking (Connection connection,
-                    List<Double> scores) {
-        setConnection(connection);
-        setScores(scores);
+/**
+ * \brief Returns the sorted list of ranking elements.
+ * \return An unmodifiableList with the sorted elements.
+ */
+    public List<Element> getElements() {
+        return Collections.unmodifiableList(elements);
     }
 
-    @JSON
-    public Connection getConnection () {
-        return connection;
-    }
 }

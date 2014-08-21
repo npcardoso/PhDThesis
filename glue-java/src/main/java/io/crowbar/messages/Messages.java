@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.runners.messages;
+package io.crowbar.messages;
 
 import io.crowbar.diagnostic.DiagnosticReport;
 
@@ -47,13 +47,11 @@ public final class Messages {
 
     public static JSONDeserializer<Response> getResponseDeserializer () {
         return new JSONDeserializer<Response> ()
-            .use(null, responseBinder)
-            .use(DiagnosticReport.class, new DiagnosticReport.JSONObjectFactory());
+            .use(null, responseBinder);
     }
 
     public static JSONDeserializer<Request> getRequestDeserializer () {
         return new JSONDeserializer<Request> ()
-            .use(null, requestBinder)
-            .use(DiagnosticReport.class, new DiagnosticReport.JSONObjectFactory());
+            .use(null, requestBinder);
     }
 }

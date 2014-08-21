@@ -2,6 +2,7 @@
 
 #include <boost/foreach.hpp>
 #include <iostream>
+#include <cmath>
 
 namespace diagnostic{
 
@@ -42,7 +43,10 @@ std::ostream & json_write (std::ostream & out, const long & i) {
 
 
 std::ostream & json_write (std::ostream & out, const double & i) {
-    out << i;
+    if(std::isnan(i))
+        out << "NaN";
+    else
+        out << i;
     return out;
 }
 

@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.runners.messages;
+package io.crowbar.messages;
 
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.DiagnosticSystem;
@@ -11,7 +11,7 @@ public class DiagnosticMessages {
     private static final String NAME = "diagnostic";
 
     public static final class Request
-        extends io.crowbar.diagnostic.runners.messages.Request {
+        extends io.crowbar.messages.Request {
 
         private DiagnosticSystem system = null;
         private String spectrum = null;
@@ -52,7 +52,7 @@ public class DiagnosticMessages {
     }
 
     public static final class Response
-        extends io.crowbar.diagnostic.runners.messages.Response {
+        extends io.crowbar.messages.Response {
 
         private DiagnosticSystem system = null;
         private DiagnosticReport report = null;

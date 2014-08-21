@@ -1,3 +1,3 @@
-package io.crowbar.diagnostic.runners.messages;
+package io.crowbar.messages;
 
 public abstract class Response extends Message {}

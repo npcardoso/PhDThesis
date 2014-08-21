@@ -13,83 +13,38 @@ import java.util.Map;
 
 
 public final class DiagnosticReport {
-    public static final class JSONObjectFactory implements ObjectFactory {
-        private static final String GEN_RESULTS="gen_results";
-        private static final String RANK_RESULTS="rank_results";
+    private static final String GEN_RESULTS="gen_results";
+    private static final String RANK_RESULTS="rank_results";
 
+    private List<List<Candidate> > generatorResults = new ArrayList<List<Candidate> > ();
+    private List<List<Double> > rankerResults = new ArrayList<List<Double> > ();
 
-        public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
-            DiagnosticReport dr = new DiagnosticReport();
-            if(!(value instanceof Map))
-                throw context.cannotConvertValueToTargetType(value, Map.class);
+    DiagnosticReport(){}
 
-            Map valueMap = (Map) value;
-            for (String k : new String[] {GEN_RESULTS,
-                                          RANK_RESULTS}) {
-                if(!valueMap.containsKey(k))
-                    throw new JSONException("Missing key: " + k);
+    @JSON(name=GEN_RESULTS)
+    private void setGeneratorResults (List<List<List<Integer>>> results) {
+        generatorResults = new ArrayList<List<Candidate>>(results.size());
+        for(List<List<Integer>> generator : results) {
+            List<Candidate> candidateList = new ArrayList<Candidate>(generator.size());
+            for(List<Integer> candidate : generator) {
+                candidateList.add(new Candidate(candidate));
             }
-
-            for(Object o : getList(context, valueMap.get(GEN_RESULTS))) {
-                dr.generatorResults.add(parseGeneratorResult(context, o));
-            }
-
-            for(Object o : getList(context, valueMap.get(RANK_RESULTS))) {
-                dr.rankerResults.add(parseRankerResult(context, o));
-            }
-
-            return dr;
-        }
-
-        private List getList(ObjectBinder context, Object o) {
-            if(!(o instanceof List))
-                throw context.cannotConvertValueToTargetType(o, List.class);
-            return (List) o;
-        }
-
-        private List<Candidate> parseGeneratorResult(ObjectBinder context, Object o) {
-            if(o == null)
-                return null;
-
-            List list = getList(context, o);
-            List ret = new ArrayList<Candidate>();
-
-            for(Object c : list) {
-                ret.add(new Candidate.JSONObjectFactory().instantiate(context, c, null, null));
-            }
-
-            return ret;
-        }
-
-        private List<Double> parseRankerResult(ObjectBinder context, Object o) {
-            if(o == null)
-                return null;
-
-            List list = getList(context, o);
-            List ret = new ArrayList<Double>();
-
-            for(Object n : list) {
-                if(!(n instanceof JsonNumber))
-                    ret.add(Double.NaN);
-                else
-                    ret.add(((JsonNumber) n).doubleValue());
-            }
-
-            return ret;
+            generatorResults.add(candidateList);
         }
     }
 
+    @JSON(name=RANK_RESULTS)
+    private void setRankerResults(List<List<Double>> results) {
+        rankerResults = results;
+    }
 
-    @JSON
+    @JSON(name=GEN_RESULTS)
     private List<List<Candidate>> getGeneratorResults () {
         return generatorResults;
     }
 
-    @JSON
+    @JSON(name=RANK_RESULTS)
     private List<List<Double>> getRankerResults () {
         return rankerResults;
     }
-
-    private List<List<Candidate> > generatorResults = new ArrayList<List<Candidate> > ();
-    private List<List<Double> > rankerResults = new ArrayList<List<Double> > ();
 }

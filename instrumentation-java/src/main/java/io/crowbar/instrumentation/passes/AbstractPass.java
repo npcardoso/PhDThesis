@@ -61,5 +61,3 @@ public abstract class AbstractPass implements Pass {
         return c.registerProbe(cls.getName(), n.getId(), type);
     }
 }
-
-malabar finished at Fri Aug 22 14:13:16

@@ -1,15 +1,9 @@
 package io.crowbar.diagnostic;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.ArrayList;
 
 import flexjson.JSON;
-import flexjson.ObjectFactory;
-import flexjson.ObjectBinder;
-import flexjson.JsonNumber;
-import flexjson.JSONException;
-import java.util.Map;
 
 
 public final class DiagnosticReport {

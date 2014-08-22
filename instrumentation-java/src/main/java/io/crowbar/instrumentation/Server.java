@@ -1,14 +1,14 @@
-package io.crowbar.instrumentation.messaging;
+package io.crowbar.instrumentation;
 
 import io.crowbar.instrumentation.events.EventListener;
-import io.crowbar.instrumentation.messaging.Messages.HelloMessage;
-import io.crowbar.instrumentation.messaging.Messages.ByeMessage;
-import io.crowbar.instrumentation.messaging.Messages.ProbeMessage;
-import io.crowbar.instrumentation.messaging.Messages.TransactionStartMessage;
-import io.crowbar.instrumentation.messaging.Messages.TransactionEndMessage;
-import io.crowbar.instrumentation.messaging.Messages.OracleMessage;
-import io.crowbar.instrumentation.messaging.Messages.RegisterNodeMessage;
-import io.crowbar.instrumentation.messaging.Messages.RegisterProbeMessage;
+import io.crowbar.instrumentation.Messages.HelloMessage;
+import io.crowbar.instrumentation.Messages.ByeMessage;
+import io.crowbar.instrumentation.Messages.ProbeMessage;
+import io.crowbar.instrumentation.Messages.TransactionStartMessage;
+import io.crowbar.instrumentation.Messages.TransactionEndMessage;
+import io.crowbar.instrumentation.Messages.OracleMessage;
+import io.crowbar.instrumentation.Messages.RegisterNodeMessage;
+import io.crowbar.instrumentation.Messages.RegisterProbeMessage;
 import io.crowbar.util.io.ThreadedServer;
 
 import java.io.ObjectInputStream;

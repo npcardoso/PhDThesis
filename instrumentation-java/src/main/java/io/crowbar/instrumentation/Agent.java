@@ -2,7 +2,6 @@ package io.crowbar.instrumentation;
 
 import io.crowbar.instrumentation.events.MultiListener;
 import io.crowbar.instrumentation.events.VerboseListener;
-import io.crowbar.instrumentation.messaging.Client;
 import io.crowbar.instrumentation.passes.FilterPass;
 import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;

@@ -22,24 +22,24 @@ public final class Component {
         this.nodeId = nodeId;
     }
 
-    public final ProbeType getType() {
+    public ProbeType getType() {
         return type;
     }
 
-    public final int getId () {
+    public int getId () {
         return id;
     }
 
-    public final int getNodeId () {
+    public int getNodeId () {
         return nodeId;
     }
 
-    public final Node getNode () {
+    public Node getNode () {
         return spectrum.getTree().getNode(nodeId);
     }
 
     @Override
-    public final String toString () {
+    public String toString () {
         StringBuilder str = new StringBuilder();
 
 

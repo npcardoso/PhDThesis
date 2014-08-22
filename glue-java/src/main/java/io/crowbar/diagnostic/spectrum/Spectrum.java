@@ -8,9 +8,12 @@ public abstract class Spectrum<A extends Activity,
 
     private abstract class AbstractIterator<T>
         implements Iterator<T> {
-        protected int i = 0;
+        private int id = 0;
 
-        protected abstract T get (int i);
+        protected abstract T get (int id);
+        protected int getId() {
+            return id;
+        }
 
         @Override
         public void remove () {
@@ -22,7 +25,7 @@ public abstract class Spectrum<A extends Activity,
             if (!hasNext())
                 throw new NoSuchElementException();
 
-            return get(i++);
+            return get(id++);
         }
 
     }
@@ -32,7 +35,7 @@ public abstract class Spectrum<A extends Activity,
             return new AbstractIterator<Transaction<A, TM> > () {
                 @Override
                 public boolean hasNext () {
-                    return i < getTransactionCount();
+                    return getId() < getTransactionCount();
                 }
                 @Override
                 protected Transaction<A,TM> get (int i) {
@@ -47,7 +50,7 @@ public abstract class Spectrum<A extends Activity,
             return new AbstractIterator<Component> (){
                 @Override
                 public boolean hasNext () {
-                    return i < getComponentCount();
+                    return getId() < getComponentCount();
                 }
                 @Override
                 protected Component get (int i) {

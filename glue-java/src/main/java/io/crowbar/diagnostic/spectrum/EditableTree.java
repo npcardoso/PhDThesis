@@ -14,17 +14,17 @@ public final class EditableTree implements Tree {
     }
 
     @Override
-    public final int size () {
+    public int size () {
         return nodes.size();
     }
 
     @Override
-    public final Node getRoot () {
+    public Node getRoot () {
         return getNode(0);
     }
 
     @Override
-    public final Node getNode (int id) {
+    public Node getNode (int id) {
         if (id < 0 || id >= nodes.size())
             return null;
 
@@ -32,17 +32,17 @@ public final class EditableTree implements Tree {
     }
 
     @Override
-    public final List<Node> getNodes () {
+    public List<Node> getNodes () {
         return Collections.unmodifiableList(nodes);
     }
 
     @Override
-    public final Iterator<Node> iterator () {
+    public Iterator<Node> iterator () {
         return nodes.iterator();
     }
 
     public Node addNode (String name,
-                        int parentId) {
+                         int parentId) {
         Node parent = getNode(parentId);
         Node child = new Node(this, name, nodes.size(), parent);
         nodes.add(child);

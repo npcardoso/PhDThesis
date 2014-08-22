@@ -1,8 +1,5 @@
 package io.crowbar.messages;
 
-import io.crowbar.diagnostic.DiagnosticReport;
-
-import flexjson.JSON;
 import flexjson.JSONSerializer;
 import flexjson.JSONDeserializer;
 import flexjson.locators.TypeLocator;
@@ -10,8 +7,8 @@ import flexjson.transformer.AbstractTransformer;
 
 public final class Messages {
     /**
-       This class is used to filter null elements from json serialization
-    */
+     * @brief This class is used to filter null elements from json serialization
+     */
     private static class ExcludeTransformer extends AbstractTransformer {
         @Override
         public Boolean isInline () {return true;}

@@ -1,7 +1,5 @@
 package io.crowbar.diagnostic;
 
-import flexjson.JSON;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,8 +32,8 @@ public final class Ranking {
     private List<Element> elements = null;
 
     /**
-     * \brief Creates a ranking.
-     * \pre candidates.size () == scores.size()
+     * @brief Creates a ranking.
+     * @pre candidates.size () == scores.size()
      */
     public Ranking (List<Candidate> candidates,
                     List<Double> scores) {
@@ -49,10 +47,10 @@ public final class Ranking {
         Collections.sort(elements);
     }
 
-/**
- * \brief Returns the sorted list of ranking elements.
- * \return An unmodifiableList with the sorted elements.
- */
+    /**
+     * @brief Returns the sorted list of ranking elements.
+     * @return An unmodifiableList with the sorted elements.
+     */
     public List<Element> getElements() {
         return Collections.unmodifiableList(elements);
     }

@@ -4,7 +4,6 @@ import io.crowbar.diagnostic.runners.*;
 import io.crowbar.diagnostic.algorithms.*;
 import io.crowbar.diagnostic.spectrum.*;
 import io.crowbar.diagnostic.spectrum.unserializers.*;
-import io.crowbar.diagnostic.spectrum.*;
 import io.crowbar.messages.*;
 
 import flexjson.JSONSerializer;

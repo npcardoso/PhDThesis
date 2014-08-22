@@ -1,17 +1,23 @@
 package io.crowbar.instrumentation.spectrum;
 
-import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.instrumentation.events.AbstractEventListener;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Tree;
+import io.crowbar.diagnostic.spectrum.activity.Hit;
+import io.crowbar.instrumentation.events.AbstractEventListener;
+import io.crowbar.instrumentation.runtime.Probe;
+
+import java.util.Map;
+import java.util.HashMap;
 
 
 public class SpectrumBuilder extends AbstractEventListener {
     private boolean error = false;
+
+    private Map<Integer,Node> nodeIdTranslation = new HashMap<Integer,Node>();
+
     private final EditableSpectrum<Hit, TrM> spectrum =
         new EditableSpectrum<Hit, TrM> ();
 
@@ -22,15 +28,18 @@ public class SpectrumBuilder extends AbstractEventListener {
 
     @Override
     public final void registerNode (String name, int id, int parentId) throws Exception {
-        // FIXME: maintain a translation map for ids
-        spectrum.getTree().addNode(name, parentId);
+        assert(nodeIdTranslation.get(id) == null);
+        Node n = spectrum.getTree().addNode(name, parentId);
+        nodeIdTranslation.put(id, n);
+
     }
 
     @Override
     public final void registerProbe (Probe probe) throws Exception {
-        Node n = spectrum.getTree().getNode(probe.getNodeId());
-        if(n == null) //! \todo handle this case properly
-            n = spectrum.getTree().getRoot();
+        Node n = nodeIdTranslation.get(probe.getNodeId());
+
+        assert(n != null);
+
         spectrum.setComponent(probe.getId(), probe.getType(), n);
     }
 

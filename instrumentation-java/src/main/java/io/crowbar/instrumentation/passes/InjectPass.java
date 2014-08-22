@@ -50,7 +50,7 @@ public class InjectPass extends AbstractPass {
 
             boolean methodWasInjected = handleMethod(c, m);
             injected = injected || methodWasInjected;
-            // ca.setMaxStack(ca.computeMaxStack());
+            ca.setMaxStack(ca.computeMaxStack());
         }
 
         if (injected) {

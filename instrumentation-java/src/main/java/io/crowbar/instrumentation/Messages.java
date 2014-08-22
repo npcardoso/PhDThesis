@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation.messaging;
+package io.crowbar.instrumentation;
 
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.runtime.Probe;

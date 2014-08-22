@@ -20,12 +20,12 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public final int getComponentCount () {
+    public int getComponentCount () {
         return componentCount;
     }
 
     @Override
-    public final int getTransactionCount () {
+    public int getTransactionCount () {
         return transactions.size();
     }
 
@@ -35,7 +35,7 @@ extends Spectrum<A, TM> {
      * does not exist.
      */
     @Override
-    public final Transaction<A, TM> getTransaction (int transactionId) {
+    public Transaction<A, TM> getTransaction (int transactionId) {
         if (transactionId < 0 || transactionId >= transactions.size())
             return null;
 
@@ -49,7 +49,7 @@ extends Spectrum<A, TM> {
      * not exist.
      */
     @Override
-    public final Component getComponent (int id) {
+    public Component getComponent (int id) {
         if (id < 0 || id >= components.size())
             return null;
 
@@ -60,7 +60,7 @@ extends Spectrum<A, TM> {
      * @brief Adds a new transactions to the spectrum.
      * @pre this.getTransaction(transaction.getId()) == null
      */
-    public final void setTransaction (Transaction<A, TM> transaction) {
+    public void setTransaction (Transaction<A, TM> transaction) {
         assert(this.getTransaction(transaction.getId()) == null);
         transactions.ensureCapacity(transaction.getId() + 1);
 
@@ -78,9 +78,9 @@ extends Spectrum<A, TM> {
      * @pre node.getTree() == this.getTree()
      * @pre this.getComponent(id) == null
      */
-    public final void setComponent (int id,
-                                    ProbeType type,
-                                    Node node) {
+    public void setComponent (int id,
+                              ProbeType type,
+                              Node node) {
         assert(node.getTree() == this.getTree());
         assert(this.getComponent(id) == null);
  components.ensureCapacity(id + 1);

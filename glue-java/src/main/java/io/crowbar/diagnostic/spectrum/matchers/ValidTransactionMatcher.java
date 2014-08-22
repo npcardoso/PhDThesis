@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.spectrum.matcher;
+package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Activity;
@@ -10,7 +10,7 @@ import java.util.BitSet;
  * \brief This class matches transactions that have at least one component activation.
  */
 public final class ValidTransactionMatcher
-extends AbstractSpectrumMatcher<Activity, Metadata, Metadata> {
+extends AbstractSpectrumMatcher<Activity, Metadata> {
     public ValidTransactionMatcher () {
         this(true);
     }
@@ -20,7 +20,7 @@ extends AbstractSpectrumMatcher<Activity, Metadata, Metadata> {
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends Metadata, ? extends Metadata> spectrum) {
+    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
         BitSet ret = new BitSet();
 
         int i = 0;

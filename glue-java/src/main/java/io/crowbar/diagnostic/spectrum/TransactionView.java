@@ -4,12 +4,12 @@ class TransactionView<A extends Activity,
                       TM extends Metadata>
 extends Transaction<A, TM> {
     private final Transaction<A, TM> transaction;
-    private final SpectrumView<A, TM, ? > spectrumView;
+    private final SpectrumView<A, TM> spectrumView;
     private final int active;
     private final int sze;
 
     TransactionView (int id,
-                     SpectrumView<A, TM, ? > spectrumView,
+                     SpectrumView<A, TM> spectrumView,
                      Transaction<A, TM> transaction) {
         super(id);
         this.spectrumView = spectrumView;

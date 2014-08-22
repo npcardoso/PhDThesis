@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.spectrum;
 
 import io.crowbar.diagnostic.spectrum.Component;
-import io.crowbar.diagnostic.spectrum.ComponentFactory;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.TransactionFactory;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
@@ -43,12 +42,5 @@ public final class Factory {
 
 
         return tf.create(id, adaptor, error, confidence, metadata);
-    }
-
-    public static Component<CmpM> createComponent (int id,
-                                                   CmpM metadata) {
-        ComponentFactory<CmpM> cf =
-            new ComponentFactory<CmpM> ();
-        return cf.create(id, metadata);
     }
 }

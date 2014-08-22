@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation.runtime;
+package io.crowbar.diagnostic.spectrum;
 
 public enum ProbeType {
     TRANSACTION_START("TransactionStart", "transactionStart"),

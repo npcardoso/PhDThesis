@@ -42,13 +42,13 @@ public class VerboseListener implements EventListener {
     }
 
     @Override
-    public final void registerNode (Node n) throws Exception {
+    public final void registerNode (String name, int id, int parentId) throws Exception {
         if (!registerNode) return;
 
         String ret = prefix;
 
 
-        ret += "Registering Node: " + n;
+        ret += "Registering Node: (" + name + ", " + id + ", " + parentId + ")";
         ret += suffix;
         System.out.println(ret);
     }

@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.spectrum.matcher;
+package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Activity;
@@ -15,9 +15,8 @@ import java.util.BitSet;
  * the protected constructor.
  */
 public abstract class AbstractSpectrumMatcher<A extends Activity,
-                                             TM extends Metadata,
-                                             CM extends Metadata>
-implements SpectrumMatcher<A, TM, CM> {
+                                             TM extends Metadata>
+implements SpectrumMatcher<A, TM> {
     private final boolean defaultValueComponents;
     private final boolean defaultValueTransactions;
 
@@ -42,7 +41,7 @@ implements SpectrumMatcher<A, TM, CM> {
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends A, ? extends TM, ? extends CM> spectrum) {
+    public BitSet matchComponents (Spectrum< ? extends A, ? extends TM> spectrum) {
         BitSet ret = new BitSet();
 
 
@@ -54,7 +53,7 @@ implements SpectrumMatcher<A, TM, CM> {
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends A, ? extends TM, ? extends CM> spectrum) {
+    public BitSet matchTransactions (Spectrum< ? extends A, ? extends TM> spectrum) {
         BitSet ret = new BitSet();
 
 

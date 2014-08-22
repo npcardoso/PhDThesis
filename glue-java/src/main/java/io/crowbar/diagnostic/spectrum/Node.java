@@ -8,66 +8,34 @@ import java.util.Map;
 
 import flexjson.JSON;
 
-public final class Node implements java.io.Serializable {
-    /*!
-     * \brief The tree holding the node
-     * This field is marked as transient for serialization purposes.
-     */
-    private transient Tree tree = null;
-    /*!
-     * \brief The node's name.
-     * If the node represents:
-     *  - A class: class name.
-     *  - A method: method name
-     *  - A line: line number
-     */
+public final class Node {
+    private final Tree tree;
     private final String name;
-    /*!
-     * \brief The node's id.
-     */
     private final int id;
-    /*!
-     * \brief The node's parent id.
-     */
-    private final int parentId;
-    /*!
-     * \brief The node's depth in the tree.
-     */
-    private int depth = -1;
-    /*!
-     * \brief The node's children ids.
-     */
-    private final List<Integer> children = new ArrayList<Integer> ();
-    /*!
-     * \brief The node's children ids, acessible by name.
-     */
-    private final Map<String, Integer> childrenByName = new HashMap<String, Integer> ();
+    private final int depth;
+    private final Node parent;
+    private final List<Node> children = new ArrayList<Node> ();
+    private final Map<String, Node> childrenByName = new HashMap<String, Node> ();
 
-    Node (String name,
+    Node (Tree tree,
+          String name,
           int id,
-          int parentId) {
+          Node parent) {
+        this.tree = tree;
         this.name = name;
         this.id = id;
-        this.parentId = parentId;
-    }
-
-    public Node (Node n) {
-        this.name = n.name;
-        this.id = n.id;
-        this.parentId = n.parentId;
-    }
-
-    /*!
-     * \brief Checks if node is bound to a tree.
-     */
-    @JSON(include=false)
-    public boolean isBound () {
-        return tree != null;
+        this.parent = parent;
+        if(isRoot())
+            this.depth = 0;
+        else {
+            this.depth = parent.getDepth() + 1;
+            parent.addChild(this);
+        }
     }
 
     @JSON(include=false)
     public boolean isRoot () {
-        return parentId < 0;
+        return parent == null;
     }
 
     @JSON(include=false)
@@ -80,24 +48,34 @@ public final class Node implements java.io.Serializable {
         return name;
     }
 
-    /*!
-     * \brief Concatenates the names of all nodes in the path to the root using ":" as separator.
+    @JSON(name="p")
+    public int getParentId () {
+        if(isRoot())
+            return -1;
+        return parent.getId();
+    }
+    /**
+     * @brief Concatenates the names of all nodes in the path from the
+     * root to this node using ":" as separator.
      */
     @JSON(include=false)
     public String getFullName () {
         return getFullName(":");
     }
 
-    /*!
-     * \brief Concatenates the names of all nodes in the path to the root using "separator" as separator.
+    /**
+     * @brief Concatenates the names of all nodes in the path from the
+     * root to this node using "separator" as separator.
      */
     @JSON(include=false)
     public String getFullName (String separator) {
         return getFullName(separator, 0);
     }
 
-    /*!
-     * \brief Concatenates the names of all nodes in the path to the root using "separator" as separator.
+    /**
+     * @brief Concatenates the names of all nodes with depth greater
+     * than "fromDepth" in the path from the root to this node using
+     * "separator" as separator.
      */
     @JSON(include=false)
     public String getFullName (String separator,
@@ -111,14 +89,13 @@ public final class Node implements java.io.Serializable {
         return p.getFullName(separator, fromDepth) + separator + name;
     }
 
-    @JSON(name="p")
-    public int getParentId () {
-        return parentId;
-    }
-
+    /**
+     * @brief Gets this node's parent node.
+     * @return The parent node or null if the node is a root node.
+     */
     @JSON(include=false)
     public Node getParent () {
-        return getNode(parentId);
+        return parent;
     }
 
     @JSON(include=false)
@@ -127,59 +104,38 @@ public final class Node implements java.io.Serializable {
     }
 
     @JSON(include=false)
-    public List<Integer> getChildren () {
+    public List<Node> getChildren () {
         return Collections.unmodifiableList(children);
     }
 
+    /**
+     * @brief Retreives children nodes by name.
+     * @return The child node or null if no such node exists.
+     */
     @JSON(include=false)
     public Node getChild (String name) {
-        Integer childId = childrenByName.get(name);
-
-
-        if (childId == null)
-            return null;
-
-        return getNode(childId);
+        return childrenByName.get(name);
     }
 
     @JSON(include=false)
-    private Tree getTree() {
+    public Tree getTree() {
         return tree;
     }
 
     @Override
     public String toString () {
-        String ret = "[state: " + (isBound() ? "B" : "Unb") + "ound, ";
-
-
-        ret += "name: \"" + (isBound() ? getFullName() : getName()) + "\", ";
+        String ret = "[";
+        ret += "name: \"" + getFullName() + "\", ";
         ret += "id: " + getId() + ", ";
         ret += "parentId: " + getParentId() + ", ";
-        ret += "children: " + children + "]";
+        ret += "children.size(): " + children.size() + "]";
         return ret;
     }
 
-    @JSON(include=false)
-    private Node getNode (int nodeId) {
-        assert tree != null; // ! @TODO: Create proper exception
-        return tree.getNode(nodeId);
-    }
 
     @JSON(include=false)
-    void addChild (String name,
-                   int nodeId) {
-        children.add(nodeId);
-        childrenByName.put(name, nodeId);
-    }
-
-    @JSON(include=false)
-    void setTree (Tree tree) {
-        this.tree = tree;
-        Node n = getNode(parentId);
-
-        if (n == null)
-            depth = 0;
-        else
-            depth = n.depth + 1;
+    void addChild (Node node) {
+        children.add(node);
+        childrenByName.put(node.getName(), node);
     }
 }

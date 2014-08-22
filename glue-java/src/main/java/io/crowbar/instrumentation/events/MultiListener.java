@@ -14,10 +14,10 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public final void registerNode (Node n) throws Exception {
+    public final void registerNode (String name, int id, int parentId) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.registerNode(n);
+                el.registerNode(name, id, parentId);
             }
             catch (Exception e) {
                 e.printStackTrace();

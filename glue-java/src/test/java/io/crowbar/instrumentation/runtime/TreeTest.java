@@ -1,8 +1,7 @@
 package io.crowbar.diagnostic.spectrum;
 
 import io.crowbar.diagnostic.spectrum.Node;
-import io.crowbar.diagnostic.spectrum.WritableTree;
-import io.crowbar.diagnostic.spectrum.Tree.RegistrationException;
+import io.crowbar.diagnostic.spectrum.EditableTree;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -10,8 +9,8 @@ import org.junit.Test;
 
 public class TreeTest {
     @Test
-    public void TestAddChild () throws RegistrationException {
-        WritableTree t = new WritableTree("");
+    public void TestAddChild () {
+        EditableTree t = new EditableTree("");
 
         Node n = t.getRoot();
 
@@ -20,8 +19,8 @@ public class TreeTest {
 
         assertNotNull(n);
 
-        Node c1 = t.addNode("foo1", n);
-        Node c2 = t.addNode("foo2", n);
+        Node c1 = t.addNode("foo1", 0);
+        Node c2 = t.addNode("foo2", 0);
 
         assertEquals(n, c1.getParent());
         assertEquals(n, c2.getParent());
@@ -30,10 +29,10 @@ public class TreeTest {
         assertEquals(c2, n.getChild("foo2"));
 
 
-        Node c11 = t.addNode("foo1", c1);
-        Node c12 = t.addNode("foo2", c1);
-        Node c21 = t.addNode("foo1", c2);
-        Node c22 = t.addNode("foo2", c2);
+        Node c11 = t.addNode("foo1", c1.getId());
+        Node c12 = t.addNode("foo2", c1.getId());
+        Node c21 = t.addNode("foo1", c2.getId());
+        Node c22 = t.addNode("foo2", c2.getId());
 
         assertEquals(c1, c11.getParent());
         assertEquals(c1, c12.getParent());
@@ -47,15 +46,15 @@ public class TreeTest {
     }
 
     @Test
-    public void TestFullName () throws RegistrationException {
-        WritableTree t = new WritableTree("foo0");
+    public void TestFullName () {
+        EditableTree t = new EditableTree("foo0");
         int count = 4;
         Node n = t.getRoot();
         String ret = "foo0";
 
 
         for (int i = 1; i < count; i++) {
-            n = t.addNode("foo" + i, n);
+            n = t.addNode("foo" + i, i - 1);
             ret += ":foo" + i;
         }
 

@@ -4,17 +4,20 @@ import java.util.ArrayList;
 
 /**
  * This class provides a way of creating a spectrum.
- * \return
- * \retval
  */
-public class EditableSpectrum<A extends Activity,
-                             TM extends Metadata,
-                             CM extends Metadata>
-extends Spectrum<A, TM, CM> {
+public final class EditableSpectrum<A extends Activity,
+                                      TM extends Metadata>
+extends Spectrum<A, TM> {
     private final ArrayList<Transaction<A, TM> > transactions = new ArrayList();
-    private final ArrayList<Component<CM> > components = new ArrayList();
+    private final ArrayList<Component> components = new ArrayList();
 
+    private final EditableTree tree = new EditableTree("root");
     private int componentCount = 0;
+
+    @Override
+    public EditableTree getTree () {
+        return tree;
+    }
 
     @Override
     public final int getComponentCount () {
@@ -26,6 +29,11 @@ extends Spectrum<A, TM, CM> {
         return transactions.size();
     }
 
+    /**
+     * @brief Retreives a transaction by id.
+     * @return A transaction or null if a transaction with such id
+     * does not exist.
+     */
     @Override
     public final Transaction<A, TM> getTransaction (int transactionId) {
         if (transactionId < 0 || transactionId >= transactions.size())
@@ -34,22 +42,26 @@ extends Spectrum<A, TM, CM> {
         return transactions.get(transactionId);
     }
 
+
+    /**
+     * @brief Retreives a component by id.
+     * @return A component or null if a component with such id does
+     * not exist.
+     */
     @Override
-    public final Component<CM> getComponent (int componentId) {
-        if (componentId < 0 || componentId >= components.size())
+    public final Component getComponent (int id) {
+        if (id < 0 || id >= components.size())
             return null;
 
-        return components.get(componentId);
+        return components.get(id);
     }
 
     /**
-     * \brief Adds a new transactions to the spectrum.
-     *
-     * \note If a transaction with the same id already exists, the old
-     * transaction is replaced.
+     * @brief Adds a new transactions to the spectrum.
+     * @pre this.getTransaction(transaction.getId()) == null
      */
-
     public final void setTransaction (Transaction<A, TM> transaction) {
+        assert(this.getTransaction(transaction.getId()) == null);
         transactions.ensureCapacity(transaction.getId() + 1);
 
         while (transactions.size() <= transaction.getId()) {
@@ -62,18 +74,21 @@ extends Spectrum<A, TM, CM> {
     }
 
     /**
-     * \brief Adds a new component to the spectrum.
-     *
-     * \note If a component with the same id already exists, the old
-     * component is replaced.
+     * @brief Adds a new component to the spectrum.
+     * @pre node.getTree() == this.getTree()
+     * @pre this.getComponent(id) == null
      */
-    public final void setComponent (Component<CM> component) {
-        components.ensureCapacity(component.getId() + 1);
+    public final void setComponent (int id,
+                                    ProbeType type,
+                                    Node node) {
+        assert(node.getTree() == this.getTree());
+        assert(this.getComponent(id) == null);
+ components.ensureCapacity(id + 1);
 
-        while (components.size() <= component.getId()) {
+        while (components.size() <= id){
             components.add(null);
         }
 
-        components.set(component.getId(), component);
+        components.set(id, new Component(this, type, id, node.getId()));
     }
 }

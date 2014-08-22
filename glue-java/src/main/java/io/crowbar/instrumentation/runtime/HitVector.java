@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 
 import java.util.ArrayList;

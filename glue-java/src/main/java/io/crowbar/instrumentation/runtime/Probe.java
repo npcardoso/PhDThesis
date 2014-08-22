@@ -1,5 +1,7 @@
 package io.crowbar.instrumentation.runtime;
 
+import io.crowbar.diagnostic.spectrum.ProbeType;
+
 import java.io.Serializable;
 
 public class Probe implements Serializable {

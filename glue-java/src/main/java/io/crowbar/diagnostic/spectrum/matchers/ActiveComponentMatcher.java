@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.spectrum.matcher;
+package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Activity;
@@ -9,7 +9,7 @@ import java.util.BitSet;
 /**
  * \brief This class matches all active components in a spectrum.
  */
-public final class ActiveComponentMatcher extends AbstractSpectrumMatcher<Activity, Metadata, Metadata> {
+public final class ActiveComponentMatcher extends AbstractSpectrumMatcher<Activity, Metadata> {
     public ActiveComponentMatcher () {
         this(true);
     }
@@ -19,7 +19,7 @@ public final class ActiveComponentMatcher extends AbstractSpectrumMatcher<Activi
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends Activity, ? extends Metadata, ? extends Metadata> spectrum) {
+    public BitSet matchComponents (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
         BitSet ret = new BitSet();
 
 

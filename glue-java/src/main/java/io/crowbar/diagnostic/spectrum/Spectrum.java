@@ -4,8 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public abstract class Spectrum<A extends Activity,
-                              TM extends Metadata,
-                                 CM extends Metadata> {
+                              TM extends Metadata> {
 
     private abstract class AbstractIterator<T>
         implements Iterator<T> {
@@ -43,15 +42,15 @@ public abstract class Spectrum<A extends Activity,
         }
     }
 
-    private class CIterable implements Iterable<Component<CM>> {
-        public Iterator<Component<CM>> iterator (){
-            return new AbstractIterator<Component<CM>> (){
+    private class CIterable implements Iterable<Component> {
+        public Iterator<Component> iterator (){
+            return new AbstractIterator<Component> (){
                 @Override
                 public boolean hasNext () {
                     return i < getComponentCount();
                 }
                 @Override
-                protected Component<CM> get (int i) {
+                protected Component get (int i) {
                     return getComponent(i);
                 }
             };
@@ -60,13 +59,15 @@ public abstract class Spectrum<A extends Activity,
 
     Spectrum() {}
 
+    public abstract Tree getTree ();
+
     public abstract int getTransactionCount ();
     public abstract int getComponentCount ();
 
     public abstract Transaction<A, TM> getTransaction (int transactionId);
-    public abstract Component<CM> getComponent (int componentId);
+    public abstract Component getComponent (int componentId);
 
-    public final Iterable<Component<CM> > byComponent () {
+    public final Iterable<Component> byComponent () {
         return new CIterable();
     }
 
@@ -83,7 +84,7 @@ public abstract class Spectrum<A extends Activity,
         str.append("components=[");
         boolean first = true;
 
-        for(Component<CM> component : byComponent()){
+        for(Component component : byComponent()){
             if (!first)
                 str.append(",");
 

@@ -5,7 +5,7 @@ import io.crowbar.instrumentation.runtime.Probe;
 
 public abstract class AbstractEventListener implements EventListener {
     @Override
-    public void registerNode (Node node) throws Exception {}
+    public void registerNode (String name, int id, int parentId) throws Exception {}
 
     @Override
     public void registerProbe (Probe probe) throws Exception {}

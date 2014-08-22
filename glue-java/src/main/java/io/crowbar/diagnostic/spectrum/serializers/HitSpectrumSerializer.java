@@ -7,11 +7,11 @@ import io.crowbar.diagnostic.spectrum.Spectrum;
 
 
 public final class HitSpectrumSerializer {
-    public static String serialize (Spectrum< ? extends Activity, ? , ? > spectrum) {
+    public static String serialize (Spectrum< ? extends Activity, ?> spectrum) {
         return HitSpectrumSerializer.serialize(spectrum, "\n");
     }
 
-    public static String serialize (Spectrum< ? extends Activity, ? , ? > spectrum,
+    public static String serialize (Spectrum< ? extends Activity, ?> spectrum,
                                     String separator) {
         int numComp = spectrum.getComponentCount();
         int numTran = spectrum.getTransactionCount();

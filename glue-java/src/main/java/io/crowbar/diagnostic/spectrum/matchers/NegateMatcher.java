@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.spectrum.matcher;
+package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Activity;
@@ -10,17 +10,16 @@ import java.util.BitSet;
  * \brief This class negates the output of some matcher.
  */
 public final class NegateMatcher<A extends Activity,
-                                 TM extends Metadata,
-                                 CM extends Metadata>
-implements SpectrumMatcher<A, TM, CM> {
-    private final SpectrumMatcher< ? super A, ? super TM, ? super CM> matcher;
+                                 TM extends Metadata>
+implements SpectrumMatcher<A, TM> {
+    private final SpectrumMatcher< ? super A, ? super TM> matcher;
 
-    public NegateMatcher (SpectrumMatcher< ? super A, ? super TM, ? super CM> matcher) {
+    public NegateMatcher (SpectrumMatcher< ? super A, ? super TM> matcher) {
         this.matcher = matcher;
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends A, ? extends TM, ? extends CM> spectrum) {
+    public BitSet matchComponents (Spectrum< ? extends A, ? extends TM> spectrum) {
         BitSet ret = matcher.matchComponents(spectrum);
 
 
@@ -30,7 +29,7 @@ implements SpectrumMatcher<A, TM, CM> {
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends A, ? extends TM, ? extends CM> spectrum) {
+    public BitSet matchTransactions (Spectrum< ? extends A, ? extends TM> spectrum) {
         BitSet ret = matcher.matchTransactions(spectrum);
 
 

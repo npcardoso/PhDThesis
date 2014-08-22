@@ -39,10 +39,11 @@ implements Iterable<A> {
         return id;
     }
 
-    /*!
-     * \brief Returns the activity of component "id".
-     * Note: "iterator" uses this function.
-     * Should *not* raise any exceptions if the activity does not exist but instead return null.
+    /**
+     * @brief Retreives the activity by component id.
+     * @note iterator uses this function.
+     * @return the activity or null if activity for that component
+     * does not exist.
      */
     public abstract A get (int id);
 
@@ -64,7 +65,12 @@ implements Iterable<A> {
     public abstract int numActive ();
 
 
-    // ! Note: "iterator" uses this function.
+    /**
+     * @brief Gets the size of the transaction
+     * @note iterator uses this function.
+     * @return The size of the transaction is equal to the id of the
+     * last component + 1.
+     */
     public abstract int size ();
 
     @Override

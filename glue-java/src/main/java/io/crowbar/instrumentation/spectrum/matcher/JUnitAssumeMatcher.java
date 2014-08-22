@@ -4,13 +4,13 @@ import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Metadata;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.matcher.AbstractSpectrumMatcher;
+import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;
 import io.crowbar.instrumentation.spectrum.TrM;
 
 
 import java.util.BitSet;
 
-public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, TrM, Metadata> {
+public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, TrM> {
     public JUnitAssumeMatcher () {
         this(true);
     }
@@ -20,7 +20,7 @@ public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, 
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends TrM, ? extends Metadata> spectrum) {
+    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends TrM> spectrum) {
         BitSet ret = new BitSet();
 
         int i = 0;

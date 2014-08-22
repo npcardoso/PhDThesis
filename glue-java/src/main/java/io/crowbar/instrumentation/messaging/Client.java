@@ -111,8 +111,8 @@ public class Client implements EventListener {
     }
 
     @Override
-    public final void registerNode (Node node) {
-        postMessage(new Messages.RegisterNodeMessage(node));
+    public void registerNode (String name, int id, int parentId) {
+        postMessage(new Messages.RegisterNodeMessage(name, id, parentId));
     }
 
     @Override

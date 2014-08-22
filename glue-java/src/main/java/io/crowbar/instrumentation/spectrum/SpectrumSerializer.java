@@ -1,12 +1,13 @@
 package io.crowbar.instrumentation.spectrum;
 
 import io.crowbar.diagnostic.spectrum.Activity;
+import io.crowbar.diagnostic.spectrum.Component;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.serializers.HitSpectrumSerializer;
 
 public final class SpectrumSerializer {
-    public static String serialize (Spectrum< ? extends Activity, TrM, CmpM> spectrum) {
+    public static String serialize (Spectrum< ? extends Activity, TrM> spectrum) {
         int numComp = spectrum.getComponentCount();
         int numTran = spectrum.getTransactionCount();
         StringBuilder str = new StringBuilder();
@@ -16,15 +17,15 @@ public final class SpectrumSerializer {
         str.append("[");
 
         for (int i = 0; i < numComp; i++) {
-            CmpM m = spectrum.getComponent(i).getMetadata();
+            Component c = spectrum.getComponent(i);
 
             if (!first)
                 str.append(", ");
 
             str.append(i + ": (");
-            str.append(m.getType().getName());
+            str.append(c.getType().getName());
             str.append(", ");
-            str.append(m.getNode().getFullName(":", 1));
+            str.append(c.getNode().getFullName(":", 1));
             str.append(")");
             first = false;
         }

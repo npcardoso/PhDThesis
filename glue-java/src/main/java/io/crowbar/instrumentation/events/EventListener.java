@@ -4,7 +4,7 @@ import io.crowbar.instrumentation.runtime.Probe;
 import io.crowbar.diagnostic.spectrum.Node;
 
 public interface EventListener {
-    void registerNode (Node n) throws Exception;
+    void registerNode (String name, int id, int parentId) throws Exception;
 
     void registerProbe (Probe p) throws Exception;
 

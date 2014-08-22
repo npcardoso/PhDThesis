@@ -8,14 +8,13 @@ import java.util.BitSet;
  * Changes to the spectrum after the creation of the view may have unpredictable consequences.
  */
 final class SpectrumView<A extends Activity,
-                        TM extends Metadata,
-                        CM extends Metadata>
-extends Spectrum<A, TM, CM> {
-    private final Spectrum<A, TM, CM> spectrum;
+                        TM extends Metadata>
+extends Spectrum<A, TM> {
+    private final Spectrum<A, TM> spectrum;
     private final int[] components;
     private final int[] transactions;
 
-    public SpectrumView (Spectrum<A, TM, CM> spectrum,
+    public SpectrumView (Spectrum<A, TM> spectrum,
                         BitSet transactions,
                         BitSet components) {
         this.spectrum = spectrum;
@@ -32,6 +31,11 @@ extends Spectrum<A, TM, CM> {
         }
 
         return ret;
+    }
+
+    @Override
+    public Tree getTree () {
+        return spectrum.getTree();
     }
 
     public int getComponentMapping (int id) {
@@ -63,7 +67,7 @@ extends Spectrum<A, TM, CM> {
     }
 
     @Override
-    public Component<CM> getComponent (int componentId) {
+    public Component getComponent (int componentId) {
         return spectrum.getComponent(components[componentId]);
     }
 }

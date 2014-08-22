@@ -38,27 +38,40 @@ public class Messages {
     }
 
     public static final class RegisterNodeMessage implements Message, Serializable {
-        private final Node node;
 
-        public RegisterNodeMessage (Node node) {
-            this.node = new Node(node);
+        private final String name;
+        private final int id;
+        private final int parentId;
+
+        public RegisterNodeMessage (String name, int id, int parentId) {
+            this.name = name;
+            this.id = id;
+            this.parentId = parentId;
         }
 
-        public Node getNode () {
-            return node;
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public int getParentId() {
+            return parentId;
         }
 
         @Override
         public String toString () {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
-
-
-            ret += "node: " + node + "]";
+            ret += "name: " + name + "]";
+            ret += "id: " + id + "]";
+            ret += "parentId: " + parentId + "]";
             return ret;
         }
 
         protected RegisterNodeMessage () {
-            this(null);
+            this(null, -1, -1);
         }
     }
 

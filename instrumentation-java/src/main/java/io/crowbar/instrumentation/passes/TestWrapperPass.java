@@ -1,10 +1,10 @@
 package io.crowbar.instrumentation.passes;
 
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.passes.wrappers.TestWrapper;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker.Action;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
-import io.crowbar.instrumentation.runtime.ProbeType;
-import io.crowbar.diagnostic.spectrum.Node;
 
 import javassist.ClassPool;
 import javassist.CtClass;

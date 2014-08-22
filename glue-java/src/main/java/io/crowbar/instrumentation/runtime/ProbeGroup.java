@@ -1,5 +1,7 @@
 package io.crowbar.instrumentation.runtime;
 
+import io.crowbar.diagnostic.spectrum.ProbeType;
+
 public final class ProbeGroup {
     public final class HitProbe extends Probe {
         private int localId;

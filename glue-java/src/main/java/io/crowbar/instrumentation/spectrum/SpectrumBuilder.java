@@ -1,44 +1,37 @@
 package io.crowbar.instrumentation.spectrum;
 
 import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.diagnostic.spectrum.Tree;
 import io.crowbar.instrumentation.events.AbstractEventListener;
-import io.crowbar.instrumentation.events.TreeRebuilder;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
-import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
+import io.crowbar.diagnostic.spectrum.Tree;
 
 
 public class SpectrumBuilder extends AbstractEventListener {
     private boolean error = false;
-    private final TreeRebuilder treeRebuilder = new TreeRebuilder();
-    private final EditableSpectrum<Hit, TrM, CmpM> spectrum =
-        new EditableSpectrum<Hit, TrM, CmpM> ();
+    private final EditableSpectrum<Hit, TrM> spectrum =
+        new EditableSpectrum<Hit, TrM> ();
 
 
-    public final Spectrum<Hit, TrM, CmpM> getSpectrum () {
+    public final Spectrum<Hit, TrM> getSpectrum () {
         return spectrum;
     }
 
-    public final Tree getTree () {
-        return treeRebuilder.getTree();
-    }
-
     @Override
-    public final void registerNode (Node node) throws Exception {
-        treeRebuilder.registerNode(node);
+    public final void registerNode (String name, int id, int parentId) throws Exception {
+        // FIXME: maintain a translation map for ids
+        spectrum.getTree().addNode(name, parentId);
     }
 
     @Override
     public final void registerProbe (Probe probe) throws Exception {
-        Node n = treeRebuilder.getTree().getNode(probe.getNodeId());
-
-
-        spectrum.setComponent(
-            Factory.createComponent(probe.getId(),
-                                    new CmpM(probe.getType(), n)));
+        Node n = spectrum.getTree().getNode(probe.getNodeId());
+        if(n == null) //! \todo handle this case properly
+            n = spectrum.getTree().getRoot();
+        spectrum.setComponent(probe.getId(), probe.getType(), n);
     }
 
     @Override

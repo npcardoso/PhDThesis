@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 
 public final class HitSpectrumUnserializer {
-    public static Spectrum<Hit, ?, ?> unserialize (Scanner s) {
+    public static Spectrum<Hit, ?> unserialize (Scanner s) {
         EditableSpectrum spectrum = new EditableSpectrum();
 
         int numComp = s.nextInt();

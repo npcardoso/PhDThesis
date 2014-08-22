@@ -4,14 +4,15 @@ import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import io.crowbar.instrumentation.events.EventListener;
 
 import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Tree;
-import io.crowbar.diagnostic.spectrum.WritableTree;
+import io.crowbar.diagnostic.spectrum.EditableTree;
 
 public final class Collector {
     private static Collector collector = null;
     private final EventListener listener;
     private final HitVector hitVector = new HitVector();
-    private final WritableTree tree;
+    private final EditableTree tree;
     private boolean resetOnTransactionStart = true;
 
 
@@ -28,17 +29,19 @@ public final class Collector {
     private Collector (String name,
                        EventListener listener) {
         this.listener = listener;
-        tree = new WritableTree(name);
-        registerNode(tree.getRoot());
+        tree = new EditableTree(name);
     }
 
-    public void registerNode (Node n) {
+    public Node registerNode(String name,
+                             int parentId) {
+        Node n = tree.addNode(name, parentId);
         try {
-            listener.registerNode(n);
+            listener.registerNode(name, n.getId(), parentId);
         }
         catch (Throwable e) {
             e.printStackTrace();
         }
+        return n;
     }
 
     public HitProbe registerProbe (String groupName,
@@ -136,14 +139,5 @@ public final class Collector {
 
     public Node getRootNode () {
         return tree.getRoot();
-    }
-
-    public Node addNode (String name,
-                         Node parent) throws Tree.RegistrationException {
-        Node n = tree.addNode(name, parent);
-
-
-        registerNode(n);
-        return n;
     }
 }

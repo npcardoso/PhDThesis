@@ -96,7 +96,8 @@ public class Server extends ThreadedServer {
                                              ((OracleMessage) m).getConfidence());
                 }
                 else if (o instanceof RegisterNodeMessage) {
-                    eventListener.registerNode(((RegisterNodeMessage) o).getNode());
+                    RegisterNodeMessage rnm = (RegisterNodeMessage) o;
+                    eventListener.registerNode(rnm.getName(), rnm.getId(), rnm.getParentId());
                 }
                 else if (o instanceof RegisterProbeMessage) {
                     RegisterProbeMessage m = (RegisterProbeMessage) o;

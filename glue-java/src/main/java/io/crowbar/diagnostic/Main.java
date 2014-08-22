@@ -26,13 +26,11 @@ public class Main {
     }
 
     static Tree randomizeTree(int numNodes){
-        WritableTree t = new WritableTree("asd");
+        EditableTree t = new EditableTree("asd");
         Random r = new Random();
 
         while(numNodes-- > 0) {
-            try {
-                t.addNode(""+r.nextInt(), t.getNode(r.nextInt(t.size())));
-            } catch (Exception e) {}
+            t.addNode(""+r.nextInt(), r.nextInt(t.size()));
         }
         return t;
     }

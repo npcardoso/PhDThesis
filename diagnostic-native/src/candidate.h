@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "utils/boost.h"
+#include "serialization/json.h"
 
 #include <iostream>
 #include <set>
@@ -19,12 +20,14 @@
 
 namespace diagnostic {
 class t_candidate :
+        public t_json_writable,
         public std::set<t_component_id> {
     public:
     inline t_candidate () {}
 
     /**
-     * \brief Creates a candidate using va_args. The list must be terminated with a 0.
+     * @brief Creates a candidate using va_args.
+     * @note The list must be terminated with a 0.
      */
     t_candidate (int c, ...);
 
@@ -65,6 +68,16 @@ class t_candidate :
                              CANDIDATE_LATEX_SEP);
     }
 
+    virtual inline std::ostream & json (std::ostream & out) const {
+        t_json_group group;
+        group.open(out, "[", "]");
+        BOOST_FOREACH(const auto & el, *this) {
+            group.comma(out);
+            json_write(out, el - 1); // In the serialized format, the indices are 0-based
+        }
+        group.close(out);
+        return out;
+    }
 };
 }
 

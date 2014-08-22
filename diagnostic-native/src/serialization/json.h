@@ -2,11 +2,13 @@
 #define __JSON_H_ec30169a03d891d55545f6d26609a2cad278e208__
 
 #include "../utils/boost.h"
+#include <boost/foreach.hpp>
 #include <iostream>
-#include <set>
 #include <list>
-#include <vector>
 #include <map>
+#include <set>
+#include <stack>
+#include <vector>
 
 namespace diagnostic {
 
@@ -14,6 +16,33 @@ class t_json_writable {
     public:
     virtual std::ostream & json (std::ostream & out) const = 0;
     inline virtual ~t_json_writable(){}
+};
+
+class t_json_group {
+    public:
+    std::ostream & open(std::ostream & out,
+              std::string lbracket,
+              std::string rbracket) {
+        s.push(std::pair<bool, std::string>(true, rbracket));
+        out << lbracket;
+        return out;
+    }
+
+    std::ostream & comma(std::ostream & out) {
+        if(!s.top().first)
+            out << ",";
+        s.top().first = false;
+        return out;
+    }
+    std::ostream & close(std::ostream & out) {
+        out << s.top().second;
+        s.pop();
+        return out;
+    }
+
+    private:
+
+    std::stack<std::pair<bool, std::string>> s;
 };
 
 std::ostream & json_write (std::ostream & out,
@@ -54,18 +83,14 @@ std::ostream & json_write_container (std::ostream & out,
                                      const C & container,
                                      std::string lbracket="",
                                      std::string rbracket="") {
-    out << lbracket;
-
-    if (container.size()) {
-        typename C::const_iterator i = container.begin();
-        json_write(out, *(i++));
-        while (i != container.end()) {
-            out << ',';
-            json_write(out, *(i++));
-        }
+    t_json_group group;
+    group.open(out, lbracket, rbracket);
+    BOOST_FOREACH(const auto & el, container) {
+        group.comma(out);
+        json_write(out, el);
     }
+    group.close(out);
 
-    out << rbracket;
     return out;
 }
 

@@ -35,7 +35,7 @@ public class Main {
     }
 
     static void foo1() {
-        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner("3 2 1 1 0 1 1 0 1 -"));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner("10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0"));
         TransactionFactory tf = new TransactionFactory();
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();

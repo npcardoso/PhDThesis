@@ -3,6 +3,7 @@
 #include "../utils/iostream.h"
 
 #include <algorithm>
+#include <numeric>
 #include <boost/foreach.hpp>
 using namespace std;
 

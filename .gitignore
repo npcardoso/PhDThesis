@@ -2,3 +2,6 @@
 crowbar.jar
 target
 doc
+.project
+.settings
+.classpath

@@ -1,8 +1,6 @@
 package io.crowbar.instrumentation;
 
-import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.runtime.Probe;
-
 
 import java.io.Serializable;
 
@@ -38,7 +36,6 @@ public class Messages {
     }
 
     public static final class RegisterNodeMessage implements Message, Serializable {
-
         private final String name;
         private final int id;
         private final int parentId;
@@ -49,21 +46,23 @@ public class Messages {
             this.parentId = parentId;
         }
 
-        public String getName() {
+        public String getName () {
             return name;
         }
 
-        public int getId() {
+        public int getId () {
             return id;
         }
 
-        public int getParentId() {
+        public int getParentId () {
             return parentId;
         }
 
         @Override
         public String toString () {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
+
+
             ret += "name: " + name + "]";
             ret += "id: " + id + "]";
             ret += "parentId: " + parentId + "]";

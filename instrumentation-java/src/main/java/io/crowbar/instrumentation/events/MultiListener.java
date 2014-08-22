@@ -1,6 +1,5 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.runtime.Probe;
 
 import java.util.ArrayList;

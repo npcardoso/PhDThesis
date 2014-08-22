@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.events;
 
 import io.crowbar.instrumentation.runtime.Probe;
-import io.crowbar.diagnostic.spectrum.Node;
 
 public interface EventListener {
     void registerNode (String name, int id, int parentId) throws Exception;

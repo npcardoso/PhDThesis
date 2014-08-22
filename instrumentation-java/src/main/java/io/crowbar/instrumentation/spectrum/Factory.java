@@ -1,12 +1,11 @@
 package io.crowbar.instrumentation.spectrum;
 
-import io.crowbar.diagnostic.spectrum.Component;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.TransactionFactory;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 
-import java.util.List;
 import java.util.AbstractList;
+import java.util.List;
 
 
 public final class Factory {

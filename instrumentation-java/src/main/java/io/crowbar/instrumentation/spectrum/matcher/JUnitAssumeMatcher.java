@@ -2,7 +2,6 @@ package io.crowbar.instrumentation.spectrum.matcher;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Metadata;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;
 import io.crowbar.instrumentation.spectrum.TrM;

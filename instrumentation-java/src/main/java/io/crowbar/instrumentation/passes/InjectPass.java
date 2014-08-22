@@ -1,18 +1,16 @@
 package io.crowbar.instrumentation.passes;
 
-import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Node;
-import io.crowbar.diagnostic.spectrum.Tree;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
-
 import javassist.CtClass;
-import javassist.CtMethod;
 import javassist.CtField;
-import javassist.bytecode.MethodInfo;
+import javassist.CtMethod;
+import javassist.bytecode.Bytecode;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.CodeIterator;
-import javassist.bytecode.Bytecode;
 import javassist.bytecode.ConstPool;
+import javassist.bytecode.MethodInfo;
 import javassist.bytecode.Opcode;
 
 public class InjectPass extends AbstractPass {

@@ -1,12 +1,10 @@
 package io.crowbar.instrumentation.runtime;
 
-import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
-import io.crowbar.instrumentation.events.EventListener;
-
+import io.crowbar.diagnostic.spectrum.EditableTree;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
-import io.crowbar.diagnostic.spectrum.Tree;
-import io.crowbar.diagnostic.spectrum.EditableTree;
+import io.crowbar.instrumentation.events.EventListener;
+import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 
 public final class Collector {
     private static Collector collector = null;
@@ -32,9 +30,11 @@ public final class Collector {
         tree = new EditableTree(name);
     }
 
-    public Node registerNode(String name,
-                             int parentId) {
+    public Node registerNode (String name,
+                              int parentId) {
         Node n = tree.addNode(name, parentId);
+
+
         try {
             listener.registerNode(name, n.getId(), parentId);
         }
@@ -47,9 +47,11 @@ public final class Collector {
     public HitProbe registerProbe (String groupName,
                                    int nodeId,
                                    ProbeType type) {
-            HitProbe p = hitVector.registerProbe(groupName,
-                                                 nodeId,
-                                                 type);
+        HitProbe p = hitVector.registerProbe(groupName,
+                                             nodeId,
+                                             type);
+
+
         try {
             listener.registerProbe(p);
         }

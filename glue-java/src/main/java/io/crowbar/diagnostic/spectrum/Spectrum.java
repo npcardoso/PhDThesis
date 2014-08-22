@@ -1,62 +1,69 @@
 package io.crowbar.diagnostic.spectrum;
 
-import io.crowbar.diagnostic.DiagnosticElement;
 import io.crowbar.diagnostic.Diagnostic;
-import io.crowbar.diagnostic.Candidate;
-import io.crowbar.diagnostic.Connection;
+import io.crowbar.diagnostic.DiagnosticElement;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public abstract class Spectrum<A extends Activity,
-                              TM extends Metadata> {
+                               TM extends Metadata> {
     public interface MergeStrategy {
-        double reduce(List<Double> scores);
+        double reduce (List<Double> scores);
     }
 
     public static final MergeStrategy AVG =
         new MergeStrategy() {
-            @Override
-            public double reduce(List<Double> scores) {
-                if(scores.size() <= 0) return Double.NaN;
-                double total = 0;
-                for (Double s : scores) { total += s; }
-                return total / scores.size();
-            }
-        };
+        @Override
+        public double reduce (List<Double> scores) {
+            if (scores.size() <= 0) return Double.NaN;
+
+            double total = 0;
+
+            for (Double s : scores) {total += s;}
+
+            return total / scores.size();
+        }
+    };
 
     public static final MergeStrategy MAX =
         new MergeStrategy() {
-            @Override
-            public double reduce(List<Double> scores) {
-                if(scores.size() <= 0) return Double.NaN;
-                double max = 0;
-                for (Double s : scores) { max = Math.max(max, s); }
-                return max;
-            }
-        };
+        @Override
+        public double reduce (List<Double> scores) {
+            if (scores.size() <= 0) return Double.NaN;
+
+            double max = 0;
+
+            for (Double s : scores) {max = Math.max(max, s);}
+
+            return max;
+        }
+    };
 
     public static final MergeStrategy SUM =
         new MergeStrategy() {
-            @Override
-            public double reduce(List<Double> scores) {
-                if(scores.size() <= 0) return Double.NaN;
-                double total = 0;
-                for (Double s : scores) { total += s; }
-                return total;
-            }
-        };
+        @Override
+        public double reduce (List<Double> scores) {
+            if (scores.size() <= 0) return Double.NaN;
+
+            double total = 0;
+
+            for (Double s : scores) {total += s;}
+
+            return total;
+        }
+    };
 
 
     private abstract class AbstractIterator<T>
-        implements Iterator<T> {
+    implements Iterator<T> {
         private int id = 0;
 
         protected abstract T get (int id);
-        protected int getId() {
+        protected int getId () {
             return id;
         }
 
@@ -72,40 +79,41 @@ public abstract class Spectrum<A extends Activity,
 
             return get(id++);
         }
-
     }
 
-    private class TIterable implements Iterable<Transaction<A, TM>> {
-        public Iterator<Transaction<A, TM>> iterator (){
+    private class TIterable implements Iterable<Transaction<A, TM> > {
+        public Iterator<Transaction<A, TM> > iterator () {
             return new AbstractIterator<Transaction<A, TM> > () {
-                @Override
-                public boolean hasNext () {
-                    return getId() < getTransactionCount();
-                }
-                @Override
-                protected Transaction<A,TM> get (int i) {
-                    return getTransaction(i);
-                }
+                       @Override
+                       public boolean hasNext () {
+                           return getId() < getTransactionCount();
+                       }
+
+                       @Override
+                       protected Transaction<A, TM> get (int i) {
+                           return getTransaction(i);
+                       }
             };
         }
     }
 
     private class CIterable implements Iterable<Component> {
-        public Iterator<Component> iterator (){
-            return new AbstractIterator<Component> (){
-                @Override
-                public boolean hasNext () {
-                    return getId() < getComponentCount();
-                }
-                @Override
-                protected Component get (int i) {
-                    return getComponent(i);
-                }
+        public Iterator<Component> iterator () {
+            return new AbstractIterator<Component> () {
+                       @Override
+                       public boolean hasNext () {
+                           return getId() < getComponentCount();
+                       }
+
+                       @Override
+                       protected Component get (int i) {
+                           return getComponent(i);
+                       }
             };
         }
     }
 
-    Spectrum() {}
+    Spectrum () {}
 
     public abstract Tree getTree ();
 
@@ -129,23 +137,23 @@ public abstract class Spectrum<A extends Activity,
      * @post ret.size() == getTree.size()
      * @return A list containing the score for each node.
      */
-    public List<Double> getScorePerNode(Diagnostic diagnostic,
-                                        MergeStrategy ms) {
-
-        List<List<Double>> tmp = new ArrayList<List<Double>> (getTree().size());
+    public List<Double> getScorePerNode (Diagnostic diagnostic,
+                                         MergeStrategy ms) {
+        List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
         for (DiagnosticElement e : diagnostic) {
             for (int cmpId : e.getCandidate()) {
                 Component cmp = getComponent(cmpId);
-                assert(cmp != null);
+                assert (cmp != null);
                 int nodeId = cmp.getNode().getId();
 
-                while(tmp.size() <= nodeId)
+                while (tmp.size() <= nodeId)
                     tmp.add(null);
 
                 List<Double> list = tmp.get(cmpId);
-                if(list == null) {
-                    list = new LinkedList<Double>();
+
+                if (list == null) {
+                    list = new LinkedList<Double> ();
                     tmp.set(cmpId, list);
                 }
 
@@ -153,12 +161,13 @@ public abstract class Spectrum<A extends Activity,
             }
         }
 
-        while(tmp.size() <= getTree().size())
+        while (tmp.size() <= getTree().size())
             tmp.add(null);
 
         List<Double> ret = new ArrayList(tmp.size());
+
         for (List<Double> s : tmp) {
-            if(s == null)
+            if (s == null)
                 ret.add(Double.NaN);
             else
                 ret.add(ms.reduce(s));
@@ -166,8 +175,6 @@ public abstract class Spectrum<A extends Activity,
 
         return ret;
     }
-
-
 
     @Override
     public final String toString () {
@@ -178,7 +185,7 @@ public abstract class Spectrum<A extends Activity,
         str.append("components=[");
         boolean first = true;
 
-        for(Component component : byComponent()){
+        for (Component component : byComponent()) {
             if (!first)
                 str.append(",");
 
@@ -191,7 +198,7 @@ public abstract class Spectrum<A extends Activity,
 
         first = true;
 
-        for(Transaction<A,TM> transaction : byTransaction()){
+        for (Transaction<A, TM> transaction : byTransaction()) {
             if (!first)
                 str.append(",");
 

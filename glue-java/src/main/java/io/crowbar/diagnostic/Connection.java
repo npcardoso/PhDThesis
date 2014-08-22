@@ -29,4 +29,9 @@ public final class Connection {
     public int getTo () {
         return to;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + "[from:" + from + ",to:" + to + "]";
+    }
 }

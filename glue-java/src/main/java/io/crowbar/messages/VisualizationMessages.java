@@ -30,7 +30,7 @@ public class VisualizationMessages {
 
         Request (Tree tree,
                  List<Double> scores) {
-            assert(tree.size() != scores.size());
+            assert(tree.size() == scores.size());
             setTree(tree);
             setScores(scores);
         }

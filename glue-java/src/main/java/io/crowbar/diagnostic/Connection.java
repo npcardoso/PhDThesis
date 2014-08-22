@@ -1,6 +1,12 @@
 package io.crowbar.diagnostic;
 
+import flexjson.JSON;
+
+/**
+ * @bug Id is 0 after deserialization.
+ */
 public final class Connection {
+    private int id;
     private int from;
     private int to;
 
@@ -17,9 +23,17 @@ public final class Connection {
         this.to = to;
     }
 
-    public Connection (int from, int to) {
+    Connection (int id,
+                int from,
+                int to) {
+        this.id = id;
         this.from = from;
         this.to = to;
+    }
+
+    @JSON(include=false)
+    public int getId() {
+        return id;
     }
 
     public int getFrom () {
@@ -32,6 +46,6 @@ public final class Connection {
 
     @Override
     public String toString() {
-        return getClass().getName() + "[from:" + from + ",to:" + to + "]";
+        return getClass().getName() + "[id:" + id + ",from:" + from + ",to:" + to + "]";
     }
 }

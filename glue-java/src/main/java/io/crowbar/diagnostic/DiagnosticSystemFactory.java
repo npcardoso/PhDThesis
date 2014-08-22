@@ -37,17 +37,19 @@ public final class DiagnosticSystemFactory {
 
     /**
      * \brief Adds a connection from a generator to a ranker.
-     * \return Returns the number of connections
+     * \return The connection.
      */
-    public int addConnection (Connection c) {
-        if (c.getFrom() < 0 || c.getFrom() >= generators.size())
+    public Connection addConnection (int from,
+                                     int to) {
+        if (from < 0 || to >= generators.size())
             throw new IndexOutOfBoundsException();
 
-        if (c.getTo() < 0 || c.getTo() >= rankers.size())
+        if (to < 0 || to >= rankers.size())
             throw new IndexOutOfBoundsException();
 
+        Connection c = new Connection(connections.size(), from, to);
         connections.add(c);
-        return connections.size() - 1;
+        return c;
     }
 
     public DiagnosticSystem create () {

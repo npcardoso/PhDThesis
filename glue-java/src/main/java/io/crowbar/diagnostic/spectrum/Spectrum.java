@@ -1,10 +1,55 @@
 package io.crowbar.diagnostic.spectrum;
 
+import io.crowbar.diagnostic.DiagnosticElement;
+import io.crowbar.diagnostic.Diagnostic;
+import io.crowbar.diagnostic.Candidate;
+import io.crowbar.diagnostic.Connection;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Spectrum<A extends Activity,
                               TM extends Metadata> {
+    public interface MergeStrategy {
+        double reduce(List<Double> scores);
+    }
+
+    public static final MergeStrategy AVG =
+        new MergeStrategy() {
+            @Override
+            public double reduce(List<Double> scores) {
+                if(scores.size() <= 0) return Double.NaN;
+                double total = 0;
+                for (Double s : scores) { total += s; }
+                return total / scores.size();
+            }
+        };
+
+    public static final MergeStrategy MAX =
+        new MergeStrategy() {
+            @Override
+            public double reduce(List<Double> scores) {
+                if(scores.size() <= 0) return Double.NaN;
+                double max = 0;
+                for (Double s : scores) { max = Math.max(max, s); }
+                return max;
+            }
+        };
+
+    public static final MergeStrategy SUM =
+        new MergeStrategy() {
+            @Override
+            public double reduce(List<Double> scores) {
+                if(scores.size() <= 0) return Double.NaN;
+                double total = 0;
+                for (Double s : scores) { total += s; }
+                return total;
+            }
+        };
+
 
     private abstract class AbstractIterator<T>
         implements Iterator<T> {
@@ -77,6 +122,52 @@ public abstract class Spectrum<A extends Activity,
     public final Iterable<Transaction<A, TM> > byTransaction () {
         return new TIterable();
     }
+
+    /**
+     * @brief Calculates a score value per Tree Node using an arbitrary MergeStrategy.
+     * This is used to convert a multiple fault ranking into single fault ranking.
+     * @post ret.size() == getTree.size()
+     * @return A list containing the score for each node.
+     */
+    public List<Double> getScorePerNode(Diagnostic diagnostic,
+                                        MergeStrategy ms) {
+
+        List<List<Double>> tmp = new ArrayList<List<Double>> (getTree().size());
+
+        for (DiagnosticElement e : diagnostic) {
+            for (int cmpId : e.getCandidate()) {
+                Component cmp = getComponent(cmpId);
+                assert(cmp != null);
+                int nodeId = cmp.getNode().getId();
+
+                while(tmp.size() <= nodeId)
+                    tmp.add(null);
+
+                List<Double> list = tmp.get(cmpId);
+                if(list == null) {
+                    list = new LinkedList<Double>();
+                    tmp.set(cmpId, list);
+                }
+
+                list.add(e.getScore());
+            }
+        }
+
+        while(tmp.size() <= getTree().size())
+            tmp.add(null);
+
+        List<Double> ret = new ArrayList(tmp.size());
+        for (List<Double> s : tmp) {
+            if(s == null)
+                ret.add(Double.NaN);
+            else
+                ret.add(ms.reduce(s));
+        }
+
+        return ret;
+    }
+
+
 
     @Override
     public final String toString () {

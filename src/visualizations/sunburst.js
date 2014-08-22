@@ -39,15 +39,15 @@ function Sunburst(data, elementSel, configuration, events) {
         .append("g")
         .attr("transform", centerTranslation());
 
-        svg = zoomElement.append("g");
-
-        svg.append("rect")
+        zoomElement.append("rect")
         .attr("class", "overlay")
-        .attr("width", dimensions.width)
-        .attr("height", dimensions.height)
+        .attr("width", "100%")
+        .attr("height", "100%")
         .attr("transform", "translate(" + (-dimensions.width/2) + "," + (-dimensions.height/2) + ")")
         .attr("fill", "none")
         .attr("pointer-events", "all");
+
+        svg = zoomElement.append("g");
 
         path = svg.selectAll("path")
         .data(partition.nodes(self.data))
@@ -95,7 +95,7 @@ function ArcRender(width,height){
     var x = d3.scale.linear()
     .range([0, 2 * Math.PI]);
 
-    var y = d3.scale.sqrt()
+    var y = d3.scale.pow().exponent(.75)
     .range([0, radius]);
 
     //Returns Function that computes an svg arc for specied dimensions

@@ -10,10 +10,11 @@ function init(){
 	});
 	//prepare data
 	dataInlining(window.data_ex);
-	probabilityCalculator(data_ex[0]);
 	if(configuration.currentConfig.filterMostRelevamtNodes > 0){
-		filterToNMostRelevant(data_ex,configuration.currentConfig.filterMostRelevamtNodes);
+	window.data_ex = filterData(window.data_ex,configuration.currentConfig.filterMostRelevamtNodes);
 	}
+	probabilityCalculator(data_ex[0]);
+
 
 	var visualization = new Visualizations(configuration);
 	renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());

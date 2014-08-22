@@ -7,17 +7,9 @@ function Table(data, elementSel, configuration, events) {
         var ret = [];
         for (len = data.length, i = 0; i < len; i++) {
             var node = data[i];
-            if(!node.hasOwnProperty('children') || node.children == null || node.children.length == 0)
+            if(isLastNode(node))
             {
-                if(node != null){
-                    parent = data[node.parent_id];
-                    if(parent  != null){
-                        gParent = data[parent.parent_id];
-                        if(gParent != null){
-                            ret.push([gParent.name,parent.name,node.name,node.properties.p,node.id]);
-                        }
-                    }
-                }
+                ret.push([node.parent.parent.name,node.parent.name,node.name,node.properties.p,node.id]);
             }
         }
         return ret;

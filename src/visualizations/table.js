@@ -9,7 +9,7 @@ function Table(data, elementSel, configuration, events) {
             var node = data[i];
             if(isLastNode(node))
             {
-                ret.push([node.parent.parent.name,node.parent.name,node.name,node.properties.p,node.id]);
+                ret.push([node.parent.parent.name,node.parent.name,node.name,node.properties.p,i]);
             }
         }
         return ret;
@@ -36,6 +36,10 @@ function Table(data, elementSel, configuration, events) {
                 "class" : "center"
             }],
             "order" : [3, "desc"],
+            "createdRow": function ( row, tdata, index ) {
+                console.log('<div class="tableCircle" style="background-color: '+configuration.gradiante.normal(data[tdata[4]])+';"></div>');
+                $('td', row).eq(0).prepend('<div class="tableCircle" style="background-color: '+configuration.gradiante.normal(data[tdata[4]])+';"></div>');
+            }
         });
 
         table.on('click', 'tr', function() {

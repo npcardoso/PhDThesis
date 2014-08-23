@@ -1,3 +1,5 @@
+
+
 function dataInlining (data) {
 	for (var i = data.length - 1; i >= 0; i--) {
 		if(data[i].hasOwnProperty('children') )
@@ -30,6 +32,12 @@ function removeArray(arr, item) {
 }
 
 
+function sortByProbability(NodesArray){
+	NodesArray.sort(function(a,b){
+		return b.properties.p - a.properties.p;
+	});
+}
+
 function isLastNode(node){
 	return !node.hasOwnProperty('children') || node.children == null || node.children.length == 0;
 }
@@ -58,9 +66,7 @@ function treeFilter(root){
 
 function filterData(data,N){
 	var array = getLastLevelNodes(data);
-	array.sort(function(a,b){
-		return b.properties.p - a.properties.p;
-	});
+	sortByProbability(array);
 	var end = Math.min(N,array.length);
 	console.log(end);
 	for (var i = 0; i < end; i++) {

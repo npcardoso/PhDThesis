@@ -14,7 +14,6 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
     var events = {up: function(){
                 if(eventsBlocked)
                     return;
-                alert('ok');
                 eventsBlocked = true;
                 var curTranslate = zoomListener.translate();
                 curTranslate[1] += 100;

@@ -1,6 +1,7 @@
 package io.crowbar.instrumentation.runtime;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import org.junit.Test;
@@ -23,6 +24,16 @@ public class TestProbe {
     public void testConstructor() {
         Probe p0 = new Probe();
         assertEquals("[Probe: (id: -1, nodeId: -1, type: null)]", new Probe(p0).toString());
+    }
+
+    @Test
+    public void testNullConstructor() {
+        try {
+            new Probe(null);
+            fail("NullPointerException: null Probe");
+        } catch (NullPointerException e) {
+            // empty
+        }
     }
 
     @Test

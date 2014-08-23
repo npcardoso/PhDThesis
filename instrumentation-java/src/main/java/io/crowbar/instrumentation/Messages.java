@@ -63,8 +63,8 @@ public class Messages {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
 
 
-            ret += "name: " + name + "]";
-            ret += "id: " + id + "]";
+            ret += "name: " + name + "] ";
+            ret += "id: " + id + "] ";
             ret += "parentId: " + parentId + "]";
             return ret;
         }
@@ -94,7 +94,7 @@ public class Messages {
         }
 
         protected RegisterProbeMessage () {
-            this(null);
+            this(null); // FIXME: this code throws an exception
         }
     }
 

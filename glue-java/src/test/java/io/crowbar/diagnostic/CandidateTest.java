@@ -100,7 +100,6 @@ public class CandidateTest {
 	
 	@Theory()
 	public void testContainsWithList(int len) {
-		System.out.println("testing");
 		List<Integer> lst = createList(len);
 		
 		Candidate c = new Candidate(lst);

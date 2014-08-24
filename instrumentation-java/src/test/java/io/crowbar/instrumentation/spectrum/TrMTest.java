@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class TestTrM {
+public class TrMTest {
 
     @Test
     public void testEmptyExceptionEmptyMessage() {

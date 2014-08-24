@@ -8,7 +8,7 @@ import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import org.junit.Test;
 
-public class TestSpectrumSerializer {
+public class SpectrumSerializerTest {
 
     @Test
     public void testInstance() {

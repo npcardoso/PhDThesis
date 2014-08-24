@@ -5,7 +5,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class TestCollector {
+public class CollectorTest {
 
     @Test
     public void testNullCollector() {

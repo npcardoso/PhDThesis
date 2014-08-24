@@ -6,7 +6,7 @@ import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 
 import org.junit.Test;
 
-public class TestHitVector {
+public class HitVectorTest {
 
     @Test
     public void testRegisterProbeEmptyHitVector() {

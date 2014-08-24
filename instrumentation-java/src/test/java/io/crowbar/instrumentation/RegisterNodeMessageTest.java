@@ -5,7 +5,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class TestRegisterNodeMessage {
+public class RegisterNodeMessageTest {
 
     @Test
     public void testEmptyConstructor() {

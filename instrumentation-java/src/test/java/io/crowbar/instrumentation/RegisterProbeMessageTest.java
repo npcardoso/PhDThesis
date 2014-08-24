@@ -7,7 +7,7 @@ import io.crowbar.instrumentation.runtime.Probe;
 
 import org.junit.Test;
 
-public class TestRegisterProbeMessage {
+public class RegisterProbeMessageTest {
 
     @Test
     public void testEmptyConstructor() {

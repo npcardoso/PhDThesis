@@ -8,7 +8,7 @@ import io.crowbar.instrumentation.runtime.Probe;
 
 import org.junit.Test;
 
-public class TestSpectrumBuilder {
+public class SpectrumBuilderTest {
 
     @Test
     public void testEmptySpectrum() {

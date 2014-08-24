@@ -9,7 +9,7 @@ import io.crowbar.instrumentation.spectrum.TrM;
 
 import org.junit.Test;
 
-public class TestProbeTypeMatcher {
+public class ProbeTypeMatcherTest {
 
     @Test
     public void testEmpty() {

@@ -20,6 +20,7 @@ implements SpectrumMatcher<Activity, Metadata> {
         this.components.or(components);
     }
 
+    //TODO(Nuno): Remove this constructor?
     public IdMatcher (int[] transactions,
                       int[] components) {
         for (int t : transactions) {

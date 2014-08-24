@@ -3,6 +3,8 @@ package io.crowbar.diagnostic;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.lang.reflect.Constructor;
 import java.util.Random;
@@ -90,25 +92,62 @@ public class CandidateTest {
 	
 	@Theory()
 	public void testContainsWithArr(int len) {
+		boolean chk = true;
+
 		int[] arr = createArray(len);
 		
 		Candidate c = new Candidate(arr);
 		
 		for(int i = 0; i < arr.length; i++) {
-		    if(!c.contains(arr[i]))
-		    	fail("Element not in Candidate!");
+		    chk &= c.contains(arr[i]);
 		}		
+		
+		assertTrue(chk);
+	}		
+
+	@Theory()
+	public void testContainsWithArrIterator(int len) {
+		boolean chk = true;
+	
+		int[] arr = createArray(len);
+		
+		Candidate c = new Candidate(arr);
+		
+	    List<Integer> intList = new ArrayList<Integer>();
+	    for (int index = 0; index < len; index++) {
+	        intList.add(arr[index]);
+	    }
+		
+		Iterator<Integer> it = c.iterator();
+		while(it.hasNext()) {
+			chk &= intList.contains(it.next());
+		}
+		
+		assertTrue(chk);
 	}		
 	
 	@Theory()
 	public void testContainsWithList(int len) {
+		boolean chk = true;
+		
 		List<Integer> lst = createList(len);
 		
 		Candidate c = new Candidate(lst);
 		
 		for(int i = 0; i < lst.size(); i++) {
-		    if(!c.contains(lst.get(i)))
-		    	fail("Element not in Candidate!");
+		    chk &= c.contains(lst.get(i));
 		}
+		
+		assertTrue(chk);
+
 	}		
+	
+	@Test
+	public void testToString() {
+		int[] arr = {1,3,1,0,1,0};
+		
+		Candidate c = new Candidate(arr);
+				
+		assertTrue(c.toString().equals("{class='Candidate', components=[0, 1, 3]}"));
+	}			
 }

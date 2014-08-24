@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.events.EventListener;
@@ -173,5 +172,33 @@ public class CollectorTest {
         assertEquals(collector.getHitVector("group1").length, 4);
         assertEquals(collector.getHitVector("group2").length, 3);
         assertEquals(collector.getHitVector("group3").length, 1);
+    }
+
+    @Test
+    public void testNotNullCollector () {
+        Collector.start("", null);
+        Assert.assertNotNull(Collector.instance());
+    }
+
+    @Test
+    public void testOracle () {
+        Collector.start("", null);
+        Collector c = Collector.instance();
+        c.oracle(0, 0.0, 0.0);
+        // FIXME: catch NullPointerException
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetHitVectorEmptyCollector () {
+        Collector.start("", null);
+        Collector c = Collector.instance();
+        c.getHitVector("");
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testHitEmptyCollector () {
+        Collector.start("", null);
+        Collector c = Collector.instance();
+        c.hit(-1);
     }
 }

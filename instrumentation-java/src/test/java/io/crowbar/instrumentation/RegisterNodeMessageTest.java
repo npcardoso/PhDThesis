@@ -6,9 +6,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 public class RegisterNodeMessageTest {
-
     @Test
-    public void testEmptyConstructor() {
+    public void testEmptyConstructor () {
         Messages.RegisterNodeMessage mr = new Messages.RegisterNodeMessage();
         Assert.assertNull(mr.getName());
         assertEquals(-1, mr.getId());
@@ -16,7 +15,7 @@ public class RegisterNodeMessageTest {
     }
 
     @Test
-    public void testNonEmptyConstructor() {
+    public void testNonEmptyConstructor () {
         Messages.RegisterNodeMessage mr = new Messages.RegisterNodeMessage("node message", 0, 1);
         assertEquals("node message", mr.getName());
         assertEquals(0, mr.getId());

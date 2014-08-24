@@ -7,76 +7,85 @@ import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import org.junit.Test;
 
 public class HitVectorTest {
-
     @Test
-    public void testRegisterProbeEmptyHitVector() {
+    public void testRegisterProbeEmptyHitVector () {
         HitVector hv = new HitVector();
         HitProbe hp = hv.registerProbe(null, -1, ProbeType.ORACLE);
+
+
         assertEquals(-1, hp.getNodeId());
     }
 
     @Test
-    public void testRegisterProbe() {
+    public void testRegisterProbe () {
         // TODO
         fail("to implement");
     }
 
     @Test
-    public void testExists() {
+    public void testExists () {
         HitVector hv = new HitVector();
+
+
         assertEquals(false, hv.exists("key"));
     }
 
     @Test
-    public void testGetArrayWithKeyException() {
+    public void testGetArrayWithKeyException () {
         HitVector hv = new HitVector();
+
 
         try {
             hv.get("key");
             fail("NullPointerException: key doesn't exist");
-        } catch(Exception e) {
+        }
+        catch (Exception e) {
             // empty
         }
     }
 
     @Test
-    public void testGetArrayWithKey() {
+    public void testGetArrayWithKey () {
         // TODO
         fail("to implement");
     }
 
     @Test
-    public void testGetEmptyHitVector() {
+    public void testGetEmptyHitVector () {
         HitVector hv = new HitVector();
+
+
         assertEquals(0, hv.get().length);
     }
 
     @Test
-    public void testGet() {
+    public void testGet () {
         // TODO
         fail("to implement");
     }
 
     @Test
-    public void testHitIndexOutOfBoundsException() {
+    public void testHitIndexOutOfBoundsException () {
         HitVector hv = new HitVector();
+
 
         try {
             hv.hit(0);
             fail("IndexOutOfBoundsException");
-        } catch(IndexOutOfBoundsException e) {
+        }
+        catch (IndexOutOfBoundsException e) {
             // empty
         }
     }
 
     @Test
-    public void testHit() {
+    public void testHit () {
         // TODO
         fail("to implement");
     }
 
     @Test
-    public void testReset() {
+    public void testReset () {
         // TODO
         fail("to implement");
     }

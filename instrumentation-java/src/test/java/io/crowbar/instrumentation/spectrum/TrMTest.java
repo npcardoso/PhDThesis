@@ -5,23 +5,28 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TrMTest {
-
     @Test
-    public void testEmptyExceptionEmptyMessage() {
+    public void testEmptyExceptionEmptyMessage () {
         TrM tr = new TrM("", "");
+
+
         assertEquals("", tr.getExceptionClass());
         assertEquals("", tr.getExceptionMessage());
     }
 
     @Test
-    public void testGetExceptionClass() {
+    public void testGetExceptionClass () {
         TrM tr = new TrM("exceptionClass", "");
+
+
         assertEquals("exceptionClass", tr.getExceptionClass());
     }
 
     @Test
-    public void testGetExceptionMessage() {
+    public void testGetExceptionMessage () {
         TrM tr = new TrM("", "exceptionMessage");
+
+
         assertEquals("exceptionMessage", tr.getExceptionMessage());
     }
 }

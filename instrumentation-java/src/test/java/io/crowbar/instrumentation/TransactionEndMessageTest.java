@@ -6,9 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TransactionEndMessageTest {
-
     @Test
-    public void testEmptyConstructor() {
+    public void testEmptyConstructor () {
         Messages.TransactionEndMessage mt = new Messages.TransactionEndMessage();
         Assert.assertNull(mt.getExceptionClass());
         Assert.assertNull(mt.getExceptionMessage());
@@ -19,7 +18,7 @@ public class TransactionEndMessageTest {
     }
 
     @Test
-    public void testNonEmptyConstructor() {
+    public void testNonEmptyConstructor () {
         Messages.TransactionEndMessage mt = new Messages.TransactionEndMessage(2, "exceptionClass string", "exceptionMessage string", null);
         assertEquals("exceptionClass string", mt.getExceptionClass());
         assertEquals("exceptionMessage string", mt.getExceptionMessage());

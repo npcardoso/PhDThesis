@@ -5,9 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class OracleMessageTest {
-
     @Test
-    public void testEmptyConstructor() {
+    public void testEmptyConstructor () {
         Messages.OracleMessage mo = new Messages.OracleMessage();
         assertEquals(-1.0, mo.getConfidence(), 0.0);
         assertEquals(-1.0, mo.getError(), 0.0);
@@ -17,7 +16,7 @@ public class OracleMessageTest {
     }
 
     @Test
-    public void testNonEmptyConstructor() {
+    public void testNonEmptyConstructor () {
         Messages.OracleMessage mo = new Messages.OracleMessage(2, 0.0, 0.0);
         assertEquals(0.0, mo.getConfidence(), 0.0);
         assertEquals(0.0, mo.getError(), 0.0);

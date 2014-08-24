@@ -7,11 +7,11 @@ import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import org.junit.Test;
 
 public class ProbeGroupTest {
-
     @Test
-    public void testRegister() {
+    public void testRegister () {
         ProbeGroup pg = new ProbeGroup();
         HitProbe hp = pg.register(1, 2, null);
+
 
         assertEquals(1, hp.getId());
         assertEquals(0, hp.getLocalId());
@@ -21,19 +21,21 @@ public class ProbeGroupTest {
     }
 
     @Test
-    public void testGetEmptyProbeGroup() {
+    public void testGetEmptyProbeGroup () {
         ProbeGroup pg = new ProbeGroup();
+
+
         assertEquals(0, pg.get().length);
     }
 
     @Test
-    public void testGet() {
+    public void testGet () {
         // TODO
         fail("to implement");
     }
 
     @Test
-    public void testReset() {
+    public void testReset () {
         // TODO
         fail("to implement");
     }

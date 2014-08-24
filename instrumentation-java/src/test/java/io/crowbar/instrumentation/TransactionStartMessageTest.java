@@ -5,9 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class TransactionStartMessageTest {
-
     @Test
-    public void testEmptyConstructor() {
+    public void testEmptyConstructor () {
         Messages.TransactionStartMessage mt = new Messages.TransactionStartMessage();
         assertEquals(-1, mt.getProbeId());
 
@@ -15,10 +14,10 @@ public class TransactionStartMessageTest {
     }
 
     @Test
-    public void testNonEmptyConstructor() {
+    public void testNonEmptyConstructor () {
         Messages.TransactionStartMessage mt = new Messages.TransactionStartMessage(2);
         assertEquals(2, mt.getProbeId());
-  
+
         assertEquals("[[TransactionStartMessage]: probe_id: 2]", mt.toString());
     }
 }

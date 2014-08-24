@@ -9,31 +9,33 @@ import io.crowbar.diagnostic.spectrum.activity.Hit;
 import org.junit.Test;
 
 public class SpectrumSerializerTest {
-
     @Test
-    public void testInstance() {
+    public void testInstance () {
         SpectrumSerializer ss = new SpectrumSerializer();
+
+
         assertNotNull(ss);
     }
 
     @Test
-    public void testNullSpectrum() {
+    public void testNullSpectrum () {
         try {
             SpectrumSerializer.serialize(null);
             fail("NullPointerException: spectrum == null");
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             // empty
         }
     }
 
     @Test
-    public void testEmptySerialize() {
-        EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM>();
+    public void testEmptySerialize () {
+        EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
         assertEquals("[]\n0 0\n", SpectrumSerializer.serialize(es));
     }
 
     @Test
-    public void testNonEmptySerialize() {
+    public void testNonEmptySerialize () {
         // TODO
         fail("to implement");
     }

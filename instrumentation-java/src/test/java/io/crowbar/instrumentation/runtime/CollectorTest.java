@@ -1,112 +1,9 @@
 package io.crowbar.instrumentation.runtime;
 
-<<<<<<< HEAD
-import static org.junit.Assert.*;
-import junit.framework.Assert;
-
-import org.junit.Test;
-
-public class CollectorTest {
-
-    @Test
-    public void testNullCollector() {
-        Assert.assertNull(Collector.instance());
-    }
-
-    @Test
-    public void testNotNullCollector() {
-        Collector.start("", null);
-        Assert.assertNotNull(Collector.instance());
-    }
-
-    @Test
-    public void testRegisterNode() {
-        // TODO
-        fail("to implement");
-    }
-
-    @Test
-    public void testRegisterProbe() {
-        // TODO
-        fail("to implement");
-    }
-
-    @Test
-    public void testTransactionStart() {
-        // TODO
-        fail("to implement");
-    }
-
-    @Test
-    public void testTransactionEnd() {
-        // TODO
-        fail("to implement");
-    }
-
-    @Test
-    public void testTransactionEnd2() {
-        // TODO
-        fail("to implement");
-    }
-
-    @Test
-    public void testOracle() {
-        Collector.start("", null);
-        Collector c = Collector.instance();
-        c.oracle(0, 0.0, 0.0);
-        // FIXME: catch NullPointerException
-    }
-
-    @Test
-    public void testGetHitVectorEmptyCollector() {
-        Collector.start("", null);
-        Collector c = Collector.instance();
-
-        try {
-            c.getHitVector("");
-            fail("NullPointerException: key doesn't exist");
-        } catch(NullPointerException e) {
-            // empty
-        }
-    }
-
-    @Test
-    public void testGetHitVectorNonEmptyCollector() {
-        // TODO
-        fail("to implement");
-    }
-
-    @Test
-    public void testHitEmptyCollector() {
-        Collector.start("", null);
-        Collector c = Collector.instance();
-
-        try {
-            c.hit(-1);
-            fail("IndexOutOfBoundsException");
-        } catch(IndexOutOfBoundsException e) {
-            // empty
-        }
-    }
-
-    @Test
-    public void testHitNonEmptyCollector() {
-        // TODO
-        fail("to implement");
-    }
-
-    @Test
-    public void testGetRootNode() {
-        Collector.start("root", null);
-        Collector c = Collector.instance();
-        Assert.assertNotNull(c.getRootNode());
-        Assert.assertEquals("root", c.getRootNode().getName());
-    }
-}
-=======
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import io.crowbar.diagnostic.spectrum.ProbeType;
+import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.events.EventListenerMocks.EventListenerChecks;
 import io.crowbar.instrumentation.events.EventListenerMocks.OracleListener;
@@ -117,6 +14,7 @@ import io.crowbar.instrumentation.events.EventListenerMocks.TestableTransactionS
 
 import java.lang.reflect.Constructor;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -251,5 +149,57 @@ public class CollectorTest {
         collector.oracle(id, error, confidence);
         assertTrue(ol.wasTriggered());
     }
+
+    private void fillWithHitProbes (Collector collector) {
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+
+        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
+
+        collector.registerProbe("group3", 1, ProbeType.HIT_PROBE);
+    }
+
+    @Test
+    public void hitVectorSizeTest () throws Exception {
+        Collector collector = newCollectorInstance("collector", new AbstractEventListener() {});
+
+
+        fillWithHitProbes(collector);
+
+        assertEquals(collector.getHitVector("group1").length, 4);
+        assertEquals(collector.getHitVector("group2").length, 3);
+        assertEquals(collector.getHitVector("group3").length, 1);
+    }
+
+    @Test
+    public void testNotNullCollector () {
+        Collector.start("", null);
+        Assert.assertNotNull(Collector.instance());
+    }
+
+    @Test
+    public void testOracle () {
+        Collector.start("", null);
+        Collector c = Collector.instance();
+        c.oracle(0, 0.0, 0.0);
+        // FIXME: catch NullPointerException
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetHitVectorEmptyCollector () {
+        Collector.start("", null);
+        Collector c = Collector.instance();
+        c.getHitVector("");
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testHitEmptyCollector () {
+        Collector.start("", null);
+        Collector c = Collector.instance();
+        c.hit(-1);
+    }
 }
->>>>>>> origin/dev-ap

@@ -1,6 +1,7 @@
 package io.crowbar.instrumentation.runtime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.events.EventListener;

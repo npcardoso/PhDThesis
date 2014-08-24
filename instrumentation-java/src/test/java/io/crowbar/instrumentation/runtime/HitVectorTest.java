@@ -64,18 +64,12 @@ public class HitVectorTest {
         fail("to implement");
     }
 
-    @Test
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testHitIndexOutOfBoundsException () {
         HitVector hv = new HitVector();
 
 
-        try {
-            hv.hit(0);
-            fail("IndexOutOfBoundsException");
-        }
-        catch (IndexOutOfBoundsException e) {
-            // empty
-        }
+        hv.hit(0);
     }
 
     @Test

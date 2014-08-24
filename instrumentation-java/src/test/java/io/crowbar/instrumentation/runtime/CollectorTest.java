@@ -13,6 +13,7 @@ import io.crowbar.instrumentation.events.EventListenerMocks.TestableTransactionE
 import io.crowbar.instrumentation.events.EventListenerMocks.TestableTransactionStartListener;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -151,16 +152,16 @@ public class CollectorTest {
     }
 
     private void fillWithHitProbes (Collector collector) {
+        collector.registerProbe("group1", 0, ProbeType.HIT_PROBE);
         collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
-        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
-        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
-        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 2, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 3, ProbeType.HIT_PROBE);
 
+        collector.registerProbe("group2", 0, ProbeType.HIT_PROBE);
         collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
-        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
-        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group2", 2, ProbeType.HIT_PROBE);
 
-        collector.registerProbe("group3", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group3", 0, ProbeType.HIT_PROBE);
     }
 
     @Test
@@ -176,30 +177,39 @@ public class CollectorTest {
     }
 
     @Test
+    public void hitVectorTest () throws Exception {
+        Collector collector = newCollectorInstance("collector", new AbstractEventListener() {});
+
+
+        fillWithHitProbes(collector);
+        collector.getHitVector("group1"); // create the hit vector
+
+        collector.hit(1);
+        collector.hit(2);
+        collector.hit(2);
+
+        assertTrue(Arrays.equals(collector.getHitVector("group1"), new boolean[] {false, true, true, false}));
+    }
+
+    @Test
     public void testNotNullCollector () {
         Collector.start("", null);
         Assert.assertNotNull(Collector.instance());
     }
 
-    @Test
-    public void testOracle () {
-        Collector.start("", null);
-        Collector c = Collector.instance();
-        c.oracle(0, 0.0, 0.0);
-        // FIXME: catch NullPointerException
-    }
-
     @Test(expected = NullPointerException.class)
-    public void testGetHitVectorEmptyCollector () {
-        Collector.start("", null);
-        Collector c = Collector.instance();
+    public void testGetHitVectorEmptyCollector () throws Exception {
+        Collector c = newCollectorInstance("", new AbstractEventListener() {});
+
+
         c.getHitVector("");
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testHitEmptyCollector () {
-        Collector.start("", null);
-        Collector c = Collector.instance();
+    public void testHitEmptyCollector () throws Exception {
+        Collector c = newCollectorInstance("", new AbstractEventListener() {});
+
+
         c.hit(-1);
     }
 }

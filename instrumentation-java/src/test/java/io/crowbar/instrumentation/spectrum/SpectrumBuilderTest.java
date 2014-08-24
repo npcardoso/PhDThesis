@@ -25,19 +25,13 @@ public class SpectrumBuilderTest {
         fail("to implement");
     }
 
-    @Test
-    public void testRegisterProbe () {
+    @Test(expected = Exception.class)
+    public void testRegisterProbe () throws Exception {
         SpectrumBuilder sb = new SpectrumBuilder();
         Probe p = new Probe(0, 0, null);
 
 
-        try {
-            sb.registerProbe(p);
-            fail("no probe found");
-        }
-        catch (Exception e) {
-            // empty
-        }
+        sb.registerProbe(p);
     }
 
     @Test

@@ -2,6 +2,10 @@ package io.crowbar.instrumentation.passes.matchers;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import java.util.ArrayList;
+
 import javassist.NotFoundException;
 
 import org.junit.Test;
@@ -34,6 +38,12 @@ public class PrefixMatcherTest extends AbstractClassMatcherTest {
         assertTrue(new PrefixMatcher("foo", "bar", "io").matches(testClass));
 
         assertFalse(new PrefixMatcher("foo", "bar").matches(testClass));
+
+        assertTrue(new PrefixMatcher(new ArrayList<String> () {{add("io");add("foo");add("bar");}}).matches(testClass));
+        assertTrue(new PrefixMatcher(new ArrayList<String> () {{add("foo");add("io");add("bar");}}).matches(testClass));
+        assertTrue(new PrefixMatcher(new ArrayList<String> () {{add("foo");add("bar");add("io");}}).matches(testClass));
+
+        assertFalse(new PrefixMatcher(new ArrayList<String> () {{add("foo");add("bar");}}).matches(testClass));
     }
 
     @Test

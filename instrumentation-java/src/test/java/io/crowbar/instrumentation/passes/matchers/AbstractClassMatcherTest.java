@@ -6,12 +6,17 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 public class AbstractClassMatcherTest {
-    protected final CtClass testClass;
-    protected final CtMethod voidTestMethod;
-    protected final CtMethod stringTestMethod;
-    protected final CtMethod intTestMethod;
-    protected final CtMethod doubleArrayTestMethod;
-    protected final CtClass extendedTestClass;
+    protected final CtClass testClass,
+                            extendedTestClass,
+                            annotationTestClass;
+
+    protected final CtMethod voidTestMethod,
+                             stringTestMethod,
+                             intTestMethod,
+                             doubleArrayTestMethod,
+                             annotationTestMethod,
+                             noAnnotationTestMethod;
+
 
     public static class TestClass {
         public void voidTestMethod () {}
@@ -21,6 +26,19 @@ public class AbstractClassMatcherTest {
     }
 
     public static class ExtendedTestClass extends TestClass {}
+
+    public static @interface AnnotationClass {}
+
+    protected String getAnnotationName () {
+        return AbstractClassMatcherTest.class.getCanonicalName() + "$AnnotationClass";
+    }
+
+    @AnnotationClass
+    public static class AnnotationTestClass {
+        @AnnotationClass
+        public void annotationTestMethod () {}
+        public void noAnnotationTestMethod () {}
+    }
 
     public AbstractClassMatcherTest () throws NotFoundException {
         ClassPool cp = ClassPool.getDefault();
@@ -33,5 +51,9 @@ public class AbstractClassMatcherTest {
         doubleArrayTestMethod = testClass.getMethod("doubleArrayTestMethod", "()[Ljava/lang/Double;");
 
         extendedTestClass = cp.get(AbstractClassMatcherTest.class.getCanonicalName() + "$ExtendedTestClass");
+
+        annotationTestClass = cp.get(AbstractClassMatcherTest.class.getCanonicalName() + "$AnnotationTestClass");
+        annotationTestMethod = annotationTestClass.getMethod("annotationTestMethod", "()V");
+        noAnnotationTestMethod = annotationTestClass.getMethod("noAnnotationTestMethod", "()V");
     }
 }

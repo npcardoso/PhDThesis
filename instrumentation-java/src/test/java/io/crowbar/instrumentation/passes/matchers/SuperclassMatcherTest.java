@@ -11,7 +11,7 @@ public class SuperclassMatcherTest extends AbstractClassMatcherTest {
     }
 
     @Test
-    public void testMatchingSuperClass () {
+    public void testMatchingSuperclass () {
         assertTrue(new SuperclassMatcher("java.lang.Object").matches(testClass));
 
         String testClassName = AbstractClassMatcherTest.class.getCanonicalName() + "$TestClass";
@@ -19,13 +19,20 @@ public class SuperclassMatcherTest extends AbstractClassMatcherTest {
     }
 
     @Test
-    public void testTransitiveSuperClass () {
+    public void testTransitiveSuperclass () {
         assertTrue(new SuperclassMatcher("java.lang.Object").matches(extendedTestClass));
     }
 
     @Test
-    public void testIncorrectSuperClass () {
+    public void testIncorrectSuperclass () {
         assertFalse(new SuperclassMatcher("java.lang.String").matches(testClass));
         assertFalse(new SuperclassMatcher("").matches(extendedTestClass));
+    }
+
+    @Test
+    public void tryToMatchMethods () {
+        assertTrue(new SuperclassMatcher("java.lang.Object").matches(testClass, voidTestMethod));
+        assertTrue(new SuperclassMatcher("java.lang.Object").matches(extendedTestClass, intTestMethod));
+        assertFalse(new SuperclassMatcher("java.lang.String").matches(testClass, doubleArrayTestMethod));
     }
 }

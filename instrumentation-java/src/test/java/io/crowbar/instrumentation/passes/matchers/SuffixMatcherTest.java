@@ -2,6 +2,9 @@ package io.crowbar.instrumentation.passes.matchers;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+
 import javassist.NotFoundException;
 
 import org.junit.Test;
@@ -34,6 +37,12 @@ public class SuffixMatcherTest extends AbstractClassMatcherTest {
         assertTrue(new SuffixMatcher("foo", "bar", "TestClass").matches(testClass));
 
         assertFalse(new SuffixMatcher("foo", "bar").matches(testClass));
+
+        assertTrue(new SuffixMatcher(new ArrayList<String> () {{add("TestClass");add("foo");add("bar");}}).matches(testClass));
+        assertTrue(new SuffixMatcher(new ArrayList<String> () {{add("foo");add("TestClass");add("bar");}}).matches(testClass));
+        assertTrue(new SuffixMatcher(new ArrayList<String> () {{add("foo");add("bar");add("TestClass");}}).matches(testClass));
+
+        assertFalse(new SuffixMatcher(new ArrayList<String> () {{add("foo");add("bar");}}).matches(testClass));
     }
 
     @Test

@@ -37,15 +37,36 @@ public class CouplerMatcherTest {
 			CouplerMatcher cmat = new CouplerMatcher(coupler, a, n);
 						
 			assertEquals(cmat.matchTransactions(s).length(), 0);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-  
-								
-				
-        }
+	}		
+
+	
+	@Test
+	public void testComponentsAnd() {
+		ActiveComponentMatcher a = new ActiveComponentMatcher();
+		
+		ValidTransactionMatcher v = new ValidTransactionMatcher();
+		NegateMatcher n = new NegateMatcher(v);
+		
+		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+
+		Spectrum<Hit, ?> s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+		
+		BitSet cs = a.matchComponents(s);
+		BitSet ts = a.matchTransactions(s);
+
+        Field[] allFields = CouplerMatcher.class.getDeclaredFields();
+        allFields[0].setAccessible(true);
+        try {
+			Coupler coupler = (Coupler) allFields[0].get(null);
+						
+			CouplerMatcher cmat = new CouplerMatcher(coupler, a, n);
+						
+			assertEquals(cmat.matchComponents(s).length(), 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
 }

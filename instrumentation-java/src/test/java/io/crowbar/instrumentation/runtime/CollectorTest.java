@@ -3,6 +3,7 @@ package io.crowbar.instrumentation.runtime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import io.crowbar.diagnostic.spectrum.ProbeType;
+import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.events.EventListenerMocks.EventListenerChecks;
 import io.crowbar.instrumentation.events.EventListenerMocks.OracleListener;
@@ -13,6 +14,7 @@ import io.crowbar.instrumentation.events.EventListenerMocks.TestableTransactionS
 
 import java.lang.reflect.Constructor;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -146,5 +148,30 @@ public class CollectorTest {
 
         collector.oracle(id, error, confidence);
         assertTrue(ol.wasTriggered());
+    }
+
+    private void fillWithHitProbes (Collector collector) {
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group1", 1, ProbeType.HIT_PROBE);
+
+        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
+        collector.registerProbe("group2", 1, ProbeType.HIT_PROBE);
+
+        collector.registerProbe("group3", 1, ProbeType.HIT_PROBE);
+    }
+
+    @Test
+    public void hitVectorSizeTest () throws Exception {
+        Collector collector = newCollectorInstance("collector", new AbstractEventListener() {});
+
+
+        fillWithHitProbes(collector);
+
+        assertEquals(collector.getHitVector("group1").length, 4);
+        assertEquals(collector.getHitVector("group2").length, 3);
+        assertEquals(collector.getHitVector("group3").length, 1);
     }
 }

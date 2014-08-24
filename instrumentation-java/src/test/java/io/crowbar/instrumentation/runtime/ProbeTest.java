@@ -31,15 +31,9 @@ public class ProbeTest {
         assertEquals("[Probe: (id: -1, nodeId: -1, type: null)]", new Probe(p0).toString());
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testNullConstructor () {
-        try {
-            new Probe(null);
-            fail("NullPointerException: null Probe");
-        }
-        catch (NullPointerException e) {
-            // empty
-        }
+        new Probe(null);
     }
 
     @Test

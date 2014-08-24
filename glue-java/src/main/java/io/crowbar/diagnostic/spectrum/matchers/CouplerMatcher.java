@@ -11,8 +11,7 @@ import java.util.BitSet;
  * \brief This class couples several matchers using some logic operator.
  */
 public final class CouplerMatcher<A extends Activity,
-                                  TM extends Metadata,
-                                  CM extends Metadata>
+                                  TM extends Metadata>
 implements SpectrumMatcher<A, TM> {
     public interface Coupler {
         void couple (BitSet ret, BitSet operand);

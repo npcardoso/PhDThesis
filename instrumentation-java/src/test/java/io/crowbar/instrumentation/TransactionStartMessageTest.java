@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class TestTransactionStartMessage {
+public class TransactionStartMessageTest {
 
     @Test
     public void testEmptyConstructor() {

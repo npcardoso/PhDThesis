@@ -7,7 +7,7 @@ import io.crowbar.instrumentation.spectrum.TrM;
 
 import org.junit.Test;
 
-public class TestJUnitAssumeMatcher {
+public class JUnitAssumeMatcherTest {
 
     @Test
     public void testEmptySpectrum() {

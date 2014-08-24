@@ -6,7 +6,7 @@ import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import org.junit.Test;
 
-public class TestFactory {
+public class FactoryTest {
 
     @Test
     public void testInstance() {

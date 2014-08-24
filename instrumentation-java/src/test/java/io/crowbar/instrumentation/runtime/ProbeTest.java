@@ -6,7 +6,7 @@ import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import org.junit.Test;
 
-public class TestProbe {
+public class ProbeTest {
 
     @Test
     public void testGetNodeID() {

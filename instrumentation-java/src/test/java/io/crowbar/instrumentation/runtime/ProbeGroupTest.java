@@ -6,7 +6,7 @@ import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 
 import org.junit.Test;
 
-public class TestProbeGroup {
+public class ProbeGroupTest {
 
     @Test
     public void testRegister() {

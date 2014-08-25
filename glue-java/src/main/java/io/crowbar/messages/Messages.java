@@ -22,12 +22,12 @@ public final class Messages {
     private static TypeLocator<String> requestBinder = new TypeLocator<String> ("type");
 
     static void registerResponse (String name,
-                                  Class response) {
+                                  Class<?> response) {
         responseBinder = responseBinder.add(name, response);
     }
 
     static void registerRequest (String name,
-                                 Class response) {
+                                 Class<?> response) {
         requestBinder = requestBinder.add(name, response);
     }
 

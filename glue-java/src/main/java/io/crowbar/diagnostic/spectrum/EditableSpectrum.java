@@ -8,8 +8,8 @@ import java.util.ArrayList;
 public final class EditableSpectrum<A extends Activity,
                                       TM extends Metadata>
 extends Spectrum<A, TM> {
-    private final ArrayList<Transaction<A, TM> > transactions = new ArrayList();
-    private final ArrayList<Component> components = new ArrayList();
+    private final ArrayList<Transaction<A, TM> > transactions = new ArrayList<Transaction<A, TM> >();
+    private final ArrayList<Component> components = new ArrayList<Component>();
 
     private final EditableTree tree = new EditableTree("root");
     private int componentCount = 0;

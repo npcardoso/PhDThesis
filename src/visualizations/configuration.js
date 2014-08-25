@@ -7,8 +7,10 @@ function ConfigurationView(data,elementSel, configuration, events) {
         self.renderGradiante();
         self.renderFilterNodes();
         self.renderRegexFilter();
+        self.renderDefualtTableEntries();
         self.renderChosenScript();
     }
+
 
     this.renderDefualtVis = function() {
         $(elementSel).append('<p><label for="defaultVis">Select the default visualization:</label></p><select name="defaultVis" id="defaultVis"></select>');
@@ -90,6 +92,23 @@ function ConfigurationView(data,elementSel, configuration, events) {
             configuration.saveConfig();
         });
     }
+
+
+    this.renderDefualtTableEntries = function() {
+        $(elementSel).append('<p><label for="defaultTE">Default number of table entries:</label></p><select style="width: 100px;" name="defaultTE" id="defaultTE"></select>');
+        $("#defaultTE").append('<option value="10">10</option>');
+        $("#defaultTE").append('<option value="25">25</option>');
+        $("#defaultTE").append('<option value="50">50</option>');
+        $("#defaultTE").append('<option value="100">100</option>');
+        $('option[value="'+configuration.currentConfig.defaultTableEntries+'"]', "#defaultTE").attr("selected", "selected");
+        $("#defaultTE").selectmenu({
+            change: function(event, data) {
+                configuration.currentConfig.defaultTableEntries = data.item.value;
+                configuration.saveConfig();
+            }
+        });
+    }
+
 
     this.renderChosenScript = function() {
         $(elementSel).append('<br /><br/><div class="ui-widget"><label for="tags">Additional scripts to load: </label><br /><input id="tags" size="50"></div>');

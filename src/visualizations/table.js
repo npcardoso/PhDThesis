@@ -37,9 +37,9 @@ function Table(data, elementSel, configuration, events) {
             }],
             "order" : [3, "desc"],
             "createdRow": function ( row, tdata, index ) {
-                console.log('<div class="tableCircle" style="background-color: '+configuration.gradiante.normal(data[tdata[4]])+';"></div>');
                 $('td', row).eq(0).prepend('<div class="tableCircle" style="background-color: '+configuration.gradiante.normal(data[tdata[4]])+';"></div>');
-            }
+            },
+            "iDisplayLength": configuration.currentConfig.defaultTableEntries
         });
 
         table.on('click', 'tr', function() {

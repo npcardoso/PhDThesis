@@ -56,7 +56,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
             range: "min",
             value: configuration.currentConfig.filterMostRelevamtNodes,
             min: 0,
-            max: Math.max(configuration.currentConfig.filterMostRelevamtNodes*2,10000),
+            max: Math.max(configuration.currentConfig.filterMostRelevamtNodes*2,500),
             slide: function(event, ui) {
                 $("#nnodes").val(renderValue(ui.value));   
                 configuration.currentConfig.filterMostRelevamtNodes = ui.value;

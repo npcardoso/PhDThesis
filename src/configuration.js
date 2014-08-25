@@ -3,7 +3,7 @@ function Configuration() {
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
-    filterMostRelevamtNodes: 700,
+    filterMostRelevamtNodes: 150,
     normalGradiante: [
     {
      color: "green",
@@ -48,5 +48,7 @@ if (localStorageConf == null || !(localStorageConf = JSON.parse(localStorageConf
 else {
   this.currentConfig = localStorageConf;
 }
+    //[rgba(0, 255, 0, 1), rgba(255, 255, 0, 1), rgba(255, 0, 0, 1)]
+    this.gradiante = new Gradiant(this.currentConfig.normalGradiante);
 
-}
+  }

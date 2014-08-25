@@ -107,7 +107,7 @@ public abstract class Spectrum<A extends Activity,
 
                        @Override
                        protected Component get (int i) {
-							return getComponent(i);
+                           return getComponent(i);
                        }
             };
         }
@@ -123,8 +123,8 @@ public abstract class Spectrum<A extends Activity,
     public abstract Transaction<A, TM> getTransaction (int transactionId);
     public abstract Component getComponent (int componentId);
 
-	public abstract ArrayList<Component> getComponents() ;
-    
+    public abstract ArrayList<Component> getComponents ();
+
     public final Iterable<Component> byComponent () {
         return new CIterable();
     }
@@ -138,10 +138,10 @@ public abstract class Spectrum<A extends Activity,
      * This is used to convert a multiple fault ranking into single fault ranking.
      * @post ret.size() == getTree.size()
      * @return A list containing the score for each node.
-     * @throws NoComponentInformationAvailableException 
+     * @throws NoComponentInformationAvailableException
      */
     public List<Double> getScorePerNode (Diagnostic diagnostic,
-                                         MergeStrategy ms) throws NoComponentInformationAvailableException {
+                                         MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
         for (DiagnosticElement e : diagnostic) {

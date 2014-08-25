@@ -3,7 +3,6 @@ package io.crowbar.diagnostic.spectrum.unserializers;
 import static org.junit.Assert.*;
 
 import io.crowbar.diagnostic.spectrum.Component;
-import io.crowbar.diagnostic.spectrum.NoComponentInformationAvailableException;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 
@@ -12,33 +11,35 @@ import java.util.Scanner;
 import org.junit.Test;
 
 public class HitSpectrumUnserializerTest {
+    @Test
+    public void testSerializerTransactionCount () {
+        String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
-	@Test
-	public void testSerializerTransactionCount() {
-		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
-		Spectrum<Hit, ?> s = HitSpectrumUnserializer.unserialize(new Scanner(in));
-				
-		assertEquals(s.getTransactionCount(),9);		
-	}
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-	@Test
-	public void testSerializerComponentCount() {
-		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+        assertEquals(s.getTransactionCount(), 9);
+    }
 
-		Spectrum<Hit, ?> s = HitSpectrumUnserializer.unserialize(new Scanner(in));
-				
-		assertEquals(s.getComponentCount(),10);		
-	}	
-	
-	@Test
-	public void testGetComponent() throws NoComponentInformationAvailableException {
-		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+    @Test
+    public void testSerializerComponentCount () {
+        String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
-		Spectrum<Hit, ?> s = HitSpectrumUnserializer.unserialize(new Scanner(in));
-				
-		Component c = s.getComponent(0);	
-		
-		assertEquals(c,null);	
-	}		
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        assertEquals(s.getComponentCount(), 10);
+    }
+
+    @Test
+    public void testGetComponent () {
+        String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        Component c = s.getComponent(0);
+
+        assertEquals(c, null);
+    }
 }

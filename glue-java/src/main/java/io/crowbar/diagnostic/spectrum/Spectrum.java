@@ -188,8 +188,10 @@ public abstract class Spectrum<A extends Activity,
         for (Component component : byComponent()) {
             if (!first)
                 str.append(",");
-
-            str.append(component.toString());
+            if(component == null)
+                str.append("null");
+            else
+                str.append(component.toString());
             first = false;
         }
 

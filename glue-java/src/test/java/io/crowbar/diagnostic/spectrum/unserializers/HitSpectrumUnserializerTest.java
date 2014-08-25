@@ -17,7 +17,7 @@ public class HitSpectrumUnserializerTest {
 
 		Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-		//s.toString();
+		s.toString();
 
 	    //TODO Assert
 	}

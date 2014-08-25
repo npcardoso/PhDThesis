@@ -3,9 +3,9 @@
 # Hook used to indent all source files before commiting
 #
 
-INDENT=`whereis -b uncrustify | cut -d' ' -f2`
+INDENT=`type uncrustify | grep s | sed 's/.*is//'`
 CONF_PATH=configs/uncrustify.conf
-if [[ -n "$INDENT" ]]; then
+if [[ -z "$INDENT" ]]; then
 	echo "Unable to find indent executable on the configuration."
 	echo
 	echo "Please configure it with :"

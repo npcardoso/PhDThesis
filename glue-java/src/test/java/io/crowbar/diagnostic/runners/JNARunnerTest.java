@@ -57,7 +57,7 @@ public class JNARunnerTest {
             String jsonRequest = io.crowbar.messages.Messages.serialize(
                     VisualizationMessages.issueRequest(t,scores));
                 System.out.println(jsonRequest);            
-
+            //TODO: conclude
        
         }
         catch (Throwable e) {e.printStackTrace();}

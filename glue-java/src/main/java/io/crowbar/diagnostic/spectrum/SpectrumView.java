@@ -1,5 +1,6 @@
 package io.crowbar.diagnostic.spectrum;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 
 /*!
@@ -67,7 +68,12 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public Component getComponent (int componentId) {
+    public Component getComponent (int componentId) throws NoComponentInformationAvailableException {
         return spectrum.getComponent(components[componentId]);
     }
+
+	@Override
+	public ArrayList<Component> getComponents() {
+		return spectrum.getComponents();
+	}
 }

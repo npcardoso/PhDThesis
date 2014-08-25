@@ -49,13 +49,25 @@ extends Spectrum<A, TM> {
      * not exist.
      */
     @Override
-    public Component getComponent (int id) {
+    public Component getComponent (int id) throws NoComponentInformationAvailableException {
+    	if(components.size() == 0) 
+    		throw new NoComponentInformationAvailableException();
+    	
         if (id < 0 || id >= components.size())
             return null;
 
         return components.get(id);
     }
 
+    /**
+     * @brief Retreives the list of components
+     * @return A list of components
+=     */
+    @Override
+    public ArrayList<Component> getComponents () {
+        return components;
+    }    
+    
     /**
      * @brief Adds a new transactions to the spectrum.
      * @pre this.getTransaction(transaction.getId()) == null
@@ -74,13 +86,14 @@ extends Spectrum<A, TM> {
     }
 
     /**
+     * @throws NoComponentInformationAvailableException 
      * @brief Adds a new component to the spectrum.
      * @pre node.getTree() == this.getTree()
      * @pre this.getComponent(id) == null
      */
     public void setComponent (int id,
                               ProbeType type,
-                              Node node) {
+                              Node node) throws NoComponentInformationAvailableException {
         assert(node.getTree() == this.getTree());
         assert(this.getComponent(id) == null);
  components.ensureCapacity(id + 1);

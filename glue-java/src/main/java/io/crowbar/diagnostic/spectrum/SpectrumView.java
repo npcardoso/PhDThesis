@@ -68,7 +68,7 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public Component getComponent (int componentId) throws NoComponentInformationAvailableException {
+    public Component getComponent (int componentId) {
         return spectrum.getComponent(components[componentId]);
     }
 

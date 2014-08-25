@@ -31,12 +31,14 @@ public class HitSpectrumUnserializerTest {
 		assertEquals(s.getComponentCount(),10);		
 	}	
 	
-	@Test(expected=NoComponentInformationAvailableException.class)
+	@Test
 	public void testGetComponent() throws NoComponentInformationAvailableException {
 		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 		Spectrum<Hit, ?> s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 				
-		Component c = s.getComponent(0);		
+		Component c = s.getComponent(0);	
+		
+		assertEquals(c,null);	
 	}		
 }

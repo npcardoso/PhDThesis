@@ -49,9 +49,9 @@ extends Spectrum<A, TM> {
      * not exist.
      */
     @Override
-    public Component getComponent (int id) throws NoComponentInformationAvailableException {
+    public Component getComponent (int id) {
     	if(components.size() == 0) 
-    		throw new NoComponentInformationAvailableException();
+    		return null;
     	
         if (id < 0 || id >= components.size())
             return null;

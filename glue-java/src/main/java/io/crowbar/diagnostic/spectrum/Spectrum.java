@@ -107,12 +107,7 @@ public abstract class Spectrum<A extends Activity,
 
                        @Override
                        protected Component get (int i) {
-                           try {
 							return getComponent(i);
-						} catch (NoComponentInformationAvailableException e) {
-							e.printStackTrace();
-						}
-                           return null;
                        }
             };
         }
@@ -126,7 +121,7 @@ public abstract class Spectrum<A extends Activity,
     public abstract int getComponentCount ();
 
     public abstract Transaction<A, TM> getTransaction (int transactionId);
-    public abstract Component getComponent (int componentId) throws NoComponentInformationAvailableException;
+    public abstract Component getComponent (int componentId);
 
 	public abstract ArrayList<Component> getComponents() ;
     

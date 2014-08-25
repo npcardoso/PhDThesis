@@ -138,7 +138,6 @@ public abstract class Spectrum<A extends Activity,
      * This is used to convert a multiple fault ranking into single fault ranking.
      * @post ret.size() == getTree.size()
      * @return A list containing the score for each node.
-     * @throws NoComponentInformationAvailableException
      */
     public List<Double> getScorePerNode (Diagnostic diagnostic,
                                          MergeStrategy ms) {
@@ -147,17 +146,24 @@ public abstract class Spectrum<A extends Activity,
         for (DiagnosticElement e : diagnostic) {
             for (int cmpId : e.getCandidate()) {
                 Component cmp = getComponent(cmpId);
-                assert (cmp != null);
-                int nodeId = cmp.getNode().getId();
+                List<Double> list = null;
 
-                while (tmp.size() <= nodeId)
-                    tmp.add(null);
+                if (cmp != null) {
+                    int nodeId = cmp.getNode().getId();
 
-                List<Double> list = tmp.get(cmpId);
+                    while (tmp.size() <= nodeId)
+                        tmp.add(null);
+
+                    list = tmp.get(cmpId);
+                }
+                else if (tmp.size() > cmpId) {
+                    // if there is no information about the components IDs -- seems safe to do
+                    list = tmp.get(cmpId);
+                }
 
                 if (list == null) {
                     list = new LinkedList<Double> ();
-                    tmp.set(cmpId, list);
+                    tmp.add(cmpId, list);
                 }
 
                 list.add(e.getScore());

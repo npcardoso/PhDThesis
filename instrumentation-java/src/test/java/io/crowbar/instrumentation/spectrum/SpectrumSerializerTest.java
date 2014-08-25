@@ -17,15 +17,9 @@ public class SpectrumSerializerTest {
         assertNotNull(ss);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testNullSpectrum () {
-        try {
-            SpectrumSerializer.serialize(null);
-            fail("NullPointerException: spectrum == null");
-        }
-        catch (NullPointerException e) {
-            // empty
-        }
+        SpectrumSerializer.serialize(null);
     }
 
     @Test

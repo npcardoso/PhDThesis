@@ -1,8 +1,9 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv3';
+  this.CONFIG_STORE = 'configv5';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
+    zoomAnimationTime: 500,
     filterMostRelevamtNodes: 150,
     normalGradiante: [
     {

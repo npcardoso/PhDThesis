@@ -18,7 +18,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
                 var curTranslate = zoomListener.translate();
                 curTranslate[1] += 100;
                 zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime).each("end", eventsUnlock));
+                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
             },
             down: function(){
                 if(eventsBlocked)
@@ -27,7 +27,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
                 var curTranslate = zoomListener.translate();
                 curTranslate[1] -= 100;
                 zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime).each("end", eventsUnlock));
+                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
             },
             right: function(){
                 if(eventsBlocked)
@@ -36,7 +36,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
                 var curTranslate = zoomListener.translate();
                 curTranslate[0] -= 100;
                 zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime).each("end", eventsUnlock));
+                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
             },
             left: function(){
                 if(eventsBlocked)
@@ -45,7 +45,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
                 var curTranslate = zoomListener.translate();
                 curTranslate[0] += 100;
                 zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime).each("end", eventsUnlock));
+                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
             },            
             zoomIn: function(){
                 if(eventsBlocked)
@@ -55,7 +55,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
                 ++curScale
                 if(curScale <= 10){
                     zoomListener.scale(curScale);
-                    zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime).each("end", eventsUnlock));
+                    zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
                 }
                 eventsUnlock();
             },
@@ -69,7 +69,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
                     curScale = 1;
                 }
                 zoomListener.scale(curScale);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime).each("end", eventsUnlock));
+                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
             },
             zoomReset: function(){
                 if(eventsBlocked)
@@ -77,7 +77,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
                 eventsBlocked = true;
                 zoomListener.scale(1);
                 zoomListener.translate([0,0]);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.animationTransitionTime).each("end", eventsUnlock));
+                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
             }
         };
 

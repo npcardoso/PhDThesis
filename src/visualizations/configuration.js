@@ -4,6 +4,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         $(elementSel).html("");
         self.renderDefualtVis();
         self.renderAnimationTime();
+        self.renderZoomAnimationTime();
         self.renderGradiante();
         self.renderFilterNodes();
         self.renderRegexFilter();
@@ -45,6 +46,25 @@ function ConfigurationView(data,elementSel, configuration, events) {
         $("#anitime").val($("#slider-anitime").slider("value"));
     }
 
+    this.renderZoomAnimationTime = function() {
+        $(elementSel).append('<p><label for="zanitime">Zoom animation time (ms):</label><input type="text" id="zanitime" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-zanitime"></div>');
+
+        $("#slider-zanitime").slider({
+            range: "min",
+            value: configuration.currentConfig.zoomAnimationTime,
+            min: 0,
+            max: Math.max(configuration.currentConfig.zoomAnimationTime*2,5000),
+            slide: function(event, ui) {
+                $("#zanitime").val(ui.value);
+                configuration.currentConfig.zoomAnimationTime = ui.value;
+                configuration.saveConfig();
+            }
+        });
+        $("#zanitime").val($("#slider-zanitime").slider("value"));
+    }
+
+
+
     this.renderFilterNodes = function() {
         $(elementSel).append('<p><label for="nnodes">Filter to most relevant nodes:</label><input type="text" id="nnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-nnodes"></div>');
 
@@ -70,7 +90,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
     }
 
     this.renderGradiante = function() {
-        $(elementSel).append('<label>Gradient: </label><div id="gradX" ></div>');
+        $(elementSel).append('<br /><label>Gradient: </label><div id="gradX" ></div>');
 
         gradX("#gradX", {
             type: "linear",

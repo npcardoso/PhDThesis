@@ -131,7 +131,12 @@ public final class Collector {
     }
 
     public void hit (int globalProbeId) {
-        hitVector.hit(globalProbeId);
+        try {
+            hitVector.hit(globalProbeId);
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     public Node getRootNode () {

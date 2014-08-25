@@ -4,8 +4,9 @@ function ConfigurationView(data,elementSel, configuration, events) {
         $(elementSel).html("");
         self.renderDefualtVis();
         self.renderAnimationTime();
-        self.renderFilterNodes();
         self.renderGradiante();
+        self.renderFilterNodes();
+        self.renderRegexFilter();
         self.renderChosenScript();
     }
 
@@ -79,6 +80,15 @@ function ConfigurationView(data,elementSel, configuration, events) {
      });
 
         $("#gradx_gradient_type, #gradx_gradient_subtype, #gradx_show_code").remove();
+    }
+
+    this.renderRegexFilter = function() {
+        $(elementSel).append('<br /><br/><div class="ui-widget"><label for="regex">Regular Expression to filter nodes: </label><br /><input id="regex" size="50"></div>');
+        $("#regex").val(configuration.currentConfig.regexFilter);
+        $("#regex").change(function(){
+            configuration.currentConfig.regexFilter = $("#regex").val();
+            configuration.saveConfig();
+        });
     }
 
     this.renderChosenScript = function() {

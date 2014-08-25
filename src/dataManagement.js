@@ -1,5 +1,3 @@
-
-
 function dataInlining (data) {
 	for (var i = data.length - 1; i >= 0; i--) {
 		if(data[i].hasOwnProperty('children') )
@@ -23,6 +21,46 @@ function getAncestors(node){
 	return new Array(node);
 }
 
+function setState(nodesArray,state){
+	for (var i = nodesArray.length - 1; i >= 0; i--) {
+		nodesArray[i].state = state;
+	};
+}
+
+function getDescendents(node){
+	if(isLastNode(node))
+		return [];
+	var descendents = [];
+	for (var i = node.children.length - 1; i >= 0; i--) {
+		descendents = descendents.concat(getDescendents(node.children[i]));
+	};
+	return node.children.concat(descendents);
+}
+
+function getAncestorsAndDescends(node){
+	return getAncestors(node).concat(getDescendents(node));
+}
+
+
+function filterWithAncestorsAndDescents(nodesArray, filterFunction){
+	setState(nodesArray,false);
+	for (var i = nodesArray.length - 1; i >= 0; i--) {
+		if(filterFunction(nodesArray[i])){
+			setState(getAncestorsAndDescends(nodesArray[i]),true);
+		}
+	};
+	treeFilter(nodesArray[0]);
+	return filterTrue(nodesArray);
+}
+
+
+function regexFilter(nodesArray,regexStr){
+	var regex = new RegExp(regexStr);
+	return filterWithAncestorsAndDescents(nodesArray,function(node){
+		return regex.test(node.name);
+	});
+}
+
 function removeArray(arr, item) {
 	for(var i = arr.length; i--;) {
 		if(arr[i].id == item) {
@@ -39,7 +77,7 @@ function sortByProbability(NodesArray){
 }
 
 function isLastNode(node){
-	return !node.hasOwnProperty('children') || node.children == null || node.children.length == 0;
+	return  node == undefined || !node.hasOwnProperty('children') || node.children == null || node.children.length == 0;
 }
 
 function getLastLevelNodes(data){
@@ -65,6 +103,7 @@ function treeFilter(root){
 }
 
 function filterData(data,N){
+	setState(data,false);
 	var array = getLastLevelNodes(data);
 	sortByProbability(array);
 	var end = Math.min(N,array.length);
@@ -79,29 +118,6 @@ function filterData(data,N){
 	};
 	treeFilter(data[0]);
 	return filterTrue(data);
-}
-
-
-function filterToNMostRelevant(data,N){
-	var tmp = data.slice();
-	tmp.sort(function(a,b){
-		return b.properties.p - a.properties.p;
-	});
-	var maxProb = tmp[Math.min(tmp.length-1,N)].properties.p;
-	probabilityFilter(data,maxProb);
-}
-
-function probabilityFilter(data,pFilter){
-	for (var i = data.length - 1; i >= 0; i--) {
-		if(data[i].properties.p < pFilter)
-		{
-			var parent = data[data[i].parent_id];
-			if(parent != null && parent.hasOwnProperty('children')){
-				removeArray(parent.children,data[i].id);
-			}
-			data.splice(i, 1);
-		}
-	}
 }
 
 function probabilityCalculator(node) {

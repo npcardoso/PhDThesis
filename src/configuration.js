@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv1';
+  this.CONFIG_STORE = 'configv2';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
@@ -19,15 +19,14 @@ function Configuration() {
    }
    ],
    scriptsLoad: ["data_ex.js"],
-   scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"]
+   scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"],
+   regexFilter: null
  };
 
  var self = this;
  var localStorageConf = localStorage.getItem(this.CONFIG_STORE);
  if (localStorageConf == null || !(localStorageConf = JSON.parse(localStorageConf))) {
-  this.currentConfig = jQuery.extend(this.DEFAULT_CONFIG,  {
-    lastViewed: this.DEFAULT_CONFIG.defaultView
-  });
+  self.resetConfig();
 }
 else {
   this.currentConfig = localStorageConf;
@@ -44,6 +43,13 @@ else {
     this.saveGradiante = function() {
       self.saveConfig();
       self.gradiante = new Gradiant(self.currentConfig.normalGradiante);
+    }
+
+    this.resetConfig = function(){
+          self.currentConfig = jQuery.extend(this.DEFAULT_CONFIG,  {
+          lastViewed: this.DEFAULT_CONFIG.defaultView
+          });
+          self.saveGradiante();
     }
 
   }

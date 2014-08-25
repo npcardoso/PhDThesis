@@ -90,7 +90,7 @@ function Sunburst(data, elementSel, configuration, events) {
 
 
 function ArcRender(width,height){
-    var radius = Math.min(width, height) / 2;
+    var radius = Math.min(width, height-20) / 2;
 
     var x = d3.scale.linear()
     .range([0, 2 * Math.PI]);

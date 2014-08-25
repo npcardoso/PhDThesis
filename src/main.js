@@ -1,6 +1,9 @@
 //Program entry point
 function init(){
 	var configuration = new Configuration();
+	if(window.location.hash == "#reset"){
+		configuration.resetConfig();
+	}
 	$.each(configuration.currentConfig.scriptsLoad, function(index, script) {
 		$.ajax({
 			async: false,
@@ -10,18 +13,27 @@ function init(){
 	});
 	//prepare data
 	dataInlining(window.data_ex);
-	if(configuration.currentConfig.filterMostRelevamtNodes > 0){
-	window.data_ex = filterData(window.data_ex,configuration.currentConfig.filterMostRelevamtNodes);
+	if(validRegex(configuration.currentConfig.regexFilter)){
+		data_ex = regexFilter(data_ex,configuration.currentConfig.regexFilter);
 	}
-	probabilityCalculator(data_ex[0]);
+
+	//window.data_ex = filterWithAncestorsAndDescents(data_ex,function(node){
+	//	return node.name == "CirSim";
+	//});
+
+if(configuration.currentConfig.filterMostRelevamtNodes > 0){
+	window.data_ex = filterData(window.data_ex,configuration.currentConfig.filterMostRelevamtNodes);
+}
+
+probabilityCalculator(data_ex[0]);
 
 
-	var visualization = new Visualizations(configuration);
-	renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
+var visualization = new Visualizations(configuration);
+renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
 
-	visualization.init();
+visualization.init();
 
-	$( window ).resize(visualization.resize);
+$( window ).resize(visualization.resize);
 }
 
 function getVizID(vizNo){
@@ -50,7 +62,7 @@ function renderButtonsHtml(visActivationCallBack,defaultTab){
 function getDimensions(){
 	return {
 		width: $(window).width()-75,
-		height: $(window).height()-155
+		height: $(window).height()-170
 	}
 }
 
@@ -65,4 +77,8 @@ function visClickEv(node) {
 	};
 	str += node.name;
 	//alert(str);
+}
+
+function validRegex(str){
+	return str != undefined && str != null && str.length > 0 && str != " ";
 }

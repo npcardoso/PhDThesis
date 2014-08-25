@@ -14,10 +14,8 @@ function initializeBreadcrumbTrail(elementSel) {
   .attr("height", 50)
   .attr("id", "trail");
   // Add the label at the end, for the percentage.
-  trail.append("svg:text")
-  .attr("id", "endlabel")
-  .style("fill", "#000");
-}
+  d3.select(elementSel).append("div")
+  .attr("id", "endlabel")}
 
 // Generate a string that describes the points of a breadcrumb polygon.
 function breadcrumbPoints(d, i) {
@@ -63,14 +61,9 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
 
   // Remove exiting nodes.
   g.exit().remove();
-
+  var color = configuration.gradiante.normal(last);
   // Now move and update the percentage at the end.
-  d3.select("#trail").select("#endlabel")
-  .attr("x", (nodeArray.length + 0.5) * (ARROW_DIMENSIONS.w + ARROW_DIMENSIONS.s))
-  .attr("y", ARROW_DIMENSIONS.h / 2)
-  .attr("dy", "0.35em")
-  .attr("text-anchor", "middle")
-  .text(d3.round(last.properties.p*100,2) + ' %');
+  $("#endlabel").html('<div class="pace pace-active" style="border-color: '+color+';"><div class="pace-progress" data-progress="'+d3.round(last.properties.p*100,2)+'" data-progress-text="'+d3.round(last.properties.p*100,2)+'%" style="width: '+d3.round(last.properties.p*100,2)+'%;   background: '+color+'; color: '+color+';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
 
   // Make the breadcrumb trail visible, if it's hidden.
   d3.select("#trail")

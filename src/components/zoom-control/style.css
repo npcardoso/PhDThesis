@@ -1,3 +1,6 @@
+.has-leaflet-pan-control {
+  margin-top: 70px;
+}
 .graticule {
   fill: none;
   stroke: #777;
@@ -48,7 +51,7 @@
   float: right;
 }
 .leaflet-top .leaflet-control {
-  margin-top: 60px;
+  margin-top: 20px;
 }
 .leaflet-bottom .leaflet-control {
   margin-bottom: 10px;

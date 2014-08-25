@@ -3,14 +3,10 @@
 # Hook used to indent all source files before commiting
 #
 
-INDENT=`type uncrustify | grep s | sed 's/.*is//'`
+INDENT=`type uncrustify | grep s | sed 's/.*is *//'`
 CONF_PATH=configs/uncrustify.conf
-if [[ -z "$INDENT" ]]; then
-	echo "Unable to find indent executable on the configuration."
-	echo
-	echo "Please configure it with :"
-	echo "  git config hooks.indent /path/to/indent"
-	echo
+if [[ ! -x "$INDENT" ]]; then
+	echo "Unable to find indent executable."
 fi
 
 # indent / format file by type
@@ -27,7 +23,7 @@ indent() {
 	# loop on modified files
 	git diff --cached --name-only $against |while read file;
 	do
-		local ext=$(expr "$file" : ".*\(\..*\)")
+		local ext=`echo "$file" | sed 's/.*\././'`
 		case $ext in
 		    .c|.h|.cpp|.hpp)
 			__indent_C;
@@ -41,14 +37,6 @@ indent() {
 
 # Indent the file with `indent' if this is a C/H file
 __indent_C() {
-	if test ! -x "$INDENT"
-	then
-		return;
-	fi
-	if test ! -f $file
-	then
-		return;
-	fi
 
 	echo "Indenting " $file
 	"$INDENT" -c $CONF_PATH --no-backup "$file"

@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.runtime;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import org.junit.Test;

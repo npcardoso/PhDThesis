@@ -38,11 +38,23 @@ public class SuffixMatcherTest extends AbstractClassMatcherTest {
 
         assertFalse(new SuffixMatcher("foo", "bar").matches(testClass));
 
-        assertTrue(new SuffixMatcher(new ArrayList<String> () {{add("TestClass");add("foo");add("bar");}}).matches(testClass));
-        assertTrue(new SuffixMatcher(new ArrayList<String> () {{add("foo");add("TestClass");add("bar");}}).matches(testClass));
-        assertTrue(new SuffixMatcher(new ArrayList<String> () {{add("foo");add("bar");add("TestClass");}}).matches(testClass));
+        assertTrue(new SuffixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = 7798521343490352036L;
+            {add("TestClass");add("foo");add("bar");}
+        }).matches(testClass));
+        assertTrue(new SuffixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = -3991137601289671853L;
+            {add("foo");add("TestClass");add("bar");}
+        }).matches(testClass));
+        assertTrue(new SuffixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = 4803322309419255807L;
+            {add("foo");add("bar");add("TestClass");}
+        }).matches(testClass));
 
-        assertFalse(new SuffixMatcher(new ArrayList<String> () {{add("foo");add("bar");}}).matches(testClass));
+        assertFalse(new SuffixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = -4790097362905659617L;
+            {add("foo");add("bar");}
+        }).matches(testClass));
     }
 
     @Test

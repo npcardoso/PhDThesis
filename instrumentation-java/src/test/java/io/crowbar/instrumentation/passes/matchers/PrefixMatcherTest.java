@@ -3,7 +3,6 @@ package io.crowbar.instrumentation.passes.matchers;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.ArrayList;
 
 import javassist.NotFoundException;
@@ -39,11 +38,23 @@ public class PrefixMatcherTest extends AbstractClassMatcherTest {
 
         assertFalse(new PrefixMatcher("foo", "bar").matches(testClass));
 
-        assertTrue(new PrefixMatcher(new ArrayList<String> () {{add("io");add("foo");add("bar");}}).matches(testClass));
-        assertTrue(new PrefixMatcher(new ArrayList<String> () {{add("foo");add("io");add("bar");}}).matches(testClass));
-        assertTrue(new PrefixMatcher(new ArrayList<String> () {{add("foo");add("bar");add("io");}}).matches(testClass));
+        assertTrue(new PrefixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = 4950280704387196069L;
+            {add("io");add("foo");add("bar");}
+        }).matches(testClass));
+        assertTrue(new PrefixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = -4649535971259526912L;
+            {add("foo");add("io");add("bar");}
+        }).matches(testClass));
+        assertTrue(new PrefixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = 5611032468956303044L;
+            {add("foo");add("bar");add("io");}
+        }).matches(testClass));
 
-        assertFalse(new PrefixMatcher(new ArrayList<String> () {{add("foo");add("bar");}}).matches(testClass));
+        assertFalse(new PrefixMatcher(new ArrayList<String> () {
+            private static final long serialVersionUID = -2700718722628812842L;
+            {add("foo");add("bar");}
+        }).matches(testClass));
     }
 
     @Test

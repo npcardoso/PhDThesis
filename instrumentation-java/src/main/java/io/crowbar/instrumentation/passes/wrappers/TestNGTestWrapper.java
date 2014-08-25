@@ -27,7 +27,7 @@ public class TestNGTestWrapper implements TestWrapper {
     private static boolean isSameType (Object o,
                                        String type) {
         try {
-            Class cls = Class.forName(type);
+            Class<?> cls = Class.forName(type);
             return cls.isAssignableFrom(o.getClass());
         }
         catch (ClassNotFoundException e) {
@@ -69,7 +69,7 @@ public class TestNGTestWrapper implements TestWrapper {
                                        Probe p,
                                        String collectorVar,
                                        String exceptionVar) {
-        Class[] expected = null;
+        Class<?>[] expected = null;
         String expectedMsgRegex = null;
 
         try {
@@ -100,7 +100,7 @@ public class TestNGTestWrapper implements TestWrapper {
             code.append("new String[]{");
             boolean first = true;
 
-            for (Class cls : expected) {
+            for (Class<?> cls : expected) {
                 if (!first)
                     code.append(", ");
 
@@ -119,7 +119,7 @@ public class TestNGTestWrapper implements TestWrapper {
     @Override
     public boolean isDefaultPass(CtClass c,
                                  CtMethod m) {
-        Class[] expected = null;
+        Class<?>[] expected = null;
         try {
             Object annotation = m.getAnnotation(Class.forName(ANNOTATION_CLASS));
             Method method = annotation.getClass().getMethod("expectedExceptions");

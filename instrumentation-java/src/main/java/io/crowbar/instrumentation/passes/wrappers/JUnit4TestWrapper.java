@@ -25,7 +25,7 @@ public final class JUnit4TestWrapper implements TestWrapper {
     private static boolean isSameType (Object o,
                                        String type) {
         try {
-            Class cls = Class.forName(type);
+            Class<?> cls = Class.forName(type);
             return cls.isAssignableFrom(o.getClass());
         }
         catch (ClassNotFoundException e) {
@@ -63,7 +63,7 @@ public final class JUnit4TestWrapper implements TestWrapper {
         try {
             Object annotation = m.getAnnotation(Class.forName("org.junit.Test"));
             Method method = annotation.getClass().getMethod("expected");
-            Class expected = (Class) method.invoke(annotation);
+            Class<?> expected = (Class<?>) method.invoke(annotation);
             expectedStr = expected.getName();
         }
         catch (Throwable e) {}

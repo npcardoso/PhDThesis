@@ -4,6 +4,7 @@ import io.crowbar.diagnostic.spectrum.ProbeType;
 
 public final class ProbeGroup {
     public final class HitProbe extends Probe {
+        private static final long serialVersionUID = 1326454495409325099L;
         private int localId;
         private HitProbe (int globalId,
                           int localId,

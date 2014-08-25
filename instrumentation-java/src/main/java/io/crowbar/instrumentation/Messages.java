@@ -8,6 +8,7 @@ public class Messages {
     public interface Message {}
 
     public static final class HelloMessage implements Message, Serializable {
+        private static final long serialVersionUID = 4523313711692005000L;
         private final String id;
 
         public HelloMessage (String id) {
@@ -29,6 +30,8 @@ public class Messages {
     }
 
     public static final class ByeMessage implements Message, Serializable {
+        private static final long serialVersionUID = 3262507873284969712L;
+
         @Override
         public String toString () {
             return "[[ByeMessage]]";
@@ -36,6 +39,7 @@ public class Messages {
     }
 
     public static final class RegisterNodeMessage implements Message, Serializable {
+        private static final long serialVersionUID = -1646717811451968968L;
         private final String name;
         private final int id;
         private final int parentId;
@@ -75,6 +79,7 @@ public class Messages {
     }
 
     public static final class RegisterProbeMessage implements Message, Serializable {
+        private static final long serialVersionUID = 8746687288408031667L;
         private final Probe probe;
         public RegisterProbeMessage (Probe probe) {
             this.probe = new Probe(probe);
@@ -99,6 +104,7 @@ public class Messages {
     }
 
     public abstract static class ProbeMessage implements Message, Serializable {
+        private static final long serialVersionUID = 2094257171874796426L;
         private final int probeId;
 
         public ProbeMessage (int probeId) {
@@ -124,6 +130,8 @@ public class Messages {
     }
 
     public static final class TransactionStartMessage extends ProbeMessage implements Serializable {
+        private static final long serialVersionUID = 7459099682879100695L;
+
         TransactionStartMessage (int probeId) {
             super(probeId);
         }
@@ -134,6 +142,7 @@ public class Messages {
     }
 
     public static final class TransactionEndMessage extends ProbeMessage implements Serializable {
+        private static final long serialVersionUID = 5478029092609894069L;
         private final String exceptionClass;
         private final String exceptionMessage;
         private final boolean[] hitVector;
@@ -179,6 +188,7 @@ public class Messages {
     }
 
     public static final class OracleMessage extends ProbeMessage implements Serializable  {
+        private static final long serialVersionUID = -4795516008213040058L;
         private final double error;
         private final double confidence;
 

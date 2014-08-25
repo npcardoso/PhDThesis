@@ -97,7 +97,7 @@ public final class TestWrapperPass extends AbstractPass {
          */
         code.append("{Collector " + collectorVar + " = Collector.instance();");
         code.append("try {");
-        String oracleCode = wrapper.getOracleCode(c, m, n, oracleProbe, collectorVar, exceptionVar);
+        String oracleCode = wrapper.getOracleCode(c, m, n, oracleProbe.getId(), collectorVar, exceptionVar);
         code.append((oracleCode != null) ? oracleCode : "");
 
         // Oracle Fail

@@ -97,11 +97,15 @@ public class Server extends ThreadedServer {
                 }
                 else if (o instanceof RegisterNodeMessage) {
                     RegisterNodeMessage rnm = (RegisterNodeMessage) o;
-                    eventListener.registerNode(rnm.getName(), rnm.getId(), rnm.getParentId());
+                    eventListener.registerNode(rnm.getNodeId(),
+                                               rnm.getParentId(),
+                                               rnm.getName());
                 }
                 else if (o instanceof RegisterProbeMessage) {
                     RegisterProbeMessage m = (RegisterProbeMessage) o;
-                    eventListener.registerProbe(m.getProbe());
+                    eventListener.registerProbe(m.getProbeId(),
+                                                m.getNodeId(),
+                                                m.getProbeType());
                 }
                 else {
                     throw new Exception("Unknown Message Type: " + o);

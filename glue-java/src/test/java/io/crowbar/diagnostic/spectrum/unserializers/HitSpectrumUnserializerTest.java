@@ -16,9 +16,9 @@ public class HitSpectrumUnserializerTest {
 		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 		Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
-		
+
 		//s.toString();
-		
+
 	    //TODO Assert
 	}
 
@@ -27,10 +27,9 @@ public class HitSpectrumUnserializerTest {
 		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 		Spectrum<Hit, ?> s = HitSpectrumUnserializer.unserialize(new Scanner(in));
-				
+
 		Component c = s.getComponent(0);
-		
-		assertNotEquals(c, null);
-	    assertEquals(c.getNodeId(),0);
-	}	
+
+		assertEquals(c, null);
+	}
 }

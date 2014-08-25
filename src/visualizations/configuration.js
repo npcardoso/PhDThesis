@@ -9,6 +9,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         self.renderRegexFilter();
         self.renderDefualtTableEntries();
         self.renderChosenScript();
+        this.renderResetButton();
     }
 
 
@@ -68,16 +69,16 @@ function ConfigurationView(data,elementSel, configuration, events) {
         $("#nnodes").val(renderValue(configuration.currentConfig.filterMostRelevamtNodes));
     }
 
-        this.renderGradiante = function() {
+    this.renderGradiante = function() {
         $(elementSel).append('<label>Gradient: </label><div id="gradX" ></div>');
 
         gradX("#gradX", {
             type: "linear",
             change: function(sliders,styles) {
-               configuration.currentConfig.normalGradiante = convertGradRepresentation(sliders);
-               configuration.saveGradiante();
-            },
-            sliders: configuration.currentConfig.normalGradiante
+             configuration.currentConfig.normalGradiante = convertGradRepresentation(sliders);
+             configuration.saveGradiante();
+         },
+         sliders: configuration.currentConfig.normalGradiante
 
      });
 
@@ -109,6 +110,14 @@ function ConfigurationView(data,elementSel, configuration, events) {
         });
     }
 
+    this.renderResetButton = function(){
+        $(elementSel).append('<br /><button id="buttonReset">Reset to default</button>');
+        $( "#buttonReset").button()
+        .click(function( event ) {
+            configuration.resetConfig();
+            self.render();
+        });
+    }
 
     this.renderChosenScript = function() {
         $(elementSel).append('<br /><br/><div class="ui-widget"><label for="tags">Additional scripts to load: </label><br /><input id="tags" size="50"></div>');

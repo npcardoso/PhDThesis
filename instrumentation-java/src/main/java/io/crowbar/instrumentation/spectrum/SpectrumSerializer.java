@@ -23,9 +23,14 @@ public final class SpectrumSerializer {
                 str.append(", ");
 
             str.append(i + ": (");
-            str.append(c.getType().getName());
-            str.append(", ");
-            str.append(c.getNode().getFullName(":", 1));
+
+            if (c != null) {
+                str.append(c.getType().getName());
+                str.append(", ");
+                str.append(c.getNode().getFullName(":", 1));
+            } else
+                str.append("null");
+
             str.append(")");
             first = false;
         }

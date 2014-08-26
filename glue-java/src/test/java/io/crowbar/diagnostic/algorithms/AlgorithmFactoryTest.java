@@ -73,7 +73,7 @@ public class AlgorithmFactoryTest {
 		
 		af.setConfig(name, value);
 		
-		Algorithm a = af.create("Ochiai");
+		Algorithm a = af.create("single_fault");
 		
 		assertTrue(a.getName().equals("single_fault"));
 		assertTrue(a.getConfig("name").equals("value"));

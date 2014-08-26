@@ -36,7 +36,6 @@ class HitVector {
     }
 
     public final boolean[] get (String groupName) {
-        assert exists(groupName);
         return groups.get(groupName).get();
     }
 
@@ -52,8 +51,6 @@ class HitVector {
     }
 
     public final void hit (int globalId) {
-        assert globalId >= 0 && globalId < probes.size();
-
         HitProbe p = probes.get(globalId);
         p.hit();
     }

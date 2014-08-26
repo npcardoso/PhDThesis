@@ -1,10 +1,10 @@
 package io.crowbar.instrumentation;
 
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.Messages.ByeMessage;
 import io.crowbar.instrumentation.Messages.HelloMessage;
 import io.crowbar.instrumentation.Messages.Message;
 import io.crowbar.instrumentation.events.EventListener;
-import io.crowbar.instrumentation.runtime.Probe;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -110,13 +110,21 @@ public class Client implements EventListener {
     }
 
     @Override
-    public void registerNode (String name, int id, int parentId) {
-        postMessage(new Messages.RegisterNodeMessage(name, id, parentId));
+    public void registerNode (int nodeId,
+                              int parentId,
+                              String name) throws Exception {
+        postMessage(new Messages.RegisterNodeMessage(nodeId,
+                                                     parentId,
+                                                     name));
     }
 
     @Override
-    public final void registerProbe (Probe probe) {
-        postMessage(new Messages.RegisterProbeMessage(probe));
+    public void registerProbe (int probeId,
+                               int nodeId,
+                               ProbeType type) throws Exception {
+        postMessage(new Messages.RegisterProbeMessage(probeId,
+                                                      nodeId,
+                                                      type));
     }
 
     @Override

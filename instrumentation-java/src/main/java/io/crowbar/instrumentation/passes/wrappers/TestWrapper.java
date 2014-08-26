@@ -2,15 +2,14 @@ package io.crowbar.instrumentation.passes.wrappers;
 
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
-import io.crowbar.instrumentation.runtime.Probe;
 
 import javassist.CtClass;
 import javassist.CtMethod;
 
 public interface TestWrapper extends ActionTaker {
     /**
-     * This function should return the oracle code for expected transactions.
-     * Unless specified otherwise, transactions that go to the catch block will fail.
+     * @brief This function should return the oracle code for expected transactions.
+     * Unless specified otherwise, transactions that enter the catch block will fail.
      * To change this behavior, the exceptionVar should be thrown.
      * The generated code will be something similar to:
      *
@@ -31,7 +30,7 @@ public interface TestWrapper extends ActionTaker {
     String getOracleCode (CtClass c,
                           CtMethod m,
                           Node n,
-                          Probe p,
+                          int probeId,
                           String collectorVar,
                           String exceptionVar);
 

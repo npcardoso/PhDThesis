@@ -7,7 +7,6 @@ import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.Probe;
 
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
@@ -66,7 +65,7 @@ public class TestNGTestWrapper implements TestWrapper {
     public final String getOracleCode (CtClass c,
                                        CtMethod m,
                                        Node n,
-                                       Probe p,
+                                       int probeId,
                                        String collectorVar,
                                        String exceptionVar) {
         Class[] expected = null;
@@ -90,7 +89,7 @@ public class TestNGTestWrapper implements TestWrapper {
         StringBuilder code = new StringBuilder();
         code.append(getClass().getName() + ".isPass(");
         code.append(collectorVar + ", ");
-        code.append(p.getId() + ", ");
+        code.append(probeId + ", ");
         code.append(exceptionVar + ", ");
 
         if (expected.length == 0) {

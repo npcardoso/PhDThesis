@@ -19,14 +19,14 @@ public final class DiagnosticReport {
             this.scores = Collections.unmodifiableList(scores);
         }
 
-        public List<Double> getScores () {
-            return scores;
-        }
-
-        public List<Candidate> getCandidates () {
-            return candidates;
-        }
-
+        /*  public List<Double> getScores () {
+         *    return scores;
+         * }
+         *
+         * public List<Candidate> getCandidates () {
+         *    return candidates;
+         * }
+         */
         @Override
         public DiagnosticElement get (int id) {
             return new DiagnosticElement(candidates.get(id),

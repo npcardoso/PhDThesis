@@ -1,12 +1,12 @@
 package io.crowbar.diagnostic.runners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import flexjson.JSONSerializer;
 import io.crowbar.diagnostic.Connection;
 import io.crowbar.diagnostic.Diagnostic;
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.DiagnosticSystemFactory;
+import io.crowbar.diagnostic.SortedDiagnostic;
 import io.crowbar.diagnostic.algorithms.FuzzinelRanker;
 import io.crowbar.diagnostic.algorithms.MHSGenerator;
 import io.crowbar.diagnostic.algorithms.SimilarityRanker;
@@ -54,7 +54,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -80,7 +80,6 @@ public class JNARunnerTest {
 
             Diagnostic diag = dr.getDiagnostic(ochiaiCon);
 
-
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
             List<Double> scores = s.getScorePerNode(diag, Spectrum.AVG);
@@ -90,7 +89,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -126,7 +125,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -161,7 +160,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -194,7 +193,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -228,7 +227,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -261,7 +260,7 @@ public class JNARunnerTest {
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.5, 0.666667));
 
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -287,7 +286,6 @@ public class JNARunnerTest {
 
             Diagnostic diag = dr.getDiagnostic(fuzzinelCon);
 
-
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
             List<Double> scores = s.getScorePerNode(diag, Spectrum.SUM);
@@ -296,7 +294,7 @@ public class JNARunnerTest {
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 1.0, 0.666667));
 
 
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -331,7 +329,7 @@ public class JNARunnerTest {
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }
@@ -356,6 +354,7 @@ public class JNARunnerTest {
 
         j.addRanker(new FuzzinelRanker());
         Connection fuzzinelCon = j.addConnection(0, 0);
+        fuzzinelCon.toString(); // just to get 100% coverage.
 
         try {
             JNARunner runner = new JNARunner();
@@ -371,7 +370,41 @@ public class JNARunnerTest {
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
+        }
+        catch (Throwable e) {e.printStackTrace();}
+    }
+
+    @Test
+    public void testJNARunner_SORTEDDiagnostic () {
+        String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
+        j.addGenerator(new MHSGenerator());
+
+        j.addRanker(new FuzzinelRanker());
+        Connection fuzzinelCon = j.addConnection(0, 0);
+
+        try {
+            JNARunner runner = new JNARunner();
+
+            DiagnosticReport dr = runner.run(j.create(), s);
+
+            Diagnostic diag = dr.getDiagnostic(fuzzinelCon);
+
+            SortedDiagnostic sdiag = new SortedDiagnostic(diag);
+
+            List<Double> scores = s.getScorePerNode(diag, Spectrum.SUM);
+
+            List<Double> cmp = new ArrayList<Double> (Arrays.asList(1.0, 0.666667, 0.333333));
+
+            assertEquals(sdiag.size(), scores.size());
+            assertEquals(sdiag.get(0).getScore(), 1.0, 0.01);
+            assertEquals(sdiag.getSortedDiagnostic(), cmp);
         }
         catch (Throwable e) {e.printStackTrace();}
     }

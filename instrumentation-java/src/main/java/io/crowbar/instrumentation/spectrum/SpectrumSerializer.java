@@ -45,8 +45,8 @@ public final class SpectrumSerializer {
 
         for (Transaction< ? extends Activity, TrM> t : spectrum.byTransaction()) {
             str.append(HitSpectrumSerializer.serialize(t, numComp));
-            str.append(" # exceptionClass: " + (t == null ? "null" : t.getMetadata().getExceptionClass()));
-            str.append(", exceptionMessage: " + (t == null ? "null" : t.getMetadata().getExceptionMessage()));
+            str.append(" # exceptionClass: " + ((t == null || t.getMetadata() == null) ? "null" : t.getMetadata().getExceptionClass()));
+            str.append(", exceptionMessage: " + ((t == null || t.getMetadata() == null) ? "null" : t.getMetadata().getExceptionMessage()));
             str.append("\n");
         }
 

@@ -49,7 +49,7 @@ public class SpectrumSerializerTest {
         String output = SpectrumSerializer.serialize(es);
         String except = "[0: (TransactionStart, root), 1: (HitProbe, root), 2: (TransactionEnd, root)]\n" +
                         "3 1\n" +
-                        "1 0 1 1.0\n";
+                        "1 0 1 1.0 # exceptionClass: null, exceptionMessage: null\n";
 
         assertEquals(except, output);
     }

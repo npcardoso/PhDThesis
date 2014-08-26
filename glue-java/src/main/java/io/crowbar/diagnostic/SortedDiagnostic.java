@@ -28,10 +28,6 @@ extends Diagnostic {
         return elements.size();
     }
 
-    public List<DiagnosticElement> getSortedDiagnostic () {
-        return elements;
-    }
-
     public List<Double> getScorePerProbe () {
         List<Double> lret = new ArrayList<Double> (size());
         Iterator<DiagnosticElement> i = elements.iterator();

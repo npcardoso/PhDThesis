@@ -1,22 +1,25 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MultiListener implements EventListener {
+public final class MultiListener
+implements EventListener {
     public final void add (EventListener l) {
         assert l != null;
         this.listeners.add(l);
     }
 
     @Override
-    public final void registerNode (String name, int id, int parentId) throws Exception {
+    public void registerNode (int nodeId,
+                              int parentId,
+                              String name) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.registerNode(name, id, parentId);
+                el.registerNode(nodeId, parentId, name);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -25,10 +28,12 @@ public class MultiListener implements EventListener {
     }
 
     @Override
-    public final void registerProbe (Probe probe) throws Exception {
+    public void registerProbe (int probeId,
+                               int nodeId,
+                               ProbeType type) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.registerProbe(probe);
+                el.registerProbe(probeId, nodeId, type);
             }
             catch (Exception e) {
                 e.printStackTrace();

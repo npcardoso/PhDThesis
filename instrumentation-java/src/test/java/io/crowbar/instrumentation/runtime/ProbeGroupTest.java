@@ -1,8 +1,10 @@
 package io.crowbar.instrumentation.runtime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
+
+import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -30,13 +32,40 @@ public class ProbeGroupTest {
 
     @Test
     public void testGet () {
-        // TODO
-        fail("to implement");
+        ProbeGroup pg = new ProbeGroup();
+
+
+        pg.register(0, 0, ProbeType.HIT_PROBE);
+        pg.register(0, 0, ProbeType.HIT_PROBE);
+        pg.register(0, 0, ProbeType.HIT_PROBE);
+        pg.register(0, 0, ProbeType.HIT_PROBE);
+        pg.register(0, 0, ProbeType.HIT_PROBE);
+
+        assertEquals(pg.get().length, 5);
+    }
+
+    @Test
+    public void testEmptyReset () {
+        ProbeGroup pg = new ProbeGroup();
+
+
+        pg.reset();
+        assertEquals(0, pg.get().length);
     }
 
     @Test
     public void testReset () {
-        // TODO
-        fail("to implement");
+        ProbeGroup pg = new ProbeGroup();
+
+
+        pg.register(0, 0, ProbeType.HIT_PROBE);
+        pg.register(0, 0, ProbeType.HIT_PROBE);
+
+        boolean[] hitArray = pg.get();
+        hitArray[0] = true;
+
+        pg.reset();
+
+        assertTrue(Arrays.equals(pg.get(), new boolean[] {false, false}));
     }
 }

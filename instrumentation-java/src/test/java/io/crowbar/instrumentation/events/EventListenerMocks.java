@@ -2,7 +2,6 @@ package io.crowbar.instrumentation.events;
 
 import static org.junit.Assert.assertEquals;
 import io.crowbar.diagnostic.spectrum.ProbeType;
-import io.crowbar.instrumentation.runtime.Probe;
 
 public final class EventListenerMocks {
     public static class EventListenerChecks {
@@ -48,7 +47,9 @@ public final class EventListenerMocks {
         }
 
         @Override
-        public void registerNode (String name, int id, int parentId) throws Exception {
+        public void registerNode (int nodeId,
+                                  int parentId,
+                                  String name) throws Exception {
             assertEquals(checks.nodeName, name);
             assertEquals(checks.parentNodeId, parentId);
             triggered = true;
@@ -61,9 +62,11 @@ public final class EventListenerMocks {
         }
 
         @Override
-        public void registerProbe (Probe probe) throws Exception {
-            assertEquals(checks.probeNodeId, probe.getNodeId());
-            assertEquals(checks.probeType, probe.getType());
+        public void registerProbe (int probeId,
+                                   int nodeId,
+                                   ProbeType type) throws Exception {
+            assertEquals(checks.probeNodeId, probeId);
+            assertEquals(checks.probeType, type);
             triggered = true;
         }
     }

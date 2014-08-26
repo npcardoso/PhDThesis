@@ -1,6 +1,6 @@
 package io.crowbar.instrumentation;
 
-import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import java.io.Serializable;
 
@@ -36,22 +36,24 @@ public class Messages {
     }
 
     public static final class RegisterNodeMessage implements Message, Serializable {
-        private final String name;
-        private final int id;
+        private final int nodeId;
         private final int parentId;
+        private final String name;
 
-        public RegisterNodeMessage (String name, int id, int parentId) {
-            this.name = name;
-            this.id = id;
+        public RegisterNodeMessage (int nodeId,
+                                    int parentId,
+                                    String name) {
+            this.nodeId = nodeId;
             this.parentId = parentId;
+            this.name = name;
         }
 
         public String getName () {
             return name;
         }
 
-        public int getId () {
-            return id;
+        public int getNodeId () {
+            return nodeId;
         }
 
         public int getParentId () {
@@ -63,40 +65,17 @@ public class Messages {
             String ret = "[[" + this.getClass().getSimpleName() + "]: ";
 
 
-            ret += "name: " + name + "] ";
-            ret += "id: " + id + "] ";
-            ret += "parentId: " + parentId + "]";
+            ret += "id: " + nodeId + ", ";
+            ret += "parentId: " + parentId + ", ";
+            ret += "name: " + name + "]";
             return ret;
         }
 
         protected RegisterNodeMessage () {
-            this(null, -1, -1);
+            this(-1, -1, null);
         }
     }
 
-    public static final class RegisterProbeMessage implements Message, Serializable {
-        private final Probe probe;
-        public RegisterProbeMessage (Probe probe) {
-            this.probe = new Probe(probe);
-        }
-
-        public Probe getProbe () {
-            return probe;
-        }
-
-        @Override
-        public String toString () {
-            String ret = "[[" + this.getClass().getSimpleName() + "]: ";
-
-
-            ret += probe + "]";
-            return ret;
-        }
-
-        protected RegisterProbeMessage () {
-            this(null); // FIXME: this code throws an exception
-        }
-    }
 
     public abstract static class ProbeMessage implements Message, Serializable {
         private final int probeId;
@@ -122,6 +101,44 @@ public class Messages {
             this(-1);
         }
     }
+
+    public static final class RegisterProbeMessage
+    extends ProbeMessage
+    implements Serializable {
+        private final int nodeId;
+        private final ProbeType type;
+        public RegisterProbeMessage (int probeId,
+                                     int nodeId,
+                                     ProbeType type) {
+            super(probeId);
+            this.nodeId = nodeId;
+            this.type = type;
+        }
+
+        public final int getNodeId () {
+            return nodeId;
+        }
+
+        public final ProbeType getProbeType () {
+            return type;
+        }
+
+        @Override
+        public String toString () {
+            String ret = "[[" + this.getClass().getSimpleName() + "]: ";
+
+
+            ret += getProbeId() + ", ";
+            ret += getNodeId() + ", ";
+            ret += getProbeType() + "]";
+            return ret;
+        }
+
+        protected RegisterProbeMessage () {
+            this(-1, -1, null); // FIXME: this code throws an exception
+        }
+    }
+
 
     public static final class TransactionStartMessage extends ProbeMessage implements Serializable {
         TransactionStartMessage (int probeId) {

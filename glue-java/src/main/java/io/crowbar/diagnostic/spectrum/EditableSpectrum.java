@@ -45,7 +45,7 @@ extends Spectrum<A, TM> {
     /**
      * @brief Retreives a component by id.
      * @return A component or null if a component with such id does
-     * not exist.
+     * not exist/is not linked with any node in the tree.
      */
     @Override
     public Component getComponent (int id) {

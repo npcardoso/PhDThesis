@@ -1,11 +1,15 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 
 public interface EventListener {
-    void registerNode (String name, int id, int parentId) throws Exception;
+    void registerNode (int nodeId,
+                       int parentId,
+                       String name) throws Exception;
 
-    void registerProbe (Probe p) throws Exception;
+    void registerProbe (int probeId,
+                        int nodeId,
+                        ProbeType type) throws Exception;
 
     void startTransaction (int probeId) throws Exception;
 

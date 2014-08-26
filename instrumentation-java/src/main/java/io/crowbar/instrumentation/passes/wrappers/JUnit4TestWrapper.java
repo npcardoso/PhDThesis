@@ -7,7 +7,6 @@ import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.Probe;
 
 import java.lang.reflect.Method;
 
@@ -18,9 +17,9 @@ import javassist.CtMethod;
 public final class JUnit4TestWrapper implements TestWrapper {
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
-        	new AndMatcher(
-        		new AnnotationMatcher("org.junit.Test"),
-        		new ReturnTypeMatcher("void")));
+            new AndMatcher(
+                new AnnotationMatcher("org.junit.Test"),
+                new ReturnTypeMatcher("void")));
 
     private static boolean isSameType (Object o,
                                        String type) {
@@ -53,12 +52,13 @@ public final class JUnit4TestWrapper implements TestWrapper {
 
     @Override
     public Action getAction (CtClass c,
-                                   CtMethod m) {
+                             CtMethod m) {
         return ACTION_TAKER.getAction(c, m);
     }
 
-    private String getExpectedExceptionName(CtMethod m){
+    private String getExpectedExceptionName (CtMethod m) {
         String expectedStr = null;
+
 
         try {
             Object annotation = m.getAnnotation(Class.forName("org.junit.Test"));
@@ -75,10 +75,11 @@ public final class JUnit4TestWrapper implements TestWrapper {
     public String getOracleCode (CtClass c,
                                  CtMethod m,
                                  Node n,
-                                 Probe p,
+                                 int probeId,
                                  String collectorVar,
                                  String exceptionVar) {
         String expectedStr = getExpectedExceptionName(m);
+
 
         if (expectedStr == null)
             expectedStr = "\"\"";
@@ -88,16 +89,18 @@ public final class JUnit4TestWrapper implements TestWrapper {
         String oracleCall =
             getClass().getName() + ".isPass(" +
             collectorVar + ", " +
-            p.getId() + ", " +
+            probeId + ", " +
             exceptionVar + ", " +
             expectedStr + ")";
         return "if(" + oracleCall + ") throw " + exceptionVar + ";";
     }
 
     @Override
-    public boolean isDefaultPass(CtClass c,
-                                 CtMethod m) {
+    public boolean isDefaultPass (CtClass c,
+                                  CtMethod m) {
         String expectedStr = getExpectedExceptionName(m);
+
+
         return expectedStr == null;
     }
 }

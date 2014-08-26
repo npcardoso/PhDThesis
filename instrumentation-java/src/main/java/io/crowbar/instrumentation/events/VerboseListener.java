@@ -1,8 +1,11 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.diagnostic.spectrum.ProbeType;
+
+import java.io.PrintStream;
 
 public class VerboseListener implements EventListener {
+    private final PrintStream out;
     private String prefix = "";
     private String suffix = "";
 
@@ -11,6 +14,14 @@ public class VerboseListener implements EventListener {
     private boolean startTransaction = true;
     private boolean endTransaction = true;
     private boolean oracle = true;
+
+    public VerboseListener () {
+        this(System.out);
+    }
+
+    public VerboseListener (PrintStream out) {
+        this.out = out;
+    }
 
     public final void setPrefix (String str) {
         prefix = str;
@@ -41,25 +52,30 @@ public class VerboseListener implements EventListener {
     }
 
     @Override
-    public final void registerNode (String name, int id, int parentId) throws Exception {
+    public void registerNode (int nodeId,
+                              int parentId,
+                              String name) throws Exception {
         if (!registerNode) return;
 
         String ret = prefix;
 
 
-        ret += "Registering Node: (" + name + ", " + id + ", " + parentId + ")";
+        ret += "Registering Node " + nodeId + ": (n:" + name + ", p:" + parentId + ")";
         ret += suffix;
-        System.out.println(ret);
+        out.println(ret);
     }
 
     @Override
-    public final void registerProbe (Probe p) throws Exception {
+
+    public void registerProbe (int probeId,
+                               int nodeId,
+                               ProbeType type) throws Exception {
         if (!registerProbe) return;
 
         String ret = prefix;
-        ret += "Registering Probe: " + p;
+        ret += "Registering Probe " + probeId + " @ " + nodeId + "(" + type + ")";
         ret += suffix;
-        System.out.println(ret);
+        out.println(ret);
     }
 
     @Override
@@ -71,7 +87,7 @@ public class VerboseListener implements EventListener {
 
         ret += "Transaction Start: [probeId: " + probeId + "]";
         ret += suffix;
-        System.out.println(ret);
+        out.println(ret);
     }
 
     @Override
@@ -94,7 +110,7 @@ public class VerboseListener implements EventListener {
         }
 
         ret += "]]" + suffix;
-        System.out.println(ret);
+        out.println(ret);
     }
 
     @Override
@@ -110,6 +126,6 @@ public class VerboseListener implements EventListener {
         ret += "error: " + error + ", ";
         ret += "confidence: " + confidence + "]";
         ret += suffix;
-        System.out.println(ret);
+        out.println(ret);
     }
 }

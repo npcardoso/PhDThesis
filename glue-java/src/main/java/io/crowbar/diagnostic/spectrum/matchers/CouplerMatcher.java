@@ -34,8 +34,8 @@ implements SpectrumMatcher<A, TM> {
         }
     }
 
-    private static final Coupler AND = new And();
-    private static final Coupler OR = new Or();
+    public static final Coupler AND = new And();
+    public static final Coupler OR = new Or();
 
 
     private final Coupler coupler;

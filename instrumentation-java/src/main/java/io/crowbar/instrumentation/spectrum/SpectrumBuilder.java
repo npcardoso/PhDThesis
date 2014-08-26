@@ -2,17 +2,17 @@ package io.crowbar.instrumentation.spectrum;
 
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.instrumentation.events.AbstractEventListener;
-import io.crowbar.instrumentation.runtime.Probe;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class SpectrumBuilder extends AbstractEventListener {
+public final class SpectrumBuilder extends AbstractEventListener {
     private boolean error = false;
 
     private Map<Integer, Node> nodeIdTranslation = new HashMap<Integer, Node> ();
@@ -21,25 +21,29 @@ public class SpectrumBuilder extends AbstractEventListener {
         new EditableSpectrum<Hit, TrM> ();
 
 
-    public final Spectrum<Hit, TrM> getSpectrum () {
+    public Spectrum<Hit, TrM> getSpectrum () {
         return spectrum;
     }
 
     @Override
-    public final void registerNode (String name, int id, int parentId) throws Exception {
-        assert (nodeIdTranslation.get(id) == null);
+    public void registerNode (int nodeId,
+                              int parentId,
+                              String name) throws Exception {
+        assert (nodeIdTranslation.get(nodeId) == null);
         Node n = spectrum.getTree().addNode(name, parentId);
-        nodeIdTranslation.put(id, n);
+        nodeIdTranslation.put(nodeId, n);
     }
 
     @Override
-    public final void registerProbe (Probe probe) throws Exception {
-        Node n = nodeIdTranslation.get(probe.getNodeId());
+    public void registerProbe (int probeId,
+                               int nodeId,
+                               ProbeType type) throws Exception {
+        Node n = nodeIdTranslation.get(nodeId);
 
 
         assert (n != null);
 
-        spectrum.setComponent(probe.getId(), probe.getType(), n);
+        spectrum.setComponent(probeId, type, n);
     }
 
     @Override

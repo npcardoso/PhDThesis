@@ -164,7 +164,7 @@ public abstract class Spectrum<A extends Activity,
                                          MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
-        while (tmp.size() <= getTree().size())
+        while (tmp.size() < getTree().size())
             tmp.add(null);
 
         for (DiagnosticElement e : diagnostic) {
@@ -198,7 +198,7 @@ public abstract class Spectrum<A extends Activity,
                                           MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getProbeCount());
 
-        while (tmp.size() <= getProbeCount())
+        while (tmp.size() < getProbeCount())
             tmp.add(null);
 
         for (DiagnosticElement e : diagnostic) {

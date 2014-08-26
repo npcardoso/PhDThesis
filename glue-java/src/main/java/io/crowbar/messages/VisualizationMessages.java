@@ -33,7 +33,9 @@ public class VisualizationMessages {
          */
         Request (Tree tree,
                  List<Double> scores) {
-            assert (tree.size() == scores.size());
+            if (tree.size() != scores.size())
+                throw new RuntimeException("tree.size() !=  scores.size() (" + tree.size() + " != " + scores.size() + ")");
+
             setTree(tree);
             setScores(scores);
         }

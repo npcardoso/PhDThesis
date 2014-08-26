@@ -41,7 +41,7 @@ public final class DiagnosticSystemFactory {
      */
     public Connection addConnection (int from,
                                      int to) {
-        if (from < 0 || to >= generators.size())
+        if (from < 0 || from >= generators.size())
             throw new IndexOutOfBoundsException();
 
         if (to < 0 || to >= rankers.size())

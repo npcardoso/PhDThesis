@@ -76,6 +76,8 @@ public class JNARunnerTest {
         j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
         Connection ochiaiCon = j.addConnection(0, 0);
 
+        System.out.println(ochiaiCon.toString()); // this way, class will be fully tested -- Hack
+
         try {
             JNARunner runner = new JNARunner();
 
@@ -395,6 +397,66 @@ public class JNARunnerTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testJDiagnosticSystemFactory_ConnectionFromNegative () {
+        String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
+        j.addGenerator(new MHSGenerator());
+
+        j.addRanker(new FuzzinelRanker());
+        Connection fuzzinelCon = j.addConnection(-1, 0);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testJDiagnosticSystemFactory_ConnectionFromInexistent () {
+        String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
+        j.addGenerator(new MHSGenerator());
+
+        j.addRanker(new FuzzinelRanker());
+        Connection fuzzinelCon = j.addConnection(10, 0);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testJDiagnosticSystemFactory_ConnectionToInexistent () {
+        String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
+        j.addGenerator(new MHSGenerator());
+
+        j.addRanker(new FuzzinelRanker());
+        Connection fuzzinelCon = j.addConnection(0, 10);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testJDiagnosticSystemFactory_ConnectionToNegative () {
+        String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
+        j.addGenerator(new MHSGenerator());
+
+        j.addRanker(new FuzzinelRanker());
+        Connection fuzzinelCon = j.addConnection(0, -1);
     }
 
     @Test

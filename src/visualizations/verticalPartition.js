@@ -45,10 +45,11 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(rect);
-        ZoomController(elementSel,zoomElement,svg,self.configuration);
+        zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
     }
 
     this.click = function(node) {
+        zoomEvents.zoomReset();
         self.nodeInfoDisplay.setClicked(node);
         events.click(node)
         rect_render.rectAnimation(rect,node);

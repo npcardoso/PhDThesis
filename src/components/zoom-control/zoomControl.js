@@ -12,95 +12,96 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
         eventsBlocked = false;
     }
     var events = {up: function(){
-                if(eventsBlocked)
-                    return;
-                eventsBlocked = true;
-                var curTranslate = zoomListener.translate();
-                curTranslate[1] += 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            },
-            down: function(){
-                if(eventsBlocked)
-                    return;
-                eventsBlocked = true;
-                var curTranslate = zoomListener.translate();
-                curTranslate[1] -= 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            },
-            right: function(){
-                if(eventsBlocked)
-                    return;
-                eventsBlocked = true;
-                var curTranslate = zoomListener.translate();
-                curTranslate[0] -= 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            },
-            left: function(){
-                if(eventsBlocked)
-                    return;
-                eventsBlocked = true;
-                var curTranslate = zoomListener.translate();
-                curTranslate[0] += 100;
-                zoomListener.translate(curTranslate);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            },            
-            zoomIn: function(){
-                if(eventsBlocked)
-                    return;
-                eventsBlocked = true;
-                var curScale = zoomListener.scale();
-                ++curScale
-                if(curScale <= 10){
-                    zoomListener.scale(curScale);
-                    zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-                }
-                eventsUnlock();
-            },
-            zoomOut: function(){
-                if(eventsBlocked)
-                    return;
-                eventsBlocked = true;
-                var curScale = zoomListener.scale();
-                --curScale;
-                if(curScale < 1){
-                    curScale = 1;
-                }
-                zoomListener.scale(curScale);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            },
-            zoomReset: function(){
-                if(eventsBlocked)
-                    return;
-                eventsBlocked = true;
-                zoomListener.scale(1);
-                zoomListener.translate([0,0]);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            }
-        };
-
-        zoomListener(zoomElement);
-        zoomListener.event(zoomElement);
-
-        $('#zoomContainer').remove();
-        $(elementSel).prepend(ZoomController_HTML);
-        $('#panUp').click(events.up);
-        $('#panDown').click(events.down);
-        $('#panLeft').click(events.left);
-        $('#panRight').click(events.right);
-        $('#zoomIn').click(events.zoomIn);
-        $('#zoomOut').click(events.zoomOut);
-        $('#zoomReset').click(events.zoomReset);
+        if(eventsBlocked)
+            return;
+        eventsBlocked = true;
+        var curTranslate = zoomListener.translate();
+        curTranslate[1] += 100;
+        zoomListener.translate(curTranslate);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+    },
+    down: function(){
+        if(eventsBlocked)
+            return;
+        eventsBlocked = true;
+        var curTranslate = zoomListener.translate();
+        curTranslate[1] -= 100;
+        zoomListener.translate(curTranslate);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+    },
+    right: function(){
+        if(eventsBlocked)
+            return;
+        eventsBlocked = true;
+        var curTranslate = zoomListener.translate();
+        curTranslate[0] -= 100;
+        zoomListener.translate(curTranslate);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+    },
+    left: function(){
+        if(eventsBlocked)
+            return;
+        eventsBlocked = true;
+        var curTranslate = zoomListener.translate();
+        curTranslate[0] += 100;
+        zoomListener.translate(curTranslate);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+    },            
+    zoomIn: function(){
+        if(eventsBlocked)
+            return;
+        eventsBlocked = true;
+        var curScale = zoomListener.scale();
+        ++curScale
+        if(curScale <= 10){
+            zoomListener.scale(curScale);
+            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+        }
+        eventsUnlock();
+    },
+    zoomOut: function(){
+        if(eventsBlocked)
+            return;
+        eventsBlocked = true;
+        var curScale = zoomListener.scale();
+        --curScale;
+        if(curScale < 1){
+            curScale = 1;
+        }
+        zoomListener.scale(curScale);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+    },
+    zoomReset: function(){
+        if(eventsBlocked)
+            return;
+        eventsBlocked = true;
+        zoomListener.scale(1);
+        zoomListener.translate([0,0]);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
     }
+};
 
-    $.ajax({
-     url: 'components/zoom-control/zoomcontrol.html',
-     type: 'get',
-     dataType: 'html',
-     async: false,
-     success: function(html) {
+zoomListener(zoomElement);
+zoomListener.event(zoomElement);
+
+$('#zoomContainer').remove();
+$(elementSel).prepend(ZoomController_HTML);
+$('#panUp').click(events.up);
+$('#panDown').click(events.down);
+$('#panLeft').click(events.left);
+$('#panRight').click(events.right);
+$('#zoomIn').click(events.zoomIn);
+$('#zoomOut').click(events.zoomOut);
+$('#zoomReset').click(events.zoomReset);
+return events;
+}
+
+$.ajax({
+   url: 'components/zoom-control/zoomcontrol.html',
+   type: 'get',
+   dataType: 'html',
+   async: false,
+   success: function(html) {
       ZoomController_HTML = html;
   }
 });

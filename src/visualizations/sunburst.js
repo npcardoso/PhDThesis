@@ -26,6 +26,8 @@ function Sunburst(data, elementSel, configuration, events) {
 
     var element = d3.select(elementSel);
 
+    var zoomEvents;
+
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
         element.html('');       
@@ -62,7 +64,7 @@ function Sunburst(data, elementSel, configuration, events) {
 
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(path);
-        ZoomController(elementSel,zoomElement,svg,self.configuration);
+        zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
     }
 
     var centerTranslation = function(){
@@ -71,6 +73,7 @@ function Sunburst(data, elementSel, configuration, events) {
 
     //Function called when a node is clicked call the click event and applicates the animation
     this.click = function(node) {
+        zoomEvents.zoomReset();
         self.nodeInfoDisplay.setClicked(node);
         self.events.click(node);
         path.transition()

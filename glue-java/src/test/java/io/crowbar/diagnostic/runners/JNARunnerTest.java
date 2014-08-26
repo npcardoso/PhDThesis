@@ -57,7 +57,7 @@ public class JNARunnerTest {
             assertEquals(scores.size(), cmp.size());
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -93,7 +93,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {
             e.printStackTrace();
@@ -131,7 +131,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {
             e.printStackTrace();
@@ -168,7 +168,7 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
         catch (Throwable e) {
             e.printStackTrace();
@@ -203,9 +203,9 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -239,9 +239,9 @@ public class JNARunnerTest {
 
 
             assertEquals(scores.size(), cmp.size());
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -274,9 +274,9 @@ public class JNARunnerTest {
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.5, 0.666667));
 
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -311,10 +311,9 @@ public class JNARunnerTest {
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 1.0, 0.666667));
 
-
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -349,9 +348,9 @@ public class JNARunnerTest {
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
-            assertTrue(scores.equals(cmp));
+            assertEquals(scores, cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -391,15 +390,15 @@ public class JNARunnerTest {
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
-            assertEquals(cmp, scores);
+            assertEquals(scores, cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void testJNARunner_SORTEDDiagnostic () {
+    public void testJNARunner_SortedDiagnostic () {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
@@ -429,7 +428,7 @@ public class JNARunnerTest {
             assertEquals(sdiag.get(0).getScore(), 1.0, 0.01);
             assertEquals(sdiag.getSortedDiagnostic(), cmp);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

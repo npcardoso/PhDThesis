@@ -23,7 +23,9 @@ public abstract class Spectrum<A extends Activity,
 
             double total = 0;
 
-            for (Double s : scores) {total += s;}
+            for (Double s : scores) {
+                total += s;
+            }
 
             return total / scores.size();
         }
@@ -37,7 +39,9 @@ public abstract class Spectrum<A extends Activity,
 
             double max = 0;
 
-            for (Double s : scores) {max = Math.max(max, s);}
+            for (Double s : scores) {
+                max = Math.max(max, s);
+            }
 
             return max;
         }
@@ -51,7 +55,9 @@ public abstract class Spectrum<A extends Activity,
 
             double total = 0;
 
-            for (Double s : scores) {total += s;}
+            for (Double s : scores) {
+                total += s;
+            }
 
             return total;
         }
@@ -97,17 +103,17 @@ public abstract class Spectrum<A extends Activity,
         }
     }
 
-    private class CIterable implements Iterable<Component> {
-        public Iterator<Component> iterator () {
-            return new AbstractIterator<Component> () {
+    private class PIterable implements Iterable<Probe> {
+        public Iterator<Probe> iterator () {
+            return new AbstractIterator<Probe> () {
                        @Override
                        public boolean hasNext () {
-                           return getId() < getComponentCount();
+                           return getId() < getProbeCount();
                        }
 
                        @Override
-                       protected Component get (int i) {
-                           return getComponent(i);
+                       protected Probe get (int i) {
+                           return getProbe(i);
                        }
             };
         }
@@ -118,19 +124,34 @@ public abstract class Spectrum<A extends Activity,
     public abstract Tree getTree ();
 
     public abstract int getTransactionCount ();
-    public abstract int getComponentCount ();
+    public abstract int getProbeCount ();
 
     public abstract Transaction<A, TM> getTransaction (int transactionId);
-    public abstract Component getComponent (int componentId);
 
-    public abstract ArrayList<Component> getComponents ();
+    public abstract Probe getProbe (int probeId);
 
-    public final Iterable<Component> byComponent () {
-        return new CIterable();
+    public abstract List<Probe> getProbes ();
+
+    public final Iterable<Probe> byProbe () {
+        return new PIterable();
     }
 
     public final Iterable<Transaction<A, TM> > byTransaction () {
         return new TIterable();
+    }
+
+    private List<Double> reduce (List<List<Double> > l,
+                                 MergeStrategy ms) {
+        List<Double> ret = new ArrayList<Double> (l.size());
+
+        for (List<Double> s : l) {
+            if (s == null)
+                ret.add(Double.NaN);
+            else
+                ret.add(ms.reduce(s));
+        }
+
+        return ret;
     }
 
     /**
@@ -143,46 +164,57 @@ public abstract class Spectrum<A extends Activity,
                                          MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
+        while (tmp.size() < getTree().size())
+            tmp.add(null);
+
         for (DiagnosticElement e : diagnostic) {
-            for (int cmpId : e.getCandidate()) {
-                Component cmp = getComponent(cmpId);
-                List<Double> list = null;
+            for (int probeId : e.getCandidate()) {
+                Probe probe = getProbe(probeId);
 
-                if (cmp != null) {
-                    int nodeId = cmp.getNode().getId();
+                if (probe == null) continue; // Ignore probes without information
 
-                    while (tmp.size() <= nodeId)
-                        tmp.add(null);
-
-                    list = tmp.get(cmpId);
-                }
-                else if (tmp.size() > cmpId) {
-                    // if there is no information about the components IDs -- seems safe to do
-                    list = tmp.get(cmpId);
-                }
+                int nodeId = probe.getNode().getId();
+                List<Double> list = tmp.get(nodeId);
 
                 if (list == null) {
                     list = new LinkedList<Double> ();
-                    tmp.add(cmpId, list);
+                    tmp.set(nodeId, list);
                 }
 
                 list.add(e.getScore());
             }
         }
 
-        while (tmp.size() <= getTree().size())
+        return reduce(tmp, ms);
+    }
+
+    /**
+     * @brief Calculates a score value per Probe using an arbitrary MergeStrategy.
+     * This is used to convert a multiple fault ranking into single fault ranking.
+     * @post ret.size() == getProbeCount()
+     * @return A list containing the score for each probe.
+     */
+    public List<Double> getScorePerProbe (Diagnostic diagnostic,
+                                          MergeStrategy ms) {
+        List<List<Double> > tmp = new ArrayList<List<Double> > (getProbeCount());
+
+        while (tmp.size() < getProbeCount())
             tmp.add(null);
 
-        List<Double> ret = new ArrayList(tmp.size());
+        for (DiagnosticElement e : diagnostic) {
+            for (int probeId : e.getCandidate()) {
+                List<Double> list = tmp.get(probeId);
 
-        for (List<Double> s : tmp) {
-            if (s == null)
-                ret.add(Double.NaN);
-            else
-                ret.add(ms.reduce(s));
+                if (list == null) {
+                    list = new LinkedList<Double> ();
+                    tmp.set(probeId, list);
+                }
+
+                list.add(e.getScore());
+            }
         }
 
-        return ret;
+        return reduce(tmp, ms);
     }
 
     @Override
@@ -191,14 +223,18 @@ public abstract class Spectrum<A extends Activity,
 
 
         str.append("{class='Spectrum', ");
-        str.append("components=[");
+        str.append("probes=[");
         boolean first = true;
 
-        for (Component component : byComponent()) {
+        for (Probe probe : byProbe()) {
             if (!first)
                 str.append(",");
 
-            str.append(component.toString());
+            if (probe == null)
+                str.append("null");
+            else
+                str.append(probe.toString());
+
             first = false;
         }
 

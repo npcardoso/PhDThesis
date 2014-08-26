@@ -7,13 +7,13 @@ import io.crowbar.diagnostic.spectrum.Spectrum;
 
 
 public final class HitSpectrumSerializer {
-    public static String serialize (Spectrum< ? extends Activity, ?> spectrum) {
+    public static String serialize (Spectrum< ? extends Activity, ? > spectrum) {
         return HitSpectrumSerializer.serialize(spectrum, "\n");
     }
 
-    public static String serialize (Spectrum< ? extends Activity, ?> spectrum,
+    public static String serialize (Spectrum< ? extends Activity, ? > spectrum,
                                     String separator) {
-        int numComp = spectrum.getComponentCount();
+        int numComp = spectrum.getProbeCount();
         int numTran = spectrum.getTransactionCount();
         StringBuilder str = new StringBuilder();
 
@@ -32,7 +32,7 @@ public final class HitSpectrumSerializer {
     }
 
     public static String serialize (Transaction< ? extends Activity, ? > transaction,
-                                    int componentCount) {
+                                    int probeCount) {
         StringBuilder str = new StringBuilder();
         int i = 0;
 
@@ -44,14 +44,14 @@ public final class HitSpectrumSerializer {
             }
         }
 
-        for (; i < componentCount; i++) {
+        for (; i < probeCount; i++) {
             str.append(0);
             str.append(" ");
         }
 
         str.append(transaction == null ? 0 : transaction.getError());
-//        str.append(" ");
-//        str.append(transaction == null ? 0 : transaction.getConfidence());
+        // str.append(" ");
+        // str.append(transaction == null ? 0 : transaction.getConfidence());
 
         return str.toString();
     }

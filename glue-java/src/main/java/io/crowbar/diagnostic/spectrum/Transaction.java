@@ -40,9 +40,9 @@ implements Iterable<A> {
     }
 
     /**
-     * @brief Retreives the activity by component id.
+     * @brief Retreives the activity by probe id.
      * @note iterator uses this function.
-     * @return the activity or null if activity for that component
+     * @return the activity or null if activity for that probe
      * does not exist.
      */
     public abstract A get (int id);
@@ -69,7 +69,7 @@ implements Iterable<A> {
      * @brief Gets the size of the transaction
      * @note iterator uses this function.
      * @return The size of the transaction is equal to the id of the
-     * last component + 1.
+     * last probe + 1.
      */
     public abstract int size ();
 

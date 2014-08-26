@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Hook used to indent all source files before commiting
 #
 
-INDENT=`type uncrustify | grep s | sed 's/.*is *//'`
+INDENT=`type uncrustify | grep is | sed 's/.*is *//'`
 CONF_PATH=configs/uncrustify.conf
 if [[ ! -x "$INDENT" ]]; then
 	echo "Unable to find indent executable."
@@ -27,10 +27,10 @@ indent() {
 		case $ext in
 		    .c|.h|.cpp|.hpp)
 			__indent_C;
-			;;
+		        ;;
 		    .java)
 			__indent_C;
-			;;
+		        ;;
 		esac
 	done
 }

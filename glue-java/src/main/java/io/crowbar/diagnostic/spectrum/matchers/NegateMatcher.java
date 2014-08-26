@@ -19,11 +19,11 @@ implements SpectrumMatcher<A, TM> {
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends A, ? extends TM> spectrum) {
-        BitSet ret = matcher.matchComponents(spectrum);
+    public BitSet matchProbes (Spectrum< ? extends A, ? extends TM> spectrum) {
+        BitSet ret = matcher.matchProbes(spectrum);
 
 
-        ret.flip(0, spectrum.getComponentCount());
+        ret.flip(0, spectrum.getProbeCount());
 
         return ret;
     }

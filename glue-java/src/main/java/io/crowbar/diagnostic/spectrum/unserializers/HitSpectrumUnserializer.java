@@ -29,10 +29,10 @@ public final class HitSpectrumUnserializer {
 
     public static Transaction<Hit, ? > unserialize (Scanner s,
                                                     int id,
-                                                    int componentCount) {
+                                                    int probeCount) {
         List<Hit> activity = new ArrayList<Hit> ();
 
-        for (int i = 0; i < componentCount; i++) {
+        for (int i = 0; i < probeCount; i++) {
             int a = s.nextInt();
             activity.add(new Hit(a != 0));
         }
@@ -41,8 +41,7 @@ public final class HitSpectrumUnserializer {
 
         if (s.hasNextDouble()) {
             error = s.nextDouble();
-        }
-        else {
+        } else {
             String errStr = s.next();
             System.out.println(errStr);
 

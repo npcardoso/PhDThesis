@@ -11,7 +11,9 @@ public final class Messages {
      */
     private static class ExcludeTransformer extends AbstractTransformer {
         @Override
-        public Boolean isInline () {return true;}
+        public Boolean isInline () {
+            return true;
+        }
 
         @Override
         public void transform (Object object) {}
@@ -22,12 +24,12 @@ public final class Messages {
     private static TypeLocator<String> requestBinder = new TypeLocator<String> ("type");
 
     static void registerResponse (String name,
-                                  Class response) {
+                                  Class< ? > response) {
         responseBinder = responseBinder.add(name, response);
     }
 
     static void registerRequest (String name,
-                                 Class response) {
+                                 Class< ? > response) {
         requestBinder = requestBinder.add(name, response);
     }
 
@@ -44,11 +46,11 @@ public final class Messages {
 
     public static JSONDeserializer<Response> getResponseDeserializer () {
         return new JSONDeserializer<Response> ()
-            .use(null, responseBinder);
+               .use(null, responseBinder);
     }
 
     public static JSONDeserializer<Request> getRequestDeserializer () {
         return new JSONDeserializer<Request> ()
-            .use(null, requestBinder);
+               .use(null, requestBinder);
     }
 }

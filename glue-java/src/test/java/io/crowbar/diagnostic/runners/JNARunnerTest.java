@@ -47,7 +47,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.SUM);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.5, 0.5));
@@ -56,7 +56,9 @@ public class JNARunnerTest {
             assertEquals(scores.size(), cmp.size());
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -82,7 +84,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.AVG);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.AVG);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.5, 0.5));
@@ -91,7 +93,9 @@ public class JNARunnerTest {
             assertEquals(scores.size(), cmp.size());
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -118,7 +122,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.5, 0.5));
@@ -127,7 +131,9 @@ public class JNARunnerTest {
             assertEquals(scores.size(), cmp.size());
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -154,7 +160,7 @@ public class JNARunnerTest {
 
             // System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.AVG);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.AVG);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5));
 
@@ -162,7 +168,9 @@ public class JNARunnerTest {
             assertEquals(scores.size(), cmp.size());
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -187,7 +195,7 @@ public class JNARunnerTest {
             Diagnostic diag = dr.getDiagnostic(ochiaiCon);
 
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5));
 
@@ -195,7 +203,9 @@ public class JNARunnerTest {
             assertEquals(scores.size(), cmp.size());
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -221,7 +231,7 @@ public class JNARunnerTest {
             Diagnostic diag = dr.getDiagnostic(ochiaiCon);
 
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.SUM);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5));
 
@@ -229,7 +239,9 @@ public class JNARunnerTest {
             assertEquals(scores.size(), cmp.size());
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -256,13 +268,15 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.AVG);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.AVG);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.5, 0.666667));
 
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -288,7 +302,8 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.SUM);
+            // FIXME: May use getScorePerProbe
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 1.0, 0.666667));
@@ -296,7 +311,9 @@ public class JNARunnerTest {
 
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -325,13 +342,15 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -366,13 +385,15 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
             assertEquals(scores, cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -406,6 +427,8 @@ public class JNARunnerTest {
             assertEquals(sdiag.get(0).getScore(), 1.0, 0.01);
             assertEquals(sdiag.getSortedDiagnostic(), cmp);
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }

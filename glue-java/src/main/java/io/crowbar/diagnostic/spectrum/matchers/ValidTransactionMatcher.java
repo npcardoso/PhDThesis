@@ -7,7 +7,7 @@ import io.crowbar.diagnostic.spectrum.Transaction;
 import java.util.BitSet;
 
 /**
- * \brief This class matches transactions that have at least one component activation.
+ * \brief This class matches transactions that have at least one probe activation.
  */
 public final class ValidTransactionMatcher
 extends AbstractSpectrumMatcher<Activity, Metadata> {
@@ -15,8 +15,8 @@ extends AbstractSpectrumMatcher<Activity, Metadata> {
         this(true);
     }
 
-    public ValidTransactionMatcher (boolean defaultValueComponents) {
-        super(false, defaultValueComponents);
+    public ValidTransactionMatcher (boolean defaultValueProbes) {
+        super(false, defaultValueProbes);
     }
 
     @Override

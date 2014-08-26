@@ -48,7 +48,7 @@ extends AbstractSet<Integer> {
 
 
         str.append("{class='Candidate', ");
-        str.append("components=[");
+        str.append("probes=[");
         boolean first = true;
 
         for (int c : this) {

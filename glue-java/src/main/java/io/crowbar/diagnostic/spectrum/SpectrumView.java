@@ -1,26 +1,26 @@
 package io.crowbar.diagnostic.spectrum;
 
-import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 /*!
- * This class creates a view of an arbitrary spectrum with some components/transactions ommited.
+ * This class creates a view of an arbitrary spectrum with some probes/transactions ommited.
  * As this class does not make any copies of the original spectrum, it assumes its immutability.
  * Changes to the spectrum after the creation of the view may have unpredictable consequences.
  */
 final class SpectrumView<A extends Activity,
-                        TM extends Metadata>
+                         TM extends Metadata>
 extends Spectrum<A, TM> {
     private final Spectrum<A, TM> spectrum;
-    private final int[] components;
+    private final int[] probes;
     private final int[] transactions;
 
     public SpectrumView (Spectrum<A, TM> spectrum,
-                        BitSet transactions,
-                        BitSet components) {
+                         BitSet transactions,
+                         BitSet probes) {
         this.spectrum = spectrum;
         this.transactions = toArray(transactions);
-        this.components = toArray(components);
+        this.probes = toArray(probes);
     }
 
     private static int[] toArray (BitSet bs) {
@@ -39,8 +39,8 @@ extends Spectrum<A, TM> {
         return spectrum.getTree();
     }
 
-    public int getComponentMapping (int id) {
-        return components[id];
+    public int getProbeMapping (int id) {
+        return probes[id];
     }
 
     public int getTransactionMapping (int id) {
@@ -48,8 +48,8 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public int getComponentCount () {
-        return components.length;
+    public int getProbeCount () {
+        return probes.length;
     }
 
     @Override
@@ -68,12 +68,12 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public Component getComponent (int componentId) {
-        return spectrum.getComponent(components[componentId]);
+    public Probe getProbe (int probeId) {
+        return spectrum.getProbe(probes[probeId]);
     }
 
-	@Override
-	public ArrayList<Component> getComponents() {
-		return spectrum.getComponents();
-	}
+    @Override
+    public List<Probe> getProbes () {
+        return spectrum.getProbes();
+    }
 }

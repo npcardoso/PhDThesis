@@ -37,7 +37,7 @@ public class VisualizationMessagesTest {
         Random r = new Random();
 
 
-        while (numNodes-- > 0) {
+        while (numNodes-- > 1) {
             t.addNode("" + r.nextInt(), r.nextInt(t.size()));
         }
 
@@ -47,9 +47,11 @@ public class VisualizationMessagesTest {
     @Test
     public void testVisualizationMessages () {
         // needs to be improverd.
-        List<Double> lscores = new ArrayList<Double> (Arrays.asList(0.3624116251182534, 0.23679368533093226, 0.1716916465415933));
+        List<Double> lscores = Arrays.asList(0.3624116251182534, 0.23679368533093226, 0.1716916465415933);
 
         Tree t = randomizeTree(3);
+        assertTrue(t != null);
+        assertTrue(lscores != null);
 
         VisualizationMessages.Request v = VisualizationMessages.issueRequest(t, lscores);
 
@@ -58,6 +60,8 @@ public class VisualizationMessagesTest {
         JSONDeserializer<io.crowbar.messages.Response> jsreq = Messages.getResponseDeserializer();
         DiagnosticMessages.Response rqst = (DiagnosticMessages.Response)jsreq.deserialize(jsonRequest);
 
+        // FIXME: this asser implies that the ordering of elements is always equal.
+        // Its better to deserialize and test it using proper methods.
         assertTrue(jsonRequest.startsWith("{\"scores\":[0.3624116251182534,0.23679368533093226,0.1716916465415933],\"tree\""));
     }
 }

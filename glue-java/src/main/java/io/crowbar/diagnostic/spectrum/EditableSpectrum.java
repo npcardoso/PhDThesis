@@ -1,6 +1,8 @@
 package io.crowbar.diagnostic.spectrum;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This class provides a way of creating a spectrum.
@@ -8,11 +10,11 @@ import java.util.ArrayList;
 public final class EditableSpectrum<A extends Activity,
                                     TM extends Metadata>
 extends Spectrum<A, TM> {
-    private final ArrayList<Transaction<A, TM> > transactions = new ArrayList();
-    private final ArrayList<Component> components = new ArrayList();
+    private final ArrayList<Transaction<A, TM> > transactions = new ArrayList<Transaction<A, TM> > ();
+    private final ArrayList<Probe> probes = new ArrayList<Probe> ();
 
     private final EditableTree tree = new EditableTree("root");
-    private int componentCount = 0;
+    private int probeCount = 0;
 
     @Override
     public EditableTree getTree () {
@@ -20,8 +22,8 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public int getComponentCount () {
-        return componentCount;
+    public int getProbeCount () {
+        return probeCount;
     }
 
     @Override
@@ -43,28 +45,25 @@ extends Spectrum<A, TM> {
     }
 
     /**
-     * @brief Retreives a component by id.
-     * @return A component or null if a component with such id does
+     * @brief Retreives a probe by id.
+     * @return A probe or null if a probe with such id does
      * not exist/is not linked with any node in the tree.
      */
     @Override
-    public Component getComponent (int id) {
-        if (components.size() == 0)
+    public Probe getProbe (int id) {
+        if (id < 0 || id >= probes.size())
             return null;
 
-        if (id < 0 || id >= components.size())
-            return null;
-
-        return components.get(id);
+        return probes.get(id);
     }
 
     /**
-     * @brief Retreives the list of components
-     * @return A list of components
-     * =     */
+     * @brief Retreives the list of probes
+     * @return A list of probes
+     */
     @Override
-    public ArrayList<Component> getComponents () {
-        return components;
+    public List<Probe> getProbes () {
+        return Collections.unmodifiableList(probes);
     }
 
     /**
@@ -81,26 +80,25 @@ extends Spectrum<A, TM> {
 
         transactions.set(transaction.getId(), transaction);
 
-        componentCount = Math.max(componentCount, transaction.size());
+        probeCount = Math.max(probeCount, transaction.size());
     }
 
     /**
-     * @throws NoComponentInformationAvailableException
-     * @brief Adds a new component to the spectrum.
+     * @brief Adds a new probe to the spectrum.
      * @pre node.getTree() == this.getTree()
-     * @pre this.getComponent(id) == null
+     * @pre this.getProbe(id) == null
      */
-    public void setComponent (int id,
-                              ProbeType type,
-                              Node node) {
+    public void setProbe (int id,
+                          ProbeType type,
+                          Node node) {
         assert (node.getTree() == this.getTree());
-        assert (this.getComponent(id) == null);
-        components.ensureCapacity(id + 1);
+        assert (this.getProbe(id) == null);
+        probes.ensureCapacity(id + 1);
 
-        while (components.size() <= id) {
-            components.add(null);
+        while (probes.size() <= id) {
+            probes.add(null);
         }
 
-        components.set(id, new Component(this, type, id, node.getId()));
+        probes.set(id, new Probe(this, type, id, node.getId()));
     }
 }

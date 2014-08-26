@@ -7,34 +7,34 @@ import java.util.BitSet;
 
 
 /**
- * \brief This class matches components/transactions by id.
+ * \brief This class matches probes/transactions by id.
  */
 public final class IdMatcher
 implements SpectrumMatcher<Activity, Metadata> {
     private final BitSet transactions = new BitSet();
-    private final BitSet components = new BitSet();
+    private final BitSet probes = new BitSet();
 
     public IdMatcher (BitSet transactions,
-                      BitSet components) {
+                      BitSet probes) {
         this.transactions.or(transactions);
-        this.components.or(components);
+        this.probes.or(probes);
     }
 
-    //TODO(Nuno): Remove this constructor?
+    // TODO(Nuno): Remove this constructor?
     public IdMatcher (int[] transactions,
-                      int[] components) {
+                      int[] probes) {
         for (int t : transactions) {
             this.transactions.set(t);
         }
 
-        for (int c : components) {
-            this.components.set(c);
+        for (int c : probes) {
+            this.probes.set(c);
         }
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
-        return components;
+    public BitSet matchProbes (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
+        return probes;
     }
 
     @Override

@@ -10,20 +10,20 @@ import java.util.BitSet;
  * SpectrumMatcher.
  *
  * The default implementation does not match any
- * component/transaction or, alternativelly, matches all
- * components/transactions. The default behavior can be selected using
+ * probe/transaction or, alternativelly, matches all
+ * probes/transactions. The default behavior can be selected using
  * the protected constructor.
  */
 public abstract class AbstractSpectrumMatcher<A extends Activity,
-                                             TM extends Metadata>
+                                              TM extends Metadata>
 implements SpectrumMatcher<A, TM> {
-    private final boolean defaultValueComponents;
+    private final boolean defaultValueProbes;
     private final boolean defaultValueTransactions;
 
 
     /**
      * \brief Using this constructor will result in a matcher that, by
-     * default, does not match any component/transaction.
+     * default, does not match any probe/transaction.
      */
     protected AbstractSpectrumMatcher () {
         this(false, false);
@@ -32,21 +32,21 @@ implements SpectrumMatcher<A, TM> {
     /**
      * \brief
      * \param defaultValueTransactions  the default value for transactions.
-     * \param defaultValueComponents the default value for components.
+     * \param defaultValueProbes the default value for probes.
      */
     protected AbstractSpectrumMatcher (boolean defaultValueTransactions,
-                                      boolean defaultValueComponents) {
+                                       boolean defaultValueProbes) {
         this.defaultValueTransactions = defaultValueTransactions;
-        this.defaultValueComponents = defaultValueComponents;
+        this.defaultValueProbes = defaultValueProbes;
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends A, ? extends TM> spectrum) {
+    public BitSet matchProbes (Spectrum< ? extends A, ? extends TM> spectrum) {
         BitSet ret = new BitSet();
 
 
-        if (defaultValueComponents) {
-            ret.set(0, spectrum.getComponentCount());
+        if (defaultValueProbes) {
+            ret.set(0, spectrum.getProbeCount());
         }
 
         return ret;

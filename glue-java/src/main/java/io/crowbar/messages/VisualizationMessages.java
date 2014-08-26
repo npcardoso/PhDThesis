@@ -10,27 +10,32 @@ public class VisualizationMessages {
     private static final String NAME = "visualization";
 
     public static final class Request
-        extends io.crowbar.messages.Request {
-
+    extends io.crowbar.messages.Request {
         private Tree tree = null;
-        private List<Double> scores= null;
+        private List<Double> scores = null;
 
         /*! Used for JSON deserialization */
         private Request () {}
 
         /*! Used for JSON deserialization */
-        private void setTree(Tree tree) {
-            this.tree= tree;
+        private void setTree (Tree tree) {
+            this.tree = tree;
         }
 
         /*! Used for JSON deserialization */
-        private void setScores(List<Double> scores) {
+        private void setScores (List<Double> scores) {
             this.scores = scores;
         }
 
+        /**
+         * @brief Creates a visualization request.
+         * @pre tree.size() == scores.size()
+         */
         Request (Tree tree,
                  List<Double> scores) {
-            assert(tree.size() == scores.size());
+            if (tree.size() != scores.size())
+                throw new RuntimeException("tree.size() !=  scores.size() (" + tree.size() + " != " + scores.size() + ")");
+
             setTree(tree);
             setScores(scores);
         }
@@ -41,7 +46,7 @@ public class VisualizationMessages {
         }
 
         @JSON
-        public Iterable<Node> getTree() {
+        public Iterable<Node> getTree () {
             return tree;
         }
 
@@ -52,7 +57,7 @@ public class VisualizationMessages {
     }
 
     public static VisualizationMessages.Request issueRequest (Tree tree,
-                                                           List<Double> scores) {
+                                                              List<Double> scores) {
         return new Request(tree, scores);
     }
 

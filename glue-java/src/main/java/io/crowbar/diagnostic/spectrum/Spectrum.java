@@ -103,7 +103,7 @@ public abstract class Spectrum<A extends Activity,
         }
     }
 
-    private class CIterable implements Iterable<Probe> {
+    private class PIterable implements Iterable<Probe> {
         public Iterator<Probe> iterator () {
             return new AbstractIterator<Probe> () {
                        @Override
@@ -127,12 +127,13 @@ public abstract class Spectrum<A extends Activity,
     public abstract int getProbeCount ();
 
     public abstract Transaction<A, TM> getTransaction (int transactionId);
+
     public abstract Probe getProbe (int probeId);
 
-    public abstract ArrayList<Probe> getProbes ();
+    public abstract List<Probe> getProbes ();
 
     public final Iterable<Probe> byProbe () {
-        return new CIterable();
+        return new PIterable();
     }
 
     public final Iterable<Transaction<A, TM> > byTransaction () {

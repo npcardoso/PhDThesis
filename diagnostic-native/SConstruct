@@ -39,7 +39,9 @@ for i in ['PATH', 'LIBPATH', 'CPPPATH']:
       env[i] = [env[i]]
 env['PATH'].extend([env['bin_dir'],'/usr/local/bin', '/bin', '/usr/bin'])
 env['LIBPATH'].extend([env['lib_dir']])
+env['LIBPATH'].extend(['/usr/local/lib/'])
 env['CPPPATH'].extend([env['include_dir']])
+env['CPPPATH'].extend(['/usr/local/include/'])
 env['ENV']['PATH'] = env['PATH']
 env['ENV']['LD_LIBRARY_PATH'] = env['LIBPATH']
 

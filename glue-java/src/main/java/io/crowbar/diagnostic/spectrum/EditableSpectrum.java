@@ -1,6 +1,8 @@
 package io.crowbar.diagnostic.spectrum;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This class provides a way of creating a spectrum.
@@ -60,8 +62,8 @@ extends Spectrum<A, TM> {
      * @return A list of probes
      */
     @Override
-    public ArrayList<Probe> getProbes () {
-        return probes;
+    public List<Probe> getProbes () {
+        return Collections.unmodifiableList(probes);
     }
 
     /**

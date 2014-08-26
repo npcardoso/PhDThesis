@@ -1,7 +1,7 @@
 package io.crowbar.diagnostic.spectrum;
 
-import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 /*!
  * This class creates a view of an arbitrary spectrum with some probes/transactions ommited.
@@ -73,7 +73,7 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public ArrayList<Probe> getProbes () {
+    public List<Probe> getProbes () {
         return spectrum.getProbes();
     }
 }

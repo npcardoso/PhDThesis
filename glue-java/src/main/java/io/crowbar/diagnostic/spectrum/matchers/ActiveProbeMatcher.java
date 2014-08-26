@@ -7,7 +7,7 @@ import io.crowbar.diagnostic.spectrum.Transaction;
 import java.util.BitSet;
 
 /**
- * \brief This class matches all active probes in a spectrum.
+ * @brief This class matches all active probes in a spectrum.
  */
 public final class ActiveProbeMatcher extends AbstractSpectrumMatcher<Activity, Metadata> {
     public ActiveProbeMatcher () {

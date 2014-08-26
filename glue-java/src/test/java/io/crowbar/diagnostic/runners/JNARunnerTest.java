@@ -51,7 +51,10 @@ public class JNARunnerTest {
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
 
+            // FIXME: May use getScorePerProbe
             List<Double> scores = s.getScorePerNode(diag, Spectrum.SUM);
+
+            // FIXME: this does not make sense.. the unserialized spectra will not have a proper tree
             Tree t = s.getTree();
 
 
@@ -60,6 +63,8 @@ public class JNARunnerTest {
             System.out.println(jsonRequest);
             // TODO: conclude
         }
-        catch (Throwable e) {e.printStackTrace();}
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }

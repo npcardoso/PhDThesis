@@ -139,6 +139,20 @@ public abstract class Spectrum<A extends Activity,
         return new TIterable();
     }
 
+    private List<Double> reduce (List<List<Double> > l,
+                                 MergeStrategy ms) {
+        List<Double> ret = new ArrayList<Double> (l.size());
+
+        for (List<Double> s : l) {
+            if (s == null)
+                ret.add(Double.NaN);
+            else
+                ret.add(ms.reduce(s));
+        }
+
+        return ret;
+    }
+
     /**
      * @brief Calculates a score value per Tree Node using an arbitrary MergeStrategy.
      * This is used to convert a multiple fault ranking into single fault ranking.
@@ -149,41 +163,57 @@ public abstract class Spectrum<A extends Activity,
                                          MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
+        while (tmp.size() <= getTree().size())
+            tmp.add(null);
+
         for (DiagnosticElement e : diagnostic) {
-            for (int cmpId : e.getCandidate()) {
-                Probe cmp = getProbe(cmpId);
+            for (int probeId : e.getCandidate()) {
+                Probe probe = getProbe(probeId);
 
-                if (cmp == null) continue; // Ignore probes without information
+                if (probe == null) continue; // Ignore probes without information
 
-                int nodeId = cmp.getNode().getId();
-
-                while (tmp.size() <= nodeId)
-                    tmp.add(null);
-
-                List<Double> list = tmp.get(cmpId);
+                int nodeId = probe.getNode().getId();
+                List<Double> list = tmp.get(nodeId);
 
                 if (list == null) {
                     list = new LinkedList<Double> ();
-                    tmp.set(cmpId, list);
+                    tmp.set(nodeId, list);
                 }
 
                 list.add(e.getScore());
             }
         }
 
-        while (tmp.size() <= getTree().size())
+        return reduce(tmp, ms);
+    }
+
+    /**
+     * @brief Calculates a score value per Probe using an arbitrary MergeStrategy.
+     * This is used to convert a multiple fault ranking into single fault ranking.
+     * @post ret.size() == getProbeCount()
+     * @return A list containing the score for each probe.
+     */
+    public List<Double> getScorePerProbe (Diagnostic diagnostic,
+                                          MergeStrategy ms) {
+        List<List<Double> > tmp = new ArrayList<List<Double> > (getProbeCount());
+
+        while (tmp.size() <= getProbeCount())
             tmp.add(null);
 
-        List<Double> ret = new ArrayList<Double> (tmp.size());
+        for (DiagnosticElement e : diagnostic) {
+            for (int probeId : e.getCandidate()) {
+                List<Double> list = tmp.get(probeId);
 
-        for (List<Double> s : tmp) {
-            if (s == null)
-                ret.add(Double.NaN);
-            else
-                ret.add(ms.reduce(s));
+                if (list == null) {
+                    list = new LinkedList<Double> ();
+                    tmp.set(probeId, list);
+                }
+
+                list.add(e.getScore());
+            }
         }
 
-        return ret;
+        return reduce(tmp, ms);
     }
 
     @Override

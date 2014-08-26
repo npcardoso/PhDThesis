@@ -26,7 +26,9 @@ public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, 
 
 
         for (Transaction< ? extends Activity, ? extends TrM> t : spectrum.byTransaction()) {
-            if ("org.junit.Assume$AssumptionViolatedException".equals(t.getMetadata().getExceptionClass()))
+            TrM m = t.getMetadata();
+
+            if (m != null && "org.junit.Assume$AssumptionViolatedException".equals(m.getExceptionClass()))
                 ret.set(i);
             else
                 ret.clear(i);

@@ -13,15 +13,9 @@ public class FactoryTest {
         assertNotNull(transaction);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testNullHitVector () {
-        try {
-            Factory.createTransaction(0, null, 0.0, 0.0, null);
-            fail("NullPointerException: hitVector == null");
-        }
-        catch (NullPointerException e) {
-            // empty
-        }
+        Factory.createTransaction(0, null, 0.0, 0.0, null);
     }
 
     @Test

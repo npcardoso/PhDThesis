@@ -207,13 +207,4 @@ public class CollectorTest {
 
         c.getHitVector("");
     }
-
-    @Test
-    public void testHitEmptyCollector () throws Exception {
-        Collector c = newCollectorInstance("", new AbstractEventListener() {});
-
-
-        // c.hit(-1);
-        // TODO catch exception or change test case to test a valid collector
-    }
 }

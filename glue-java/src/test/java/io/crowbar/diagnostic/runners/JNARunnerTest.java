@@ -461,34 +461,34 @@ public class JNARunnerTest {
 
     @Test
     public void testJNARunner_SortedDiagnostic () {
-        String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
+        String in = "3 3 1 0 1 1.0 0 1 1 1.0 0 1 1 0.0";
 
 
         Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
 
-        j.addGenerator(new MHSGenerator());
+        j.addGenerator(new SingleFaultGenerator());
+        j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
 
-        j.addRanker(new FuzzinelRanker());
-        Connection fuzzinelCon = j.addConnection(0, 0);
+        Connection con = j.addConnection(0, 0);
 
         try {
             JNARunner runner = new JNARunner();
 
             DiagnosticReport dr = runner.run(j.create(), s);
 
-            Diagnostic diag = dr.getDiagnostic(fuzzinelCon);
+            Diagnostic diag = dr.getDiagnostic(con);
 
             SortedDiagnostic sdiag = new SortedDiagnostic(diag);
 
-            List<Double> scores = s.getScorePerNode(diag, Spectrum.SUM);
+            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
 
-            List<Double> cmp = new ArrayList<Double> (Arrays.asList(1.0, 0.666667, 0.333333));
+            List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.707107, 0.5));
 
             assertEquals(sdiag.size(), scores.size());
-            assertEquals(sdiag.get(0).getScore(), 1.0, 0.01);
-            assertEquals(sdiag.getSortedDiagnostic(), cmp);
+            assertEquals(sdiag.get(0).getScore(), 0.816497, 0.01);
+            assertEquals(cmp, sdiag.getScorePerProbe());
         }
         catch (Exception e) {
             e.printStackTrace();

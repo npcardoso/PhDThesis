@@ -205,11 +205,12 @@ public class CollectorTest {
         c.getHitVector("");
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testHitEmptyCollector () throws Exception {
         Collector c = newCollectorInstance("", new AbstractEventListener() {});
 
 
         c.hit(-1);
+        // catch exception or change test case to test a valid collector
     }
 }

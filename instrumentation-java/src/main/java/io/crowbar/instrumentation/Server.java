@@ -94,14 +94,18 @@ public class Server extends ThreadedServer {
                         eventListener.oracle(m.getProbeId(),
                                              ((OracleMessage) m).getError(),
                                              ((OracleMessage) m).getConfidence());
+                    else if (o instanceof RegisterProbeMessage) {
+                        RegisterProbeMessage r = (RegisterProbeMessage) o;
+                        eventListener.registerProbe(r.getProbeId(),
+                                                    r.getNodeId(),
+                                                    r.getProbeType());
+                    }
                 }
                 else if (o instanceof RegisterNodeMessage) {
                     RegisterNodeMessage rnm = (RegisterNodeMessage) o;
-                    eventListener.registerNode(rnm.getName(), rnm.getId(), rnm.getParentId());
-                }
-                else if (o instanceof RegisterProbeMessage) {
-                    RegisterProbeMessage m = (RegisterProbeMessage) o;
-                    eventListener.registerProbe(m.getProbe());
+                    eventListener.registerNode(rnm.getNodeId(),
+                                               rnm.getParentId(),
+                                               rnm.getName());
                 }
                 else {
                     throw new Exception("Unknown Message Type: " + o);

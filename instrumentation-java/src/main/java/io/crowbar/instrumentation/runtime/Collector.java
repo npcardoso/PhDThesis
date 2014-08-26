@@ -36,7 +36,7 @@ public final class Collector {
 
 
         try {
-            listener.registerNode(name, n.getId(), parentId);
+            listener.registerNode(n.getId(), parentId, name);
         }
         catch (Throwable e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public final class Collector {
 
 
         try {
-            listener.registerProbe(p);
+            listener.registerProbe(p.getId(), p.getNodeId(), p.getType());
         }
         catch (Throwable e) {
             e.printStackTrace();

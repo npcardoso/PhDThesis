@@ -1,13 +1,17 @@
 package io.crowbar.instrumentation.events;
 
-import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 
 public abstract class AbstractEventListener implements EventListener {
     @Override
-    public void registerNode (String name, int id, int parentId) throws Exception {}
+    public void registerNode (int nodeId,
+                              int parentId,
+                              String name) throws Exception {}
 
     @Override
-    public void registerProbe (Probe probe) throws Exception {}
+    public void registerProbe (int probeId,
+                               int nodeId,
+                               ProbeType type) throws Exception {}
 
     @Override
     public void startTransaction (int probeId) throws Exception {}

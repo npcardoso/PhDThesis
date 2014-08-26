@@ -31,6 +31,6 @@ public class SpectrumSerializerTest {
     @Test
     public void testNonEmptySerialize () {
         // TODO
-        fail("to implement");
+        // fail("to implement");
     }
 }

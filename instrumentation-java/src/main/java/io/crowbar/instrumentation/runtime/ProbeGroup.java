@@ -3,15 +3,32 @@ package io.crowbar.instrumentation.runtime;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 public final class ProbeGroup {
-    public final class HitProbe extends Probe {
-        private static final long serialVersionUID = 1326454495409325099L;
-        private int localId;
+    public final class HitProbe {
+        private final int id;
+        private final int localId;
+        private final int nodeId;
+        private final ProbeType type;
+
         private HitProbe (int globalId,
                           int localId,
                           int nodeId,
                           ProbeType type) {
-            super(globalId, nodeId, type);
+            this.id = globalId;
             this.localId = localId;
+            this.nodeId = nodeId;
+            this.type = type;
+        }
+
+        public int getId () {
+            return id;
+        }
+
+        public int getNodeId () {
+            return nodeId;
+        }
+
+        public ProbeType getType () {
+            return type;
         }
 
         public boolean getActivation () {

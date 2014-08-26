@@ -7,7 +7,6 @@ import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
-import io.crowbar.instrumentation.runtime.Probe;
 
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
@@ -27,7 +26,7 @@ public class TestNGTestWrapper implements TestWrapper {
     private static boolean isSameType (Object o,
                                        String type) {
         try {
-            Class<?> cls = Class.forName(type);
+            Class< ? > cls = Class.forName(type);
             return cls.isAssignableFrom(o.getClass());
         }
         catch (ClassNotFoundException e) {
@@ -50,7 +49,6 @@ public class TestNGTestWrapper implements TestWrapper {
         return false;
     }
 
-
     @Override
     public final Action getAction (CtClass c) {
         return ACTION_TAKER.getAction(c);
@@ -66,10 +64,10 @@ public class TestNGTestWrapper implements TestWrapper {
     public final String getOracleCode (CtClass c,
                                        CtMethod m,
                                        Node n,
-                                       Probe p,
+                                       int probeId,
                                        String collectorVar,
                                        String exceptionVar) {
-        Class<?>[] expected = null;
+        Class< ? >[] expected = null;
         String expectedMsgRegex = null;
 
         try {
@@ -90,7 +88,7 @@ public class TestNGTestWrapper implements TestWrapper {
         StringBuilder code = new StringBuilder();
         code.append(getClass().getName() + ".isPass(");
         code.append(collectorVar + ", ");
-        code.append(p.getId() + ", ");
+        code.append(probeId + ", ");
         code.append(exceptionVar + ", ");
 
         if (expected.length == 0) {
@@ -100,7 +98,7 @@ public class TestNGTestWrapper implements TestWrapper {
             code.append("new String[]{");
             boolean first = true;
 
-            for (Class<?> cls : expected) {
+            for (Class< ? > cls : expected) {
                 if (!first)
                     code.append(", ");
 
@@ -117,9 +115,9 @@ public class TestNGTestWrapper implements TestWrapper {
     }
 
     @Override
-    public boolean isDefaultPass(CtClass c,
-                                 CtMethod m) {
-        Class<?>[] expected = null;
+    public boolean isDefaultPass (CtClass c,
+                                  CtMethod m) {
+        Class< ? >[] expected = null;
         try {
             Object annotation = m.getAnnotation(Class.forName(ANNOTATION_CLASS));
             Method method = annotation.getClass().getMethod("expectedExceptions");

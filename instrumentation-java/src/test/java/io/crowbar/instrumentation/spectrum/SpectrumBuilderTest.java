@@ -32,7 +32,7 @@ public class SpectrumBuilderTest {
         // TODO
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = AssertionError.class)
     public void testRegisterProbe () throws Exception {
         SpectrumBuilder sb = new SpectrumBuilder();
 

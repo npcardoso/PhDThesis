@@ -13,8 +13,6 @@ public class TransactionEndMessageTest {
         Assert.assertNull(mt.getExceptionMessage());
         assertEquals(-1, mt.getProbeId());
         Assert.assertNull(mt.getHitVector());
-
-        assertEquals("[[TransactionEndMessage]: probeId: -1, exceptionClass: null, exceptionMessage: null, hitVector: null]", mt.toString());
     }
 
     @Test
@@ -24,7 +22,5 @@ public class TransactionEndMessageTest {
         assertEquals("exceptionMessage string", mt.getExceptionMessage());
         assertEquals(2, mt.getProbeId());
         Assert.assertNull(mt.getHitVector());
-
-        assertEquals("[[TransactionEndMessage]: probeId: 2, exceptionClass: exceptionClass string, exceptionMessage: exceptionMessage string, hitVector: null]", mt.toString());
     }
 }

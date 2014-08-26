@@ -1,8 +1,11 @@
 package io.crowbar.instrumentation.spectrum;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertFalse;
+import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
+import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import org.junit.Test;
@@ -14,43 +17,49 @@ public class SpectrumBuilderTest {
 
 
         Spectrum<Hit, TrM> spectrum = sb.getSpectrum();
-        assertEquals(0, spectrum.getComponentCount());
+        assertEquals(0, spectrum.getProbeCount());
         assertEquals(0, spectrum.getTransactionCount());
     }
 
     @Test
-    public void testRegisterNode () {
-        // TODO
-        // fail("to implement");
+    public void testRegisterNode () throws Exception {
+        SpectrumBuilder sb = new SpectrumBuilder();
+
+        String new_node_name = "other node";
+
+
+        sb.registerNode(1, 0, new_node_name);
+
+        assertEquals(2, sb.getSpectrum().getTree().getNodes().size());
+
+        Node root = sb.getSpectrum().getTree().getNodes().get(0);
+        assertEquals(1, root.getChildren().size());
+
+        Node new_node = sb.getSpectrum().getTree().getNodes().get(1);
+        assertEquals(0, new_node.getChildren().size());
+        assertEquals(new_node_name, new_node.getName());
     }
 
-    // @Test(expected = Exception.class)
+    @Test(expected = AssertionError.class)
     public void testRegisterProbe () throws Exception {
-        // SpectrumBuilder sb = new SpectrumBuilder();
-        // sb.registerProbe(0,0,null);
-    }
-
-    @Test
-    public void testEndTransaction () {
-        // TODO
-        // fail("to implement");
-    }
-
-    @Test
-    public void testOracle () {
-        // TODO
-        // create a SpectrumBuilder with one transaction and three components
-        // create a probe
-        // set the oracle
-        // fail("to implement");
-    }
-
-    @Test
-    public void testToString () {
         SpectrumBuilder sb = new SpectrumBuilder();
 
 
-        Spectrum<Hit, TrM> spectrum = sb.getSpectrum();
-        assertEquals("{class='Spectrum', components=[], transactions=[]}", spectrum.toString());
+        sb.registerProbe(0, 0, null);
+    }
+
+    @Test
+    public void testEndTransaction () throws Exception {
+        SpectrumBuilder sb = new SpectrumBuilder();
+
+
+        sb.registerNode(1, 0, "other node");
+        sb.registerProbe(0, 1, ProbeType.TRANSACTION_START);
+        sb.endTransaction(3, "", "", new boolean[] {false});
+
+        assertEquals(1, sb.getSpectrum().getTransactionCount());
+
+        Transaction<Hit, TrM> tr = sb.getSpectrum().getTransaction(0);
+        assertFalse(tr.get(0).isActive());
     }
 }

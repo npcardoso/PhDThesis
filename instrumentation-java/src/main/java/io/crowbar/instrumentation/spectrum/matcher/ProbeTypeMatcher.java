@@ -17,7 +17,8 @@ public final class ProbeTypeMatcher extends AbstractSpectrumMatcher<Activity, Me
         this(true, types);
     }
 
-    public ProbeTypeMatcher (boolean defaultValueTransactions, ProbeType... types) {
+    public ProbeTypeMatcher (boolean defaultValueTransactions,
+                             ProbeType... types) {
         super(defaultValueTransactions, false);
 
         for (ProbeType t : types) {
@@ -26,12 +27,12 @@ public final class ProbeTypeMatcher extends AbstractSpectrumMatcher<Activity, Me
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
+    public BitSet matchProbes (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
         BitSet ret = new BitSet();
 
 
-        for (int i = 0; i < spectrum.getComponentCount(); i++) {
-            ProbeType type = spectrum.getComponent(i).getType();
+        for (int i = 0; i < spectrum.getProbeCount(); i++) {
+            ProbeType type = spectrum.getProbe(i).getType();
 
             if (types.contains(type))
                 ret.set(i);

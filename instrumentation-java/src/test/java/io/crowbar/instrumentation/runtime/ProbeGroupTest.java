@@ -68,4 +68,30 @@ public class ProbeGroupTest {
 
         assertTrue(Arrays.equals(pg.get(), new boolean[] {false, false}));
     }
+
+    @Test(expected = java.lang.AssertionError.class)
+    public void testNullHitVector () {
+        ProbeGroup pg = new ProbeGroup();
+
+        HitProbe hb = pg.register(0, 0, ProbeType.HIT_PROBE);
+
+
+        hb.hit();
+    }
+
+    @Test
+    public void testNotNullHitVector () {
+        ProbeGroup pg = new ProbeGroup();
+
+        HitProbe hb = pg.register(0, 0, ProbeType.HIT_PROBE);
+        boolean hit = pg.get()[0];
+
+
+        assertFalse(hit);
+
+        hb.hit();
+
+        hit = pg.get()[0];
+        assertTrue(hit);
+    }
 }

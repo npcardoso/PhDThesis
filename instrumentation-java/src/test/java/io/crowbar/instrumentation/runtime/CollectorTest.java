@@ -22,9 +22,12 @@ import org.junit.Test;
 public class CollectorTest {
     private EventListenerChecks checks;
 
-    public Collector newCollectorInstance (String name, EventListener listener) throws Exception {
+    public Collector newCollectorInstance (String name,
+                                           EventListener listener) throws Exception {
         // We need to be able to create different instances of collector
-        Class< ? >[] argTypes = {String.class, EventListener.class};
+        Class< ? >[] argTypes = {
+            String.class, EventListener.class
+        };
         Constructor<Collector> c = Collector.class.getDeclaredConstructor(argTypes);
 
         // this may not be possible in some JVMs, or in JVMs with less security permissions:
@@ -203,13 +206,5 @@ public class CollectorTest {
 
 
         c.getHitVector("");
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testHitEmptyCollector () throws Exception {
-        Collector c = newCollectorInstance("", new AbstractEventListener() {});
-
-
-        c.hit(-1);
     }
 }

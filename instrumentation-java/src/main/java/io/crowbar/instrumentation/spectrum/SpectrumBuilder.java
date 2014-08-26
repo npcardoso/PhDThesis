@@ -43,7 +43,7 @@ public final class SpectrumBuilder extends AbstractEventListener {
 
         assert (n != null);
 
-        spectrum.setComponent(probeId, type, n);
+        spectrum.setProbe(probeId, type, n);
     }
 
     @Override

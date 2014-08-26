@@ -57,8 +57,7 @@ public final class TestWrapperPass extends AbstractPass {
                     m.insertAfter(getTransactionEndCode(ep, op, tw.isDefaultPass(c, m)),
                                   false /* asFinally */);
                     ca.computeMaxStack();
-                }
-                else if (ret == Action.REJECT) {
+                } else if (ret == Action.REJECT) {
                     return Outcome.CONTINUE;
                 }
             }

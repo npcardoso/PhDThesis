@@ -17,14 +17,14 @@ import javassist.CtMethod;
 public final class JUnit4TestWrapper implements TestWrapper {
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
-                      new AndMatcher(
-                                     new AnnotationMatcher("org.junit.Test"),
-                                     new ReturnTypeMatcher("void")));
+            new AndMatcher(
+                new AnnotationMatcher("org.junit.Test"),
+                new ReturnTypeMatcher("void")));
 
     private static boolean isSameType (Object o,
                                        String type) {
         try {
-            Class cls = Class.forName(type);
+            Class< ? > cls = Class.forName(type);
             return cls.isAssignableFrom(o.getClass());
         }
         catch (ClassNotFoundException e) {
@@ -56,13 +56,14 @@ public final class JUnit4TestWrapper implements TestWrapper {
         return ACTION_TAKER.getAction(c, m);
     }
 
-    private String getExpectedExceptionName(CtMethod m){
+    private String getExpectedExceptionName (CtMethod m) {
         String expectedStr = null;
+
 
         try {
             Object annotation = m.getAnnotation(Class.forName("org.junit.Test"));
             Method method = annotation.getClass().getMethod("expected");
-            Class expected = (Class) method.invoke(annotation);
+            Class< ? > expected = (Class< ? > )method.invoke(annotation);
             expectedStr = expected.getName();
         }
         catch (Throwable e) {}
@@ -79,6 +80,7 @@ public final class JUnit4TestWrapper implements TestWrapper {
                                  String exceptionVar) {
         String expectedStr = getExpectedExceptionName(m);
 
+
         if (expectedStr == null)
             expectedStr = "\"\"";
         else
@@ -94,9 +96,11 @@ public final class JUnit4TestWrapper implements TestWrapper {
     }
 
     @Override
-    public boolean isDefaultPass(CtClass c,
-                                 CtMethod m) {
+    public boolean isDefaultPass (CtClass c,
+                                  CtMethod m) {
         String expectedStr = getExpectedExceptionName(m);
+
+
         return expectedStr == null;
     }
 }

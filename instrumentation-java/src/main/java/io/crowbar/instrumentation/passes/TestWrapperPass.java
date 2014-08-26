@@ -57,8 +57,7 @@ public final class TestWrapperPass extends AbstractPass {
                     m.insertAfter(getTransactionEndCode(ep, op, tw.isDefaultPass(c, m)),
                                   false /* asFinally */);
                     ca.computeMaxStack();
-                }
-                else if (ret == Action.REJECT) {
+                } else if (ret == Action.REJECT) {
                     return Outcome.CONTINUE;
                 }
             }
@@ -73,7 +72,7 @@ public final class TestWrapperPass extends AbstractPass {
                                 TestWrapper wrapper,
                                 HitProbe transactionEndProbe,
                                 HitProbe oracleProbe) throws Exception {
-        assert(transactionEndProbe.getType() == ProbeType.TRANSACTION_END);
+        assert (transactionEndProbe.getType() == ProbeType.TRANSACTION_END);
 
         final String exceptionVar = "eeeeeeeeeee";
         final String collectorVar = "ccccccccccc";
@@ -102,8 +101,8 @@ public final class TestWrapperPass extends AbstractPass {
 
         // Oracle Fail
         code.append(collectorVar + ".hit(" + oracleProbe.getId() + ");");
-        code.append(collectorVar + "." + oracleProbe.getType().getMethodName()
-                    + "(" + oracleProbe.getId() + ", 1d, 1d);");
+        code.append(collectorVar + "." + oracleProbe.getType().getMethodName() +
+                    "(" + oracleProbe.getId() + ", 1d, 1d);");
 
         code.append("} finally {");
         // Transaction End
@@ -119,32 +118,32 @@ public final class TestWrapperPass extends AbstractPass {
     }
 
     private String getTransactionStartCode (HitProbe p) {
-        assert(p.getType() == ProbeType.TRANSACTION_START);
+        assert (p.getType() == ProbeType.TRANSACTION_START);
 
         StringBuilder code = new StringBuilder();
         code.append("{Collector c = Collector.instance();");
         code.append("c.hit(" + p.getId() + ");");
-        code.append("c." + p.getType().getMethodName() + "(" + p.getId() +");");
+        code.append("c." + p.getType().getMethodName() + "(" + p.getId() + ");");
         code.append("}");
         return code.toString();
     }
 
-
-    private String getTransactionEndCode(HitProbe p,
-                                         HitProbe oracleProbe,
-                                         boolean isDefaultPass) {
-        assert(p.getType() == ProbeType.TRANSACTION_END);
+    private String getTransactionEndCode (HitProbe p,
+                                          HitProbe oracleProbe,
+                                          boolean isDefaultPass) {
+        assert (p.getType() == ProbeType.TRANSACTION_END);
 
         StringBuilder code = new StringBuilder();
         code.append("{Collector c = Collector.instance();");
 
-        if(!isDefaultPass) {
+        if (!isDefaultPass) {
             code.append("c.hit(" + oracleProbe.getId() + ");");
-            code.append("c." + oracleProbe.getType().getMethodName()
-                        + "(" + oracleProbe.getId() + ", 1d, 1d);");
+            code.append("c." + oracleProbe.getType().getMethodName() +
+                        "(" + oracleProbe.getId() + ", 1d, 1d);");
         }
+
         code.append("c.hit(" + p.getId() + ");");
-        code.append("c." + p.getType().getMethodName() + "(" + p.getId() +");");
+        code.append("c." + p.getType().getMethodName() + "(" + p.getId() + ");");
         code.append("}");
         return code.toString();
     }

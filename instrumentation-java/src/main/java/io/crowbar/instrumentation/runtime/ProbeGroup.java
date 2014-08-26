@@ -19,15 +19,15 @@ public final class ProbeGroup {
             this.type = type;
         }
 
-        public int getId() {
+        public int getId () {
             return id;
         }
 
-        public int getNodeId() {
+        public int getNodeId () {
             return nodeId;
         }
 
-        public ProbeType getType() {
+        public ProbeType getType () {
             return type;
         }
 

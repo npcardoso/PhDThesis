@@ -17,8 +17,8 @@ public class JUnit3TestWrapper implements TestWrapper {
             new AndMatcher(
                 new SuperclassMatcher("junit.framework.TestCase"),
                 new AndMatcher(
-                		new ReturnTypeMatcher("void"),
-                		new PrefixMatcher("test"))));
+                    new ReturnTypeMatcher("void"),
+                    new PrefixMatcher("test"))));
 
     @Override
     public final Action getAction (CtClass c) {
@@ -42,8 +42,8 @@ public class JUnit3TestWrapper implements TestWrapper {
     }
 
     @Override
-    public boolean isDefaultPass(CtClass c,
-                          CtMethod m) {
+    public boolean isDefaultPass (CtClass c,
+                                  CtMethod m) {
         return true;
     }
 }

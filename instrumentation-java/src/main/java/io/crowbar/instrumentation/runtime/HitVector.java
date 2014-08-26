@@ -52,6 +52,8 @@ class HitVector {
 
     public final void hit (int globalId) {
         HitProbe p = probes.get(globalId);
+
+
         p.hit();
     }
 

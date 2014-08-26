@@ -89,7 +89,9 @@ public final class EventListenerMocks {
         }
 
         @Override
-        public void endTransaction (int probeId, String exceptionClass, String exceptionMessage,
+        public void endTransaction (int probeId,
+                                    String exceptionClass,
+                                    String exceptionMessage,
                                     boolean[] hitVector) {
             assertEquals(checks.endTransactionId, probeId);
             assertEquals(checks.endTransactionExceptionClass, exceptionClass);
@@ -104,7 +106,9 @@ public final class EventListenerMocks {
         }
 
         @Override
-        public void oracle (int probeId, double error, double confidence) throws Exception {
+        public void oracle (int probeId,
+                            double error,
+                            double confidence) throws Exception {
             assertEquals(checks.oracleId, probeId);
             assertEquals(checks.oracleError, error, 1e-6);
             assertEquals(checks.oracleConfidence, confidence, 1e-6);

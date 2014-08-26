@@ -15,11 +15,11 @@ public class VerboseListener implements EventListener {
     private boolean endTransaction = true;
     private boolean oracle = true;
 
-    public VerboseListener() {
+    public VerboseListener () {
         this(System.out);
     }
 
-    public VerboseListener(PrintStream out) {
+    public VerboseListener (PrintStream out) {
         this.out = out;
     }
 

@@ -8,6 +8,7 @@ public class Messages {
     public interface Message {}
 
     public static final class HelloMessage implements Message, Serializable {
+        private static final long serialVersionUID = 4523313711692005000L;
         private final String id;
 
         public HelloMessage (String id) {
@@ -29,6 +30,8 @@ public class Messages {
     }
 
     public static final class ByeMessage implements Message, Serializable {
+        private static final long serialVersionUID = 3262507873284969712L;
+
         @Override
         public String toString () {
             return "[[ByeMessage]]";
@@ -36,6 +39,7 @@ public class Messages {
     }
 
     public static final class RegisterNodeMessage implements Message, Serializable {
+        private static final long serialVersionUID = -1646717811451968968L;
         private final int nodeId;
         private final int parentId;
         private final String name;
@@ -76,8 +80,8 @@ public class Messages {
         }
     }
 
-
     public abstract static class ProbeMessage implements Message, Serializable {
+        private static final long serialVersionUID = 2094257171874796426L;
         private final int probeId;
 
         public ProbeMessage (int probeId) {
@@ -103,11 +107,12 @@ public class Messages {
     }
 
     public static final class RegisterProbeMessage
-        extends ProbeMessage
-        implements Serializable {
-
+    extends ProbeMessage
+    implements Serializable {
+        private static final long serialVersionUID = 8746687288408031667L;
         private final int nodeId;
         private final ProbeType type;
+
         public RegisterProbeMessage (int probeId,
                                      int nodeId,
                                      ProbeType type) {
@@ -116,11 +121,11 @@ public class Messages {
             this.type = type;
         }
 
-        public final int getNodeId() {
+        public final int getNodeId () {
             return nodeId;
         }
 
-        public final ProbeType getProbeType() {
+        public final ProbeType getProbeType () {
             return type;
         }
 
@@ -136,12 +141,14 @@ public class Messages {
         }
 
         protected RegisterProbeMessage () {
-            this(-1,-1,null); // FIXME: this code throws an exception
+            this(-1, -1, null);
         }
     }
 
 
     public static final class TransactionStartMessage extends ProbeMessage implements Serializable {
+        private static final long serialVersionUID = 7459099682879100695L;
+
         TransactionStartMessage (int probeId) {
             super(probeId);
         }
@@ -152,6 +159,7 @@ public class Messages {
     }
 
     public static final class TransactionEndMessage extends ProbeMessage implements Serializable {
+        private static final long serialVersionUID = 5478029092609894069L;
         private final String exceptionClass;
         private final String exceptionMessage;
         private final boolean[] hitVector;
@@ -197,6 +205,7 @@ public class Messages {
     }
 
     public static final class OracleMessage extends ProbeMessage implements Serializable  {
+        private static final long serialVersionUID = -4795516008213040058L;
         private final double error;
         private final double confidence;
 

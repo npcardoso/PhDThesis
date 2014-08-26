@@ -34,6 +34,6 @@ public interface TestWrapper extends ActionTaker {
                           String collectorVar,
                           String exceptionVar);
 
-    boolean isDefaultPass(CtClass c,
-                          CtMethod m);
+    boolean isDefaultPass (CtClass c,
+                           CtMethod m);
 }

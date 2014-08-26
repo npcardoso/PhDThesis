@@ -60,7 +60,8 @@ public class Client implements EventListener {
     private int port;
 
 
-    public Client (String host, int port) {
+    public Client (String host,
+                   int port) {
         this.host = host;
         this.port = port;
 

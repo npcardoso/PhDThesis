@@ -21,7 +21,7 @@ public final class ActionTakerToTestWrapper implements TestWrapper {
 
     @Override
     public Action getAction (CtClass c,
-                                   CtMethod m) {
+                             CtMethod m) {
         return actionTaker.getAction(c, m);
     }
 
@@ -36,9 +36,8 @@ public final class ActionTakerToTestWrapper implements TestWrapper {
     }
 
     @Override
-    public boolean isDefaultPass(CtClass c,
-                          CtMethod m) {
+    public boolean isDefaultPass (CtClass c,
+                                  CtMethod m) {
         return true;
     }
-
 }

@@ -45,8 +45,7 @@ public class Server extends ThreadedServer {
                     if (o instanceof ByeMessage) {
                         service.terminate();
                         break;
-                    }
-                    else
+                    } else
                         dispatch(o);
                 }
             }
@@ -94,20 +93,18 @@ public class Server extends ThreadedServer {
                         eventListener.oracle(m.getProbeId(),
                                              ((OracleMessage) m).getError(),
                                              ((OracleMessage) m).getConfidence());
-                }
-                else if (o instanceof RegisterNodeMessage) {
+                    else if (o instanceof RegisterProbeMessage) {
+                        RegisterProbeMessage r = (RegisterProbeMessage) o;
+                        eventListener.registerProbe(r.getProbeId(),
+                                                    r.getNodeId(),
+                                                    r.getProbeType());
+                    }
+                } else if (o instanceof RegisterNodeMessage) {
                     RegisterNodeMessage rnm = (RegisterNodeMessage) o;
                     eventListener.registerNode(rnm.getNodeId(),
                                                rnm.getParentId(),
                                                rnm.getName());
-                }
-                else if (o instanceof RegisterProbeMessage) {
-                    RegisterProbeMessage m = (RegisterProbeMessage) o;
-                    eventListener.registerProbe(m.getProbeId(),
-                                                m.getNodeId(),
-                                                m.getProbeType());
-                }
-                else {
+                } else {
                     throw new Exception("Unknown Message Type: " + o);
                 }
             }

@@ -10,26 +10,25 @@ import java.util.Scanner;
 import org.junit.Test;
 
 public class HitSpectrumUnserializerTest {
+    @Test
+    public void testSerializer () {
+        String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
-	@Test
-	public void testSerializer() {
-		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-		Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        // s.toString();
+        // TODO Assert
+    }
 
-		s.toString();
+    @Test
+    public void testGetComponent () {
+        String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
-	    //TODO Assert
-	}
 
-	@Test
-	public void testGetComponent() {
-		String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-		Spectrum<Hit, ?> s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Component c = s.getComponent(0);
 
-		Component c = s.getComponent(0);
-
-		assertEquals(c, null);
-	}
+        assertEquals(c, null);
+    }
 }

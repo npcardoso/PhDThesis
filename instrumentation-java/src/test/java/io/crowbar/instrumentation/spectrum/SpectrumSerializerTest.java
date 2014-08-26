@@ -2,7 +2,6 @@ package io.crowbar.instrumentation.spectrum;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 
@@ -17,16 +16,9 @@ public class SpectrumSerializerTest {
         assertNotNull(ss);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testNullSpectrum () {
-        // FIXME
-        // try {
-        //     SpectrumSerializer.serialize(null);
-        //     fail("NullPointerException: spectrum == null");
-        // }
-        // catch (NullPointerException e) {
-        //     // empty
-        // }
+        SpectrumSerializer.serialize(null);
     }
 
     @Test
@@ -38,6 +30,6 @@ public class SpectrumSerializerTest {
     @Test
     public void testNonEmptySerialize () {
         // TODO
-        //fail("to implement");
+        // fail("to implement");
     }
 }

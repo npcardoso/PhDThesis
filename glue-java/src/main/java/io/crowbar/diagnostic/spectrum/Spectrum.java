@@ -23,7 +23,9 @@ public abstract class Spectrum<A extends Activity,
 
             double total = 0;
 
-            for (Double s : scores) {total += s;}
+            for (Double s : scores) {
+                total += s;
+            }
 
             return total / scores.size();
         }
@@ -37,7 +39,9 @@ public abstract class Spectrum<A extends Activity,
 
             double max = 0;
 
-            for (Double s : scores) {max = Math.max(max, s);}
+            for (Double s : scores) {
+                max = Math.max(max, s);
+            }
 
             return max;
         }
@@ -51,7 +55,9 @@ public abstract class Spectrum<A extends Activity,
 
             double total = 0;
 
-            for (Double s : scores) {total += s;}
+            for (Double s : scores) {
+                total += s;
+            }
 
             return total;
         }
@@ -144,7 +150,9 @@ public abstract class Spectrum<A extends Activity,
         for (DiagnosticElement e : diagnostic) {
             for (int cmpId : e.getCandidate()) {
                 Component cmp = getComponent(cmpId);
-                assert (cmp != null);
+
+                if (cmp == null) continue; // Ignore components without information
+
                 int nodeId = cmp.getNode().getId();
 
                 while (tmp.size() <= nodeId)
@@ -164,7 +172,7 @@ public abstract class Spectrum<A extends Activity,
         while (tmp.size() <= getTree().size())
             tmp.add(null);
 
-        List<Double> ret = new ArrayList(tmp.size());
+        List<Double> ret = new ArrayList<Double> (tmp.size());
 
         for (List<Double> s : tmp) {
             if (s == null)
@@ -188,10 +196,12 @@ public abstract class Spectrum<A extends Activity,
         for (Component component : byComponent()) {
             if (!first)
                 str.append(",");
-            if(component == null)
+
+            if (component == null)
                 str.append("null");
             else
                 str.append(component.toString());
+
             first = false;
         }
 

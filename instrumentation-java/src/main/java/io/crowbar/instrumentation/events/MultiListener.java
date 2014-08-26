@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public final class MultiListener
-    implements EventListener {
+implements EventListener {
     public final void add (EventListener l) {
         assert l != null;
         this.listeners.add(l);

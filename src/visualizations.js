@@ -1,9 +1,13 @@
 function Visualizations(configuration){
 	var self = this;
-
+	var nodeToRender = null;
 
 	var events = {
-		click: visClickEv
+		click: visClickEv,
+		switchToViz: function(visN, node){
+			nodeToRender = node;
+			 $('#tabs').tabs({ active: visN });
+		}
 	};
 	var currentVisualizationN,currentVisualization;
 
@@ -12,12 +16,21 @@ function Visualizations(configuration){
 		return new visualizations[visN].obj(data_ex,'#'+getVizID(visN),configuration,events);
 	}
 
-	this.setVisualization = function(visN){
+
+	this.prepareVisualization = function(visN){
 		configuration.currentConfig.lastViewed = visN;
 		configuration.saveConfig();
 		currentVisualizationN = visN;
 		currentVisualization = self.createVisualization(visN);
+	}
+
+	this.setVisualization = function(visN){
+		self.prepareVisualization(visN);
 		currentVisualization.render();
+		if(nodeToRender != null){
+			currentVisualization.click(nodeToRender);
+			nodeToRender= null;
+		}
 	}
 
 	this.getInitVisN = function(){

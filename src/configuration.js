@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv5';
+  this.CONFIG_STORE = 'configv6';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
@@ -21,7 +21,7 @@ function Configuration() {
    ],
    scriptsLoad: ["data_ex.js"],
    scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"],
-   regexFilter: null,
+   regexFilter: "p.*d",
    defaultTableEntries: 10,
  };
 

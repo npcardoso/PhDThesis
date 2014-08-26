@@ -72,9 +72,9 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
         zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
     },
     zoomReset: function(){
-        if(eventsBlocked)
-            return;
-        eventsBlocked = true;
+        //if(eventsBlocked)
+         //   return;
+        //eventsBlocked = true;
         zoomListener.scale(1);
         zoomListener.translate([0,0]);
         zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));

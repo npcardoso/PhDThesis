@@ -55,31 +55,28 @@ function Table(data, elementSel, configuration, events) {
 
         function format(data){
             return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-        '<tr>'+
+            '<tr>'+
             '<td>Tests Passed:</td>'+
-            '<td>45</td>'+
-        '</tr>'+
-        '<tr>'+
+            '<td>45 (demo)</td>'+
+            '</tr>'+
+            '<tr>'+
             '<td>Failed testes:</td>'+
-            '<td>3</td>'+
-        '</tr>'+
-        '<tr>'+
+            '<td>3 (demo)</td>'+
+            '</tr>'+
+            '<tr>'+
             '<td>Extra info:</td>'+
             '<td>Code coverege, statistics or other info</td>'+
-        '</tr>'+
-    '</table>'+'<div class="ui-widget-header ui-corner-all toolbar"><span id="buttons'+data[4]+'">'
-    +'<input type="radio" id="viz0" name="viz0"><label for="viz0">Go to Sunburst</label>'
-    +'<input type="radio" id="viz1" name="viz1"><label for="viz1">Go to Vertical Partition</label></span></div>';
+            '</tr>'+
+            '</table>'+'<button class="vizb" id="vizb0">Go to Sunburst</button><button class="vizb" id="vizb1">Go to Vertical Partition</button>';
 
         }
 
         table.on('click', '.tableCircle', function () {
             console.log(table);
-            alert('ok');
-        var tr = $(this).closest('tr');
-        var row = table.row( tr );
- 
-        if ( row.child.isShown() ) {
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
+
+            if ( row.child.isShown() ) {
             // This row is already open - close it
             $(this).html('+');
             row.child.hide();
@@ -91,7 +88,14 @@ function Table(data, elementSel, configuration, events) {
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
 
-            $( '#buttons'+row.data()[4]).buttonset();
+            $('.vizb').button().click(function(e) {
+                var rawElement = this;
+                var $element = $(this);
+                var vizN = $element.attr('id').replace('vizb','');
+                events.switchToViz(vizN,data[row.data()[4]]);
+                return false;
+                /* Do stuff with the element that fired the event */
+            });
         }
     } );
 

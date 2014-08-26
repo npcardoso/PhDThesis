@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Button - Toolbar</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+  .toolbar {
+    padding: 4px;
+    display: inline-block;
+  }
+  /* support: IE7 */
+  *+html .toolbar {
+    display: inline;
+  }
+  </style>
+  <script>
+  $(function() {
+    $( "#repeat" ).buttonset();
+  });
+  </script>
+</head>
+<body>
+ 
+<div class="ui-widget-header ui-corner-all toolbar"><span id="repeat">
+    <input type="radio" id="viz0" name="viz0"><label for="viz0">Go to Sunburst</label>
+    <input type="radio" id="viz1" name="viz1"><label for="viz1">Go to Vertical Partition</label>
+</span></div>
+ 
+ 
+</body>
+</html>

@@ -22,14 +22,6 @@ public class ProbeTest {
         assertEquals(-1, p.getId());
     }
 
-    @Test
-    public void testConstructor () {
-        Probe p0 = new Probe();
-
-
-        assertEquals("[Probe: (id: -1, nodeId: -1, type: null)]", new Probe(p0).toString());
-    }
-
     @Test(expected = NullPointerException.class)
     public void testNullConstructor () {
         new Probe(null);

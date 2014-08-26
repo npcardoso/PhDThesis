@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.spectrum.matcher;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.activity.Hit;

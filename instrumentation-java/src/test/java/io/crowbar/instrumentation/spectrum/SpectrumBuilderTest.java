@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.spectrum;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
@@ -28,15 +27,17 @@ public class SpectrumBuilderTest {
         sb.registerProbe(0, 1, ProbeType.TRANSACTION_START);
         sb.registerProbe(1, 1, ProbeType.TRANSACTION_END);
 
-        System.out.println(sb.getSpectrum().toString());
+        // System.out.println(sb.getSpectrum().toString());
         // fail("to implement");
         // TODO
     }
 
-    // @Test(expected = Exception.class)
+    @Test(expected = Exception.class)
     public void testRegisterProbe () throws Exception {
-        // SpectrumBuilder sb = new SpectrumBuilder();
-        // sb.registerProbe(0,0,null);
+        SpectrumBuilder sb = new SpectrumBuilder();
+
+
+        sb.registerProbe(0, 0, null);
     }
 
     @Test
@@ -52,14 +53,5 @@ public class SpectrumBuilderTest {
 
         sb.oracle(0, 0.0, 0.0);
         // TODO
-    }
-
-    @Test
-    public void testToString () {
-        SpectrumBuilder sb = new SpectrumBuilder();
-
-
-        Spectrum<Hit, TrM> spectrum = sb.getSpectrum();
-        assertEquals("{class='Spectrum', components=[], transactions=[]}", spectrum.toString());
     }
 }

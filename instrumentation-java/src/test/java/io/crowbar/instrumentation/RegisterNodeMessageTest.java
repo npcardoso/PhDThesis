@@ -20,7 +20,5 @@ public class RegisterNodeMessageTest {
         assertEquals("node message", mr.getName());
         assertEquals(0, mr.getNodeId());
         assertEquals(1, mr.getParentId());
-
-        // assertEquals("[[RegisterNodeMessage]: name: node message] id: 0] parentId: 1]", mr.toString());
     }
 }

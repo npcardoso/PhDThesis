@@ -141,7 +141,7 @@ public class Messages {
         }
 
         protected RegisterProbeMessage () {
-            this(-1, -1, null); // FIXME: this code throws an exception
+            this(-1, -1, null);
         }
     }
 

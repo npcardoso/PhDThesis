@@ -41,7 +41,7 @@
               <workingDirectory>${basedir}</workingDirectory>
               <commandlineArgs></commandlineArgs>
             </configuration>
-          </execution>
+          </execution> 
         </executions>
       </plugin>
     </plugins>

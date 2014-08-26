@@ -129,6 +129,8 @@ public abstract class Spectrum<A extends Activity,
     public abstract Transaction<A, TM> getTransaction (int transactionId);
     public abstract Component getComponent (int componentId);
 
+    public abstract ArrayList<Component> getComponents ();
+
     public final Iterable<Component> byComponent () {
         return new CIterable();
     }

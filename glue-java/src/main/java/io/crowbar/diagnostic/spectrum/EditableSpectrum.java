@@ -56,6 +56,15 @@ extends Spectrum<A, TM> {
     }
 
     /**
+     * @brief Retreives the list of components
+     * @return A list of components
+     */
+    @Override
+    public ArrayList<Component> getComponents () {
+        return components;
+    }
+
+    /**
      * @brief Adds a new transactions to the spectrum.
      * @pre this.getTransaction(transaction.getId()) == null
      */

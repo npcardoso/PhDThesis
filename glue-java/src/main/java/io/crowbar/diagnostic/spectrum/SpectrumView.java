@@ -1,5 +1,6 @@
 package io.crowbar.diagnostic.spectrum;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 
 /*!
@@ -8,15 +9,15 @@ import java.util.BitSet;
  * Changes to the spectrum after the creation of the view may have unpredictable consequences.
  */
 final class SpectrumView<A extends Activity,
-                        TM extends Metadata>
+                         TM extends Metadata>
 extends Spectrum<A, TM> {
     private final Spectrum<A, TM> spectrum;
     private final int[] components;
     private final int[] transactions;
 
     public SpectrumView (Spectrum<A, TM> spectrum,
-                        BitSet transactions,
-                        BitSet components) {
+                         BitSet transactions,
+                         BitSet components) {
         this.spectrum = spectrum;
         this.transactions = toArray(transactions);
         this.components = toArray(components);
@@ -69,5 +70,10 @@ extends Spectrum<A, TM> {
     @Override
     public Component getComponent (int componentId) {
         return spectrum.getComponent(components[componentId]);
+    }
+
+    @Override
+    public ArrayList<Component> getComponents () {
+        return spectrum.getComponents();
     }
 }

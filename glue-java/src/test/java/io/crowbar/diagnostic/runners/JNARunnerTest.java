@@ -310,7 +310,49 @@ public class JNARunnerTest {
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
 
-        j.addGenerator(new MHSGenerator());
+        MHSGenerator mhs = new MHSGenerator();
+        mhs.setLambda(1);
+        j.addGenerator(mhs);
+
+        j.addRanker(new FuzzinelRanker());
+        Connection fuzzinelCon = j.addConnection(0, 0);
+
+        try {
+            JNARunner runner = new JNARunner();
+
+            DiagnosticReport dr = runner.run(j.create(), s);
+
+            Diagnostic diag = dr.getDiagnostic(fuzzinelCon);
+
+
+            System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
+
+            List<Double> scores = s.getScorePerNode(diag, Spectrum.MAX);
+
+            List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
+
+            assertTrue(scores.equals(cmp));
+        }
+        catch (Throwable e) {e.printStackTrace();}
+    }
+
+    @Test
+    public void testJNARunnerMAX_MHS_FUZLambda () {
+        String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
+        MHSGenerator mhs = new MHSGenerator();
+        mhs.setLambda(1);
+        mhs.setMaxCandidates(10);
+        mhs.setMaxDepth(10);
+        mhs.setMaxTime(1000);
+        mhs.setMinScore(1);
+        mhs.setHeuristic(SimilarityRanker.Type.OCHIAI);
+        j.addGenerator(mhs);
 
         j.addRanker(new FuzzinelRanker());
         Connection fuzzinelCon = j.addConnection(0, 0);

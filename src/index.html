@@ -43,7 +43,19 @@
 	</script>
 
 	<style type="text/css">
+/*  body {
+  font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+  font-size: 62.5%;
+}*/
 
+  .toolbar {
+    padding: 4px;
+    display: inline-block;
+  }
+  /* support: IE7 */
+  *+html .toolbar {
+    display: inline;
+  }
 
 	.tableCircle{
 		top: 2px;
@@ -62,6 +74,7 @@
 		box-sizing: content-box;
 		content: '+';
 		background-color: #31b131;
+		font-size: 16px;
 	}
 	</style>
 </head>

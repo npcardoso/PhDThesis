@@ -14,7 +14,7 @@ public class SpectrumBuilderTest {
 
 
         Spectrum<Hit, TrM> spectrum = sb.getSpectrum();
-        assertEquals(0, spectrum.getComponentCount());
+        assertEquals(0, spectrum.getProbeCount());
         assertEquals(0, spectrum.getTransactionCount());
     }
 

@@ -2,7 +2,7 @@ package io.crowbar.diagnostic.spectrum.unserializers;
 
 import static org.junit.Assert.*;
 
-import io.crowbar.diagnostic.spectrum.Component;
+import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
 
@@ -25,22 +25,22 @@ public class HitSpectrumUnserializerTest {
     }
 
     @Test
-    public void testSerializerComponentCount () {
+    public void testSerializerProbeCount () {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
         Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
-        assertEquals(s.getComponentCount(), 10);
+        assertEquals(s.getProbeCount(), 10);
     }
 
     @Test
-    public void testGetComponent () {
+    public void testGetProbe () {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
         Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        Component c = s.getComponent(0);
+        Probe c = s.getProbe(0);
         assertNull(c);
     }
 }

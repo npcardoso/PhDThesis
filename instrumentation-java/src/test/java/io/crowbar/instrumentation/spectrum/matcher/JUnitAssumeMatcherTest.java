@@ -15,14 +15,14 @@ public class JUnitAssumeMatcherTest {
 
         EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
         assertEquals(0, jm.matchTransactions(es).cardinality());
-        assertEquals(0, jm.matchComponents(es).cardinality());
+        assertEquals(0, jm.matchProbes(es).cardinality());
     }
 
     @Test
     public void testNonEmptySpectrum () {
         // TODO
-        // create a Spectrum with components and transactions
-        // test matchTransactions() and matchComponents()
+        // create a Spectrum with probes and transactions
+        // test matchTransactions() and matchProbes()
         // fail("to implement");
     }
 }

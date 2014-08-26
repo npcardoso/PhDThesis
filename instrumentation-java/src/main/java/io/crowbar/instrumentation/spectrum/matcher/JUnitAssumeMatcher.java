@@ -14,8 +14,8 @@ public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, 
         this(true);
     }
 
-    public JUnitAssumeMatcher (boolean defaultValueComponents) {
-        super(false, defaultValueComponents);
+    public JUnitAssumeMatcher (boolean defaultValueProbes) {
+        super(false, defaultValueProbes);
     }
 
     @Override

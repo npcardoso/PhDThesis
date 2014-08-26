@@ -1,14 +1,14 @@
 package io.crowbar.instrumentation.spectrum;
 
 import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Component;
+import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.serializers.HitSpectrumSerializer;
 
 public final class SpectrumSerializer {
     public static String serialize (Spectrum< ? extends Activity, TrM> spectrum) {
-        int numComp = spectrum.getComponentCount();
+        int numComp = spectrum.getProbeCount();
         int numTran = spectrum.getTransactionCount();
         StringBuilder str = new StringBuilder();
         boolean first = true;
@@ -17,7 +17,7 @@ public final class SpectrumSerializer {
         str.append("[");
 
         for (int i = 0; i < numComp; i++) {
-            Component c = spectrum.getComponent(i);
+            Probe c = spectrum.getProbe(i);
 
             if (!first)
                 str.append(", ");

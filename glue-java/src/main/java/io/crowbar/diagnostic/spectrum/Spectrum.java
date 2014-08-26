@@ -103,17 +103,17 @@ public abstract class Spectrum<A extends Activity,
         }
     }
 
-    private class CIterable implements Iterable<Component> {
-        public Iterator<Component> iterator () {
-            return new AbstractIterator<Component> () {
+    private class CIterable implements Iterable<Probe> {
+        public Iterator<Probe> iterator () {
+            return new AbstractIterator<Probe> () {
                        @Override
                        public boolean hasNext () {
-                           return getId() < getComponentCount();
+                           return getId() < getProbeCount();
                        }
 
                        @Override
-                       protected Component get (int i) {
-                           return getComponent(i);
+                       protected Probe get (int i) {
+                           return getProbe(i);
                        }
             };
         }
@@ -124,14 +124,14 @@ public abstract class Spectrum<A extends Activity,
     public abstract Tree getTree ();
 
     public abstract int getTransactionCount ();
-    public abstract int getComponentCount ();
+    public abstract int getProbeCount ();
 
     public abstract Transaction<A, TM> getTransaction (int transactionId);
-    public abstract Component getComponent (int componentId);
+    public abstract Probe getProbe (int probeId);
 
-    public abstract ArrayList<Component> getComponents ();
+    public abstract ArrayList<Probe> getProbes ();
 
-    public final Iterable<Component> byComponent () {
+    public final Iterable<Probe> byProbe () {
         return new CIterable();
     }
 
@@ -151,9 +151,9 @@ public abstract class Spectrum<A extends Activity,
 
         for (DiagnosticElement e : diagnostic) {
             for (int cmpId : e.getCandidate()) {
-                Component cmp = getComponent(cmpId);
+                Probe cmp = getProbe(cmpId);
 
-                if (cmp == null) continue; // Ignore components without information
+                if (cmp == null) continue; // Ignore probes without information
 
                 int nodeId = cmp.getNode().getId();
 
@@ -192,17 +192,17 @@ public abstract class Spectrum<A extends Activity,
 
 
         str.append("{class='Spectrum', ");
-        str.append("components=[");
+        str.append("probes=[");
         boolean first = true;
 
-        for (Component component : byComponent()) {
+        for (Probe probe : byProbe()) {
             if (!first)
                 str.append(",");
 
-            if (component == null)
+            if (probe == null)
                 str.append("null");
             else
-                str.append(component.toString());
+                str.append(probe.toString());
 
             first = false;
         }

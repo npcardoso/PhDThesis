@@ -15,15 +15,15 @@ public class ProbeTypeMatcherTest {
 
 
         EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
-        assertEquals(true, ptm.matchComponents(es).isEmpty());
+        assertEquals(true, ptm.matchProbes(es).isEmpty());
         assertEquals(true, ptm.matchTransactions(es).isEmpty());
     }
 
     @Test
     public void testNonEmptySpectrum () {
         // TODO
-        // create a Spectrum with components and transactions
-        // test matchTransactions() and matchComponents()
+        // create a Spectrum with probes and transactions
+        // test matchTransactions() and matchProbes()
         // fail("to implement");
     }
 }

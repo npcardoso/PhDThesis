@@ -14,12 +14,14 @@ public final class CouplerMatcher<A extends Activity,
                                   TM extends Metadata>
 implements SpectrumMatcher<A, TM> {
     public interface Coupler {
-        void couple (BitSet ret, BitSet operand);
+        void couple (BitSet ret,
+                     BitSet operand);
     }
 
     private static final class And implements Coupler {
         @Override
-        public void couple (BitSet ret, BitSet operand) {
+        public void couple (BitSet ret,
+                            BitSet operand) {
             if (ret.size() < operand.size())
                 ret.set(ret.size(), operand.size());
 
@@ -29,7 +31,8 @@ implements SpectrumMatcher<A, TM> {
 
     private static final class Or implements Coupler {
         @Override
-        public void couple (BitSet ret, BitSet operand) {
+        public void couple (BitSet ret,
+                            BitSet operand) {
             ret.or(operand);
         }
     }
@@ -57,12 +60,12 @@ implements SpectrumMatcher<A, TM> {
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends A, ? extends TM> spectrum) {
+    public BitSet matchProbes (Spectrum< ? extends A, ? extends TM> spectrum) {
         BitSet ret = new BitSet();
 
 
         for (SpectrumMatcher< ? super A, ? super TM> matcher : matchers) {
-            coupler.couple(ret, matcher.matchComponents(spectrum));
+            coupler.couple(ret, matcher.matchProbes(spectrum));
         }
 
         return ret;

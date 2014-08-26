@@ -17,8 +17,8 @@ extends Transaction<A, TM> {
         int size;
 
         // compute correct size for transaction + view
-        for (size = spectrumView.getComponentCount(); size > 0; size--) {
-            if (spectrumView.getComponentMapping(size - 1) < transaction.size())
+        for (size = spectrumView.getProbeCount(); size > 0; size--) {
+            if (spectrumView.getProbeMapping(size - 1) < transaction.size())
                 break;
         }
 
@@ -37,7 +37,7 @@ extends Transaction<A, TM> {
 
     @Override
     public final A get (int id) {
-        return transaction.get(spectrumView.getComponentMapping(id));
+        return transaction.get(spectrumView.getProbeMapping(id));
     }
 
     @Override

@@ -7,19 +7,19 @@ import io.crowbar.diagnostic.spectrum.Transaction;
 import java.util.BitSet;
 
 /**
- * \brief This class matches all active components in a spectrum.
+ * \brief This class matches all active probes in a spectrum.
  */
-public final class ActiveComponentMatcher extends AbstractSpectrumMatcher<Activity, Metadata> {
-    public ActiveComponentMatcher () {
+public final class ActiveProbeMatcher extends AbstractSpectrumMatcher<Activity, Metadata> {
+    public ActiveProbeMatcher () {
         this(true);
     }
 
-    public ActiveComponentMatcher (boolean defaultValueTransactions) {
+    public ActiveProbeMatcher (boolean defaultValueTransactions) {
         super(defaultValueTransactions, false);
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
+    public BitSet matchProbes (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
         BitSet ret = new BitSet();
 
 

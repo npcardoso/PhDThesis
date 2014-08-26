@@ -7,13 +7,13 @@ import io.crowbar.diagnostic.spectrum.Metadata;
 import java.util.BitSet;
 
 public interface SpectrumMatcher<A extends Activity,
-                                TM extends Metadata> {
+                                 TM extends Metadata> {
     /**
-     * \brief Returns a BitSet encoding the component matches.
-     * \post ret.size() == spectrum.getComponentCount()
-     * \return a BitSet ret where ret.get(i) represents the matching result for component i.
+     * \brief Returns a BitSet encoding the probe matches.
+     * \post ret.size() == spectrum.getProbeCount()
+     * \return a BitSet ret where ret.get(i) represents the matching result for probe i.
      */
-    BitSet matchComponents (Spectrum< ? extends A, ? extends TM> spectrum);
+    BitSet matchProbes (Spectrum< ? extends A, ? extends TM> spectrum);
     /**
      * \brief Returns a BitSet encoding the transaction matches.
      * \post ret.size() == spectrum.getTransactionCount()

@@ -1,28 +1,28 @@
 package io.crowbar.diagnostic.spectrum;
 
-public final class Component {
+public final class Probe {
     private final Spectrum spectrum;
     private final int id;
     private final int nodeId;
     private final ProbeType type;
 
-    Component (Spectrum spectrum,
-               ProbeType type,
-               int id) {
+    Probe (Spectrum spectrum,
+           ProbeType type,
+           int id) {
         this(spectrum, type, id, 0);
     }
 
-    Component (Spectrum spectrum,
-               ProbeType type,
-               int id,
-               int nodeId) {
+    Probe (Spectrum spectrum,
+           ProbeType type,
+           int id,
+           int nodeId) {
         this.spectrum = spectrum;
         this.type = type;
         this.id = id;
         this.nodeId = nodeId;
     }
 
-    public ProbeType getType() {
+    public ProbeType getType () {
         return type;
     }
 
@@ -43,7 +43,7 @@ public final class Component {
         StringBuilder str = new StringBuilder();
 
 
-        str.append("{class='Component', ");
+        str.append("{class='Probe', ");
         str.append("id=" + getId() + ", ");
         str.append("nodeId=" + getNodeId() + ", ");
 

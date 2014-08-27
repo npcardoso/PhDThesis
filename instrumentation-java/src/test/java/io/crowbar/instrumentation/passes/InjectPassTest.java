@@ -1,6 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
 import static org.junit.Assert.assertEquals;
+import io.crowbar.instrumentation.examples.Dummy;
 import io.crowbar.instrumentation.passes.InjectPass.Granularity;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -10,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class InjectPassTest {
-    private static String testClass = "io.crowbar.instrumentation.passes.CalculatorExample";
+    private static String testClass = Dummy.class.getCanonicalName();
 
     private ClassPool cp;
     private CtClass cc;

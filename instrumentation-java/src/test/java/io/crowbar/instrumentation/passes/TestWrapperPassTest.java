@@ -1,6 +1,7 @@
 package io.crowbar.instrumentation.passes;
 
 import static org.junit.Assert.assertEquals;
+import io.crowbar.instrumentation.examples.Dummy;
 import io.crowbar.instrumentation.passes.wrappers.JUnit4TestWrapper;
 import io.crowbar.instrumentation.passes.wrappers.TestWrapper;
 
@@ -15,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestWrapperPassTest {
-    private static String testClass = "io.crowbar.instrumentation.passes.CalculatorExampleTest";
+    private static String testClass = Dummy.class.getCanonicalName();
 
     private ClassPool cp;
     private CtClass cc;

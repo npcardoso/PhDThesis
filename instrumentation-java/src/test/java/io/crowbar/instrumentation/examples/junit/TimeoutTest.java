@@ -1,9 +1,11 @@
 package io.crowbar.instrumentation.examples.junit;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+@Ignore
 public class TimeoutTest {
     @Rule
     public Timeout globalTimeout = new Timeout(10000);

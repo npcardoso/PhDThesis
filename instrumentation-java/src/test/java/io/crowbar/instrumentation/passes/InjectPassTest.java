@@ -1,8 +1,10 @@
 package io.crowbar.instrumentation.passes;
 
 import static org.junit.Assert.assertEquals;
+import io.crowbar.instrumentation.events.AbstractEventListener;
 import io.crowbar.instrumentation.examples.Dummy;
 import io.crowbar.instrumentation.passes.InjectPass.Granularity;
+import io.crowbar.instrumentation.runtime.Collector;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -18,6 +20,7 @@ public class InjectPassTest {
 
     @Before
     public void setUp () throws NotFoundException {
+        Collector.start("", new AbstractEventListener() {});
         this.cp = ClassPool.getDefault();
         this.cc = this.cp.get(testClass);
     }

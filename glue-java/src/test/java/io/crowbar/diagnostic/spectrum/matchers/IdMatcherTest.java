@@ -44,4 +44,52 @@ public class IdMatcherTest {
 
         assertEquals(id.matchProbes(s).length(), 10);
     }
+
+    @Test
+    public void testTransactionsIntArr () {
+        ActiveProbeMatcher a = new ActiveProbeMatcher();
+
+        String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        BitSet cs = a.matchProbes(s);
+        BitSet ts = a.matchTransactions(s);
+
+        int[] tran = {
+            1, 2, 3
+        };
+        int[] prob = {
+            1, 5
+        };
+        IdMatcher id = new IdMatcher(tran, prob);
+
+
+        assertEquals(id.matchTransactions(s).length(), 4);
+    }
+
+    @Test
+    public void testProbesIntArr () {
+        ActiveProbeMatcher a = new ActiveProbeMatcher();
+
+        String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
+
+
+        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+        BitSet cs = a.matchProbes(s);
+        BitSet ts = a.matchTransactions(s);
+
+        int[] tran = {
+            1, 2, 3
+        };
+        int[] prob = {
+            1, 5
+        };
+        IdMatcher id = new IdMatcher(tran, prob);
+
+
+        assertEquals(id.matchProbes(s).length(), 6);
+    }
 }

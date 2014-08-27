@@ -7,6 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public final class EchoServer extends ThreadedServer {
+    public static final int MAX_SIZE = 100;
+
     private class EchoService implements Runnable {
         public EchoService (Socket s) {
             this.socket = s;
@@ -16,8 +18,13 @@ public final class EchoServer extends ThreadedServer {
             try {
                 while (socket.isConnected()) {
                     InputStream in = socket.getInputStream();
+
+                    byte[] b = new byte[MAX_SIZE];
+                    in.read(b);
+
                     OutputStream out = socket.getOutputStream();
-                    out.write(in.read());
+                    out.write(b);
+                    out.flush();
                 }
 
                 socket.close();

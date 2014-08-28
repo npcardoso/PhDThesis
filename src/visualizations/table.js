@@ -26,7 +26,7 @@ function Table(data, elementSel, configuration, events) {
         $(elementSel).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="tableData"></table>');
 
         var table = $('#tableData').DataTable({
-            "scrollY":        $(window).height()-260 + "px",
+            "scrollY":        $(window).height()-270 + "px",
             "retrieve" : true,
             "scrollCollapse": true,
             "data" : tableData,

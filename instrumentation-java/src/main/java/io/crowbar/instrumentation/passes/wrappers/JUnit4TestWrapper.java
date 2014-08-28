@@ -32,11 +32,15 @@ public final class JUnit4TestWrapper implements TestWrapper {
         }
     }
 
-    public static final boolean isPass (Collector c,
-                                        int probeId,
-                                        Throwable e,
+    public static final boolean isPass (Throwable e,
                                         String expected) {
+        if (e == null)
+            return true;
+
         if (isSameType(e, "org.junit.Assume$AssumptionViolatedException"))
+            return true;
+
+        if (isSameType(e, "org.junit.internal.AssumptionViolatedException"))
             return true;
 
         if (isSameType(e, expected))

@@ -22,22 +22,24 @@ implements SpectrumMatcher<Activity, Metadata> {
 
     public IdMatcher (int[] transactions,
                       int[] probes) {
-        for (int t : transactions) {
-            this.transactions.set(t);
-        }
+        if (transactions != null)
+            for (int t : transactions) {
+                this.transactions.set(t);
+            }
 
-        for (int c : probes) {
-            this.probes.set(c);
-        }
+        if (probes != null)
+            for (int c : probes) {
+                this.probes.set(c);
+            }
     }
 
     @Override
     public BitSet matchProbes (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
-        return probes;
+        return (BitSet) probes.clone();
     }
 
     @Override
     public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
-        return transactions;
+        return (BitSet) transactions.clone();
     }
 }

@@ -218,6 +218,52 @@ public abstract class Spectrum<A extends Activity,
     }
 
     @Override
+    public final boolean equals (Object o) {
+        if (!(o instanceof Spectrum))
+            return false;
+
+        Spectrum s = (Spectrum) o;
+
+        if (s.getTransactionCount() != getTransactionCount())
+            return false;
+
+        if (s.getProbeCount() != getProbeCount())
+            return false;
+
+        if (!s.getProbes().equals(getProbes()))
+            return false;
+
+        if (!s.getTree().equals(getTree()))
+            return false;
+
+        Iterator<Transaction> tIt = s.byTransaction().iterator();
+
+        for (Transaction t : byTransaction()) {
+            Transaction other = tIt.next();
+
+            if (other == null || t == null) {
+                if (t != null || other != null)
+                    return false;
+            } else if (!t.equals(other))
+                return false;
+        }
+
+        Iterator<Probe> pIt = s.byProbe().iterator();
+
+        for (Probe p : byProbe()) {
+            Probe other = pIt.next();
+
+            if (other == null || p == null) {
+                if (p != null || other != null)
+                    return false;
+            } else if (!p.equals(other))
+                return false;
+        }
+
+        return true;
+    }
+
+    @Override
     public final String toString () {
         StringBuilder str = new StringBuilder();
 

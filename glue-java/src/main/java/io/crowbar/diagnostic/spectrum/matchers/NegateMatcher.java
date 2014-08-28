@@ -34,6 +34,7 @@ implements SpectrumMatcher<A, TM> {
 
 
         ret.flip(0, spectrum.getTransactionCount());
+
         return ret;
     }
 }

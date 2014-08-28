@@ -53,18 +53,13 @@ public class JUnit4TestWrapperTest {
     }
 
     @Test
-    public void testIsPass () {
-        assertEquals(false, JUnit4TestWrapper.isPass(null, 0, null, ""));
-    }
-
-    @Test
     public void testIsPassAssumptionViolatedException () {
-        assertEquals(true, JUnit4TestWrapper.isPass(null, 0, new AssumptionViolatedException(""), ""));
+        assertEquals(true, JUnit4TestWrapper.isPass(new AssumptionViolatedException(""), ""));
     }
 
     @Test
     public void testIsPassNullPointerException () {
-        assertEquals(true, JUnit4TestWrapper.isPass(null, 0, new NullPointerException(""), java.lang.NullPointerException.class.getCanonicalName()));
+        assertEquals(true, JUnit4TestWrapper.isPass(new NullPointerException(""), java.lang.NullPointerException.class.getCanonicalName()));
     }
 
     @Test

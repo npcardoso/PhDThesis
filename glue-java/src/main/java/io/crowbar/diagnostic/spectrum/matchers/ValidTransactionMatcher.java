@@ -23,8 +23,6 @@ extends AbstractSpectrumMatcher<Activity, Metadata> {
     public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
         BitSet ret = new BitSet();
 
-        int i = 0;
-
 
         for (Transaction< ? extends Activity, ? extends Metadata> t : spectrum.byTransaction()) {
             boolean valid = false;
@@ -36,7 +34,7 @@ extends AbstractSpectrumMatcher<Activity, Metadata> {
                 }
             }
 
-            ret.set(i++, valid);
+            ret.set(t.getId(), valid);
         }
 
         return ret;

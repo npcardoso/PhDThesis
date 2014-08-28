@@ -34,9 +34,7 @@ public class TestNGTestWrapper implements TestWrapper {
         }
     }
 
-    public static final boolean isPass (Collector c,
-                                        int probeId,
-                                        Throwable e,
+    public static final boolean isPass (Throwable e,
                                         String[] expected,
                                         String expectedMsgRegex) {
         if (expected != null)

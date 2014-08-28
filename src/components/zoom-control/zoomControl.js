@@ -98,10 +98,12 @@ $('#zoomReset').click(events.zoomReset);
 
 $(document).click(function(e){
   // checking for any non left click and convert to left click.
-  if (e.which != 2) { 
+  if (e.which == 2) { 
     events.zoomReset();
   }
 });
+
+
 
 return events;
 }

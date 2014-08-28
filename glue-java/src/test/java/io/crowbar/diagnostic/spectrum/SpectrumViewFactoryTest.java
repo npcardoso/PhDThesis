@@ -143,4 +143,19 @@ public class SpectrumViewFactoryTest {
             assertEquals(p.getId() + ((p.getId() >= filteredPr) ? 1 : 0), view.getProbeMapping(p.getId()));
         }
     }
+
+    @Test
+    public void testMappingsProbes_noMatch () {
+        int filteredPr = 1;
+
+
+        Spectrum<Hit, ? > s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
+        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+
+        int pid = 0;
+
+        for (Probe p : s.getProbes()) {
+            assertEquals(p.getId(), pid++);
+        }
+    }
 }

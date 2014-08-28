@@ -79,6 +79,8 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
         zoomListener.translate([0,0]);
         zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
     }
+
+
 };
 
 zoomListener(zoomElement);
@@ -93,6 +95,14 @@ $('#panRight').click(events.right);
 $('#zoomIn').click(events.zoomIn);
 $('#zoomOut').click(events.zoomOut);
 $('#zoomReset').click(events.zoomReset);
+
+$(document).click(function(e){
+  // checking for any non left click and convert to left click.
+  if (e.which != 2) { 
+    events.zoomReset();
+  }
+});
+
 return events;
 }
 

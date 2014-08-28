@@ -25,8 +25,6 @@ public class AnnotationMatcher implements Matcher {
     public final boolean matches (CtClass c,
                                   CtMethod m) {
         try {
-            System.out.println("Checking: " + annotation + " ->" + m.hasAnnotation(Class.forName(annotation)));
-
             return m.hasAnnotation(Class.forName(annotation));
         }
         catch (Exception e) {

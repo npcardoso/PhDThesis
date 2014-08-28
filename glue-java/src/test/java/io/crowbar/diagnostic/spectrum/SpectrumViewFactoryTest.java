@@ -6,6 +6,7 @@ import io.crowbar.diagnostic.spectrum.matchers.IdMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.NegateMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.ValidTransactionMatcher;
 import io.crowbar.diagnostic.spectrum.unserializers.HitSpectrumUnserializer;
+import io.crowbar.util.SpectraGenerator;
 
 import java.util.Scanner;
 
@@ -124,26 +125,22 @@ public class SpectrumViewFactoryTest {
         }
     }
 
-    // @Test
-    // public void testMappingsProbes() {
-    // TODO: The spectrum must be created so it contains probe information
-    // String in = "4 4 1 1 0 1 1.0 1 1 1 0 1.0 1 1 1 1 0.0 0 0 0 0 0.0";
-    // int filteredPr = 1;
-
-    // Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
-    // SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+    @Test
+    public void testMappingsProbes () {
+        int filteredPr = 1;
 
 
-    // svf.addStage(new NegateMatcher(new IdMatcher(null, new int[]{filteredPr})));
-    // SpectrumView<Hit, ? > view = svf.getView();
+        Spectrum<Hit, ? > s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
+        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
 
-    // assertEquals(s.getProbeCount() - 1, view.getProbeCount());
-    // assertEquals(s.getTransactionCount(), view.getTransactionCount());
+        svf.addStage(new NegateMatcher(new IdMatcher(null, new int[] {filteredPr})));
+        SpectrumView<Hit, ? > view = svf.getView();
 
+        assertEquals(s.getProbeCount() - 1, view.getProbeCount());
+        assertEquals(s.getTransactionCount(), view.getTransactionCount());
 
-    // for(Probe p : view.byProbe()) {
-    // assertEquals(p.getId() + ((p.getId() >= filteredPr)?1:0),
-    // view.getProbeMapping(p.getId()));
-    // }
-    // }
+        for (Probe p : view.byProbe()) {
+            assertEquals(p.getId() + ((p.getId() >= filteredPr) ? 1 : 0), view.getProbeMapping(p.getId()));
+        }
+    }
 }

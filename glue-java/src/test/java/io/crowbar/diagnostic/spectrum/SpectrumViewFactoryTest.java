@@ -41,7 +41,7 @@ public class SpectrumViewFactoryTest {
 
     @Test
     public void testStage () {
-        String in = "3 4 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
+        String in = "3 3 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
 
 
         Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));

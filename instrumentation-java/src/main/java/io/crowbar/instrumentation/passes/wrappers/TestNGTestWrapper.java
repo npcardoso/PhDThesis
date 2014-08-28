@@ -85,8 +85,6 @@ public class TestNGTestWrapper implements TestWrapper {
 
         StringBuilder code = new StringBuilder();
         code.append(getClass().getName() + ".isPass(");
-        code.append(collectorVar + ", ");
-        code.append(probeId + ", ");
         code.append(exceptionVar + ", ");
 
         if (expected.length == 0) {

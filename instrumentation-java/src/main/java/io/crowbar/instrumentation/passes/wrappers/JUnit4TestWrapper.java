@@ -92,8 +92,6 @@ public final class JUnit4TestWrapper implements TestWrapper {
 
         String oracleCall =
             getClass().getName() + ".isPass(" +
-            collectorVar + ", " +
-            probeId + ", " +
             exceptionVar + ", " +
             expectedStr + ")";
         return "if(" + oracleCall + ") throw " + exceptionVar + ";";

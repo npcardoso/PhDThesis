@@ -28,6 +28,7 @@ public class TestWrapperPassTest {
         Collector.start("", new AbstractEventListener() {});
         this.cp = ClassPool.getDefault();
         this.cc = this.cp.get(testClass);
+        cp.importPackage("io.crowbar.instrumentation.runtime");
     }
 
     @Test

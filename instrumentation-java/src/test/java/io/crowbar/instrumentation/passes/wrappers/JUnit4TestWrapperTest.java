@@ -68,7 +68,7 @@ public class JUnit4TestWrapperTest {
         CtMethod cm = cc.getMethod("testTryCatch", Descriptor.ofMethod(CtClass.voidType, null));
 
 
-        assertTrue(jW.getOracleCode(this.cc, cm, null, 0, "", "").contains(", 0, , \"\""));
+        assertTrue(jW.getOracleCode(this.cc, cm, null, 0, "", "").contains(", \"\""));
     }
 
     @Test

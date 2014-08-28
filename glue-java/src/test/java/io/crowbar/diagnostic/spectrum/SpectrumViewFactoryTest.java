@@ -41,19 +41,18 @@ public class SpectrumViewFactoryTest {
 
     @Test
     public void testStage () {
-        String in = "3 3 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
+        String in = "3 4 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0 0 0 0 0.0";
 
 
         Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
 
-        SpectrumView<Hit, ? > sv = svf.getView();
-
         ValidTransactionMatcher v = new ValidTransactionMatcher();
-        NegateMatcher n = new NegateMatcher(v);
 
-        svf.addStage(n);
+        svf.addStage(v);
+
+        SpectrumView<Hit, ? > sv = svf.getView();
 
         assertEquals(sv.getTransactionCount(), 3);
     }

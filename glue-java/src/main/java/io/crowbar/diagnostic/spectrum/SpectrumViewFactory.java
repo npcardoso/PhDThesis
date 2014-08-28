@@ -27,7 +27,8 @@ public final  class SpectrumViewFactory<A extends Activity,
 
 
         BitSet retTr = matcher.matchTransactions(view);
-        assert (retTr.length() < view.getTransactionCount());
+        assert (retTr != null);
+        assert (retTr.length() <= view.getTransactionCount());
 
         for (int i = 0; i < view.getTransactionCount(); i++) {
             if (!retTr.get(i)) {
@@ -36,11 +37,12 @@ public final  class SpectrumViewFactory<A extends Activity,
             }
         }
 
-        BitSet retComp = matcher.matchProbes(view);
-        assert (retComp.length() < view.getProbeCount());
+        BitSet retPr = matcher.matchProbes(view);
+        assert (retPr != null);
+        assert retPr.length() <= view.getProbeCount();
 
         for (int i = 0; i < view.getProbeCount(); i++) {
-            if (!retComp.get(i)) {
+            if (!retPr.get(i)) {
                 int original = view.getProbeMapping(i);
                 probes.clear(original);
             }

@@ -69,9 +69,40 @@ implements Iterable<A> {
      * @brief Gets the size of the transaction
      * @note iterator uses this function.
      * @return The size of the transaction is equal to the id of the
-     * last probe + 1.
+     * last active probe + 1.
      */
     public abstract int size ();
+
+    @Override
+    public boolean equals (Object o) {
+        if (!(o instanceof Transaction))
+            return false;
+
+        Transaction t = (Transaction) o;
+
+        if (getError() != t.getError())
+            return false;
+
+        if (getConfidence() != t.getConfidence())
+            return false;
+
+        if (getMetadata() == null || t.getMetadata() == null) {
+            if (getMetadata() != null)
+                return false;
+
+            if (t.getMetadata() != null)
+                return false;
+        } else if (!getMetadata().equals(t.getMetadata()))
+            return false;
+
+        Iterator it = t.iterator();
+
+        for (A a : this)
+            if (!a.equals(it.next()))
+                return false;
+
+        return true;
+    }
 
     @Override
     public final String toString () {

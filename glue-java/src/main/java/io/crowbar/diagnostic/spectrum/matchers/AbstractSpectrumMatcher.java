@@ -45,9 +45,9 @@ implements SpectrumMatcher<A, TM> {
         BitSet ret = new BitSet();
 
 
-        if (defaultValueProbes) {
+        if (defaultValueProbes)
             ret.set(0, spectrum.getProbeCount());
-        }
+
 
         return ret;
     }
@@ -57,9 +57,9 @@ implements SpectrumMatcher<A, TM> {
         BitSet ret = new BitSet();
 
 
-        if (defaultValueTransactions) {
+        if (defaultValueTransactions)
             ret.set(0, spectrum.getTransactionCount());
-        }
+
 
         return ret;
     }

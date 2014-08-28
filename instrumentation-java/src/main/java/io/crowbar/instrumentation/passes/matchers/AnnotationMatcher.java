@@ -15,16 +15,21 @@ public class AnnotationMatcher implements Matcher {
     public final boolean matches (CtClass c) {
         try {
             return c.hasAnnotation(Class.forName(annotation));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return false;
         }
     }
 
     @Override
-    public final boolean matches (CtClass c, CtMethod m) {
+    public final boolean matches (CtClass c,
+                                  CtMethod m) {
         try {
+            System.out.println("Checking: " + annotation + " ->" + m.hasAnnotation(Class.forName(annotation)));
+
             return m.hasAnnotation(Class.forName(annotation));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return false;
         }
     }

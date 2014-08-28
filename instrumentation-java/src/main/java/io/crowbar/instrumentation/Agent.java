@@ -30,7 +30,8 @@ import javassist.CtClass;
 import javassist.Modifier;
 
 public class Agent implements ClassFileTransformer {
-    public static void premain (String agentArgs, Instrumentation inst) {
+    public static void premain (String agentArgs,
+                                Instrumentation inst) {
         CtClass.debugDump = "debug";
 
         Agent a = new Agent();
@@ -41,7 +42,6 @@ public class Agent implements ClassFileTransformer {
                                                    "java.",
                                                    "sun.",
                                                    "javassist.",
-                                                   "io.crowbar.instrumentation",
                                                    "org.apache.",
                                                    "org.junit.",
                                                    "org.hamcrest",

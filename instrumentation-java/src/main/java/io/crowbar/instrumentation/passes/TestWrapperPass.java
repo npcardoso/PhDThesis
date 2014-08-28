@@ -122,8 +122,8 @@ public final class TestWrapperPass extends AbstractPass {
 
         StringBuilder code = new StringBuilder();
         code.append("{Collector c = Collector.instance();");
-        code.append("c.hit(" + p.getId() + ");");
         code.append("c." + p.getType().getMethodName() + "(" + p.getId() + ");");
+        code.append("c.hit(" + p.getId() + ");");
         code.append("}");
         return code.toString();
     }

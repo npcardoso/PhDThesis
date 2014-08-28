@@ -3,6 +3,7 @@ package io.crowbar.instrumentation.passes.wrappers;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.passes.matchers.AndMatcher;
+import io.crowbar.instrumentation.passes.matchers.OrMatcher;
 import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
@@ -18,7 +19,9 @@ public final class JUnit4TestWrapper implements TestWrapper {
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
             new AndMatcher(
-                new AnnotationMatcher("org.junit.Test"),
+                new OrMatcher(
+                    new AnnotationMatcher("org.junit.Test"),
+                    new AnnotationMatcher("org.junit.experimental.theories.Theory")),
                 new ReturnTypeMatcher("void")));
 
     private static boolean isSameType (Object o,

@@ -22,7 +22,7 @@ function Configuration() {
    scriptsLoad: ["data_ex.js"],
    scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"],
    regexFilter: "p.*d",
-   defaultTableEntries: 10,
+   defaultTableEntries: 100,
  };
 
  var self = this;

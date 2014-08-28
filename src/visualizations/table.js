@@ -16,13 +16,19 @@ function Table(data, elementSel, configuration, events) {
     }
 
 
+    this.resize = function(){
+        self.render();
+    }
+
     var tableData = this.getTableRows();
     this.render = function(){
 
         $(elementSel).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="tableData"></table>');
 
         var table = $('#tableData').DataTable({
+            "scrollY":        $(window).height()-260 + "px",
             "retrieve" : true,
+            "scrollCollapse": true,
             "data" : tableData,
             "columns" : [{
                 "title" : "Class"

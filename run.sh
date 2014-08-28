@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp crowbar.jar $*
+java -cp glue-java/target/*-jar-with-dependencies.jar $*

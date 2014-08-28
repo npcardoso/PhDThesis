@@ -3,6 +3,7 @@ package io.crowbar.diagnostic.algorithms;
 import flexjson.JSON;
 import flexjson.JSONSerializer;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -28,7 +29,6 @@ public final class Algorithm {
         this.configs = configs;
     }
 
-
     /**
      * This constructor creates a copy of the configurations to ensure
      * immutability.
@@ -50,8 +50,8 @@ public final class Algorithm {
     }
 
     @JSON
-    private Map<String, String> getConfigs () {
-        return configs;
+    public Map<String, String> getConfigs () {
+        return configs == null ? null : Collections.unmodifiableMap(configs);
     }
 
     public String getConfig (String name) {

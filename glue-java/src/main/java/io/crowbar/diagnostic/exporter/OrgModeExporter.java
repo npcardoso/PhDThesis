@@ -1,9 +1,13 @@
 package io.crowbar.diagnostic.exporter;
 
 import io.crowbar.diagnostic.Connection;
+import io.crowbar.diagnostic.Diagnostic;
+import io.crowbar.diagnostic.DiagnosticElement;
 import io.crowbar.diagnostic.DiagnosticSystem;
 import io.crowbar.diagnostic.DiagnosticReport;
+import io.crowbar.diagnostic.SortedDiagnostic;
 import io.crowbar.diagnostic.algorithms.Algorithm;
+import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.Spectrum;
@@ -16,7 +20,8 @@ import java.util.Map;
 // TODO: Remove this
 import io.crowbar.diagnostic.DiagnosticSystemFactory;
 import io.crowbar.diagnostic.algorithms.*;
-import io.crowbar.diagnostic.spectrum.Activity;
+import io.crowbar.diagnostic.runners.*;
+import io.crowbar.util.*;
 
 
 public final class OrgModeExporter {
@@ -27,7 +32,7 @@ public final class OrgModeExporter {
     private static String PROBE_ANCHOR = "prb";
     private static String TRANSACTION_ANCHOR = "tr";
 
-    private int nodeListAtDepth;
+    private int nodeListAtDepth = -1;
 
     /**
      * @brief Gets the depth after which tree nodes start to be displayed as list items instead of sections.
@@ -51,18 +56,17 @@ public final class OrgModeExporter {
         StringBuilder ret = new StringBuilder();
 
 
-        header(0, "DiagnosticSystem", ret);
-        export(1, ds, ret);
-        header(0, "Spectrum", ret);
-        export(1, spectrum, ret);
-
+        export(0, ds, ret);
+        export(0, spectrum, ret);
+        export(0, ds, dr, ret);
         return ret.toString();
     }
 
     public void export (int depth,
                         DiagnosticSystem ds,
                         StringBuilder ret) {
-        header(depth, "Generators", ret);
+        header(depth, "Diagnostic System", ret);
+        header(depth + 1, "Generators", ret);
         int i = 0;
 
         for (Algorithm a : ds.getGenerators()) {
@@ -71,7 +75,7 @@ public final class OrgModeExporter {
             i++;
         }
 
-        header(depth, "Rankers", ret);
+        header(depth + 1, "Rankers", ret);
         i = 0;
 
         for (Algorithm a : ds.getRankers()) {
@@ -80,16 +84,14 @@ public final class OrgModeExporter {
             i++;
         }
 
-        header(depth, "Connections", ret);
-        i = 0;
+        header(depth + 1, "Connections", ret);
 
         for (Connection c : ds.getConnections()) {
-            header(depth + 1, "Connection" + i + " " + anchor(CON_ANCHOR, i), ret);
+            header(depth + 2, "Connection" + c.getId() + " " + anchor(CON_ANCHOR, c.getId()), ret);
             listItem(0, "from: " + ds.getGenerators().get(c.getFrom()).getName() + " " +
                      link(GEN_ANCHOR, c.getFrom()), ret);
             listItem(0, "to: " + ds.getRankers().get(c.getTo()).getName() + " " +
                      link(RANK_ANCHOR, c.getTo()), ret);
-            i++;
         }
     }
 
@@ -109,24 +111,25 @@ public final class OrgModeExporter {
     public void export (int depth,
                         Spectrum< ? , ? > spectrum,
                         StringBuilder ret) {
-        header(depth, "Tree", ret);
+        header(depth, "Spectrum", ret);
+        header(depth + 1, "Tree", ret);
 
         for (Node n : spectrum.getTree().getRoot().getChildren()) {
-            export(depth + 1, n, ret);
+            export(depth + 2, n, ret);
         }
 
-        header(depth, "Probes", ret);
+        header(depth + 1, "Probes", ret);
 
         for (Probe p : spectrum.byProbe()) {
             if (p != null)
-                export(depth + 1, p, ret);
+                export(depth + 2, p, ret);
         }
 
-        header(depth, "Transactions", ret);
+        header(depth + 1, "Transactions", ret);
 
         for (Transaction< ? , ? > t : spectrum.byTransaction()) {
             if (t != null)
-                export(depth + 1, spectrum, t, ret);
+                export(depth + 2, spectrum, t, ret);
         }
     }
 
@@ -187,6 +190,36 @@ public final class OrgModeExporter {
         listItem(0, "active nodes:" + activeNodes.toString(), ret);
     }
 
+    public void export (int depth,
+                        DiagnosticSystem ds,
+                        DiagnosticReport dr,
+                        StringBuilder ret) {
+        header(depth, "Diagnostic Report", ret);
+
+        for (Connection c : ds.getConnections()) {
+            header(depth + 1, "Report for " + link(CON_ANCHOR, c.getId()) +
+                   " (from: " + link(GEN_ANCHOR, c.getFrom()) +
+                   ", to: " + link(RANK_ANCHOR, c.getTo()) + ")", ret);
+            export(depth + 2, dr.getDiagnostic(c), ret);
+        }
+    }
+
+    public void export (int depth,
+                        Diagnostic d,
+                        StringBuilder ret) {
+        SortedDiagnostic sd = new SortedDiagnostic(d);
+
+
+        for (DiagnosticElement de : sd) {
+            StringBuilder entry = new StringBuilder(de.getScore() + ":");
+
+            for (int id : de.getCandidate())
+                entry.append(" " + link(PROBE_ANCHOR, id));
+
+            listItem(0, entry.toString(), ret);
+        }
+    }
+
     private void header (int depth,
                          String text,
                          StringBuilder ret) {
@@ -227,10 +260,20 @@ public final class OrgModeExporter {
         j.addConnection(1, 0);
 
         j.addRanker(new FuzzinelRanker());
-        Connection fuzzinelCon = j.addConnection(1, 1);
+        j.addConnection(1, 1);
+
+        Spectrum< ? , ? > s = SpectraGenerator.generateSpectrum(10, 20, 10, 0.5, 0.5);
+
 
         DiagnosticSystem ds = j.create();
+        try {
+            JNARunner runner = new JNARunner();
+            DiagnosticReport dr = runner.run(ds, s);
 
-        System.out.println(new OrgModeExporter().export(ds, null, null));
+            System.out.println(new OrgModeExporter().export(ds, s, dr));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

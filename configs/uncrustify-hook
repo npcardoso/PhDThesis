@@ -37,10 +37,13 @@ indent() {
 
 # Indent the file with `indent' if this is a C/H file
 __indent_C() {
-
-	echo "Indenting " $file
-	"$INDENT" -c $CONF_PATH --no-backup "$file"
-	git add "$file"
+    if [[ -f $file ]]; then
+	    echo "Indenting " $file
+	    "$INDENT" -c $CONF_PATH --no-backup "$file"
+	    git add "$file"
+    else
+        echo "Ignoring" $file
+    fi
 }
 
 GIT_ROOT=$(git rev-parse --show-cdup )

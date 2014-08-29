@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv6';
+  this.CONFIG_STORE = 'configv12';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
@@ -23,11 +23,41 @@ function Configuration() {
    scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"],
    regexFilter: "p.*d",
    defaultTableEntries: 100,
- };
+   keyBindings : [{
+    name: "Zoom Reset",
+    keyCodes: [90,82]
+  },
+  {
+    name: "Zoom In",
+    keyCodes: [90,73]
+  },
+  {
+    name: "Zoom Out",
+    keyCodes: [90,79]
+  },
+  {
+    name: "Move Left",
+    keyCodes: [37]
+  },
+  {
+    name: "Move Up",
+    keyCodes: [38]
+  },
+  {
+    name: "Move Right",
+    keyCodes: [39]
+  },
+  {
+    name: "Move Down",
+    keyCodes: [40]
+  },
 
- var self = this;
+  ]
+};
 
- this.saveConfig = function() {
+var self = this;
+
+this.saveConfig = function() {
   localStorage.setItem(this.CONFIG_STORE, JSON.stringify(self.currentConfig));
 }
 

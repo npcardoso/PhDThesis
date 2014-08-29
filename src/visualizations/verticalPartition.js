@@ -46,6 +46,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(rect);
         zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
+        keyBindings(configuration,zoomEvents);
     }
 
     this.click = function(node) {

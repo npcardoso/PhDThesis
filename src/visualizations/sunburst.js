@@ -65,6 +65,7 @@ function Sunburst(data, elementSel, configuration, events) {
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(path);
         zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
+        keyBindings(configuration,zoomEvents);
     }
 
     var centerTranslation = function(){

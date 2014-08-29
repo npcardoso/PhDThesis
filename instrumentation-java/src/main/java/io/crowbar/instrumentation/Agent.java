@@ -1,7 +1,5 @@
 package io.crowbar.instrumentation;
 
-import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
 import io.crowbar.instrumentation.passes.Pass;
 
 import java.io.IOException;
@@ -12,6 +10,7 @@ import java.security.ProtectionDomain;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import flexjson.JSONDeserializer;
 
 public class Agent implements ClassFileTransformer {
     public static void premain (String agentArgs,
@@ -30,9 +29,6 @@ public class Agent implements ClassFileTransformer {
         } else {
             a.agentConfigs = new AgentConfigs();
         }
-
-        System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(a.agentConfigs));
-
 
         a.agentConfigs.configure();
         inst.addTransformer(a);

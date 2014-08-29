@@ -10,6 +10,7 @@ import io.crowbar.diagnostic.algorithms.Algorithm;
 import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Probe;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Tree;
@@ -25,12 +26,12 @@ import io.crowbar.util.*;
 
 
 public final class OrgModeExporter {
-    private static String GEN_ANCHOR = "gen";
-    private static String RANK_ANCHOR = "rank";
-    private static String CON_ANCHOR = "con";
-    private static String NODE_ANCHOR = "node";
-    private static String PROBE_ANCHOR = "prb";
-    private static String TRANSACTION_ANCHOR = "tr";
+    private static String GEN_ANCHOR = "Generator";
+    private static String RANK_ANCHOR = "Ranker";
+    private static String CON_ANCHOR = "Connection";
+    private static String NODE_ANCHOR = "Node";
+    private static String PROBE_ANCHOR = "Probe";
+    private static String TRANSACTION_ANCHOR = "Transaction";
 
     private int nodeListAtDepth = -1;
 
@@ -70,7 +71,7 @@ public final class OrgModeExporter {
         int i = 0;
 
         for (Algorithm a : ds.getGenerators()) {
-            header(depth + 1, "Generator " + i + " " + anchor(GEN_ANCHOR, i), ret);
+            header(depth + 2, anchor(GEN_ANCHOR, i), ret);
             export(a, ret);
             i++;
         }
@@ -79,7 +80,7 @@ public final class OrgModeExporter {
         i = 0;
 
         for (Algorithm a : ds.getRankers()) {
-            header(depth + 1, "Ranker " + i + " " + anchor(RANK_ANCHOR, i), ret);
+            header(depth + 2, anchor(RANK_ANCHOR, i), ret);
             export(a, ret);
             i++;
         }
@@ -87,11 +88,9 @@ public final class OrgModeExporter {
         header(depth + 1, "Connections", ret);
 
         for (Connection c : ds.getConnections()) {
-            header(depth + 2, "Connection" + c.getId() + " " + anchor(CON_ANCHOR, c.getId()), ret);
-            listItem(0, "from: " + ds.getGenerators().get(c.getFrom()).getName() + " " +
-                     link(GEN_ANCHOR, c.getFrom()), ret);
-            listItem(0, "to: " + ds.getRankers().get(c.getTo()).getName() + " " +
-                     link(RANK_ANCHOR, c.getTo()), ret);
+            header(depth + 2, anchor(CON_ANCHOR, c.getId()), ret);
+            listItem(0, "from: " + link(GEN_ANCHOR, c.getFrom()), ret);
+            listItem(0, "to: " + link(RANK_ANCHOR, c.getTo()), ret);
         }
     }
 
@@ -120,9 +119,13 @@ public final class OrgModeExporter {
 
         header(depth + 1, "Probes", ret);
 
-        for (Probe p : spectrum.byProbe()) {
-            if (p != null)
-                export(depth + 2, p, ret);
+        for (ProbeType t : ProbeType.values()) {
+            header(depth + 2, t.getName(), ret);
+
+            for (Probe p : spectrum.byProbe()) {
+                if (p != null && p.getType() == t)
+                    export(depth + 3, p, ret);
+            }
         }
 
         header(depth + 1, "Transactions", ret);
@@ -136,7 +139,7 @@ public final class OrgModeExporter {
     public void export (int depth,
                         Node n,
                         StringBuilder ret) {
-        String nodeCaption = n.getName() + " " + anchor(NODE_ANCHOR, n.getId());
+        String nodeCaption = label(anchor(NODE_ANCHOR, n.getId())) + " : " + n.getName();
 
 
         if (nodeListAtDepth >= 0 &&
@@ -153,16 +156,14 @@ public final class OrgModeExporter {
     public void export (int depth,
                         Probe p,
                         StringBuilder ret) {
-        header(depth, "Probe " + p.getId() + " " + anchor(PROBE_ANCHOR, p.getId()), ret);
-        listItem(0, "node: " + link(NODE_ANCHOR, p.getNodeId()), ret);
-        listItem(0, "type: " + p.getType().getName(), ret);
+        listItem(0, label(anchor(PROBE_ANCHOR, p.getId())) + " @ " + link(NODE_ANCHOR, p.getNodeId()), ret);
     }
 
     public void export (int depth,
                         Spectrum spectrum,
                         Transaction< ? , ? > t,
                         StringBuilder ret) {
-        header(depth, "Transaction" + t.getId() + " " + anchor(TRANSACTION_ANCHOR, t.getId()), ret);
+        header(depth, anchor(TRANSACTION_ANCHOR, t.getId()), ret);
         listItem(0, "error: " + t.getError(), ret);
         listItem(0, "confidence: " + t.getConfidence(), ret);
 
@@ -182,12 +183,14 @@ public final class OrgModeExporter {
             if (p == null)
                 continue;
 
-            activeProbes.append(" " + link(PROBE_ANCHOR, p.getId()));
-            activeNodes.append(" " + link(NODE_ANCHOR, p.getNodeId()));
+            listItem(1, link(PROBE_ANCHOR, p.getId()), activeProbes);
+            listItem(1, link(NODE_ANCHOR, p.getNodeId()), activeNodes);
         }
 
-        listItem(0, "active probes:" + activeProbes.toString(), ret);
-        listItem(0, "active nodes:" + activeNodes.toString(), ret);
+        listItem(0, "active probes:", ret);
+        ret.append(activeProbes.toString());
+        listItem(0, "active nodes:", ret);
+        ret.append(activeNodes.toString());
     }
 
     public void export (int depth,
@@ -197,9 +200,7 @@ public final class OrgModeExporter {
         header(depth, "Diagnostic Report", ret);
 
         for (Connection c : ds.getConnections()) {
-            header(depth + 1, "Report for " + link(CON_ANCHOR, c.getId()) +
-                   " (from: " + link(GEN_ANCHOR, c.getFrom()) +
-                   ", to: " + link(RANK_ANCHOR, c.getTo()) + ")", ret);
+            header(depth + 1, "Report for " + link(CON_ANCHOR, c.getId()), ret);
             export(depth + 2, dr.getDiagnostic(c), ret);
         }
     }
@@ -240,12 +241,16 @@ public final class OrgModeExporter {
 
     private String anchor (String prefix,
                            int id) {
-        return " <<" + prefix + id + ">>";
+        return prefix + " " + id;
+    }
+
+    private String label (String lbl) {
+        return "<<" + lbl + ">>";
     }
 
     private String link (String prefix,
                          int id) {
-        return "[[" + prefix + id + "]]";
+        return "[[" + prefix + " " + id + "]]";
     }
 
     public static void main (String[] args) {

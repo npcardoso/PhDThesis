@@ -86,8 +86,7 @@ public class InjectPass extends AbstractPass {
                 continue;
 
 
-            Node n = (granularity == Granularity.FUNCTION) ?
-                     getNode(c, m) : getNode(c, m, curLine);
+            Node n = getNode(c, m, curLine);
 
             Bytecode b = getInstrumentationCode(c, n, info.getConstPool());
             ci.insert(index, b.get());

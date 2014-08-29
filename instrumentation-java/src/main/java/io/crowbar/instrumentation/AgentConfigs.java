@@ -145,7 +145,6 @@ public class AgentConfigs {
 
         if (verbose) ml.add(vl);
 
-        System.out.println("port " + port);
         Client cl = new Client(null, port);
         ml.add(cl);
 

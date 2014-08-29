@@ -1,11 +1,13 @@
 package io.crowbar.diagnostic.exporter;
 
+import io.crowbar.diagnostic.Candidate;
 import io.crowbar.diagnostic.Connection;
 import io.crowbar.diagnostic.Diagnostic;
 import io.crowbar.diagnostic.DiagnosticElement;
 import io.crowbar.diagnostic.DiagnosticSystem;
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.SortedDiagnostic;
+import io.crowbar.diagnostic.UnsortedDiagnostic;
 import io.crowbar.diagnostic.algorithms.Algorithm;
 import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Node;
@@ -16,6 +18,8 @@ import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Tree;
 
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 
 // TODO: Remove this
@@ -54,13 +58,64 @@ public final class OrgModeExporter {
     public String export (DiagnosticSystem ds,
                           Spectrum< ? , ? > spectrum,
                           DiagnosticReport dr) {
+        int depth = 0;
         StringBuilder ret = new StringBuilder();
 
 
-        export(0, ds, ret);
-        export(0, spectrum, ret);
-        export(0, ds, dr, ret);
+        header(depth, "Rankings", ret);
+        exportSingleRankings(depth + 1, ds, spectrum, dr, ret);
+        header(depth, "Node Scores", ret);
+        exportNodeScores(depth + 1, ds, spectrum, dr, ret);
+        header(depth, "Raw Data", ret);
+        export(depth + 1, ds, ret);
+        export(depth + 1, spectrum, ret);
+        export(depth + 1, ds, dr, ret);
         return ret.toString();
+    }
+
+    public void exportSingleRankings (int depth,
+                                      DiagnosticSystem ds,
+                                      Spectrum< ? , ? > spectrum,
+                                      DiagnosticReport dr,
+                                      StringBuilder ret) {
+        int treeSize = spectrum.getTree().size();
+
+
+        for (Connection c : ds.getConnections()) {
+            header(depth, "Ranking for " + link(anchor(CON_ANCHOR, c.getId())), ret);
+            Diagnostic d = dr.getDiagnostic(c);
+            List<Double> scores = spectrum.getScorePerNode(d, Spectrum.MAX);
+            List<Candidate> candidates = new ArrayList<Candidate> (treeSize);
+
+            for (int i = 0; i < treeSize; i++) {
+                candidates.add(new Candidate(i));
+            }
+
+            d = new SortedDiagnostic(
+                new UnsortedDiagnostic(candidates, scores));
+
+            for (DiagnosticElement de : d) {
+                if (Double.isNaN(de.getScore()))
+                    continue;
+
+                Node n = spectrum.getTree().getNode(de.getCandidate().iterator().next());
+
+                listItem(0, n.getFullName() + " : " + de.getScore(), ret);
+            }
+        }
+    }
+
+    public void exportNodeScores (int depth,
+                                  DiagnosticSystem ds,
+                                  Spectrum< ? , ? > spectrum,
+                                  DiagnosticReport dr,
+                                  StringBuilder ret) {
+        for (Connection c : ds.getConnections()) {
+            header(depth, "Scores for " + link(anchor(CON_ANCHOR, c.getId())), ret);
+            Diagnostic d = dr.getDiagnostic(c);
+            List<Double> scores = spectrum.getScorePerNode(d, Spectrum.MAX);
+            export(0, spectrum.getTree().getRoot(), scores, ret);
+        }
     }
 
     public void export (int depth,
@@ -89,8 +144,8 @@ public final class OrgModeExporter {
 
         for (Connection c : ds.getConnections()) {
             header(depth + 2, anchor(CON_ANCHOR, c.getId()), ret);
-            listItem(0, "from: " + link(GEN_ANCHOR, c.getFrom()), ret);
-            listItem(0, "to: " + link(RANK_ANCHOR, c.getTo()), ret);
+            listItem(0, "from: " + link(anchor(GEN_ANCHOR, c.getFrom())), ret);
+            listItem(0, "to: " + link(anchor(RANK_ANCHOR, c.getTo())), ret);
         }
     }
 
@@ -154,9 +209,28 @@ public final class OrgModeExporter {
     }
 
     public void export (int depth,
+                        Node n,
+                        List<Double> scores,
+                        StringBuilder ret) {
+        String nodeCaption = link(anchor(NODE_ANCHOR, n.getId()), n.getName());
+        double score = scores.get(n.getId());
+
+
+        if (!Double.isNaN(score))
+            nodeCaption += " : " + score;
+
+
+        listItem(depth, nodeCaption, ret);
+
+        for (Node child : n.getChildren()) {
+            export(depth + 1, child, scores, ret);
+        }
+    }
+
+    public void export (int depth,
                         Probe p,
                         StringBuilder ret) {
-        listItem(0, label(anchor(PROBE_ANCHOR, p.getId())) + " @ " + link(NODE_ANCHOR, p.getNodeId()), ret);
+        listItem(0, label(anchor(PROBE_ANCHOR, p.getId())) + " @ " + link(anchor(NODE_ANCHOR, p.getNodeId())), ret);
     }
 
     public void export (int depth,
@@ -183,8 +257,8 @@ public final class OrgModeExporter {
             if (p == null)
                 continue;
 
-            listItem(1, link(PROBE_ANCHOR, p.getId()), activeProbes);
-            listItem(1, link(NODE_ANCHOR, p.getNodeId()), activeNodes);
+            listItem(1, link(anchor(PROBE_ANCHOR, p.getId())), activeProbes);
+            listItem(1, link(anchor(NODE_ANCHOR, p.getNodeId())), activeNodes);
         }
 
         listItem(0, "active probes:", ret);
@@ -200,7 +274,7 @@ public final class OrgModeExporter {
         header(depth, "Diagnostic Report", ret);
 
         for (Connection c : ds.getConnections()) {
-            header(depth + 1, "Report for " + link(CON_ANCHOR, c.getId()), ret);
+            header(depth + 1, "Report for " + link(anchor(CON_ANCHOR, c.getId())), ret);
             export(depth + 2, dr.getDiagnostic(c), ret);
         }
     }
@@ -215,7 +289,7 @@ public final class OrgModeExporter {
             StringBuilder entry = new StringBuilder(de.getScore() + ":");
 
             for (int id : de.getCandidate())
-                entry.append(" " + link(PROBE_ANCHOR, id));
+                entry.append(" " + link(anchor(PROBE_ANCHOR, id)));
 
             listItem(0, entry.toString(), ret);
         }
@@ -248,9 +322,13 @@ public final class OrgModeExporter {
         return "<<" + lbl + ">>";
     }
 
-    private String link (String prefix,
-                         int id) {
-        return "[[" + prefix + " " + id + "]]";
+    private String link (String dest) {
+        return "[[" + dest + "]]";
+    }
+
+    private String link (String dest,
+                         String lbl) {
+        return "[[" + dest + "][" + lbl + "]]";
     }
 
     public static void main (String[] args) {

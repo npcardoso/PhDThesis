@@ -21,17 +21,6 @@ import java.util.Scanner;
 import org.junit.Test;
 
 public class VisualizationMessagesTest {
-    static List<Double> randomizeScores (int numNodes) {
-        List<Double> l = new ArrayList<Double> ();
-        Random r = new Random();
-
-        while (numNodes-- > 0) {
-            l.add(r.nextDouble());
-        }
-
-        return l;
-    }
-
     static Tree randomizeTree (int numNodes) {
         EditableTree t = new EditableTree("asd");
         Random r = new Random();

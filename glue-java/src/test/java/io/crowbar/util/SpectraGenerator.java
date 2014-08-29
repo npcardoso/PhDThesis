@@ -11,6 +11,7 @@ import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public final class SpectraGenerator {
     // TODO: Improve generator.
@@ -59,5 +60,16 @@ public final class SpectraGenerator {
         }
 
         return s;
+    }
+
+    static List<Double> randomizeScores (int numNodes) {
+        List<Double> l = new ArrayList<Double> ();
+        Random r = new Random();
+
+        while (numNodes-- > 0) {
+            l.add(r.nextDouble());
+        }
+
+        return l;
     }
 }

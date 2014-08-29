@@ -1,9 +1,11 @@
 package io.crowbar.diagnostic.spectrum;
 
-import io.crowbar.diagnostic.spectrum.Node;
-import io.crowbar.diagnostic.spectrum.EditableTree;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import io.crowbar.diagnostic.spectrum.activity.Hit;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 

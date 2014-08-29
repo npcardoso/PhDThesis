@@ -10,7 +10,6 @@ import java.security.ProtectionDomain;
 
 import javassist.ClassPool;
 import javassist.CtClass;
-import flexjson.JSONDeserializer;
 
 public class Agent implements ClassFileTransformer {
     public static void premain (String agentArgs,
@@ -19,14 +18,10 @@ public class Agent implements ClassFileTransformer {
 
 
         if (agentArgs != null && agentArgs.length() >= 0) {
-            try {
-                a.agentConfigs = new JSONDeserializer<AgentConfigs> ().deserialize(agentArgs, AgentConfigs.class);
-            }
-            catch (Throwable t) {
-                t.printStackTrace();
-                a.agentConfigs = new AgentConfigs();
-            }
-        } else {
+            a.agentConfigs = AgentConfigs.deserialize(agentArgs);
+        }
+
+        if (a.agentConfigs == null) {
             a.agentConfigs = new AgentConfigs();
         }
 
@@ -94,5 +89,5 @@ public class Agent implements ClassFileTransformer {
         return ret;
     }
 
-    private AgentConfigs agentConfigs;
+    private AgentConfigs agentConfigs = null;
 }

@@ -1,6 +1,8 @@
 package io.crowbar.instrumentation;
 
 import flexjson.JSON;
+import flexjson.JSONDeserializer;
+import flexjson.JSONSerializer;
 import io.crowbar.instrumentation.events.MultiListener;
 import io.crowbar.instrumentation.events.VerboseListener;
 import io.crowbar.instrumentation.passes.FilterPass;
@@ -149,5 +151,18 @@ public class AgentConfigs {
         ml.add(cl);
 
         Collector.start("Workspace-" + cl.getCliendId(), ml);
+    }
+
+    public String serialize () {
+        return new JSONSerializer().exclude("*.class").deepSerialize(this);
+    }
+
+    public static AgentConfigs deserialize (String str) {
+        try {
+            return new JSONDeserializer<AgentConfigs> ().deserialize(str, AgentConfigs.class);
+        }
+        catch (Throwable t) {
+            return null;
+        }
     }
 }

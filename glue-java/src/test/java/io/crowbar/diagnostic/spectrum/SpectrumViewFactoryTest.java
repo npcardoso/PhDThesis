@@ -168,7 +168,8 @@ public class SpectrumViewFactoryTest {
         int index = 0;
 
         for (Probe p : view.byProbe()) {
-            assertEquals(p.getId(), view.getProbeMapping(index++));
+            assertEquals(p.getId() + ((p.getId() >= filteredPr) ? 1 : 0),
+                         view.getProbeMapping(p.getId()));
         }
     }
 

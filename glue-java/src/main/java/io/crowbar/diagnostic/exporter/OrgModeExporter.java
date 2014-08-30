@@ -16,6 +16,7 @@ import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Tree;
+import io.crowbar.diagnostic.spectrum.serializers.HitSpectrumTableSerializer;
 
 import java.util.Map;
 import java.util.List;
@@ -68,8 +69,10 @@ public final class OrgModeExporter {
         exportNodeScores(depth + 1, ds, spectrum, dr, ret);
         header(depth, "Raw Data", ret);
         export(depth + 1, ds, ret);
-        export(depth + 1, spectrum, ret);
         export(depth + 1, ds, dr, ret);
+        exportHitSpectrum(depth + 1, spectrum, ret);
+        export(depth + 1, spectrum, ret);
+
         return ret.toString();
     }
 
@@ -116,6 +119,16 @@ public final class OrgModeExporter {
             List<Double> scores = spectrum.getScorePerNode(d, Spectrum.MAX);
             export(0, spectrum.getTree().getRoot(), scores, ret);
         }
+    }
+
+    public void exportHitSpectrum (int depth,
+                                   Spectrum< ? , ? > spectrum,
+                                   StringBuilder ret) {
+        header(depth, "Spectrum", ret);
+        String tab = HitSpectrumTableSerializer.serialize(
+            spectrum,
+            new HitSpectrumTableSerializer.OrgModeTableStyle());
+        ret.append(tab);
     }
 
     public void export (int depth,

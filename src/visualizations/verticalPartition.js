@@ -17,10 +17,16 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
     var element = d3.select(elementSel);
     var svg,rect;
+
+
+    this.zoomEvents = null;
+    this.clicked = data;
+    this.stateManager = new StateManager(self);
     this.render = function() {
         element.html("");
 
         self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.click,configuration);
+        self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
         .attr("width", dimensions.width)
@@ -45,15 +51,26 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(rect);
-        zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
-        keyBindings(configuration,zoomEvents);
+        self.zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
+        keyBindings(self,configuration);
     }
 
-    this.click = function(node) {
-        zoomEvents.zoomReset();
+    var isClicking = false;
+    this.click = function(node,noStateSAndZoomReset) {
+        if(isClicking)
+            return false;
+        isClicking = true;
+        if(noStateSAndZoomReset){
+            self.stateManager.saveState();
+            self.zoomEvents.zoomReset();
+        }
         self.nodeInfoDisplay.setClicked(node);
         events.click(node)
-        rect_render.rectAnimation(rect,node);
+        rect_render.rectAnimation(rect,node).each("end",function(){
+            isClicking = false;
+        });
+
+        self.clicked = node;
     }
 
     this.resize = function(){
@@ -99,7 +116,7 @@ function RectRender(width,height,configuration){
         x.domain([node.x, node.x + node.dx]);
         y.domain([node.y, 1]).range([node.y ? 20 : 0, height]);
 
-        rect.transition()
+       return rect.transition()
         .duration(configuration.currentConfig.animationTransitionTime)
         .attr("x", function(node) { return x(node.x); })
         .attr("y", function(node) { return y(node.y); })

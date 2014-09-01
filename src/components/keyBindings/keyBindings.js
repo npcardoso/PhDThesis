@@ -13,12 +13,15 @@ function keyBindings(configuration,zoomEvents){
 
 	function getKeyBindingByKeyCodes(keyCodes){
 		for (var i = keyBindingsD.length - 1; i >= 0; i--) {
-			if(arrayEquals(keyCodes,keyBindingsD[i].keyCodes)){
+			if(keyMatch(keyCodes,keyBindingsD[i].keyCodes)){
 				return keyBindingsD[i];
 			}
 		};
 		return null;
 	}
+
+
+
 
 	function setKeyBinding(name,func){
 		getKeyBindingByName(name).func = func;
@@ -35,22 +38,33 @@ function keyBindings(configuration,zoomEvents){
 	console.log(configuration.currentConfig);
 
 	var pressedKeys = [];
-	var timeOut;
+	//var timeOut;
 	document.onkeydown = function(e) {
-		clearTimeout(timeOut);
+		//clearTimeout(timeOut);
 		pressedKeys.push(e.keyCode);
 		keyBinding = getKeyBindingByKeyCodes(pressedKeys);
 		if(keyBinding != null){
 			keyBinding.func();
 			pressedKeys = [];
 		}
-		else{
-			timeOut = setTimeout(function(){
-				pressedKeys = [];
-			}, 1500);
-		}
+
+
 	}
 
+}
+
+
+function keyMatch(keys,binding){
+	var keysl = keys.length-1;
+	var keysb = binding.length-1;
+	while(keysl >= 0 && keysb >= 0){
+		if(keys[keysl] != binding[keysb]){
+			return false;
+		}
+		--keysl;
+		--keysb;
+	}
+	return keysb == -1;
 }
 
 function arrayEquals(array1,array2){

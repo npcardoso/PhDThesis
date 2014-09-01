@@ -57,7 +57,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
     var isClicking = false;
     this.click = function(node,noStateSAndZoomReset) {
-        if(d3.event.defaultPrevented || isClicking)
+        if((d3.event && d3.event.defaultPrevented) || isClicking)
             return false;
         isClicking = true;
         if(noStateSAndZoomReset){

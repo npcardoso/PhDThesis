@@ -77,7 +77,7 @@ function Sunburst(data, elementSel, configuration, events) {
     var isClicking = false;
     //Function called when a node is clicked call the click event and applicates the animation
     this.click = function(node, noStateSAndZoomReset) {
-        if(d3.event.defaultPrevented || isClicking)
+        if((d3.event && d3.event.defaultPrevented) || isClicking)
             return false;
         isClicking = true;
         if(noStateSAndZoomReset){

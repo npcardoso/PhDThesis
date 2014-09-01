@@ -32,9 +32,12 @@ function StateManager(visualization){
 		if(!self.undoPossible()){
 			return;
 		}
-		lastState = stack.pop();
-		visualization.click(lastState[0],false);
-		visualization.zoomEvents.setZoom(lastState[1]);
-		self.setButtonVis();
+		lastState = stack.slice(-1)[0] ;
+		if(visualization.click(lastState[0],false) != false){
+			visualization.zoomEvents.setZoom(lastState[1]);
+		 	self.setButtonVis();
+		 	lastState.pop();
+		}
+
 	}
 }

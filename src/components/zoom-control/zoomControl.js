@@ -1,5 +1,6 @@
 var ZoomController_HTML;
 function ZoomController(elementSel,zoomElement,svg,configuration){
+    var eventsBlocked = false;
     var zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", 
         function(){
             if (d3.event) {
@@ -7,7 +8,9 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
             }
         });
 
-    var eventsBlocked = false;
+    var zoomStack = [];
+
+
     function eventsUnlock(){
         eventsBlocked = false;
     }
@@ -78,12 +81,33 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
         zoomListener.scale(1);
         zoomListener.translate([0,0]);
         zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-    }
+    },
 
+    zoomSave: function(){
+        zoomStack.push([zoomListener.translate(),zoomListener.scale()]);
+    },
+
+    zoomRecover: function(){
+        var lastZoom = zoomStack.pop();
+        if(lastZoom != null){
+            zoomListener.translate(lastZoom[0]);
+            zoomListener.scale(lastZoom[1]);
+            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+        }
+    },
+
+    zoomBlock: function(){
+        eventsBlocked = true;
+    },
+
+    zoomUnlock: function(){
+        eventsBlocked = false;
+    }
 
 };
 
 zoomListener(zoomElement);
+zoomElement.on("dblclick.zoom", null)
 zoomListener.event(zoomElement);
 
 $('#zoomContainer').remove();
@@ -95,12 +119,11 @@ $('#panRight').click(events.right);
 $('#zoomIn').click(events.zoomIn);
 $('#zoomOut').click(events.zoomOut);
 $('#zoomReset').click(events.zoomReset);
-
 $(document).click(function(e){
   // checking for any non left click and convert to left click.
   if (e.which == 2) { 
     events.zoomReset();
-  }
+}
 });
 
 
@@ -109,11 +132,11 @@ return events;
 }
 
 $.ajax({
-   url: 'components/zoom-control/zoomcontrol.html',
-   type: 'get',
-   dataType: 'html',
-   async: false,
-   success: function(html) {
-      ZoomController_HTML = html;
-  }
+ url: 'components/zoom-control/zoomcontrol.html',
+ type: 'get',
+ dataType: 'html',
+ async: false,
+ success: function(html) {
+  ZoomController_HTML = html;
+}
 });

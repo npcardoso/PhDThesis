@@ -1,5 +1,7 @@
-function keyBindings(configuration,zoomEvents){
+function keyBindings(visualization,configuration){
 	console.log(configuration.currentConfig);
+	var zoomEvents = visualization.zoomEvents;
+
 	var keyBindingsD = configuration.currentConfig.keyBindings;
 
 	function getKeyBindingByName(name){
@@ -35,7 +37,9 @@ function keyBindings(configuration,zoomEvents){
 	setKeyBinding("Zoom Out",zoomEvents.zoomOut);
 	setKeyBinding("Move Right",zoomEvents.right);
 	setKeyBinding("Move Down",zoomEvents.down);
-	console.log(configuration.currentConfig);
+	setKeyBinding("Move Down",zoomEvents.down);
+	setKeyBinding("Undo",visualization.stateManager.recoverState);
+	console.log(visualization);
 
 	var pressedKeys = [];
 	//var timeOut;

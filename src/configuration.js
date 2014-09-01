@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv12';
+  this.CONFIG_STORE = 'configv13';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
@@ -51,7 +51,10 @@ function Configuration() {
     name: "Move Down",
     keyCodes: [40]
   },
-
+  {
+    name: "Undo",
+    keyCodes: [66]
+  }
   ]
 };
 

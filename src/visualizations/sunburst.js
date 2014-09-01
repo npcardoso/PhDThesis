@@ -26,14 +26,16 @@ function Sunburst(data, elementSel, configuration, events) {
 
     var element = d3.select(elementSel);
 
-    var zoomEvents;
-
+    this.zoomEvents = null;
+    this.clicked = data;
+    this.stateManager = new StateManager(self);
+    console.log(this.stateManager);
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
         element.html('');       
 
         self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.click,configuration);
-
+        self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
         .attr("width", dimensions.width)
@@ -64,8 +66,8 @@ function Sunburst(data, elementSel, configuration, events) {
 
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(path);
-        zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
-        keyBindings(configuration,zoomEvents);
+        self.zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
+        keyBindings(self,configuration);
     }
 
     var centerTranslation = function(){
@@ -73,32 +75,25 @@ function Sunburst(data, elementSel, configuration, events) {
     }
 
     var isClicking = false;
-    var clicked = data;
     //Function called when a node is clicked call the click event and applicates the animation
-    this.click = function(node) {
+    this.click = function(node, noStateSAndZoomReset) {
         if(isClicking)
             return false;
-        isClicking= true;
-        if(getAncestors(clicked).indexOf(node) >= 0){
-            zoomEvents.zoomRecover();
-        }else{
-            zoomEvents.zoomSave();
-            zoomEvents.zoomReset();
+        isClicking = true;
+        if(noStateSAndZoomReset){
+            self.stateManager.saveState();
+            self.zoomEvents.zoomReset();
         }
-
         self.nodeInfoDisplay.setClicked(node);
         self.events.click(node);
-        //var tmp = Object.create(node.parent);
-        //node.parent = clicked;
         path.transition()
         .duration(self.configuration.currentConfig.animationTransitionTime)
         .attrTween("d", arc_render.arcTween(node))
         .each("end",function(){
             isClicking = false;
         });
-        //node.parent = tmp;
 
-        clicked = node;
+        self.clicked = node;
     }
 
 

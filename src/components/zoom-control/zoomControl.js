@@ -96,6 +96,16 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
         }
     },
 
+    setZoom: function(zoom){
+        zoomListener.translate(zoom[0]);
+        zoomListener.scale(zoom[1]);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+    },
+
+    getZoom: function(){
+        return [zoomListener.translate(),zoomListener.scale()];
+    },
+
     zoomBlock: function(){
         eventsBlocked = true;
     },

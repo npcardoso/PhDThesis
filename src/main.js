@@ -1,5 +1,7 @@
 //Program entry point
 function init(){
+	$('body').disableSelection(); 
+
 	var configuration = new Configuration();
 	if(window.location.hash == "#reset"){
 		configuration.resetConfig();
@@ -82,3 +84,20 @@ function visClickEv(node) {
 function validRegex(str){
 	return str != undefined && str != null && str.length > 0 && str != " ";
 }
+
+
+jQuery.fn.extend({ 
+        disableSelection : function() { 
+        		document.body.style.webkitUserSelect = "none";
+        		document.body.style.MozUserSelect = "none";
+                return this.each(function() { 
+                        this.onselectstart = function() { return false; }; 
+                        this.unselectable = "on"; 
+                        jQuery(this).css('user-select', 'none'); 
+                        jQuery(this).css('-o-user-select', 'none'); 
+                        jQuery(this).css('-moz-user-select', 'none'); 
+                        jQuery(this).css('-khtml-user-select', 'none'); 
+                        jQuery(this).css('-webkit-user-select', 'none'); 
+                }); 
+        } 
+}); 

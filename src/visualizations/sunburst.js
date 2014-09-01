@@ -72,14 +72,33 @@ function Sunburst(data, elementSel, configuration, events) {
         return "translate(" + dimensions.width / 2 + "," + (dimensions.height / 2 + 10) + ")";
     }
 
+    var isClicking = false;
+    var clicked = data;
     //Function called when a node is clicked call the click event and applicates the animation
     this.click = function(node) {
-        zoomEvents.zoomReset();
+        if(isClicking)
+            return false;
+        isClicking= true;
+        if(getAncestors(clicked).indexOf(node) >= 0){
+            zoomEvents.zoomRecover();
+        }else{
+            zoomEvents.zoomSave();
+            zoomEvents.zoomReset();
+        }
+
         self.nodeInfoDisplay.setClicked(node);
         self.events.click(node);
+        //var tmp = Object.create(node.parent);
+        //node.parent = clicked;
         path.transition()
         .duration(self.configuration.currentConfig.animationTransitionTime)
-        .attrTween("d", arc_render.arcTween(node));
+        .attrTween("d", arc_render.arcTween(node))
+        .each("end",function(){
+            isClicking = false;
+        });
+        //node.parent = tmp;
+
+        clicked = node;
     }
 
 

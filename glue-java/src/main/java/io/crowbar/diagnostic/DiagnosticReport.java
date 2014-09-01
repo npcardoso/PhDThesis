@@ -8,37 +8,6 @@ import flexjson.JSON;
 
 
 public final class DiagnosticReport {
-    private static class DiagnosticPvt extends Diagnostic {
-        private final List<Candidate> candidates;
-        private final List<Double> scores;
-
-        DiagnosticPvt (List<Candidate> candidates,
-                       List<Double> scores) {
-            assert (candidates.size() == scores.size());
-            this.candidates = Collections.unmodifiableList(candidates);
-            this.scores = Collections.unmodifiableList(scores);
-        }
-
-        /*  public List<Double> getScores () {
-         *    return scores;
-         * }
-         *
-         * public List<Candidate> getCandidates () {
-         *    return candidates;
-         * }
-         */
-        @Override
-        public DiagnosticElement get (int id) {
-            return new DiagnosticElement(candidates.get(id),
-                                         scores.get(id));
-        }
-
-        @Override
-        public int size () {
-            return scores.size();
-        }
-    }
-
     private static final String GEN_RESULTS = "gen_results";
     private static final String RANK_RESULTS = "rank_results";
 
@@ -57,8 +26,8 @@ public final class DiagnosticReport {
      */
     @JSON(include = false)
     public Diagnostic getDiagnostic (Connection c) {
-        return new DiagnosticPvt(generatorResults.get(c.getFrom()),
-                                 rankerResults.get(c.getId()));
+        return new UnsortedDiagnostic(generatorResults.get(c.getFrom()),
+                                      rankerResults.get(c.getId()));
     }
 
     @JSON(name = GEN_RESULTS)

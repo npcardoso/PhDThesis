@@ -69,7 +69,13 @@ extends Spectrum<A, TM> {
 
     @Override
     public Probe getProbe (int probeId) {
-        return spectrum.getProbe(probes[probeId]);
+        Probe p = spectrum.getProbe(probes[probeId]);
+
+
+        if (p == null)
+            return null;
+
+        return new Probe(spectrum, p.getType(), probeId, p.getNodeId());
     }
 
     @Override

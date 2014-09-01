@@ -15,7 +15,7 @@ extends AbstractSet<Integer> {
         this.elements = new HashSet<Integer> ();
     }
 
-    Candidate (int[] elements) {
+    public Candidate (int... elements) {
         this.elements = new HashSet<Integer> ();
 
         for (int e:elements) {
@@ -23,7 +23,7 @@ extends AbstractSet<Integer> {
         }
     }
 
-    Candidate (List<Integer> elements) {
+    public Candidate (List<Integer> elements) {
         this.elements = new HashSet<Integer> (elements);
     }
 

@@ -13,7 +13,7 @@ function Visualizations(configuration){
 
 
 	this.createVisualization = function(visN){
-		return new visualizations[visN].obj(data_ex,'#'+getVizID(visN),configuration,events);
+		return new visualizations[visN].obj(data_ex.tree,'#'+getVizID(visN),configuration,events);
 	}
 
 

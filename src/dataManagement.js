@@ -1,15 +1,34 @@
 function dataInlining (data) {
-	for (var i = data.length - 1; i >= 0; i--) {
-		if(data[i].hasOwnProperty('children') )
-		{
-			for (var j = data[i].children.length - 1; j >= 0; j--) {
-				data[i].children[j] = data[data[i].children[j]];
-			};
+	var tree = data.tree;
+	var scores = data.scores
+	for (var i = tree.length - 1; i >= 0; i--) {
+		var node = tree[i];
+		node.id = i;
+		if(nodeHasFather(node)){
+		 node.parent = tree[node.p]
 		}
-		if(data[i].parent_id >= 0){
-			data[i].parent = data[data[i].parent_id];
+		node.score = scores[i];
+		node.children = [];
+
+	};
+	for (var i = tree.length - 1; i >= 0; i--) {
+		var node = tree[i];
+		if(nodeHasFather(node)){
+		node.parent.children.push(node);
 		}
-	};	
+	};
+}
+
+function nodeHasFather(node){
+	return node.p >= 0;
+}
+
+function getName(node){
+	return node.n;
+}
+
+function getScore(node){
+	return node.score;
 }
 
 function getAncestors(node){
@@ -57,7 +76,7 @@ function filterWithAncestorsAndDescents(nodesArray, filterFunction){
 function regexFilter(nodesArray,regexStr){
 	var regex = new RegExp(regexStr);
 	return filterWithAncestorsAndDescents(nodesArray,function(node){
-		return regex.test(node.name);
+		return regex.test(getName(node));
 	});
 }
 
@@ -72,7 +91,7 @@ function removeArray(arr, item) {
 
 function sortByProbability(NodesArray){
 	NodesArray.sort(function(a,b){
-		return b.properties.p - a.properties.p;
+		return b.score - a.score;
 	});
 }
 
@@ -121,8 +140,8 @@ function filterData(data,N){
 }
 
 function probabilityCalculator(node) {
-	if(node.hasOwnProperty('properties') && node.properties.hasOwnProperty('p'))
-		return node.properties.p;
+	if(node.score >= 0)
+		return node.score;
 
 	var p = -1;
 	if(node.hasOwnProperty('children')){
@@ -131,15 +150,7 @@ function probabilityCalculator(node) {
 		};
 	}
 
-	if(node.hasOwnProperty('properties')){
-		node.properties.p = p;
-	}
-	else
-	{
-		node.properties = {
-			p: p 
-		};
-	}
+	node.score = p;
 	
 	return p;
 }

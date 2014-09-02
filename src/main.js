@@ -15,19 +15,17 @@ function init(){
 	});
 	//prepare data
 	dataInlining(window.data_ex);
+
 	if(validRegex(configuration.currentConfig.regexFilter)){
-		data_ex = regexFilter(data_ex,configuration.currentConfig.regexFilter);
+		data_ex.tree = regexFilter(data_ex.tree,configuration.currentConfig.regexFilter);
 	}
 
-	//window.data_ex = filterWithAncestorsAndDescents(data_ex,function(node){
-	//	return node.name == "CirSim";
-	//});
 
 if(configuration.currentConfig.filterMostRelevamtNodes > 0){
-	window.data_ex = filterData(window.data_ex,configuration.currentConfig.filterMostRelevamtNodes);
+	window.data_ex.tree = filterData(window.data_ex.tree,configuration.currentConfig.filterMostRelevamtNodes);
 }
 
-probabilityCalculator(data_ex[0]);
+probabilityCalculator(data_ex.tree[0]);
 
 
 var visualization = new Visualizations(configuration);

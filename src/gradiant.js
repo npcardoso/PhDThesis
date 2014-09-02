@@ -2,8 +2,8 @@ function Gradiant(normal){
 	var normalGradiante = this.gradianteInit(normal);
 
     this.normal = function(node){
-        if(node.properties.p >= 0){
-            return normalGradiante[Math.floor(node.properties.p*100)];
+        if(node.score >= 0){
+            return normalGradiante[Math.floor(node.score*100)];
         }
         return "grey";
     }

@@ -9,7 +9,7 @@ function Table(data, elementSel, configuration, events) {
             var node = data[i];
             if(isLastNode(node))
             {
-                ret.push([node.parent.parent.name,node.parent.name,node.name,node.properties.p,i]);
+                ret.push([node.parent.parent.n,node.parent.n,node.n,node.score,i]);
             }
         }
         return ret;

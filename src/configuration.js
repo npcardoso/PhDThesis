@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv13';
+  this.CONFIG_STORE = 'configv14';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
@@ -19,9 +19,9 @@ function Configuration() {
      position: 99
    }
    ],
-   scriptsLoad: ["data_ex.js"],
+   scriptsLoad: ["new_data.js"],
    scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"],
-   regexFilter: "p.*d",
+   regexFilter: "",
    defaultTableEntries: 100,
    keyBindings : [{
     name: "Zoom Reset",

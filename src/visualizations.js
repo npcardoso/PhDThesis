@@ -13,7 +13,11 @@ function Visualizations(configuration){
 
 
 	this.createVisualization = function(visN){
+		if(window.data_ex == undefined){
+			return new visualizations[visN].obj(null,'#'+getVizID(visN),configuration,events);
+		}
 		return new visualizations[visN].obj(data_ex.tree,'#'+getVizID(visN),configuration,events);
+		
 	}
 
 

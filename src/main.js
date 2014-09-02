@@ -15,6 +15,12 @@ function init(){
 		});
 	});
 	}
+
+
+	var visualization = new Visualizations(configuration);
+	renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
+
+	if(window.data_ex != undefined){
 	//prepare data
 	dataInlining(window.data_ex);
 
@@ -30,12 +36,10 @@ function init(){
 	probabilityCalculator(data_ex.tree[0]);
 
 
-	var visualization = new Visualizations(configuration);
-	renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
-
 	visualization.init();
 
 	$( window ).resize(visualization.resize);
+	}
 }
 
 function getVizID(vizNo){

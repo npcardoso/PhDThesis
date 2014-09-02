@@ -143,7 +143,7 @@ function probabilityCalculator(node) {
 	if(node.score >= 0)
 		return node.score;
 
-	var p = -1;
+	var p = 0;
 	if(node.hasOwnProperty('children')){
 		for (var i = node.children.length - 1; i >= 0; i--) {
 			p = Math.max(p,probabilityCalculator(node.children[i]));

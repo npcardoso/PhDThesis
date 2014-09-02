@@ -33,7 +33,7 @@ function StateManager(visualization){
 			return;
 		}
 		lastState = stack.slice(-1)[0] ;
-		if(visualization.click(lastState[0],false) != false){
+		if(visualization.dblclick(lastState[0],false) != false){
 			visualization.zoomEvents.setZoom(lastState[1]);
 			stack.pop();
 		 	self.setButtonVis();

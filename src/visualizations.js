@@ -3,7 +3,7 @@ function Visualizations(configuration){
 	var nodeToRender = null;
 
 	var events = {
-		click: visClickEv,
+		click: sendClickEvent,
 		switchToViz: function(visN, node){
 			nodeToRender = node;
 			 $('#tabs').tabs({ active: visN });

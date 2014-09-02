@@ -6,6 +6,7 @@ function init(){
 	if(window.location.hash == "#reset"){
 		configuration.resetConfig();
 	}
+	if(window.data_ex == undefined){
 	$.each(configuration.currentConfig.scriptsLoad, function(index, script) {
 		$.ajax({
 			async: false,
@@ -13,6 +14,7 @@ function init(){
 			dataType: "script"
 		});
 	});
+	}
 	//prepare data
 	dataInlining(window.data_ex);
 
@@ -21,19 +23,19 @@ function init(){
 	}
 
 
-if(configuration.currentConfig.filterMostRelevamtNodes > 0){
-	window.data_ex.tree = filterData(window.data_ex.tree,configuration.currentConfig.filterMostRelevamtNodes);
-}
+	if(configuration.currentConfig.filterMostRelevamtNodes > 0){
+		window.data_ex.tree = filterData(window.data_ex.tree,configuration.currentConfig.filterMostRelevamtNodes);
+	}
 
-probabilityCalculator(data_ex.tree[0]);
+	probabilityCalculator(data_ex.tree[0]);
 
 
-var visualization = new Visualizations(configuration);
-renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
+	var visualization = new Visualizations(configuration);
+	renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
 
-visualization.init();
+	visualization.init();
 
-$( window ).resize(visualization.resize);
+	$( window ).resize(visualization.resize);
 }
 
 function getVizID(vizNo){
@@ -85,17 +87,17 @@ function validRegex(str){
 
 
 jQuery.fn.extend({ 
-        disableSelection : function() { 
-        		document.body.style.webkitUserSelect = "none";
-        		document.body.style.MozUserSelect = "none";
-                return this.each(function() { 
-                        this.onselectstart = function() { return false; }; 
-                        this.unselectable = "on"; 
-                        jQuery(this).css('user-select', 'none'); 
-                        jQuery(this).css('-o-user-select', 'none'); 
-                        jQuery(this).css('-moz-user-select', 'none'); 
-                        jQuery(this).css('-khtml-user-select', 'none'); 
-                        jQuery(this).css('-webkit-user-select', 'none'); 
-                }); 
-        } 
+	disableSelection : function() { 
+		document.body.style.webkitUserSelect = "none";
+		document.body.style.MozUserSelect = "none";
+		return this.each(function() { 
+			this.onselectstart = function() { return false; }; 
+			this.unselectable = "on"; 
+			jQuery(this).css('user-select', 'none'); 
+			jQuery(this).css('-o-user-select', 'none'); 
+			jQuery(this).css('-moz-user-select', 'none'); 
+			jQuery(this).css('-khtml-user-select', 'none'); 
+			jQuery(this).css('-webkit-user-select', 'none'); 
+		}); 
+	} 
 }); 

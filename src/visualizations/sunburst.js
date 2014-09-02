@@ -34,7 +34,7 @@ function Sunburst(data, elementSel, configuration, events) {
     this.render = function() {
         element.html('');       
 
-        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.click,configuration);
+        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.dblclick,configuration);
         self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
@@ -61,6 +61,7 @@ function Sunburst(data, elementSel, configuration, events) {
         .style("fill", self.configuration.gradiante.normal)
         .style("fill-rule", "evenodd")
         .on("click", self.click)
+        .on("dblclick", self.dblclick)
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
@@ -76,7 +77,7 @@ function Sunburst(data, elementSel, configuration, events) {
 
     var isClicking = false;
     //Function called when a node is clicked call the click event and applicates the animation
-    this.click = function(node, noStateSAndZoomReset) {
+    this.dblclick = function(node, noStateSAndZoomReset) {
         if(isClicking)
             return false;
         isClicking = true;
@@ -85,7 +86,6 @@ function Sunburst(data, elementSel, configuration, events) {
             self.zoomEvents.zoomReset();
         }
         self.nodeInfoDisplay.setClicked(node);
-        self.events.click(node);
         path.transition()
         .duration(self.configuration.currentConfig.animationTransitionTime)
         .attrTween("d", arc_render.arcTween(node))
@@ -96,7 +96,11 @@ function Sunburst(data, elementSel, configuration, events) {
         self.clicked = node;
     }
 
-
+    this.click = function(node){
+        if(d3.event.hasOwnProperty('zoomed')) return;
+        console.log(node);
+        events.click(node);
+    }
 
 
     this.resize = function(){

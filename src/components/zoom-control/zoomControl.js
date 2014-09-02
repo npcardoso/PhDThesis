@@ -4,6 +4,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
     var zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", 
         function(){
             if (d3.event) {
+                d3.event.zoomed = true;
                 svg.attr("transform", "translate(" + d3.event.translate + ")"+"scale(" + d3.event.scale + ")");
             }
         });
@@ -119,6 +120,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
 zoomListener(zoomElement);
 zoomElement.on("dblclick.zoom", null)
 zoomListener.event(zoomElement);
+zoomElement.on("mousedown", function() { d3.event.preventDefault(); });
 
 $('#zoomContainer').remove();
 $(elementSel).prepend(ZoomController_HTML);

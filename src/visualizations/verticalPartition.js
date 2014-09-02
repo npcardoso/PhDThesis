@@ -25,7 +25,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
     this.render = function() {
         element.html("");
 
-        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.click,configuration);
+        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.dblclick,configuration);
         self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
@@ -45,6 +45,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
         .attr("height", rect_render.height)
         .style("stroke", "#fff")
         .attr("fill",configuration.gradiante.normal)
+        .on("dblclick", self.dblclick)
         .on("click", self.click)
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
@@ -56,7 +57,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
     }
 
     var isClicking = false;
-    this.click = function(node,noStateSAndZoomReset) {
+    this.dblclick = function(node,noStateSAndZoomReset) {
         if(isClicking)
             return false;
         isClicking = true;
@@ -71,6 +72,12 @@ function VerticalPartition(data, elementSel, configuration, events) {
         });
 
         self.clicked = node;
+    }
+
+    this.click = function(node){
+        if(d3.event.hasOwnProperty('zoomed')) return;
+        events.click(node);
+        console.log(node);
     }
 
     this.resize = function(){

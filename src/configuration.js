@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv15';
+  this.CONFIG_STORE = 'configv17';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,

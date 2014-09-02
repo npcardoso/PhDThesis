@@ -45,8 +45,8 @@ function VerticalPartition(data, elementSel, configuration, events) {
         .attr("height", rect_render.height)
         .style("stroke", "#fff")
         .attr("fill",configuration.gradiante.normal)
-        .on("dblclick", self.dblclick)
         .on("click", self.click)
+        .on("dblclick", self.dblclick)
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
@@ -66,7 +66,6 @@ function VerticalPartition(data, elementSel, configuration, events) {
             self.zoomEvents.zoomReset();
         }
         self.nodeInfoDisplay.setClicked(node);
-        events.click(node)
         rect_render.rectAnimation(rect,node).each("end",function(){
             isClicking = false;
         });

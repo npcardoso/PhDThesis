@@ -63,7 +63,18 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
   g.exit().remove();
   var color = configuration.gradiante.normal(last);
   // Now move and update the percentage at the end.
-  $("#endlabel").html('<div class="pace pace-active" style="border-color: '+color+';"><div class="pace-progress" data-progress="'+d3.round(last.score*100,2)+'" data-progress-text="'+d3.round(last.score*100,2)+'%" style="width: '+d3.round(last.score*100,2)+'%;   background: '+color+'; color: '+color+';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
+  var percentage, displayText;
+  if(last.score >= 0){
+      percentage = d3.round(last.score*100,2);
+      displayText = percentage+'%';
+  }
+  else
+  {
+    percentage = 0;
+    displayText = 'Uncalculated';
+  }
+  $("#endlabel").html('<div class="pace pace-active" style="border-color: '+color+';"><div class="pace-progress" data-progress="'+percentage+'" data-progress-text="'+displayText+'" style="width: '+percentage+'%;   background: '+color+'; color: '+color+';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
+  
 
   // Make the breadcrumb trail visible, if it's hidden.
   d3.select("#trail")

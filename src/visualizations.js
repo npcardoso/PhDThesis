@@ -28,7 +28,7 @@ function Visualizations(configuration){
 		self.prepareVisualization(visN);
 		currentVisualization.render();
 		if(nodeToRender != null){
-			currentVisualization.click(nodeToRender);
+			currentVisualization.dblclick(nodeToRender);
 			nodeToRender= null;
 		}
 	}

@@ -1,6 +1,6 @@
 function initializeVisualization(jsonData){
 	$('body').html('');
-	window.data_ex = jsonData;
+	window.data_ex = JSON.parse(jsonData);
 	init();
 }
 

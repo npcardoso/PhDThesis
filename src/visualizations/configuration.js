@@ -11,6 +11,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         self.renderRegexFilter();
         self.renderDefualtTableEntries();
         self.renderChosenScript();
+        this.renderKeyBindings();
         this.renderResetButton();
     }
 
@@ -235,6 +236,22 @@ function ConfigurationView(data,elementSel, configuration, events) {
                 }
             });
 }
+
+    this.renderKeyBindings = function(){
+        var keyBindings = configuration.currentConfig.keyBindings;
+        $(elementSel).append('<p>Key Bindings</p>');
+        for (var i = 0; i < keyBindings.length; i++) {
+            var renderStr = '<p><small>'+keyBindings[i].name+': ';
+            var keys = keyBindings[i].keyCodes;
+            for (var j = 0; j < keys.length; j++) {
+                renderStr += KeyboardJS.key.name(keys[j]);
+            };
+            renderStr += '</small></p>';
+            $(elementSel).append(renderStr);
+        };
+
+
+    }
 }
 
 

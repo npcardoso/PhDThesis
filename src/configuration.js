@@ -1,10 +1,11 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv17';
+  this.CONFIG_STORE = 'configv19';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
     zoomAnimationTime: 500,
     filterMostRelevamtNodes: 150,
+    filterMinProbability: 1,
     normalGradiante: [
     {
      color: "green",

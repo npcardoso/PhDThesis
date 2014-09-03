@@ -139,6 +139,27 @@ function filterData(data,N){
 	return filterTrue(data);
 }
 
+
+function filterByScore(data,minScore){
+	minScore /= 100;
+	setState(data,false);
+	var array = getLastLevelNodes(data);
+	var end = array.length;
+	for (var i = 0; i < end; i++) {
+		node = array[i];
+		if(node.score >= minScore){
+			var nodes = getAncestors(node);
+		//console.log(nodes);
+		for (var j = nodes.length - 1; j >= 0; j--) {
+			nodes[j].state = true;
+		};
+		}
+	};
+	treeFilter(data[0]);
+	return filterTrue(data);
+}
+
+
 function probabilityCalculator(node) {
 	if(node.score >= 0)
 		return node.score;
@@ -180,6 +201,10 @@ function DataManager(data,configuration){
 				data.tree = regexFilter(data.tree,configuration.currentConfig.regexFilter);
 			}
 
+
+			if(configuration.currentConfig.filterMinProbability > 0){
+				data.tree = filterByScore(data.tree,configuration.currentConfig.filterMinProbability);
+			}
 
 			if(configuration.currentConfig.filterMostRelevamtNodes > 0){
 				data.tree = filterData(data.tree,configuration.currentConfig.filterMostRelevamtNodes);

@@ -7,6 +7,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         self.renderZoomAnimationTime();
         self.renderGradiante();
         self.renderFilterNodes();
+        self.renderFilterProbabilty();
         self.renderRegexFilter();
         self.renderDefualtTableEntries();
         self.renderChosenScript();
@@ -88,6 +89,33 @@ function ConfigurationView(data,elementSel, configuration, events) {
             }
         });
         $("#nnodes").val(renderValue(configuration.currentConfig.filterMostRelevamtNodes));
+    }
+
+
+
+     this.renderFilterProbabilty = function() {
+        $(elementSel).append('<p><label for="pnodes">Filter by probability:</label><input type="text" id="pnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-pnodes"></div>');
+
+        function renderValue(value){
+            if(value > 0){
+                return value;
+            }   
+            return "Disabled";
+        }
+
+        $("#slider-pnodes").slider({
+            range: "min",
+            value: configuration.currentConfig.filterMinProbability,
+            min: 0,
+            max: 100,
+            slide: function(event, ui) {
+                $("#pnodes").val(renderValue(ui.value));   
+                configuration.currentConfig.filterMinProbability = ui.value;
+                configuration.saveConfig();
+                events.filtersUpdate();
+            }
+        });
+        $("#pnodes").val(renderValue(configuration.currentConfig.filterMinProbability));
     }
 
     this.renderGradiante = function() {

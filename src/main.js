@@ -16,30 +16,17 @@ function init(){
 	});
 	}
 
+	var dataManager = new DataManager(window.data_ex,configuration);
+	dataManager.applyFilters();
 
-	var visualization = new Visualizations(configuration);
+	var visualization = new Visualizations(configuration,dataManager);
 	renderButtonsHtml(visualization.setVisualization,visualization.getInitVisN());
 
-	if(window.data_ex != undefined){
-	//prepare data
-	dataInlining(window.data_ex);
-
-	if(validRegex(configuration.currentConfig.regexFilter)){
-		data_ex.tree = regexFilter(data_ex.tree,configuration.currentConfig.regexFilter);
-	}
-
-
-	if(configuration.currentConfig.filterMostRelevamtNodes > 0){
-		window.data_ex.tree = filterData(window.data_ex.tree,configuration.currentConfig.filterMostRelevamtNodes);
-	}
-
-	probabilityCalculator(data_ex.tree[0]);
 
 
 	visualization.init();
 
 	$( window ).resize(visualization.resize);
-	}
 }
 
 function getVizID(vizNo){

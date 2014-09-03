@@ -1,4 +1,4 @@
-function Visualizations(configuration){
+function Visualizations(configuration,dataManager){
 	var self = this;
 	var nodeToRender = null;
 
@@ -6,17 +6,18 @@ function Visualizations(configuration){
 		click: sendClickEvent,
 		switchToViz: function(visN, node){
 			nodeToRender = node;
-			 $('#tabs').tabs({ active: visN });
-		}
+			$('#tabs').tabs({ active: visN });
+		},
+		filtersUpdate: dataManager.updatefilter,
 	};
 	var currentVisualizationN,currentVisualization;
 
 
 	this.createVisualization = function(visN){
-		if(window.data_ex == undefined){
+		if(dataManager.getData() == undefined){
 			return new visualizations[visN].obj(null,'#'+getVizID(visN),configuration,events);
 		}
-		return new visualizations[visN].obj(data_ex.tree,'#'+getVizID(visN),configuration,events);
+		return new visualizations[visN].obj(dataManager.getData().tree,'#'+getVizID(visN),configuration,events);
 		
 	}
 
@@ -29,17 +30,19 @@ function Visualizations(configuration){
 	}
 
 	this.setVisualization = function(visN){
-		self.prepareVisualization(visN);
-		currentVisualization.render();
-		if(nodeToRender != null){
-			currentVisualization.dblclick(nodeToRender);
-			nodeToRender= null;
+		if(dataManager.getData() != undefined || visN == 3){
+			self.prepareVisualization(visN);
+			currentVisualization.render();
+			if(nodeToRender != null){
+				currentVisualization.dblclick(nodeToRender);
+				nodeToRender= null;
+			}
 		}
 	}
 
 	this.getInitVisN = function(){
 		if(configuration.currentConfig.defaultView >= 0){
-		  return configuration.currentConfig.defaultView;
+			return configuration.currentConfig.defaultView;
 		}
 		return configuration.currentConfig.lastViewed;
 	}

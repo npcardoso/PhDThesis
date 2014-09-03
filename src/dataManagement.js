@@ -5,7 +5,7 @@ function dataInlining (data) {
 		var node = tree[i];
 		node.id = i;
 		if(nodeHasFather(node)){
-		 node.parent = tree[node.p]
+			node.parent = tree[node.p]
 		}
 		node.score = scores[i];
 		node.children = [];
@@ -14,7 +14,7 @@ function dataInlining (data) {
 	for (var i = tree.length - 1; i >= 0; i--) {
 		var node = tree[i];
 		if(nodeHasFather(node)){
-		node.parent.children.push(node);
+			node.parent.children.push(node);
 		}
 	};
 }
@@ -114,10 +114,10 @@ function treeFilter(root){
 		return;
 	}
 	if(!isLastNode(root)){
-	root.children = filterTrue(root.children);
-	for (var i = root.children.length - 1; i >= 0; i--) {
-		treeFilter(root.children[i]);
-	}
+		root.children = filterTrue(root.children);
+		for (var i = root.children.length - 1; i >= 0; i--) {
+			treeFilter(root.children[i]);
+		}
 	}
 }
 
@@ -165,4 +165,35 @@ function randomProbabilityInjector(data){
 			};
 		}
 	};	
+}
+
+
+function DataManager(data,configuration){
+	var self = this;
+	var original_data = jQuery.extend(true, {}, data);
+	this.applyFilters= function(){
+		if(data != undefined){
+			dataInlining(data);
+			probabilityCalculator(data.tree[0]);
+
+			if(validRegex(configuration.currentConfig.regexFilter)){
+				data.tree = regexFilter(data.tree,configuration.currentConfig.regexFilter);
+			}
+
+
+			if(configuration.currentConfig.filterMostRelevamtNodes > 0){
+				data.tree = filterData(data.tree,configuration.currentConfig.filterMostRelevamtNodes);
+			}
+		}
+	}
+
+	this.updatefilter = function(){
+		data = jQuery.extend(true, {}, original_data);
+		self.applyFilters();
+		console.log('ok');
+	}
+
+	this.getData = function(){
+		return data;
+	}
 }

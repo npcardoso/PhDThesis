@@ -84,6 +84,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
                 $("#nnodes").val(renderValue(ui.value));   
                 configuration.currentConfig.filterMostRelevamtNodes = ui.value;
                 configuration.saveConfig();
+                events.filtersUpdate();
             }
         });
         $("#nnodes").val(renderValue(configuration.currentConfig.filterMostRelevamtNodes));
@@ -111,6 +112,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         $("#regex").change(function(){
             configuration.currentConfig.regexFilter = $("#regex").val();
             configuration.saveConfig();
+            events.filtersUpdate();
         });
     }
 

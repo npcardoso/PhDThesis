@@ -39,6 +39,10 @@ function keyBindings(visualization,configuration){
 	setKeyBinding("Move Down",zoomEvents.down);
 	setKeyBinding("Move Down",zoomEvents.down);
 	setKeyBinding("Undo",visualization.stateManager.recoverState);
+	setKeyBinding("Goto Sunburst",function(){visualization.events.switchToViz(0,null)});
+	setKeyBinding("Goto Vertical Partition",function(){visualization.events.switchToViz(1,null)});
+	setKeyBinding("Goto Table",function(){visualization.events.switchToViz(2,null)});
+	setKeyBinding("Goto Configurations",function(){visualization.events.switchToViz(3,null)});
 	console.log(visualization);
 
 	var pressedKeys = [];

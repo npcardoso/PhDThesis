@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv20';
+  this.CONFIG_STORE = 'configv22';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
@@ -55,6 +55,22 @@ function Configuration() {
   {
     name: "Undo",
     keyCodes: [66]
+  },
+  {
+    name: "Goto Sunburst",
+    keyCodes: [49]
+  },
+  {
+    name: "Goto Vertical Partition",
+    keyCodes: [50]
+  },
+  {
+    name: "Goto Table",
+    keyCodes: [51]
+  },
+  {
+    name: "Goto Configurations",
+    keyCodes: [52]
   }
   ]
 };

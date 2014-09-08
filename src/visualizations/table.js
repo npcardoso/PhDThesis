@@ -60,20 +60,7 @@ function Table(data, elementSel, configuration, events) {
 
 
         function format(data){
-            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-            '<td>Tests Passed:</td>'+
-            '<td>45 (demo)</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td>Failed testes:</td>'+
-            '<td>3 (demo)</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td>Extra info:</td>'+
-            '<td>Code coverege, statistics or other info</td>'+
-            '</tr>'+
-            '</table>'+'<button class="vizb" id="vizb0">Go to Sunburst</button><button class="vizb" id="vizb1">Go to Vertical Partition</button>';
+            return '<button class="vizb" id="vizb0">Go to Sunburst</button><button class="vizb" id="vizb1">Go to Vertical Partition</button>';
 
         }
 

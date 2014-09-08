@@ -31,7 +31,7 @@ if (typeof jQuery.fn.draggable === "undefined") {
             //console.log(this);
             var ele = document.getElementById(this.attr("id"));
             ele.style.top = "121px";
-            Drag.init(ele, null, 26, 426, 86, 86);
+            Drag.init(ele, null, 26, 282, 86, 86);
             return this;
         };
 
@@ -261,7 +261,7 @@ var gradX = function(id, _options) {
                 var rgb = this.get_rgb_obj(color);
 
                 var left = gradx.gx(id).css("left");
-                if (parseInt(left) > 26 && parseInt(left) < 426) {
+                if (parseInt(left) > 26 && parseInt(left) < 282) {
                     gradx.gx("#gradx_slider_info") //info element cached before
                             .css("left", left)
                             .show();
@@ -303,7 +303,7 @@ var gradX = function(id, _options) {
                     break;
 
                 //convert % to px based on containers width
-                var delta = 26; //range: 26px tp 426px
+                var delta = 26; //range: 26px tp 282px
                 position = parseInt((obj[k].position * this.container_width) / 100) + delta + "px";
 
                 id = "gradx_slider_" + (this.slider_index); //create an id for this slider
@@ -339,7 +339,7 @@ var gradX = function(id, _options) {
                         var left = gradx.gx(gradx.current_slider_id).css("left");
 
 
-                        if (parseInt(left) > 26 && parseInt(left) < 426) {
+                        if (parseInt(left) > 26 && parseInt(left) < 282) {
                             gradx.gx("#gradx_slider_info") //info element cached before
                                     .css("left", left)
                                     .show();
@@ -518,7 +518,7 @@ var gradX = function(id, _options) {
             this.panel = gradx.gx("#gradx_panel_" + id);
             //.hide();
             //this.info.hide();
-            this.container_width = 400 //HARDCODE;
+            this.container_width = 256; //HARDCODE;
             this.add_slider(sliders);
 
 

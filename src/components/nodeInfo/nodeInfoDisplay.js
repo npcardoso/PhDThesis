@@ -1,66 +1,23 @@
-var ARROW_DIMENSIONS = {
-  w: 195, h: 30, s: 3, t: 10
-};
-
-
-
-
 function initializeBreadcrumbTrail(elementSel) {
+
+
+  $('#breadcrumbs').remove();
   $('#trail').remove();
   $('#endlabel').remove();
-  // Add the svg area.
-  var trail = d3.select(elementSel).append("svg:svg")
-  .attr("width", "100%")
-  .attr("height", 50)
-  .attr("id", "trail");
+
+    d3.select(elementSel).append("div")
+  .attr("id", "breadcrumbs")
+
   // Add the label at the end, for the percentage.
   d3.select(elementSel).append("div")
-  .attr("id", "endlabel")}
+  .attr("id", "endlabel");
+}
 
-// Generate a string that describes the points of a breadcrumb polygon.
-function breadcrumbPoints(d, i) {
-  var points = [];
-  points.push("0,0");
-  points.push(ARROW_DIMENSIONS.w + ",0");
-  points.push(ARROW_DIMENSIONS.w + ARROW_DIMENSIONS.t + "," + (ARROW_DIMENSIONS.h / 2));
-  points.push(ARROW_DIMENSIONS.w + "," + ARROW_DIMENSIONS.h);
-  points.push("0," + ARROW_DIMENSIONS.h);
-  if (i > 0) { // Leftmost breadcrumb; don't include 6th vertex.
-  points.push(ARROW_DIMENSIONS.t + "," + (ARROW_DIMENSIONS.h / 2));
-}
-return points.join(" ");
-}
 
 // Update the breadcrumb trail to show the current sequence and percentage.
 function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
   var last = nodeArray.slice(-1)[0];
-  // Data join; key function combines name and depth (= position in sequence).
-  var g = d3.select("#trail")
-  .selectAll("g")
-  .data(nodeArray);
 
-  // Add breadcrumb and label for entering nodes.
-  var entering = g.enter().append("svg:g")
-  .on("click", clickFunction);
-
-  entering.append("svg:polygon")
-  .attr("points", breadcrumbPoints)
-  .style("fill", configuration.gradiante.normal);
-
-  entering.append("svg:text")
-  .attr("x", (ARROW_DIMENSIONS.w + ARROW_DIMENSIONS.t) / 2)
-  .attr("y", ARROW_DIMENSIONS.h / 2)
-  .attr("dy", "0.35em")
-  .attr("text-anchor", "middle")
-  .text(function(d) { return d.n; });
-
-  // Set position for entering and updating nodes.
-  g.attr("transform", function(d, i) {
-    return "translate(" + i * (ARROW_DIMENSIONS.w + ARROW_DIMENSIONS.s) + ", 0)";
-  });
-
-  // Remove exiting nodes.
-  g.exit().remove();
   var color = configuration.gradiante.normal(last);
   // Now move and update the percentage at the end.
   var percentage, displayText;
@@ -73,12 +30,27 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
     percentage = 0;
     displayText = 'Uncalculated';
   }
-  $("#endlabel").html('<div class="pace pace-active" style="border-color: '+color+';"><div class="pace-progress" data-progress="'+percentage+'" data-progress-text="'+displayText+'" style="width: '+percentage+'%;   background: '+color+'; color: '+color+';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
+ $("#endlabel").html('<div class="pace pace-active" style="border-color: '+color+';"><div class="pace-progress" data-progress="'+percentage+'" data-progress-text="'+displayText+'" style="width: '+percentage+'%;   background: '+color+'; color: '+color+';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
   
 
+ $('#breadcrumbs').html('<ol class="breadcrumbs"></ol>');
+
+ var lengthN = nodeArray.length;
+ for (var i = 0; i < lengthN; i++) {
+   $('.breadcrumbs').append('<li><a href="#" id="node-'+i+'"><span>'+nodeArray[i].n+'</span></a></li>');
+   var x = $('body').append('<style>.breadcrumbs li:nth-child('+(i+1)+') a, .breadcrumbs li:nth-child('+(i+1)+') a:before, .breadcrumbs li:nth-child('+(i+1)+') a:after{background-color: '+configuration.gradiante.normal(nodeArray[i])+';}</style>');
+    $('.breadcrumbs a').click(function(){
+      var id = $(this).attr('id').replace("node-", ""); 
+      clickFunction(nodeArray[id]);
+    })
+ };
+
+   
+
+ 
+
   // Make the breadcrumb trail visible, if it's hidden.
-  d3.select("#trail")
-  .style("visibility", "");
+
 
 }
 

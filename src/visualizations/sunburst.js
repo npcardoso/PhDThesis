@@ -38,8 +38,9 @@ function Sunburst(data, elementSel, configuration, events) {
         self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
+        .attr("class", "sunBurstArea")
         .attr("width", dimensions.width)
-        .attr("height", dimensions.height)
+        .attr("height", dimensions.height+15)
         .append("g")
         .attr("transform", centerTranslation());
 
@@ -112,7 +113,7 @@ function Sunburst(data, elementSel, configuration, events) {
 
 
 function ArcRender(width,height){
-    var radius = Math.min(width, height-20) / 2;
+    var radius = Math.min(width, height+15) / 2;
 
     var x = d3.scale.linear()
     .range([0, 2 * Math.PI]);

@@ -54,8 +54,8 @@ function renderButtonsHtml(visActivationCallBack,defaultTab){
 
 function getDimensions(){
 	return {
-		width: $(window).width()-75,
-		height: $(window).height()-170
+		width: $(window).width()-50,
+		height: $(window).height()-132
 	}
 }
 

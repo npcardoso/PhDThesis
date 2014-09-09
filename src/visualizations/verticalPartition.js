@@ -66,7 +66,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
             self.zoomEvents.zoomReset();
         }
         self.nodeInfoDisplay.setClicked(node);
-        rect_render.rectAnimation(rect,node).each("end",function(){
+        rect_render.rectAnimation(rect,node,(noStateSAndZoomReset?self.configuration.currentConfig.animationTransitionTime:0)).each("end",function(){
             isClicking = false;
         });
 
@@ -81,8 +81,9 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
     this.resize = function(){
         dimensions = getDimensions();
-        arc_render = new ArcRender(dimensions.width,dimensions.height,self.configuration);
-        this.render();
+        rect_render = new RectRender(dimensions.width,dimensions.height,self.configuration);
+        self.render();
+        self.dblclick(self.clicked,false);
     }
 
     this.zoom = function(){
@@ -118,12 +119,12 @@ function RectRender(width,height,configuration){
         return y(node.dy);
     }
 
-    this.rectAnimation = function(rect,node){
+    this.rectAnimation = function(rect,node,time){
         x.domain([node.x, node.x + node.dx]);
         y.domain([node.y, 1]).range([node.y ? 20 : 0, height]);
 
        return rect.transition()
-        .duration(configuration.currentConfig.animationTransitionTime)
+        .duration(time)
         .attr("x", function(node) { return x(node.x); })
         .attr("y", function(node) { return y(node.y); })
         .attr("width", function(node) { return x(node.x + node.dx) - x(node.x); })

@@ -88,7 +88,7 @@ function Sunburst(data, elementSel, configuration, events) {
         }
         self.nodeInfoDisplay.setClicked(node);
         path.transition()
-        .duration(self.configuration.currentConfig.animationTransitionTime)
+        .duration((noStateSAndZoomReset?self.configuration.currentConfig.animationTransitionTime:0))
         .attrTween("d", arc_render.arcTween(node))
         .each("end",function(){
             isClicking = false;
@@ -107,7 +107,8 @@ function Sunburst(data, elementSel, configuration, events) {
     this.resize = function(){
         dimensions = getDimensions();
         arc_render = new ArcRender(dimensions.width,dimensions.height);
-        this.render();
+        self.render();
+        self.dblclick(self.clicked,false);
     }
 }
 

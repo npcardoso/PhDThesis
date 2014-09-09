@@ -4,7 +4,14 @@ import subprocess
 import sys
 import platform
 
-env = Environment()
+plat = platform.system().lower()
+machine = platform.machine().lower()
+
+if plat == 'windows':
+  env = Environment(tools=['mingw'])
+else:
+  env = Environment()
+  
 env['ENV']['TERM'] = os.environ['TERM']
 
 vars = Variables('.scons.conf')
@@ -16,13 +23,22 @@ vars.Add('CXX', '', '')
 vars.Add('prefix', '', '#/target/install/')
 vars.Add('build_dir', '', '#/target/build/')
 
+vars.Add('boost_filesystem', '', 'boost_filesystem')
+vars.Add('boost_system', '', 'boost_system')
+vars.Add('boost_date_time', '', 'boost_date_time')
+vars.Add('boost_thread', '', '')
+
 vars.Add('debug', '', False)
 vars.Update(env)
 
 # Platform
-plat = platform.system().lower()
 if plat == 'darwin':
   env['PLATFORM'] = plat
+elif plat == 'windows':
+  if machine == 'amd64':
+    env['PLATFORM'] = 'win32-x86-64'
+  else:
+    env['PLATFORM'] = 'win32-x86'
 else:
   env['PLATFORM'] = (plat + "_" + platform.machine()).replace("_", "-").lower()
 print env['PLATFORM']
@@ -55,22 +71,28 @@ env['CCFLAGS'] += " -std=c++11  -Wall -pedantic"
 
 
 # Link Flags
-link_flags = ["-Wl,-rpath,'$$ORIGIN/../../lib/%s'" % env['PLATFORM'],
-              "-lboost_filesystem",
-              "-lboost_system",
-              "-lboost_date_time",
-              "-lpthread",
-              "-lgmp",
-              "-lmpfr",]
+link_flags = ["-Wl,-rpath,'$$ORIGIN/../../lib/%s'" % env['PLATFORM']]
+              
+libs = [env['boost_filesystem'],
+        env['boost_system'],
+        env['boost_date_time'],
+        "pthread",
+        "mpfr",
+        "gmp",]
 
-if env['PLATFORM'] == 'darwin':
-  link_flags.append("-lboost_thread-mt")
+if env['boost_thread'] == '':
+  if plat == 'darwin':
+    libs.append("boost_thread-mt")
+  else:
+    libs.append("boost_thread")
 else:
-  link_flags.append("-lboost_thread")
+  libs.append(env['boost_thread'])
+
+if plat == 'windows':
+  libs.append("ws2_32")
 
 env.Append(LINKFLAGS = "   ".join(link_flags))
-
-
+env.Append(LIBS=libs)
 
 Export('env')
 SConscript('SConscript', variant_dir=env['build_dir'])

@@ -32,13 +32,13 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
   }
  $("#endlabel").html('<div class="pace pace-active" style="border-color: '+color+';"><div class="pace-progress" data-progress="'+percentage+'" data-progress-text="'+displayText+'" style="width: '+percentage+'%;   background: '+color+'; color: '+color+';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
   
-
+ $('.breadcrumbsStyle').remove();
  $('#breadcrumbs').html('<ol class="breadcrumbs"></ol>');
 
  var lengthN = nodeArray.length;
  for (var i = 0; i < lengthN; i++) {
    $('.breadcrumbs').append('<li><a href="#" id="node-'+i+'"><span>'+nodeArray[i].n+'</span></a></li>');
-   var x = $('body').append('<style>.breadcrumbs li:nth-child('+(i+1)+') a, .breadcrumbs li:nth-child('+(i+1)+') a:before, .breadcrumbs li:nth-child('+(i+1)+') a:after{background-color: '+configuration.gradiante.normal(nodeArray[i])+';}</style>');
+   var x = $('body').append('<style class="breadcrumbsStyle">.breadcrumbs li:nth-child('+(i+1)+') a, .breadcrumbs li:nth-child('+(i+1)+') a:before, .breadcrumbs li:nth-child('+(i+1)+') a:after{background-color: '+configuration.gradiante.normal(nodeArray[i])+';}</style>');
     $('.breadcrumbs a').click(function(){
       var id = $(this).attr('id').replace("node-", ""); 
       clickFunction(nodeArray[id]);

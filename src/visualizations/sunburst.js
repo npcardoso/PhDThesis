@@ -76,25 +76,32 @@ function Sunburst(data, elementSel, configuration, events) {
         return "translate(" + dimensions.width / 2 + "," + (dimensions.height / 2 + 10) + ")";
     }
 
-    var isClicking = false;
+
     //Function called when a node is clicked call the click event and applicates the animation
-    this.dblclick = function(node, noStateSAndZoomReset) {
-        if(isClicking)
+    var isMovingNode = false;
+    this.dblclick = function(node) {
+        if(isMovingNode || node == self.clicked)
             return false;
-        isClicking = true;
-        if(noStateSAndZoomReset){
-            self.stateManager.saveState();
-            self.zoomEvents.zoomReset();
-        }
+        self.stateManager.saveState();
+        self.zoomEvents.zoomReset();
+        self.gotoNode(node,self.configuration.currentConfig.animationTransitionTime);
+    }
+
+
+    this.gotoNode = function(node,animationTime){
+        console.log(isMovingNode);
+        if(isMovingNode)
+            return false;
+        isMovingNode = true;
         self.nodeInfoDisplay.setClicked(node);
         path.transition()
-        .duration((noStateSAndZoomReset?self.configuration.currentConfig.animationTransitionTime:0))
+        .duration(animationTime)
         .attrTween("d", arc_render.arcTween(node))
         .each("end",function(){
-            isClicking = false;
+            isMovingNode = false;
         });
-
         self.clicked = node;
+        return true;
     }
 
     this.click = function(node){
@@ -108,7 +115,7 @@ function Sunburst(data, elementSel, configuration, events) {
         dimensions = getDimensions();
         arc_render = new ArcRender(dimensions.width,dimensions.height);
         self.render();
-        self.dblclick(self.clicked,false);
+        self.gotoNode(self.clicked,0);
     }
 }
 

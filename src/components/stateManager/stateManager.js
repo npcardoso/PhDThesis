@@ -19,6 +19,13 @@ function StateManager(visualization){
 
 	}
 
+	this.getLast = function(){
+		if(self.undoPossible()){
+			return stack.slice(-1)[0];
+		}
+		return null;
+	}
+
 	this.undoPossible = function(){
 		return stack.length > 0;
 	}
@@ -32,12 +39,12 @@ function StateManager(visualization){
 		if(!self.undoPossible()){
 			return;
 		}
-		lastState = stack.slice(-1)[0] ;
-		if(visualization.dblclick(lastState[0],false) != false){
+		lastState = self.getLast();
+		if(visualization.gotoNode(lastState[0],visualization.configuration.currentConfig.animationTransitionTime) != false){
 			visualization.zoomEvents.setZoom(lastState[1]);
 			stack.pop();
 		 	self.setButtonVis();
 		}
-
+		return;
 	}
 }

@@ -7,6 +7,15 @@ function init(){
 		configuration.resetConfig();
 	}
 	if(window.data_ex == undefined){
+	if(window.location.hash.indexOf("#srcLoad_") >= 0){
+		var script = window.location.hash.replace('#srcLoad_','');
+				$.ajax({
+			async: false,
+			url: script,
+			dataType: "script"
+		});
+	}
+	else {
 	$.each(configuration.currentConfig.scriptsLoad, function(index, script) {
 		$.ajax({
 			async: false,
@@ -14,6 +23,7 @@ function init(){
 			dataType: "script"
 		});
 	});
+	}
 	}
 
 	var dataManager = new DataManager(window.data_ex,configuration);

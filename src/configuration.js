@@ -1,10 +1,10 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv22';
+  this.CONFIG_STORE = 'configv23';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
     zoomAnimationTime: 500,
-    filterMostRelevamtNodes: 150,
+    filterMostRelevamtNodes: 400,
     filterMinProbability: 0,
     normalGradiante: [
     {
@@ -20,7 +20,7 @@ function Configuration() {
      position: 99
    }
    ],
-   scriptsLoad: ["new_data.js"],
+   scriptsLoad: ["exA.js"],
    scriptsLoadAutoComplete: ["data_ex.js", "data_ex2.js"],
    regexFilter: "",
    defaultTableEntries: 100,

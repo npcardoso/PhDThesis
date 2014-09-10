@@ -56,21 +56,28 @@ function VerticalPartition(data, elementSel, configuration, events) {
         keyBindings(self,configuration);
     }
 
-    var isClicking = false;
-    this.dblclick = function(node,noStateSAndZoomReset) {
-        if(isClicking)
+    var isMovingNode = false;
+    this.dblclick = function(node) {
+        if(isMovingNode || node == self.clicked)
             return false;
-        isClicking = true;
-        if(noStateSAndZoomReset){
-            self.stateManager.saveState();
-            self.zoomEvents.zoomReset();
-        }
-        self.nodeInfoDisplay.setClicked(node);
-        rect_render.rectAnimation(rect,node,(noStateSAndZoomReset?self.configuration.currentConfig.animationTransitionTime:0)).each("end",function(){
-            isClicking = false;
-        });
+        self.stateManager.saveState();
+        self.zoomEvents.zoomReset();
+        self.gotoNode(node,self.configuration.currentConfig.animationTransitionTime);
+    }
 
+
+
+    this.gotoNode = function(node,animationTime){
+        console.log(isMovingNode);
+        if(isMovingNode)
+            return false;
+        isMovingNode = true;
+        self.nodeInfoDisplay.setClicked(node);
+        rect_render.rectAnimation(rect,node,animationTime).each("end",function(){
+            isMovingNode = false;
+        });
         self.clicked = node;
+        return true;
     }
 
     this.click = function(node){
@@ -83,7 +90,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
         dimensions = getDimensions();
         rect_render = new RectRender(dimensions.width,dimensions.height,self.configuration);
         self.render();
-        self.dblclick(self.clicked,false);
+        self.gotoNode(self.clicked,0);
     }
 
     this.zoom = function(){

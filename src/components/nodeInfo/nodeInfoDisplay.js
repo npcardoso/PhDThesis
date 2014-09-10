@@ -33,6 +33,7 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
  $("#endlabel").html('<div class="pace pace-active" style="border-color: '+color+';"><div class="pace-progress" data-progress="'+percentage+'" data-progress-text="'+displayText+'" style="width: '+percentage+'%;   background: '+color+'; color: '+color+';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
   
  $('.breadcrumbsStyle').remove();
+ $('.breadcrumbs').remove();
  $('#breadcrumbs').html('<ol class="breadcrumbs"></ol>');
 
  var lengthN = nodeArray.length;

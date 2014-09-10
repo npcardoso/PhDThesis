@@ -244,7 +244,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
             var renderStr = '<p><small>'+keyBindings[i].name+': ';
             var keys = keyBindings[i].keyCodes;
             for (var j = 0; j < keys.length; j++) {
-                renderStr += KeyboardJS.key.name(keys[j]);
+                renderStr += KeyboardJS.key.name(keys[j])[0];
             };
             renderStr += '</small></p>';
             $(elementSel).append(renderStr);

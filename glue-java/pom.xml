@@ -23,6 +23,27 @@
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
+    <!--dependency>
+      <groupId>io.crowbar</groupId>
+      <artifactId>diagnostic-native</artifactId>
+      <classifier>linux32</classifier>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>io.crowbar</groupId>
+      <artifactId>diagnostic-native</artifactId>
+      <classifier>linux64</classifier>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.crowbar</groupId>
+      <artifactId>diagnostic-native</artifactId>
+      <classifier>win32</classifier>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency-->
+
     <dependency>
       <groupId>io.crowbar</groupId>
       <artifactId>diagnostic-native</artifactId>

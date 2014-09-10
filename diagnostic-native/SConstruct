@@ -11,8 +11,7 @@ if plat == 'windows':
   env = Environment(tools=['mingw'])
 else:
   env = Environment()
-  
-env['ENV']['TERM'] = os.environ['TERM']
+  env['ENV']['TERM'] = os.environ['TERM']
 
 vars = Variables('.scons.conf')
 vars.Add('PATH', '', '')

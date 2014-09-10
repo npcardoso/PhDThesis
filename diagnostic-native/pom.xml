@@ -113,7 +113,7 @@
       <activation>
         <os>
           <family>windows</family>
-          <arch>x86</arch>
+          <arch>i386</arch>
         </os>
       </activation>
       <build>
@@ -133,7 +133,7 @@
       <activation>
         <os>
           <family>windows</family>
-          <arch>x86_64</arch>
+          <arch>amd64</arch>
         </os>
       </activation>
       <build>

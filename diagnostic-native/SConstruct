@@ -38,11 +38,8 @@ elif plat == 'windows':
     env['PLATFORM'] = 'win32-x86-64'
   else:
     env['PLATFORM'] = 'win32-x86'
-elif plat == 'linux':
-  if machine == 'i686':
-    env['PLATFORM'] = 'linux-x86'
-  else:
-    env['PLATFORM'] = (plat + "_" + platform.machine()).replace("_", "-").lower()
+else:
+  env['PLATFORM'] = (plat + "_" + platform.machine()).replace("_", "-").lower()
 print env['PLATFORM']
 
 # Install/Build Dirs
@@ -78,9 +75,14 @@ link_flags = ["-Wl,-rpath,'$$ORIGIN/../../lib/%s'" % env['PLATFORM']]
 libs = [env['boost_filesystem'],
         env['boost_system'],
         env['boost_date_time'],
-        "pthread",
         "mpfr",
         "gmp",]
+
+if plat == 'windows':
+  link_flags.extend(["-static-libgcc -static-libstdc++", "-static -lpthread"])
+  libs.append("ws2_32")
+else:
+  libs.append("pthread")
 
 if env['boost_thread'] == '':
   if plat == 'darwin':
@@ -89,10 +91,6 @@ if env['boost_thread'] == '':
     libs.append("boost_thread")
 else:
   libs.append(env['boost_thread'])
-
-if plat == 'windows':
-  link_flags.append("-static-libgcc -static-libstdc++")
-  libs.append("ws2_32")
 
 env.Append(LINKFLAGS = "   ".join(link_flags))
 env.Append(LIBS=libs)

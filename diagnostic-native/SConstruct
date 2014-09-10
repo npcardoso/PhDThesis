@@ -91,6 +91,7 @@ else:
   libs.append(env['boost_thread'])
 
 if plat == 'windows':
+  link_flags.append("-static-libgcc -static-libstdc++")
   libs.append("ws2_32")
 
 env.Append(LINKFLAGS = "   ".join(link_flags))

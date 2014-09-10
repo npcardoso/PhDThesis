@@ -38,6 +38,8 @@ elif plat == 'windows':
     env['PLATFORM'] = 'win32-x86-64'
   else:
     env['PLATFORM'] = 'win32-x86'
+elif plat == 'linux' and machine == 'i686':
+    env['PLATFORM'] = 'linux-x86'
 else:
   env['PLATFORM'] = (plat + "_" + platform.machine()).replace("_", "-").lower()
 print env['PLATFORM']

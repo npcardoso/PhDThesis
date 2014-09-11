@@ -11,7 +11,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         self.renderRegexFilter();
         self.renderDefualtTableEntries();
         self.renderChosenScript();
-        this.renderKeyBindings();
+        //this.renderKeyBindings();
         this.renderResetButton();
     }
 

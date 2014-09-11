@@ -2,39 +2,81 @@ function keyBindings(visualization,configuration){
 	console.log(configuration.currentConfig);
 	var zoomEvents = visualization.zoomEvents;
 
-	var keyBindingsD = configuration.currentConfig.keyBindings;
+	var currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive;
+
+
+	function findByName(name,array){
+		console.log(name);
+		//console.log(currentKeyBindings);
+		for (var i = array.length - 1; i >= 0; i--) {
+			if(array[i].name == name){
+				return array[i];
+			}
+		};
+		return null;
+	}
 
 	function getKeyBindingByName(name){
-		for (var i = keyBindingsD.length - 1; i >= 0; i--) {
-			if(keyBindingsD[i].name == name){
-				return keyBindingsD[i];
-			}
-		};
-		return null;
+		return findByName(name,currentKeyBindings);
 	}
+
+	function getModeByName(name){
+		return findByName(name,configuration.currentConfig.keyBindings.modes);
+	}
+
 
 	function getKeyBindingByKeyCodes(keyCodes){
-		for (var i = keyBindingsD.length - 1; i >= 0; i--) {
-			if(keyMatch(keyCodes,keyBindingsD[i].keyCodes)){
-				return keyBindingsD[i];
+		for (var i = currentKeyBindings.length - 1; i >= 0; i--) {
+			if(keyMatch(keyCodes,currentKeyBindings[i].keyCodes)){
+				return currentKeyBindings[i];
 			}
 		};
 		return null;
 	}
-
-
-
 
 	function setKeyBinding(name,func){
 		getKeyBindingByName(name).func = func;
 	}
 
+	function setModeKeyBinding(mode,keyBindingName,func){
+		var keyBinding = findByName(keyBindingName,mode.keyBindings);
+		keyBinding.func = func;
+	}
 
-	setKeyBinding("Zoom Reset",zoomEvents.zoomReset);
-	setKeyBinding("Zoom In",zoomEvents.zoomIn);
+	function initZoomMode(){
+		zoomMode = getModeByName("Zoom");
+		setModeKeyBinding(zoomMode,"Zoom In",zoomEvents.zoomIn);
+		setModeKeyBinding(zoomMode,"Zoom Out",zoomEvents.zoomOut);
+		setModeKeyBinding(zoomMode,"Zoom Reset",zoomEvents.zoomReset);
+	}
+
+
+	function keyMatch(keys,binding){
+		var keysl = keys.length-1;
+		var keysb = binding.length-1;
+		while(keysl >= 0 && keysb >= 0){
+			if(keys[keysl] != binding[keysb]){
+				return false;
+			}
+			--keysl;
+			--keysb;
+		}
+		return keysb == -1;
+	}
+
+	function gotoStartingMode(){
+		currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive;
+	}
+
+	function gotoZoomMode(){
+		console.log(currentKeyBindings);
+		zoomMode = getModeByName("Zoom");
+		currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive.concat(zoomMode.keyBindings);
+		console.log(currentKeyBindings);
+	}
+
 	setKeyBinding("Move Left",zoomEvents.left);
 	setKeyBinding("Move Up",zoomEvents.up);
-	setKeyBinding("Zoom Out",zoomEvents.zoomOut);
 	setKeyBinding("Move Right",zoomEvents.right);
 	setKeyBinding("Move Down",zoomEvents.down);
 	setKeyBinding("Move Down",zoomEvents.down);
@@ -43,7 +85,11 @@ function keyBindings(visualization,configuration){
 	setKeyBinding("Goto Vertical Partition",function(){visualization.events.switchToViz(1,null)});
 	setKeyBinding("Goto Table",function(){visualization.events.switchToViz(2,null)});
 	setKeyBinding("Goto Configurations",function(){visualization.events.switchToViz(3,null)});
-	console.log(visualization);
+	setKeyBinding("Goto starting mode",gotoStartingMode);
+	setKeyBinding("Zoom Mode",gotoZoomMode);
+
+ 	initZoomMode();
+
 
 	var pressedKeys = [];
 	//var timeOut;
@@ -62,26 +108,3 @@ function keyBindings(visualization,configuration){
 }
 
 
-function keyMatch(keys,binding){
-	var keysl = keys.length-1;
-	var keysb = binding.length-1;
-	while(keysl >= 0 && keysb >= 0){
-		if(keys[keysl] != binding[keysb]){
-			return false;
-		}
-		--keysl;
-		--keysb;
-	}
-	return keysb == -1;
-}
-
-function arrayEquals(array1,array2){
-	if(array1.length != array2.length)
-		return false;
-	for (var i = array1.length - 1; i >= 0; i--) {
-		if(array1[i] != array2[i]){
-			return false;
-		}
-	};
-	return true;
-}

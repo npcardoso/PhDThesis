@@ -136,7 +136,7 @@
   transform: skew(30deg);
 }
 
-.breadcrumbs li:last-child a::after,  .breadcrumbs li:last-child a::before{
+.breadcrumbs li.leaf-node a::after,  .breadcrumbs li.leaf-node a::before{
   display: none !important;
 }
 .breadcrumbs li a:hover,

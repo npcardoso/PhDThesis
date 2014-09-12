@@ -39,6 +39,9 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
  var lengthN = nodeArray.length;
  for (var i = 0; i < lengthN; i++) {
    $('.breadcrumbs').append('<li><a id="node-'+i+'"><span>'+nodeArray[i].n+'</span></a></li>');
+   if(isLastNode(nodeArray[i])){
+    $('#node-'+i).parent().addClass("leaf-node");
+   }
    var x = $('body').append('<style class="breadcrumbsStyle">.breadcrumbs li:nth-child('+(i+1)+') a, .breadcrumbs li:nth-child('+(i+1)+') a:before, .breadcrumbs li:nth-child('+(i+1)+') a:after{background-color: '+configuration.gradiante.normal(nodeArray[i])+';}</style>');
     $('.breadcrumbs a').click(function(){
       var id = $(this).attr('id').replace("node-", ""); 

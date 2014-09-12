@@ -117,6 +117,7 @@ function ZoomController(elementSel,zoomElement,svg,configuration){
 
 };
 
+
 zoomListener(zoomElement);
 zoomElement.on("dblclick.zoom", null)
 zoomListener.event(zoomElement);
@@ -143,12 +144,40 @@ $(document).click(function(e){
 return events;
 }
 
-$.ajax({
- url: 'components/zoom-control/zoomcontrol.html',
- type: 'get',
- dataType: 'html',
- async: false,
- success: function(html) {
-  ZoomController_HTML = html;
+function multiline(f) {
+  return f.toString().
+      replace(/^[^\/]+\/\*!?/, '').
+      replace(/\*\/[^\/]+$/, '');
 }
-});
+
+
+ZoomController_HTML = multiline(function() {/*!
+      <div id="zoomContainer" class="leaflet-control-container">
+        <div id="zoomInside">
+        <div class="leaflet-top leaflet-left has-leaflet-pan-control">
+          <div class="leaflet-control-pan leaflet-control">
+            <div class="leaflet-control-pan-up-wrap">
+              <a id="panUp" class="leaflet-control-pan-up" title="Up"></a>
+            </div>
+            <div class="leaflet-control-pan-left-wrap">
+              <a id="panLeft" class="leaflet-control-pan-left" title="Left"></a>
+            </div>
+            <div class="leaflet-control-pan-right-wrap">
+              <a id="panRight" class="leaflet-control-pan-right" title="Right"></a>
+            </div>
+            <div class="leaflet-control-pan-down-wrap">
+              <a id="panDown" class="leaflet-control-pan-down" title="Down"></a>
+            </div>
+
+            <div class="leaflet-control-pan-center-wrap">
+              <a id="zoomReset" class="leaflet-control-pan-center" title="Left"></a>
+            </div>
+          </div>
+          <div class="leaflet-control-zoom leaflet-bar leaflet-control">
+            <a id="zoomIn" class="leaflet-control-zoom-in" title="Zoom in">+</a>
+            <a id="zoomOut" class="leaflet-control-zoom-out" title="Zoom out">-</a>
+          </div>
+        </div>
+      </div>
+      </div>
+*/});

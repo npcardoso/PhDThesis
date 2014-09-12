@@ -1,5 +1,5 @@
 function Configuration() {
-  this.CONFIG_STORE = 'configv29';
+  this.CONFIG_STORE = 'configv32';
   this.DEFAULT_CONFIG = {
     defaultView: 0,
     animationTransitionTime: 700,
@@ -93,23 +93,32 @@ function Configuration() {
 var self = this;
 
 this.saveConfig = function() {
-    //localStorage.setItem(this.CONFIG_STORE, JSON.stringify(self.currentConfig));
+  if(localStorage != undefined){
+    localStorage.setItem(this.CONFIG_STORE, JSON.stringify(self.currentConfig));
   }
+}
 
-  this.saveGradiante = function() {
-    self.saveConfig();
-    self.gradiante = new Gradiant(self.currentConfig.normalGradiante);
+this.saveGradiante = function() {
+  self.saveConfig();
+  self.gradiante = new Gradiant(self.currentConfig.normalGradiante);
+}
+
+this.resetConfig = function(){
+  self.currentConfig = jQuery.extend(this.DEFAULT_CONFIG,  {
+    lastViewed: this.DEFAULT_CONFIG.defaultView
+  });
+  self.saveGradiante();
+}
+
+this.loadConfig = function(){
+  var localStorageConf;
+  if(localStorage == undefined){
+    localStorageConf = null;
   }
-
-  this.resetConfig = function(){
-    self.currentConfig = jQuery.extend(this.DEFAULT_CONFIG,  {
-      lastViewed: this.DEFAULT_CONFIG.defaultView
-    });
-    self.saveGradiante();
+  else
+  {
+    localStorageConf = localStorage.getItem(this.CONFIG_STORE);
   }
-
-  //var localStorageConf = localStorage.getItem(this.CONFIG_STORE);
-  localStorageConf = null;
   if (localStorageConf == null || !(localStorageConf = JSON.parse(localStorageConf))) {
     self.resetConfig();
   }
@@ -118,5 +127,6 @@ this.saveConfig = function() {
   }
     //[rgba(0, 255, 0, 1), rgba(255, 255, 0, 1), rgba(255, 0, 0, 1)]
     this.gradiante = new Gradiant(this.currentConfig.normalGradiante);
-
   }
+  self.loadConfig();
+}

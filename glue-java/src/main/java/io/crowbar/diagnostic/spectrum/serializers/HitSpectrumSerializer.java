@@ -24,16 +24,16 @@ public final class HitSpectrumSerializer {
         str.append(separator);
 
         for (Transaction t : spectrum.byTransaction()) {
-            str.append(serialize(t, numComp));
+            serialize(str, t, numComp);
             str.append(separator);
         }
 
         return str.toString();
     }
 
-    public static String serialize (Transaction< ? extends Activity, ? > transaction,
-                                    int probeCount) {
-        StringBuilder str = new StringBuilder();
+    public static void serialize (StringBuilder str,
+                                  Transaction< ? extends Activity, ? > transaction,
+                                  int probeCount) {
         int i = 0;
 
 
@@ -52,6 +52,14 @@ public final class HitSpectrumSerializer {
         str.append(transaction == null ? 0 : transaction.getError());
         // str.append(" ");
         // str.append(transaction == null ? 0 : transaction.getConfidence());
+    }
+
+    public static String serialize (Transaction< ? extends Activity, ? > transaction,
+                                    int probeCount) {
+        StringBuilder str = new StringBuilder();
+
+
+        serialize(str, transaction, probeCount);
 
         return str.toString();
     }

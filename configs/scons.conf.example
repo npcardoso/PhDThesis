@@ -1,0 +1,11 @@
+# create file at diagnostic-native/.scons.conf
+
+PATH="C:\\Progra~1\\mingw-w64\\x86_64-4.9.1-posix-seh-rt_v3-rev1\\mingw64\\bin\\"
+LIBPATH="C:\\Progra~1\\mingw-w64\\x86_64-4.9.1-posix-seh-rt_v3-rev1\\mingw64\\lib\\"
+CPPPATH="C:\\Progra~1\\mingw-w64\\x86_64-4.9.1-posix-seh-rt_v3-rev1\\mingw64\\include\\"
+CXX="C:\\Progra~1\\mingw-w64\\x86_64-4.9.1-posix-seh-rt_v3-rev1\\mingw64\\bin\\g++"
+
+boost_filesystem="boost_filesystem-mgw49-mt-1_55"
+boost_system="boost_system-mgw49-mt-1_55"
+boost_date_time="boost_date_time-mgw49-mt-1_55"
+boost_thread="boost_thread-mgw49-mt-1_55"

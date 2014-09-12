@@ -7,25 +7,25 @@
 namespace diagnostic {
 namespace configuration {
 class t_algorithm_creator {
-    public:
+public:
     class t_register {
-        public:
-        t_register(t_const_ptr<t_algorithm_creator> ac);
+public:
+        t_register (t_const_ptr<t_algorithm_creator> ac);
     };
 
-    static const t_algorithm_creator & get_default();
+    static t_ptr<t_algorithm_creator> get_default ();
 
-    virtual t_const_ptr<t_candidate_generator> generator(const t_algorithm & a) const;
+    virtual t_const_ptr<t_candidate_generator> generator (const t_algorithm & a) const;
 
-    virtual t_const_ptr<t_candidate_ranker> ranker(const t_algorithm & a) const;
+    virtual t_const_ptr<t_candidate_ranker> ranker (const t_algorithm & a) const;
 
-    inline virtual ~t_algorithm_creator() {}
+    inline virtual ~t_algorithm_creator () {}
 
-    protected:
+protected:
 
-    const std::string * get(const t_algorithm & a,
-                            const std::string & key) const;
-    inline t_algorithm_creator() {}
+    const std::string * get (const t_algorithm & a,
+                             const std::string & key) const;
+    inline t_algorithm_creator () {}
 };
 }
 }

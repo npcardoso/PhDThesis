@@ -132,6 +132,17 @@ public abstract class Spectrum<A extends Activity,
 
     public abstract List<Probe> getProbes ();
 
+    public List<Probe> getNodeProbes (int nodeId) {
+        List<Probe> nodeProbes = new ArrayList<Probe> ();
+
+        for (Probe p : getProbes()) {
+            if (p.getNodeId() == nodeId)
+                nodeProbes.add(p);
+        }
+
+        return nodeProbes;
+    }
+
     public final Iterable<Probe> byProbe () {
         return new PIterable();
     }

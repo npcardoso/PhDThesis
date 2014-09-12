@@ -1,7 +1,7 @@
 package io.crowbar.diagnostic.runners;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import flexjson.JSONSerializer;
 import io.crowbar.diagnostic.Connection;
 import io.crowbar.diagnostic.Diagnostic;
@@ -59,6 +59,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -99,6 +100,7 @@ public class JNARunnerTest {
         }
         catch (Throwable e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -137,6 +139,7 @@ public class JNARunnerTest {
         }
         catch (Throwable e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -174,6 +177,7 @@ public class JNARunnerTest {
         }
         catch (Throwable e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -209,6 +213,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -245,6 +250,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -280,6 +286,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -317,6 +324,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -354,6 +362,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -396,6 +405,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 
@@ -492,6 +502,7 @@ public class JNARunnerTest {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail("Exception was thrown: " + e.getMessage());
         }
     }
 }

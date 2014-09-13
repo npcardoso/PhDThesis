@@ -1,5 +1,7 @@
 package io.crowbar.diagnostic.spectrum;
 
+import io.crowbar.util.ViewUtils;
+
 import java.util.BitSet;
 import java.util.List;
 
@@ -19,19 +21,8 @@ extends Spectrum<A, TM> {
                          BitSet transactions,
                          BitSet probes) {
         this.spectrum = spectrum;
-        this.transactions = toArray(transactions);
-        this.probes = toArray(probes);
-    }
-
-    private static int[] toArray (BitSet bs) {
-        int[] ret = new int[bs.cardinality()];
-        int i = 0;
-
-        for (int el = bs.nextSetBit(0); el >= 0; el = bs.nextSetBit(el + 1)) {
-            ret[i++] = el;
-        }
-
-        return ret;
+        this.transactions = ViewUtils.toMappingArray(transactions);
+        this.probes = ViewUtils.toMappingArray(probes);
     }
 
     @Override

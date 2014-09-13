@@ -1,13 +1,10 @@
 function keyBindings(visualization,configuration){
-	console.log(configuration.currentConfig);
 	var zoomEvents = visualization.zoomEvents;
-
 	var currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive;
-
+	var pressedKeys = [];
+	var currentMode = null;
 
 	function findByName(name,array){
-		console.log(name);
-		//console.log(currentKeyBindings);
 		for (var i = array.length - 1; i >= 0; i--) {
 			if(array[i].name == name){
 				return array[i];
@@ -48,6 +45,13 @@ function keyBindings(visualization,configuration){
 		setModeKeyBinding(zoomMode,"Zoom In",zoomEvents.zoomIn);
 		setModeKeyBinding(zoomMode,"Zoom Out",zoomEvents.zoomOut);
 		setModeKeyBinding(zoomMode,"Zoom Reset",zoomEvents.zoomReset);
+		zoomMode.exitHandler = function(){
+			$('#zoomContainer').hide();
+		}
+	}
+
+	function loadModeKeyBindings(mode){
+		currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive.concat(mode.keyBindings);
 	}
 
 
@@ -64,15 +68,22 @@ function keyBindings(visualization,configuration){
 		return keysb == -1;
 	}
 
+	function exitLastMode(){
+		if(currentMode != null && currentMode.hasOwnProperty('exitHandler')){
+			currentMode.exitHandler();
+		}
+	}
+
 	function gotoStartingMode(){
+		exitLastMode();
 		currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive;
 	}
 
 	function gotoZoomMode(){
-		console.log(currentKeyBindings);
-		zoomMode = getModeByName("Zoom");
-		currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive.concat(zoomMode.keyBindings);
-		console.log(currentKeyBindings);
+		exitLastMode();
+		currentMode = getModeByName("Zoom");
+		loadModeKeyBindings(currentMode);
+		$('#zoomContainer').show();
 	}
 
 	setKeyBinding("Move Left",zoomEvents.left);
@@ -91,20 +102,13 @@ function keyBindings(visualization,configuration){
  	initZoomMode();
 
 
-	var pressedKeys = [];
-	//var timeOut;
+
 	document.onkeydown = function(e) {
-		//clearTimeout(timeOut);
 		pressedKeys.push(e.keyCode);
 		keyBinding = getKeyBindingByKeyCodes(pressedKeys);
 		if(keyBinding != null){
 			keyBinding.func();
 			pressedKeys = [];
 		}
-
-
 	}
-
 }
-
-

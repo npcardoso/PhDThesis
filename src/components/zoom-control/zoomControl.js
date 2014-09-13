@@ -1,5 +1,6 @@
 var ZoomController_HTML;
 function ZoomController(elementSel,zoomElement,svg,configuration){
+    var showZoom = false;
     var eventsBlocked = false;
     var zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", 
         function(){
@@ -132,8 +133,10 @@ $('#panRight').click(events.right);
 $('#zoomIn').click(events.zoomIn);
 $('#zoomOut').click(events.zoomOut);
 $('#zoomReset').click(events.zoomReset);
+
+$('#zoomContainer').hide();
+
 $(document).click(function(e){
-  // checking for any non left click and convert to left click.
   if (e.which == 2) { 
     events.zoomReset();
 }

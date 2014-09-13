@@ -11,7 +11,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         self.renderRegexFilter();
         self.renderDefualtTableEntries();
         self.renderChosenScript();
-        //this.renderKeyBindings();
+        this.renderKeyBindings();
         this.renderResetButton();
     }
 
@@ -94,7 +94,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
 
 
 
-     this.renderFilterProbabilty = function() {
+    this.renderFilterProbabilty = function() {
         $(elementSel).append('<p><label for="pnodes">Filter by probability:</label><input type="text" id="pnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-pnodes"></div>');
 
         function renderValue(value){
@@ -237,21 +237,104 @@ function ConfigurationView(data,elementSel, configuration, events) {
             });
 }
 
-    this.renderKeyBindings = function(){
-        var keyBindings = configuration.currentConfig.keyBindings;
-        $(elementSel).append('<p>Key Bindings</p>');
-        for (var i = 0; i < keyBindings.length; i++) {
-            var renderStr = '<p><small>'+keyBindings[i].name+': ';
-            var keys = keyBindings[i].keyCodes;
-            for (var j = 0; j < keys.length; j++) {
-                renderStr += KeyboardJS.key.name(keys[j])[0];
-            };
-            renderStr += '</small></p>';
-            $(elementSel).append(renderStr);
+this.renderKeyBindings = function(){
+    var keyBindingChange = null;
+    var pressedKeys = [];
+
+
+    function renderKeyCodesArray(keyCodes){
+        var renderStr = '';
+        for (var i = 0; i < keyCodes.length; i++) {
+            renderStr += KeyboardJS.key.name(keyCodes[i])[0] + ' ';
         };
-
-
+        return renderStr;
     }
+
+    function keyBindingsRender(arrayKeyBindings,modeID){
+        var renderStr = '';
+        for (var i = 0; i < arrayKeyBindings.length; i++) {
+            renderStr += '<p><small>'+arrayKeyBindings[i].name+': ';
+            renderStr += renderKeyCodesArray(arrayKeyBindings[i].keyCodes);
+            renderStr += ' <a id="mode_'+modeID+'_'+i+'" href="#" class="keyChange">Change</a></small></p>';
+        };
+        return renderStr;
+    }
+
+    function modesRender(modes){
+        var str= '';
+        for (var i = 0; i < modes.length; i++) {
+            str += '<br /><small>' + modes[i].name + ' Mode</small>';
+            str += keyBindingsRender(modes[i].keyBindings,i);
+        }; 
+        return str;
+    }
+
+    function getKeyBindingById(id){
+        var tmp = id.replace('mode_','').split('_');
+        if(tmp[0] >= 0){
+            return configuration.currentConfig.keyBindings.modes[tmp[0]].keyBindings[tmp[1]];
+        }
+        return configuration.currentConfig.keyBindings.allwaysActive[tmp[1]];
+    }
+
+    function changeClicked(){
+        keyBindingChange = getKeyBindingById($(this).attr('id'));
+        pressedKeys = [];
+        $('.pressed_keys').html('');
+        $( "#dialog" ).dialog( "open" );
+        document.onkeydown = function(e) {
+            pressedKeys.push(e.keyCode);   
+            $('.pressed_keys').html(renderKeyCodesArray(pressedKeys)); 
+        }
+        return false;
+    }
+
+    function renderConfigDisplay(){
+        $('.keyConfig').html('<p>Key Bindings:</p>' +
+         keyBindingsRender(configuration.currentConfig.keyBindings.allwaysActive,-1) +
+          modesRender(configuration.currentConfig.keyBindings.modes));
+        $('.keyChange').on("click", changeClicked);
+    }
+
+
+
+
+$(elementSel).append('<div class="keyConfig"></div>');
+renderConfigDisplay();
+
+
+
+$( "#dialog" ).remove();
+$(elementSel).append('<div id="dialog" title="Press the keys, then click ok!"><b>Selected Key(s):</b><br /> <span class="pressed_keys"></span></div>');
+$( "#dialog" ).dialog({
+    autoOpen: false,
+    modal: true,
+    show: {
+        effect: "blind",
+        duration: 1000
+    },
+    hide: {
+        effect: "explode",
+        duration: 1000
+    },
+    buttons: {
+        "Ok": function(){
+            if(keyBindingChange != null && pressedKeys.length > 0){
+                keyBindingChange.keyCodes = pressedKeys;
+                $( "#dialog" ).dialog( "close" );
+                configuration.saveConfig();
+                renderConfigDisplay();
+            }
+        }
+    },
+});
+
+
+
+
+
+
+}
 }
 
 

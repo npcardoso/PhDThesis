@@ -66,4 +66,43 @@ public final class TreeView implements Tree {
 
         return -1;
     }
+
+    public List<Double> updateScores (List<Double> scores) {
+        return removeScores(updateParents(scores));
+    }
+
+    private List<Double> updateParents (List<Double> scores) {
+        List<Double> newScores = new ArrayList<Double> ();
+
+        for (int i = 0; i < scores.size(); i++) {
+            Node n = t.getNode(i);
+            Double nodeScore = scores.get(i);
+
+            if (Double.isNaN(nodeScore) || nodeScore == -1) {
+                nodeScore = -1d;
+
+                for (Node c : n.getChildren()) {
+                    Double childScore = scores.get(c.getId());
+
+                    if (!Double.isNaN(childScore)) {
+                        nodeScore = Math.max(nodeScore, childScore);
+                    }
+                }
+            }
+
+            newScores.add(nodeScore);
+        }
+
+        return newScores;
+    }
+
+    private List<Double> removeScores (List<Double> scores) {
+        List<Double> newScores = new ArrayList<Double> ();
+
+        for (int i : nodes) {
+            newScores.add(scores.get(i));
+        }
+
+        return newScores;
+    }
 }

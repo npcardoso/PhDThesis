@@ -1,4 +1,4 @@
-function ConfigurationView(data,elementSel, configuration, events) {
+function ConfigurationView(data, elementSel, configuration, events) {
     var self = this;
     this.render = function() {
         $(elementSel).html("");
@@ -38,7 +38,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
             range: "min",
             value: configuration.currentConfig.animationTransitionTime,
             min: 0,
-            max: Math.max(configuration.currentConfig.animationTransitionTime*2,5000),
+            max: Math.max(configuration.currentConfig.animationTransitionTime * 2, 5000),
             slide: function(event, ui) {
                 $("#anitime").val(ui.value);
                 configuration.currentConfig.animationTransitionTime = ui.value;
@@ -55,7 +55,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
             range: "min",
             value: configuration.currentConfig.zoomAnimationTime,
             min: 0,
-            max: Math.max(configuration.currentConfig.zoomAnimationTime*2,5000),
+            max: Math.max(configuration.currentConfig.zoomAnimationTime * 2, 5000),
             slide: function(event, ui) {
                 $("#zanitime").val(ui.value);
                 configuration.currentConfig.zoomAnimationTime = ui.value;
@@ -70,10 +70,10 @@ function ConfigurationView(data,elementSel, configuration, events) {
     this.renderFilterNodes = function() {
         $(elementSel).append('<p><label for="nnodes">Filter to most relevant nodes:</label><input type="text" id="nnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-nnodes"></div>');
 
-        function renderValue(value){
-            if(value > 0){
+        function renderValue(value) {
+            if (value > 0) {
                 return value;
-            }   
+            }
             return "Disabled";
         }
 
@@ -81,9 +81,9 @@ function ConfigurationView(data,elementSel, configuration, events) {
             range: "min",
             value: configuration.currentConfig.filterMostRelevamtNodes,
             min: 0,
-            max: Math.max(configuration.currentConfig.filterMostRelevamtNodes*2,500),
+            max: Math.max(configuration.currentConfig.filterMostRelevamtNodes * 2, 500),
             slide: function(event, ui) {
-                $("#nnodes").val(renderValue(ui.value));   
+                $("#nnodes").val(renderValue(ui.value));
                 configuration.currentConfig.filterMostRelevamtNodes = ui.value;
                 configuration.saveConfig();
                 events.filtersUpdate();
@@ -97,10 +97,10 @@ function ConfigurationView(data,elementSel, configuration, events) {
     this.renderFilterProbabilty = function() {
         $(elementSel).append('<p><label for="pnodes">Filter by probability:</label><input type="text" id="pnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-pnodes"></div>');
 
-        function renderValue(value){
-            if(value > 0){
+        function renderValue(value) {
+            if (value > 0) {
                 return value;
-            }   
+            }
             return "Disabled";
         }
 
@@ -110,7 +110,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
             min: 0,
             max: 100,
             slide: function(event, ui) {
-                $("#pnodes").val(renderValue(ui.value));   
+                $("#pnodes").val(renderValue(ui.value));
                 configuration.currentConfig.filterMinProbability = ui.value;
                 configuration.saveConfig();
                 events.filtersUpdate();
@@ -120,17 +120,34 @@ function ConfigurationView(data,elementSel, configuration, events) {
     }
 
     this.renderGradiante = function() {
+
+        function convertGradStep(gradStep) {
+            return {
+                color: gradStep[0],
+                position: gradStep[1]
+            };
+        }
+
+        function convertGradRepresentation(grad) {
+            ret = [];
+            for (var i = grad.length - 1; i >= 0; i--) {
+                ret[i] = convertGradStep(grad[i]);
+            };
+            return ret;
+        }
+
+
         $(elementSel).append('<br /><label>Gradient: </label><div id="gradX" ></div>');
 
         gradX("#gradX", {
             type: "linear",
-            change: function(sliders,styles) {
-             configuration.currentConfig.normalGradiante = convertGradRepresentation(sliders);
-             configuration.saveGradiante();
-         },
-         sliders: configuration.currentConfig.normalGradiante
+            change: function(sliders, styles) {
+                configuration.currentConfig.normalGradiante = convertGradRepresentation(sliders);
+                configuration.saveGradiante();
+            },
+            sliders: configuration.currentConfig.normalGradiante
 
-     });
+        });
 
         $("#gradx_gradient_type, #gradx_gradient_subtype, #gradx_show_code").remove();
     }
@@ -138,7 +155,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
     this.renderRegexFilter = function() {
         $(elementSel).append('<br /><br/><div class="ui-widget"><label for="regex">Regular Expression to filter nodes: </label><br /><input id="regex" size="50"></div>');
         $("#regex").val(configuration.currentConfig.regexFilter);
-        $("#regex").change(function(){
+        $("#regex").change(function() {
             configuration.currentConfig.regexFilter = $("#regex").val();
             configuration.saveConfig();
             events.filtersUpdate();
@@ -152,7 +169,7 @@ function ConfigurationView(data,elementSel, configuration, events) {
         $("#defaultTE").append('<option value="25">25</option>');
         $("#defaultTE").append('<option value="50">50</option>');
         $("#defaultTE").append('<option value="100">100</option>');
-        $('option[value="'+configuration.currentConfig.defaultTableEntries+'"]', "#defaultTE").attr("selected", "selected");
+        $('option[value="' + configuration.currentConfig.defaultTableEntries + '"]', "#defaultTE").attr("selected", "selected");
         $("#defaultTE").selectmenu({
             change: function(event, data) {
                 configuration.currentConfig.defaultTableEntries = data.item.value;
@@ -161,10 +178,10 @@ function ConfigurationView(data,elementSel, configuration, events) {
         });
     }
 
-    this.renderResetButton = function(){
+    this.renderResetButton = function() {
         $(elementSel).append('<br /><button id="buttonReset">Reset to default</button>');
-        $( "#buttonReset").button()
-        .click(function( event ) {
+        $("#buttonReset").button()
+        .click(function(event) {
             configuration.resetConfig();
             self.render();
         });
@@ -237,12 +254,12 @@ function ConfigurationView(data,elementSel, configuration, events) {
             });
 }
 
-this.renderKeyBindings = function(){
+this.renderKeyBindings = function() {
     var keyBindingChange = null;
     var pressedKeys = [];
 
 
-    function renderKeyCodesArray(keyCodes){
+    function renderKeyCodesArray(keyCodes) {
         var renderStr = '';
         for (var i = 0; i < keyCodes.length; i++) {
             renderStr += KeyboardJS.key.name(keyCodes[i])[0] + ' ';
@@ -250,86 +267,84 @@ this.renderKeyBindings = function(){
         return renderStr;
     }
 
-    function keyBindingsRender(arrayKeyBindings,modeID){
+    function keyBindingsRender(arrayKeyBindings, modeID) {
         var renderStr = '';
         for (var i = 0; i < arrayKeyBindings.length; i++) {
-            renderStr += '<p><small>'+arrayKeyBindings[i].name+': ';
+            renderStr += '<p><small>' + arrayKeyBindings[i].name + ': ';
             renderStr += renderKeyCodesArray(arrayKeyBindings[i].keyCodes);
-            renderStr += ' <a id="mode_'+modeID+'_'+i+'" href="#" class="keyChange">Change</a></small></p>';
+            renderStr += ' <a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></small></p>';
         };
         return renderStr;
     }
 
-    function modesRender(modes){
-        var str= '';
+    function modesRender(modes) {
+        var str = '';
         for (var i = 0; i < modes.length; i++) {
             str += '<br /><small>' + modes[i].name + ' Mode</small>';
-            str += keyBindingsRender(modes[i].keyBindings,i);
-        }; 
+            str += keyBindingsRender(modes[i].keyBindings, i);
+        };
         return str;
     }
 
-    function getKeyBindingById(id){
-        var tmp = id.replace('mode_','').split('_');
-        if(tmp[0] >= 0){
+    function getKeyBindingById(id) {
+        var tmp = id.replace('mode_', '').split('_');
+        if (tmp[0] >= 0) {
             return configuration.currentConfig.keyBindings.modes[tmp[0]].keyBindings[tmp[1]];
         }
         return configuration.currentConfig.keyBindings.allwaysActive[tmp[1]];
     }
 
-    function changeClicked(){
+    function changeClicked() {
         keyBindingChange = getKeyBindingById($(this).attr('id'));
         pressedKeys = [];
         $('.pressed_keys').html('');
-        $( "#dialog" ).dialog( "open" );
+        $("#dialog").dialog("open");
         document.onkeydown = function(e) {
-            pressedKeys.push(e.keyCode);   
-            $('.pressed_keys').html(renderKeyCodesArray(pressedKeys)); 
+            pressedKeys.push(e.keyCode);
+            $('.pressed_keys').html(renderKeyCodesArray(pressedKeys));
         }
         return false;
     }
 
-    function renderConfigDisplay(){
+    function renderConfigDisplay() {
         $('.keyConfig').html('<p>Key Bindings:</p>' +
-         keyBindingsRender(configuration.currentConfig.keyBindings.allwaysActive,-1) +
-          modesRender(configuration.currentConfig.keyBindings.modes));
+            keyBindingsRender(configuration.currentConfig.keyBindings.allwaysActive, -1) +
+            modesRender(configuration.currentConfig.keyBindings.modes));
         $('.keyChange').on("click", changeClicked);
     }
 
 
 
 
-$(elementSel).append('<div class="keyConfig"></div>');
-renderConfigDisplay();
+    $(elementSel).append('<div class="keyConfig"></div>');
+    renderConfigDisplay();
 
 
 
-$( "#dialog" ).remove();
-$(elementSel).append('<div id="dialog" title="Press the keys, then click ok!"><b>Selected Key(s):</b><br /> <span class="pressed_keys"></span></div>');
-$( "#dialog" ).dialog({
-    autoOpen: false,
-    modal: true,
-    show: {
-        effect: "blind",
-        duration: 1000
-    },
-    hide: {
-        effect: "explode",
-        duration: 1000
-    },
-    buttons: {
-        "Ok": function(){
-            if(keyBindingChange != null && pressedKeys.length > 0){
-                keyBindingChange.keyCodes = pressedKeys;
-                $( "#dialog" ).dialog( "close" );
-                configuration.saveConfig();
-                renderConfigDisplay();
+    $("#dialog").remove();
+    $(elementSel).append('<div id="dialog" title="Press the keys, then click ok!"><b>Selected Key(s):</b><br /> <span class="pressed_keys"></span></div>');
+    $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        show: {
+            effect: "blind",
+            duration: 1000
+        },
+        hide: {
+            effect: "explode",
+            duration: 1000
+        },
+        buttons: {
+            "Ok": function() {
+                if (keyBindingChange != null && pressedKeys.length > 0) {
+                    keyBindingChange.keyCodes = pressedKeys;
+                    $("#dialog").dialog("close");
+                    configuration.saveConfig();
+                    renderConfigDisplay();
+                }
             }
-        }
-    },
-});
-
-
+        },
+    });
 
 
 
@@ -348,18 +363,6 @@ Array.prototype.unique = function() {
         }
     }
     return out;
-}
-
-function convertGradStep(gradStep){
-    return {color: gradStep[0], position: gradStep[1]};
-}
-
-function convertGradRepresentation(grad){
-    ret = [];
-    for (var i = grad.length - 1; i >= 0; i--) {
-        ret[i] = convertGradStep(grad[i]);
-    };
-    return ret;
 }
 
 function urlExists(testUrl) {

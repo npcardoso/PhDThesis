@@ -8,15 +8,17 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
     var dimensions = getDimensions();
 
-    var rect_render = new RectRender(dimensions.width,dimensions.height,configuration);
+    var rect_render = new RectRender(dimensions.width, dimensions.height, configuration);
 
 
     var partition = d3.layout.partition()
-    .value(function(node) {  return 1; });
+        .value(function(node) {
+            return 1;
+        });
 
 
     var element = d3.select(elementSel);
-    var svg,rect;
+    var svg, rect;
 
 
     this.zoomEvents = null;
@@ -25,116 +27,124 @@ function VerticalPartition(data, elementSel, configuration, events) {
     this.render = function() {
         element.html("");
 
-        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel,self.dblclick,configuration);
+        self.nodeInfoDisplay = new NodeInfoDisplay(elementSel, self.dblclick, configuration);
         self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
-        .attr("width", dimensions.width)
-        .attr("height", dimensions.height)
-        .append("g");
+            .attr("width", dimensions.width)
+            .attr("height", dimensions.height)
+            .append("g");
 
         svg = zoomElement.append("g");
 
 
         rect = svg.selectAll("rect")
-        .data(partition.nodes(data))
-        .enter().append("rect")
-        .attr("x", rect_render.x)
-        .attr("y", rect_render.y)
-        .attr("width", rect_render.width)
-        .attr("height", rect_render.height)
-        .style("stroke", "#fff")
-        .attr("fill",configuration.gradiante.normal)
-        .on("click", self.click)
-        .on("dblclick", self.dblclick)
-        .on("mouseover", self.nodeInfoDisplay.mouseover)
-        .on("mouseleave", self.nodeInfoDisplay.mouseleave);
+            .data(partition.nodes(data))
+            .enter().append("rect")
+            .attr("x", rect_render.x)
+            .attr("y", rect_render.y)
+            .attr("width", rect_render.width)
+            .attr("height", rect_render.height)
+            .style("stroke", "#fff")
+            .attr("fill", configuration.gradiante.normal)
+            .on("click", self.click)
+            .on("dblclick", self.dblclick)
+            .on("mouseover", self.nodeInfoDisplay.mouseover)
+            .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(rect);
-        self.zoomEvents = ZoomController(elementSel,zoomElement,svg,self.configuration);
-        keyBindings(self,configuration);
+        self.zoomEvents = ZoomController(elementSel, zoomElement, svg, self.configuration);
+        keyBindings(self, configuration);
     }
 
     var isMovingNode = false;
     this.dblclick = function(node) {
-        if(isMovingNode || node == self.clicked)
+        if (isMovingNode || node == self.clicked)
             return false;
         self.stateManager.saveState();
         self.zoomEvents.zoomReset();
-        self.gotoNode(node,self.configuration.currentConfig.animationTransitionTime);
+        self.gotoNode(node, self.configuration.currentConfig.animationTransitionTime);
     }
 
 
 
-    this.gotoNode = function(node,animationTime){
+    this.gotoNode = function(node, animationTime) {
         console.log(isMovingNode);
-        if(isMovingNode)
+        if (isMovingNode)
             return false;
         isMovingNode = true;
         self.nodeInfoDisplay.setClicked(node);
-        rect_render.rectAnimation(rect,node,animationTime).each("end",function(){
+        rect_render.rectAnimation(rect, node, animationTime).each("end", function() {
             isMovingNode = false;
         });
         self.clicked = node;
         return true;
     }
 
-    this.click = function(node){
-        if(d3.event.hasOwnProperty('zoomed')) return;
+    this.click = function(node) {
+        if (d3.event.hasOwnProperty('zoomed')) return;
         events.click(node);
         console.log(node);
     }
 
-    this.resize = function(){
+    this.resize = function() {
         dimensions = getDimensions();
-        rect_render = new RectRender(dimensions.width,dimensions.height,self.configuration);
+        rect_render = new RectRender(dimensions.width, dimensions.height, self.configuration);
         self.render();
-        self.gotoNode(self.clicked,0);
+        self.gotoNode(self.clicked, 0);
     }
 
-    this.zoom = function(){
+    this.zoom = function() {
         //alert('ok');
         if (d3.event) {
-            svg.attr("transform", "translate(" + d3.event.translate + ")"+"scale(" + d3.event.scale + ")");
+            svg.attr("transform", "translate(" + d3.event.translate + ")" + "scale(" + d3.event.scale + ")");
         }
     }
 
 }
 
 
-function RectRender(width,height,configuration){
+function RectRender(width, height, configuration) {
     var x = d3.scale.linear()
-    .range([0, width]);
+        .range([0, width]);
 
     var y = d3.scale.linear()
-    .range([0, height]);
+        .range([0, height]);
 
-    this.x = function(node){
+    this.x = function(node) {
         return x(node.x);
     }
 
-    this.y = function(node){
+    this.y = function(node) {
         return y(node.y);
     }
 
-    this.width = function(node){
+    this.width = function(node) {
         return x(node.dx);
     }
 
-    this.height = function(node){
+    this.height = function(node) {
         return y(node.dy);
     }
 
-    this.rectAnimation = function(rect,node,time){
+    this.rectAnimation = function(rect, node, time) {
         x.domain([node.x, node.x + node.dx]);
         y.domain([node.y, 1]).range([node.y ? 20 : 0, height]);
 
-       return rect.transition()
-        .duration(time)
-        .attr("x", function(node) { return x(node.x); })
-        .attr("y", function(node) { return y(node.y); })
-        .attr("width", function(node) { return x(node.x + node.dx) - x(node.x); })
-        .attr("height", function(node) { return y(node.y + node.dy) - y(node.y); });
+        return rect.transition()
+            .duration(time)
+            .attr("x", function(node) {
+                return x(node.x);
+            })
+            .attr("y", function(node) {
+                return y(node.y);
+            })
+            .attr("width", function(node) {
+                return x(node.x + node.dx) - x(node.x);
+            })
+            .attr("height", function(node) {
+                return y(node.y + node.dy) - y(node.y);
+            });
     }
 }

@@ -9,7 +9,7 @@ function keyBindings(visualization, configuration) {
             if (array[i].name == name) {
                 return array[i];
             }
-        };
+        }
         return null;
     }
 
@@ -27,7 +27,7 @@ function keyBindings(visualization, configuration) {
             if (keyMatch(keyCodes, currentKeyBindings[i].keyCodes)) {
                 return currentKeyBindings[i];
             }
-        };
+        }
         return null;
     }
 
@@ -47,7 +47,7 @@ function keyBindings(visualization, configuration) {
         setModeKeyBinding(zoomMode, "Zoom Reset", zoomEvents.zoomReset);
         zoomMode.exitHandler = function() {
             $('#zoomContainer').hide();
-        }
+        };
     }
 
     function loadModeKeyBindings(mode) {
@@ -69,7 +69,7 @@ function keyBindings(visualization, configuration) {
     }
 
     function exitLastMode() {
-        if (currentMode != null && currentMode.hasOwnProperty('exitHandler')) {
+        if (currentMode !== null && currentMode.hasOwnProperty('exitHandler')) {
             currentMode.exitHandler();
         }
     }
@@ -114,9 +114,9 @@ function keyBindings(visualization, configuration) {
     document.onkeydown = function(e) {
         pressedKeys.push(e.keyCode);
         keyBinding = getKeyBindingByKeyCodes(pressedKeys);
-        if (keyBinding != null) {
+        if (keyBinding !== null) {
             keyBinding.func();
             pressedKeys = [];
         }
-    }
+    };
 }

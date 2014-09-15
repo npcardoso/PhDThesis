@@ -13,7 +13,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
         self.renderChosenScript();
         this.renderKeyBindings();
         this.renderResetButton();
-    }
+    };
 
 
     this.renderDefualtVis = function() {
@@ -29,95 +29,67 @@ function ConfigurationView(data, elementSel, configuration, events) {
                 configuration.saveConfig();
             }
         });
+    };
+
+    function defaultRenderValue(value) {
+        return value;
+    }
+
+    function zeroDisableRenderValue(value) {
+        if (value > 0) {
+            return value;
+        }
+        return "Disabled";
+    }
+
+    function sliderRender(element, id, initValue, maxValue, renderValue, updateValue) {
+        $(element).append('<input type="text" id="input_' + id + '" readonly style="border:0; color:#f6931f; font-weight:bold;"><br /><br /><div id="slider_' + id + '"></div>');
+        $('#slider_' + id).slider({
+            range: "min",
+            value: initValue,
+            min: 0,
+            max: Math.max(initValue * 2, maxValue),
+            slide: function(event, ui) {
+                $('#input_' + id).val(renderValue(ui.value));
+                updateValue(ui.value);
+            }
+        });
+        $('#input_' + id).val(renderValue(initValue));
     }
 
     this.renderAnimationTime = function() {
-        $(elementSel).append('<p><label for="anitime">Animation time (ms):</label><input type="text" id="anitime" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-anitime"></div>');
-
-        $("#slider-anitime").slider({
-            range: "min",
-            value: configuration.currentConfig.animationTransitionTime,
-            min: 0,
-            max: Math.max(configuration.currentConfig.animationTransitionTime * 2, 5000),
-            slide: function(event, ui) {
-                $("#anitime").val(ui.value);
-                configuration.currentConfig.animationTransitionTime = ui.value;
-                configuration.saveConfig();
-            }
-        });
-        $("#anitime").val($("#slider-anitime").slider("value"));
-    }
+        $(elementSel).append('<br /><br /><label for="input_aniTime">Animation time (ms):</label>');
+        sliderRender(elementSel, 'aniTime', configuration.currentConfig.animationTransitionTime, 5000, defaultRenderValue, configuration.saveAnimationTime);
+    };
 
     this.renderZoomAnimationTime = function() {
-        $(elementSel).append('<p><label for="zanitime">Zoom animation time (ms):</label><input type="text" id="zanitime" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-zanitime"></div>');
-
-        $("#slider-zanitime").slider({
-            range: "min",
-            value: configuration.currentConfig.zoomAnimationTime,
-            min: 0,
-            max: Math.max(configuration.currentConfig.zoomAnimationTime * 2, 5000),
-            slide: function(event, ui) {
-                $("#zanitime").val(ui.value);
-                configuration.currentConfig.zoomAnimationTime = ui.value;
-                configuration.saveConfig();
-            }
-        });
-        $("#zanitime").val($("#slider-zanitime").slider("value"));
-    }
+        $(elementSel).append('<br /><br /><label for="zoomAniTime">Zoom animation time (ms):</label>');
+        sliderRender(elementSel, 'zoomAniTime', configuration.currentConfig.zoomAnimationTime, 5000, defaultRenderValue, configuration.saveZoomAnimationTime);
+    };
 
 
 
     this.renderFilterNodes = function() {
-        $(elementSel).append('<p><label for="nnodes">Filter to most relevant nodes:</label><input type="text" id="nnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-nnodes"></div>');
-
-        function renderValue(value) {
-            if (value > 0) {
-                return value;
-            }
-            return "Disabled";
+        function filterUpdated(value) {
+            configuration.saveMostRelevantFilter(value);
+            events.filtersUpdate();
         }
 
-        $("#slider-nnodes").slider({
-            range: "min",
-            value: configuration.currentConfig.filterMostRelevamtNodes,
-            min: 0,
-            max: Math.max(configuration.currentConfig.filterMostRelevamtNodes * 2, 500),
-            slide: function(event, ui) {
-                $("#nnodes").val(renderValue(ui.value));
-                configuration.currentConfig.filterMostRelevamtNodes = ui.value;
-                configuration.saveConfig();
-                events.filtersUpdate();
-            }
-        });
-        $("#nnodes").val(renderValue(configuration.currentConfig.filterMostRelevamtNodes));
-    }
+        $(elementSel).append('<br /><br /><label>Filter to most relevant nodes:</label>');
+        sliderRender(elementSel, 'filterMRelevant', configuration.currentConfig.filterMostRelevamtNodes, 500, zeroDisableRenderValue, filterUpdated);
+    };
 
 
 
     this.renderFilterProbabilty = function() {
-        $(elementSel).append('<p><label for="pnodes">Filter by probability:</label><input type="text" id="pnodes" readonly style="border:0; color:#f6931f; font-weight:bold;"></p><div id="slider-pnodes"></div>');
-
-        function renderValue(value) {
-            if (value > 0) {
-                return value;
-            }
-            return "Disabled";
+        function filterUpdated(value) {
+            configuration.saveProbabilityFilter(value);
+            events.filtersUpdate();
         }
 
-        $("#slider-pnodes").slider({
-            range: "min",
-            value: configuration.currentConfig.filterMinProbability,
-            min: 0,
-            max: 100,
-            slide: function(event, ui) {
-                $("#pnodes").val(renderValue(ui.value));
-                configuration.currentConfig.filterMinProbability = ui.value;
-                configuration.saveConfig();
-                events.filtersUpdate();
-            }
-        });
-        $("#pnodes").val(renderValue(configuration.currentConfig.filterMinProbability));
-    }
+        $(elementSel).append('<br /><br /><label>Filter by probability:</label>');
+        sliderRender(elementSel, 'filterProbabilty', configuration.currentConfig.filterMinProbability, 100, zeroDisableRenderValue, filterUpdated);
+    };
 
     this.renderGradiante = function() {
 
@@ -132,7 +104,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
             ret = [];
             for (var i = grad.length - 1; i >= 0; i--) {
                 ret[i] = convertGradStep(grad[i]);
-            };
+            }
             return ret;
         }
 
@@ -146,11 +118,10 @@ function ConfigurationView(data, elementSel, configuration, events) {
                 configuration.saveGradiante();
             },
             sliders: configuration.currentConfig.normalGradiante
-
         });
 
         $("#gradx_gradient_type, #gradx_gradient_subtype, #gradx_show_code").remove();
-    }
+    };
 
     this.renderRegexFilter = function() {
         $(elementSel).append('<br /><br/><div class="ui-widget"><label for="regex">Regular Expression to filter nodes: </label><br /><input id="regex" size="50"></div>');
@@ -160,7 +131,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
             configuration.saveConfig();
             events.filtersUpdate();
         });
-    }
+    };
 
 
     this.renderDefualtTableEntries = function() {
@@ -176,16 +147,16 @@ function ConfigurationView(data, elementSel, configuration, events) {
                 configuration.saveConfig();
             }
         });
-    }
+    };
 
     this.renderResetButton = function() {
         $(elementSel).append('<br /><button id="buttonReset">Reset to default</button>');
         $("#buttonReset").button()
-        .click(function(event) {
-            configuration.resetConfig();
-            self.render();
-        });
-    }
+            .click(function(event) {
+                configuration.resetConfig();
+                self.render();
+            });
+    };
 
     this.renderChosenScript = function() {
         $(elementSel).append('<br /><br/><div class="ui-widget"><label for="tags">Additional scripts to load: </label><br /><input id="tags" size="50"></div>');
@@ -203,8 +174,8 @@ function ConfigurationView(data, elementSel, configuration, events) {
                 if (event.keyCode === $.ui.keyCode.TAB &&
                     $(this).autocomplete("instance").menu.active) {
                     event.preventDefault();
-            }
-        })
+                }
+            })
             .autocomplete({
                 minLength: 0,
                 source: function(request, response) {
@@ -252,110 +223,109 @@ function ConfigurationView(data, elementSel, configuration, events) {
                     return false;
                 }
             });
-}
+    };
 
-this.renderKeyBindings = function() {
-    var keyBindingChange = null;
-    var pressedKeys = [];
+    this.renderKeyBindings = function() {
+        var keyBindingToChange = null;
+        var pressedKeys = [];
 
 
-    function renderKeyCodesArray(keyCodes) {
-        var renderStr = '';
-        for (var i = 0; i < keyCodes.length; i++) {
-            renderStr += KeyboardJS.key.name(keyCodes[i])[0] + ' ';
-        };
-        return renderStr;
-    }
-
-    function keyBindingsRender(arrayKeyBindings, modeID) {
-        var renderStr = '';
-        for (var i = 0; i < arrayKeyBindings.length; i++) {
-            renderStr += '<p><small>' + arrayKeyBindings[i].name + ': ';
-            renderStr += renderKeyCodesArray(arrayKeyBindings[i].keyCodes);
-            renderStr += ' <a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></small></p>';
-        };
-        return renderStr;
-    }
-
-    function modesRender(modes) {
-        var str = '';
-        for (var i = 0; i < modes.length; i++) {
-            str += '<br /><small>' + modes[i].name + ' Mode</small>';
-            str += keyBindingsRender(modes[i].keyBindings, i);
-        };
-        return str;
-    }
-
-    function getKeyBindingById(id) {
-        var tmp = id.replace('mode_', '').split('_');
-        if (tmp[0] >= 0) {
-            return configuration.currentConfig.keyBindings.modes[tmp[0]].keyBindings[tmp[1]];
+        function renderKeyCodesArray(keyCodes) {
+            var renderStr = '';
+            for (var i = 0; i < keyCodes.length; i++) {
+                renderStr += KeyboardJS.key.name(keyCodes[i])[0] + ' ';
+            };
+            return renderStr;
         }
-        return configuration.currentConfig.keyBindings.allwaysActive[tmp[1]];
-    }
 
-    function changeClicked() {
-        keyBindingChange = getKeyBindingById($(this).attr('id'));
-        pressedKeys = [];
-        $('.pressed_keys').html('');
-        $("#dialog").dialog("open");
-        document.onkeydown = function(e) {
-            pressedKeys.push(e.keyCode);
-            $('.pressed_keys').html(renderKeyCodesArray(pressedKeys));
-        }
-        return false;
-    }
-
-    function renderConfigDisplay() {
-        $('.keyConfig').html('<p>Key Bindings:</p>' +
-            keyBindingsRender(configuration.currentConfig.keyBindings.allwaysActive, -1) +
-            modesRender(configuration.currentConfig.keyBindings.modes));
-        $('.keyChange').on("click", changeClicked);
-    }
-
-
-
-
-    $(elementSel).append('<div class="keyConfig"></div>');
-    renderConfigDisplay();
-
-
-
-    $("#dialog").remove();
-    $(elementSel).append('<div id="dialog" title="Press the keys, then click ok!"><b>Selected Key(s):</b><br /> <span class="pressed_keys"></span></div>');
-    $("#dialog").dialog({
-        autoOpen: false,
-        modal: true,
-        show: {
-            effect: "blind",
-            duration: 1000
-        },
-        hide: {
-            effect: "explode",
-            duration: 1000
-        },
-        buttons: {
-            "Ok": function() {
-                if (keyBindingChange != null && pressedKeys.length > 0) {
-                    keyBindingChange.keyCodes = pressedKeys;
-                    $("#dialog").dialog("close");
-                    configuration.saveConfig();
-                    renderConfigDisplay();
-                }
+        function keyBindingsRender(arrayKeyBindings, modeID) {
+            var renderStr = '';
+            for (var i = 0; i < arrayKeyBindings.length; i++) {
+                renderStr += '<p><small>' + arrayKeyBindings[i].name + ': ';
+                renderStr += renderKeyCodesArray(arrayKeyBindings[i].keyCodes);
+                renderStr += ' <a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></small></p>';
             }
-        },
-    });
+            return renderStr;
+        }
+
+        function modesRender(modes) {
+            var str = '';
+            for (var i = 0; i < modes.length; i++) {
+                str += '<br /><small>' + modes[i].name + ' Mode</small>';
+                str += keyBindingsRender(modes[i].keyBindings, i);
+            }
+            return str;
+        }
+
+        function getKeyBindingById(id) {
+            var tmp = id.replace('mode_', '').split('_');
+            if (tmp[0] >= 0) {
+                return configuration.currentConfig.keyBindings.modes[tmp[0]].keyBindings[tmp[1]];
+            }
+            return configuration.currentConfig.keyBindings.allwaysActive[tmp[1]];
+        }
+
+        function changeClicked() {
+            keyBindingToChange = getKeyBindingById($(this).attr('id'));
+            pressedKeys = [];
+            $('.pressed_keys').html('');
+            $("#dialog").dialog("open");
+            document.onkeydown = function(e) {
+                pressedKeys.push(e.keyCode);
+                $('.pressed_keys').html(renderKeyCodesArray(pressedKeys));
+            };
+            return false;
+        }
+
+        function renderConfigDisplay() {
+            $('.keyConfig').html('<p>Key Bindings:</p>' +
+                keyBindingsRender(configuration.currentConfig.keyBindings.allwaysActive, -1) +
+                modesRender(configuration.currentConfig.keyBindings.modes));
+            $('.keyChange').on("click", changeClicked);
+        }
+
+
+        function dialogOkButtonClicked() {
+            if (keyBindingToChange !== null && pressedKeys.length > 0) {
+                keyBindingToChange.keyCodes = pressedKeys;
+                $("#dialog").dialog("close");
+                configuration.saveConfig();
+                renderConfigDisplay();
+            }
+        }
+
+        function dialogInit() {
+            $("#dialog").remove();
+            $(elementSel).append('<div id="dialog" title="Press the keys, then click ok!"><b>Selected Key(s):</b><br /> <span class="pressed_keys"></span></div>');
+            $("#dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                },
+                buttons: {
+                    "Ok": dialogOkButtonClicked
+                },
+            });
+        }
 
 
 
-
-}
+        $(elementSel).append('<div class="keyConfig"></div>');
+        renderConfigDisplay();
+        dialogInit();
+    };
 }
 
 
 Array.prototype.unique = function() {
     var tmp = {},
-    out = [];
+        out = [];
     for (var i = 0, n = this.length; i < n; ++i) {
         if (!tmp[this[i]]) {
             tmp[this[i]] = true;
@@ -363,7 +333,7 @@ Array.prototype.unique = function() {
         }
     }
     return out;
-}
+};
 
 function urlExists(testUrl) {
     var http = jQuery.ajax({

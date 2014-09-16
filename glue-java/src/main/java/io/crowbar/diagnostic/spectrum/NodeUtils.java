@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation.spectrum;
+package io.crowbar.diagnostic.spectrum;
 
 import io.crowbar.diagnostic.spectrum.Node;
 

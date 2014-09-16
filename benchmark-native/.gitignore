@@ -1,0 +1,25 @@
+.scons.conf
+.sconsign.dblite
+build
+install
+target
+gmon.out
+core
+.deps
+a.out
+*~
+~.tmp
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+*.pyc

@@ -6,18 +6,31 @@ import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import javassist.CtClass;
 import javassist.CtMethod;
+import java.util.StringTokenizer;
 
 
 public abstract class AbstractPass implements Pass {
+    private Node getNode (Collector c,
+                          Node parent,
+                          String name) {
+        Node tmp = parent.getChild(name);
+
+
+        if (tmp == null)
+            tmp = c.registerNode(name, parent.getId());
+
+        return tmp;
+    }
+
     protected final Node getNode (CtClass cls) {
         Collector c = Collector.instance();
-        Node root = c.getRootNode();
-        Node n = root.getChild(cls.getName());
+        Node n = c.getRootNode();
+        StringTokenizer stok = new StringTokenizer(cls.getName(), ".");
 
 
-        if (n == null)
-            n = c.registerNode(cls.getName(),
-                               root.getId());
+        while (stok.hasMoreTokens()) {
+            n = getNode(c, n, stok.nextToken());
+        }
 
         return n;
     }

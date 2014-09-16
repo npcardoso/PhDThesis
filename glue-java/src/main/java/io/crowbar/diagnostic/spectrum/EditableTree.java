@@ -9,7 +9,9 @@ public final class EditableTree implements Tree {
     private ArrayList<Node> nodes = new ArrayList<Node> ();
 
     public EditableTree (String rootName) {
-        Node node = new Node(this, rootName, nodes.size(), null);
+        Node node = new Node(this, rootName, Node.Type.PACKAGE, nodes.size(), null);
+
+
         nodes.add(node);
     }
 
@@ -42,9 +44,12 @@ public final class EditableTree implements Tree {
     }
 
     public Node addNode (String name,
+                         Node.Type type,
                          int parentId) {
         Node parent = getNode(parentId);
-        Node child = new Node(this, name, nodes.size(), parent);
+        Node child = new Node(this, name, type, nodes.size(), parent);
+
+
         nodes.add(child);
         return child;
     }

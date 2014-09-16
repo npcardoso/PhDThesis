@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation;
 
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import java.io.Serializable;
@@ -43,17 +44,16 @@ public class Messages {
         private final int nodeId;
         private final int parentId;
         private final String name;
+        private final Node.Type type;
 
         public RegisterNodeMessage (int nodeId,
                                     int parentId,
-                                    String name) {
+                                    String name,
+                                    Node.Type type) {
             this.nodeId = nodeId;
             this.parentId = parentId;
             this.name = name;
-        }
-
-        public String getName () {
-            return name;
+            this.type = type;
         }
 
         public int getNodeId () {
@@ -62,6 +62,14 @@ public class Messages {
 
         public int getParentId () {
             return parentId;
+        }
+
+        public String getName () {
+            return name;
+        }
+
+        public Node.Type getType () {
+            return type;
         }
 
         @Override
@@ -76,7 +84,7 @@ public class Messages {
         }
 
         protected RegisterNodeMessage () {
-            this(-1, -1, null);
+            this(-1, -1, null, null);
         }
     }
 

@@ -103,7 +103,8 @@ public class Server extends ThreadedServer {
                     RegisterNodeMessage rnm = (RegisterNodeMessage) o;
                     eventListener.registerNode(rnm.getNodeId(),
                                                rnm.getParentId(),
-                                               rnm.getName());
+                                               rnm.getName(),
+                                               rnm.getType());
                 } else {
                     throw new Exception("Unknown Message Type: " + o);
                 }

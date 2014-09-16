@@ -1,5 +1,7 @@
 package io.crowbar.instrumentation;
 
+import io.crowbar.diagnostic.spectrum.Node;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Assert;
@@ -16,9 +18,10 @@ public class RegisterNodeMessageTest {
 
     @Test
     public void testNonEmptyConstructor () {
-        Messages.RegisterNodeMessage mr = new Messages.RegisterNodeMessage(0, 1, "node message");
+        Messages.RegisterNodeMessage mr = new Messages.RegisterNodeMessage(0, 1, "node message", Node.Type.CLASS);
         assertEquals("node message", mr.getName());
         assertEquals(0, mr.getNodeId());
         assertEquals(1, mr.getParentId());
+        assertEquals(Node.Type.CLASS, mr.getType());
     }
 }

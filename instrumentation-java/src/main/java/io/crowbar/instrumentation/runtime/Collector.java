@@ -31,12 +31,13 @@ public final class Collector {
     }
 
     public Node registerNode (String name,
+                              Node.Type type,
                               int parentId) {
-        Node n = tree.addNode(name, parentId);
+        Node n = tree.addNode(name, type, parentId);
 
 
         try {
-            listener.registerNode(n.getId(), parentId, name);
+            listener.registerNode(n.getId(), parentId, name, type);
         }
         catch (Throwable e) {
             e.printStackTrace();

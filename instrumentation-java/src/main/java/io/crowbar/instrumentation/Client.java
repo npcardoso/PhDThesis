@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation;
 
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.Messages.ByeMessage;
 import io.crowbar.instrumentation.Messages.HelloMessage;
@@ -113,10 +114,12 @@ public class Client implements EventListener {
     @Override
     public void registerNode (int nodeId,
                               int parentId,
-                              String name) throws Exception {
+                              String name,
+                              Node.Type type) throws Exception {
         postMessage(new Messages.RegisterNodeMessage(nodeId,
                                                      parentId,
-                                                     name));
+                                                     name,
+                                                     type));
     }
 
     @Override

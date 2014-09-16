@@ -28,7 +28,7 @@ public class SpectrumBuilderTest {
         String new_node_name = "other node";
 
 
-        sb.registerNode(1, 0, new_node_name);
+        sb.registerNode(1, 0, new_node_name, null);
 
         assertEquals(2, sb.getSpectrum().getTree().getNodes().size());
 
@@ -53,7 +53,7 @@ public class SpectrumBuilderTest {
         SpectrumBuilder sb = new SpectrumBuilder();
 
 
-        sb.registerNode(1, 0, "other node");
+        sb.registerNode(1, 0, "other node", null);
         sb.registerProbe(0, 1, ProbeType.TRANSACTION_START);
         sb.endTransaction(3, "", "", new boolean[] {false});
 

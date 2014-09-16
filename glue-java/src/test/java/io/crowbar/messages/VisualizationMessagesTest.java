@@ -6,6 +6,7 @@ import flexjson.JSONSerializer;
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.DiagnosticSystemFactory;
 import io.crowbar.diagnostic.spectrum.EditableTree;
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Tree;
 import io.crowbar.diagnostic.spectrum.activity.Hit;
@@ -27,7 +28,7 @@ public class VisualizationMessagesTest {
 
 
         while (numNodes-- > 1) {
-            t.addNode("" + r.nextInt(), r.nextInt(t.size()));
+            t.addNode("" + r.nextInt(), Node.Type.PACKAGE, r.nextInt(t.size()));
         }
 
         return t;

@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import java.util.ArrayList;
@@ -16,10 +17,11 @@ implements EventListener {
     @Override
     public void registerNode (int nodeId,
                               int parentId,
-                              String name) throws Exception {
+                              String name,
+                              Node.Type type) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.registerNode(nodeId, parentId, name);
+                el.registerNode(nodeId, parentId, name, type);
             }
             catch (Exception e) {
                 e.printStackTrace();

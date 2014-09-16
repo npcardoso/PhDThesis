@@ -1,11 +1,13 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 public interface EventListener {
     void registerNode (int nodeId,
                        int parentId,
-                       String name) throws Exception;
+                       String name,
+                       Node.Type type) throws Exception;
 
     void registerProbe (int probeId,
                         int nodeId,

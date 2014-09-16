@@ -21,7 +21,7 @@ public final class SpectraGenerator {
 
 
         while (numNodes-- > 0) {
-            t.addNode("foo" + r.nextInt(), r.nextInt(t.size()));
+            t.addNode("foo" + r.nextInt(), Node.Type.PACKAGE, r.nextInt(t.size()));
         }
     }
 

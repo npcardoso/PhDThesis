@@ -66,7 +66,7 @@ public class ProbeTypeMatcherTest {
     public void testMatchProbes () {
         EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
 
-        Node n = es.getTree().addNode("other node", 0);
+        Node n = es.getTree().addNode("other node", null, 0);
         es.setProbe(0, ProbeType.HIT_PROBE, n);
         es.setProbe(1, ProbeType.ORACLE, n);
         es.setProbe(2, ProbeType.TRANSACTION_START, n);

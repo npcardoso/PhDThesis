@@ -9,7 +9,25 @@ import java.util.Map;
 import flexjson.JSON;
 
 public class Node {
+    public static enum Type {
+        PACKAGE("."),
+        CLASS("$"),
+        METHOD("!"),
+        LINE(":");
+
+        private final String symbol;
+
+        private Type(String symbol) {
+            this.symbol = symbol;
+        }
+
+        public String getSymbol () {
+            return symbol;
+        }
+    }
+
     private Tree tree;
+    private Type type;
     private String name;
     private int id;
     private int depth;
@@ -21,9 +39,11 @@ public class Node {
 
     Node (Tree tree,
           String name,
+          Type type,
           int id,
           Node parent) {
         this.tree = tree;
+        this.type = type;
         this.name = name;
         this.id = id;
         this.parent = parent;
@@ -51,9 +71,19 @@ public class Node {
         return id;
     }
 
-    @JSON(name = "n")
+    @JSON(include = false)
+    public Type getType () {
+        return type;
+    }
+
+    @JSON(include = false)
     public String getName () {
         return name;
+    }
+
+    @JSON(name = "n")
+    public String getNameWithSymbol () {
+        return type.getSymbol() + name;
     }
 
     @JSON(name = "p")

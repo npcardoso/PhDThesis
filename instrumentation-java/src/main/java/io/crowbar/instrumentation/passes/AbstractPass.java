@@ -12,12 +12,16 @@ import java.util.StringTokenizer;
 public abstract class AbstractPass implements Pass {
     private Node getNode (Collector c,
                           Node parent,
-                          String name) {
+                          String name,
+                          Node.Type type) {
         Node tmp = parent.getChild(name);
 
 
         if (tmp == null)
-            tmp = c.registerNode(name, parent.getId());
+            tmp = c.registerNode(name, type, parent.getId());
+
+
+        assert (tmp.getType() == type);
 
         return tmp;
     }
@@ -36,7 +40,7 @@ public abstract class AbstractPass implements Pass {
             StringTokenizer stok = new StringTokenizer(tok.substring(0, pkgEnd), ".");
 
             while (stok.hasMoreTokens()) {
-                n = getNode(c, n, stok.nextToken());
+                n = getNode(c, n, stok.nextToken(), Node.Type.PACKAGE);
             }
         } else
             pkgEnd = -1;
@@ -47,7 +51,7 @@ public abstract class AbstractPass implements Pass {
 
         while (stok.hasMoreTokens()) {
             tok = stok.nextToken();
-            n = getNode(c, n, tok);
+            n = getNode(c, n, tok, Node.Type.CLASS);
         }
 
 
@@ -58,14 +62,9 @@ public abstract class AbstractPass implements Pass {
                                   CtMethod m) {
         Collector c = Collector.instance();
         Node parent = getNode(cls);
-        Node n = parent.getChild(m.getName());
 
 
-        if (n == null)
-            n = c.registerNode(m.getName(),
-                               parent.getId());
-
-        return n;
+        return getNode(c, parent, m.getName(), Node.Type.METHOD);
     }
 
     protected final Node getNode (CtClass cls,
@@ -73,13 +72,9 @@ public abstract class AbstractPass implements Pass {
                                   int line) {
         Collector c = Collector.instance();
         Node parent = getNode(cls, m);
-        Node n = parent.getChild("" + line);
 
 
-        if (n == null)
-            n = c.registerNode("" + line, parent.getId());
-
-        return n;
+        return getNode(c, parent, "" + line, Node.Type.LINE);
     }
 
     protected final HitProbe registerProbe (CtClass cls,

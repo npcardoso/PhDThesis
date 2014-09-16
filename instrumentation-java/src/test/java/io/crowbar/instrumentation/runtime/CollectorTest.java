@@ -68,7 +68,7 @@ public class CollectorTest {
         checks.nodeName = nodeName;
         checks.parentNodeId = id;
 
-        collector.registerNode(nodeName, id);
+        collector.registerNode(nodeName, null, id);
         assertTrue(trnl.wasTriggered());
         assertEquals(collector.getRootNode().getTree().size(), 2);
     }

@@ -28,9 +28,10 @@ public final class SpectrumBuilder extends AbstractEventListener {
     @Override
     public void registerNode (int nodeId,
                               int parentId,
-                              String name) throws Exception {
+                              String name,
+                              Node.Type type) throws Exception {
         assert (nodeIdTranslation.get(nodeId) == null);
-        Node n = spectrum.getTree().addNode(name, parentId);
+        Node n = spectrum.getTree().addNode(name, type, parentId);
         nodeIdTranslation.put(nodeId, n);
     }
 

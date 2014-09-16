@@ -1,7 +1,9 @@
 package io.crowbar.instrumentation.events;
 
-import static org.junit.Assert.assertEquals;
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
+
+import static org.junit.Assert.assertEquals;
 
 public final class EventListenerMocks {
     public static class EventListenerChecks {
@@ -49,7 +51,8 @@ public final class EventListenerMocks {
         @Override
         public void registerNode (int nodeId,
                                   int parentId,
-                                  String name) throws Exception {
+                                  String name,
+                                  Node.Type type) throws Exception {
             assertEquals(checks.nodeName, name);
             assertEquals(checks.parentNodeId, parentId);
             triggered = true;

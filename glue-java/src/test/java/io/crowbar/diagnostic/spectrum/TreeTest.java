@@ -21,8 +21,8 @@ public class TreeTest {
 
         assertNotNull(n);
 
-        Node c1 = t.addNode("foo1", 0);
-        Node c2 = t.addNode("foo2", 0);
+        Node c1 = t.addNode("foo1", Node.Type.PACKAGE, 0);
+        Node c2 = t.addNode("foo2", Node.Type.PACKAGE, 0);
 
         assertEquals(n, c1.getParent());
         assertEquals(n, c2.getParent());
@@ -31,10 +31,10 @@ public class TreeTest {
         assertEquals(c2, n.getChild("foo2"));
 
 
-        Node c11 = t.addNode("foo1", c1.getId());
-        Node c12 = t.addNode("foo2", c1.getId());
-        Node c21 = t.addNode("foo1", c2.getId());
-        Node c22 = t.addNode("foo2", c2.getId());
+        Node c11 = t.addNode("foo1", Node.Type.PACKAGE, c1.getId());
+        Node c12 = t.addNode("foo2", Node.Type.PACKAGE, c1.getId());
+        Node c21 = t.addNode("foo1", Node.Type.PACKAGE, c2.getId());
+        Node c22 = t.addNode("foo2", Node.Type.PACKAGE, c2.getId());
 
         assertEquals(c1, c11.getParent());
         assertEquals(c1, c12.getParent());
@@ -56,7 +56,7 @@ public class TreeTest {
 
 
         for (int i = 1; i < count; i++) {
-            n = t.addNode("foo" + i, i - 1);
+            n = t.addNode("foo" + i, Node.Type.PACKAGE, i - 1);
             ret += ":foo" + i;
         }
 

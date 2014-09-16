@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 import java.io.PrintStream;
@@ -54,7 +55,8 @@ public class VerboseListener implements EventListener {
     @Override
     public void registerNode (int nodeId,
                               int parentId,
-                              String name) throws Exception {
+                              String name,
+                              Node.Type type) throws Exception {
         if (!registerNode) return;
 
         String ret = prefix;

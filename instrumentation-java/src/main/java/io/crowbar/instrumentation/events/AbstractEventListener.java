@@ -1,12 +1,14 @@
 package io.crowbar.instrumentation.events;
 
+import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 public abstract class AbstractEventListener implements EventListener {
     @Override
     public void registerNode (int nodeId,
                               int parentId,
-                              String name) throws Exception {}
+                              String name,
+                              Node.Type type) throws Exception {}
 
     @Override
     public void registerProbe (int probeId,

@@ -10,15 +10,34 @@ import flexjson.JSON;
 
 public class Node {
     public static enum Type {
-        PACKAGE("."),
-        CLASS("$"),
-        METHOD("!"),
-        LINE(":");
+        PACKAGE(0, "."),
+        CLASS(1, "$"),
+        METHOD(2, "!"),
+        LINE(3, ":");
 
         private final String symbol;
+        private int depth;
 
-        private Type(String symbol) {
+        private Type(int depth,
+                     String symbol) {
+            this.depth = depth;
             this.symbol = symbol;
+        }
+
+        public boolean canContain (Type type) {
+            if (type == null)
+                return false;
+
+            if (depth > type.depth)
+                return false;
+
+            if (this == METHOD && type == this)
+                return false;
+
+            if (this == LINE && type == this)
+                return false;
+
+            return true;
         }
 
         public String getSymbol () {
@@ -92,6 +111,22 @@ public class Node {
             return -1;
 
         return parent.getId();
+    }
+
+    /**
+     * @brief Concatenates the names of all nodes with depth greater
+     * than "fromDepth" in the path from the root to this node using
+     * the type's symbol as separator.
+     */
+    @JSON(include = false)
+    public String getFullNameWithSymbol (int fromDepth) {
+        Node p = getParent();
+
+
+        if (p == null || getDepth() <= fromDepth)
+            return type.getSymbol() + name;
+
+        return p.getFullNameWithSymbol(fromDepth) + type.getSymbol() + name;
     }
 
     /**

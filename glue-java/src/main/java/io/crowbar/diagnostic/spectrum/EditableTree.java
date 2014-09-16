@@ -47,6 +47,10 @@ public final class EditableTree implements Tree {
                          Node.Type type,
                          int parentId) {
         Node parent = getNode(parentId);
+
+
+        assert (parent.getType() == null || type == null || parent.getType().canContain(type));
+
         Node child = new Node(this, name, type, nodes.size(), parent);
 
 

@@ -11,6 +11,6 @@ public class FunctionGranularityMatcher extends AbstractNodeMatcher {
 
     @Override
     protected boolean matchNode (Node n) {
-        return n.getDepth() < 3;
+        return n.getType() != Node.Type.LINE;
     }
 }

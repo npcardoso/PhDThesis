@@ -25,12 +25,31 @@ public abstract class AbstractPass implements Pass {
     protected final Node getNode (CtClass cls) {
         Collector c = Collector.instance();
         Node n = c.getRootNode();
-        StringTokenizer stok = new StringTokenizer(cls.getName(), ".");
+        String tok = cls.getName();
 
+
+        // Extract Package Hierarchy
+        int pkgEnd = tok.lastIndexOf(".");
+
+
+        if (pkgEnd >= 0) {
+            StringTokenizer stok = new StringTokenizer(tok.substring(0, pkgEnd), ".");
+
+            while (stok.hasMoreTokens()) {
+                n = getNode(c, n, stok.nextToken());
+            }
+        } else
+            pkgEnd = -1;
+
+
+        // Extract Class Hierarchy
+        StringTokenizer stok = new StringTokenizer(tok.substring(pkgEnd + 1), "$");
 
         while (stok.hasMoreTokens()) {
-            n = getNode(c, n, stok.nextToken());
+            tok = stok.nextToken();
+            n = getNode(c, n, tok);
         }
+
 
         return n;
     }

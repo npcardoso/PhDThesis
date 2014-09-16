@@ -37,8 +37,8 @@ public class NodeUtilsTest {
     @Test
     public void testClassNodeNames () {
         assertEquals("package1.Class1", NodeUtils.getClassName(class1));
-        assertEquals("package2.package3.Class2", NodeUtils.getClassName(class1));
-        assertEquals("Class3", NodeUtils.getClassName(class1));
+        assertEquals("package2.package3.Class2", NodeUtils.getClassName(class2));
+        assertEquals("Class3", NodeUtils.getClassName(class3));
     }
 
     @Test

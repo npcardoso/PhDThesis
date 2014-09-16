@@ -12,7 +12,7 @@ public class NodeUtils {
         if (n == null)
             return null;
 
-        return n.getFullNameWithSymbol(0);
+        return n.getFullNameWithSymbol(1);
     }
 
     public static String getMethodName (Node n) {

@@ -1,0 +1,102 @@
+<style>
+#breadcrumb * {
+ 	font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+  text-align: center;
+}
+
+#breadcrumb {
+  list-style: none;
+  display: inline-block;
+}
+#breadcrumb .icon {
+  font-size: 10px;
+}
+#breadcrumb li {
+  float: left;
+}
+#breadcrumb li a {
+  color: #FFF;
+  display: block;
+  background: blue;
+  text-decoration: none;
+  position: relative;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 0px 0 5px;
+  text-align: center;
+  margin-right: 20px;
+}
+#breadcrumb li:nth-child(even) a {
+  background-color: blue;
+}
+#breadcrumb li:nth-child(even) a:before {
+  border-color: blue;
+  border-left-color: transparent;
+}
+#breadcrumb li:nth-child(even) a:after {
+  border-left-color: blue;
+}
+#breadcrumb li:first-child a {
+  padding-left: 15px;
+  border-radius: 4px 0 0 4px;
+}
+#breadcrumb li:first-child a:before {
+  border: none;
+}
+#breadcrumb li:last-child a {
+  padding-right: 1px;
+  border-radius: 0 4px 4px 0;
+}
+#breadcrumb li:last-child a:after {
+  border: none;
+}
+#breadcrumb li a:before, #breadcrumb li a:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  border: 0 solid blue;
+  border-width: 10px 10px;
+  width: 0;
+  height: 0;
+}
+#breadcrumb li a:before {
+  left: -18px;
+  border-left-color: transparent;
+}
+#breadcrumb li a:after {
+  left: 100%;
+  border-color: transparent;
+  border-left-color: blue;
+}
+#breadcrumb li a:hover {
+  background-color: blue;
+}
+#breadcrumb li a:hover:before {
+  border-color: blue;
+  border-left-color: transparent;
+}
+#breadcrumb li a:hover:after {
+  border-left-color: blue;
+}
+#breadcrumb li a:active {
+  background-color: blue;
+}
+#breadcrumb li a:active:before {
+  border-color: blue;
+  border-left-color: transparent;
+}
+#breadcrumb li a:active:after {
+  border-left-color: blue;
+}
+
+</style>
+
+<ul id="breadcrumb">
+  <li><a href="#"><span class="icon icon-home"> </span></a></li>
+  <li><a href="#">Projects</a></li>
+  <li><a href="#">Breadcrumb</a></li>
+  <li><a href="#">Getting started</a></li>
+  <li><a href="#">Download</a></li>
+  <li><a href="#">Download</a></li>
+</ul>

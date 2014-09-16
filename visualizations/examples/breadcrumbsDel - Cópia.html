@@ -1,0 +1,89 @@
+<style>
+.delicious {
+	list-style: none;
+	overflow: hidden;
+	color: white;
+	font: 11px arial, Helvetica, clean, sans-serif;
+	margin: 0;
+	background: rgb(233,233,233);
+}
+.delicious li {
+	float: left;
+	line-height: 20px;
+}
+.delicious li a {
+	color: #fff;
+	text-decoration: none;
+	padding: 0 10px 0 15px;
+	background: rgb(142,142,142);
+	display: block;
+	float: left;
+}
+.delicious li a::after {
+	position: relative;
+	display: block;
+	margin-top: -10px;
+	margin-left: auto;
+	margin-right: -15px;
+	height: 10px;
+	width: 10px;
+	content: " ";
+	-webkit-transform: skew(-30deg);
+	background: rgb(142,142,142);
+	border-right: 2px solid white;
+	-moz-transform: skew(-30deg);
+	-o-transform: skew(-30deg);
+	transform: skew(-30deg);
+}
+.delicious li a::before {
+	float: right;
+	display: block;
+	margin-bottom: -10px;
+	margin-left: auto;
+	margin-right: -15px;
+	height: 10px;
+	width: 10px;
+	content: " ";
+	-webkit-transform: skew(30deg);
+	background: rgb(142,142,142);
+	border-right: 2px solid white;
+	-moz-transform: skew(30deg);
+	-o-transform: skew(30deg);
+	transform: skew(30deg);
+}
+.delicious li:first-child a {
+	font-weight: 900;
+	padding-left: 10px;
+	background: rgb(108,108,108);
+}
+.delicious li:first-child a::before,
+.delicious li:first-child a::after {background: rgb(108,108,108);}
+.delicious li:last-child {
+	padding-left: 15px;
+	background: transparent !important;
+	color: rgb(50,116,208);
+	font-weight: 900;
+}
+.delicious li a:hover,
+.delicious li a:hover::before,
+.delicious li a:hover::after {background: rgb(108,108,108);}
+.delicious li:first-child a:hover,
+.delicious li:first-child a:hover::before,
+.delicious li:first-child a:hover::after {background: rgb(77,77,77);}
+.delicious li.scope a,
+.delicious li.scope a::before,
+.delicious li.scope a::after {background: rgb(50,116,208);}
+.delicious li.scope a:hover,
+.delicious li.scope a:hover::before,
+.delicious li.scope a:hover::after {background: rgb(34,97,160);}
+</style>
+
+<div id="delicious">
+<ol class="delicious">
+<li class="scope"><a href="#">Tags</a></li>
+<li><a href="#">webdesign</a></li>
+<li><a href="#">html5</a></li>
+<li><a href="#">css3</a></li>
+<li>tutorials</li>
+</ol>
+</div>

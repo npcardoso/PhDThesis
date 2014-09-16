@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Crowbar Visualizon Input",
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "description": "Array containing all nodes",
+      "type": "array",
+      "items": {
+        "title": "Node",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier of a node, also represents the node position on the nodes array",
+            "$ref": "#/definitions/id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "description": "Unique identifier of a parent of the node and its position on the nodes array",
+            "$ref": "#/definitions/id"
+          },
+          "properties": {
+            "type": "object"
+          },
+          "children": {
+            "description": "Array containing the unique identifiers of children of the node",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/id"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "config": {
+      "title": "Configuration parameters",
+      "type": "object",
+      "properties": {
+        "granularities": {
+          "description": "Array containing all the possible granularities name ordered by depth",
+          "type": "array",
+          "items": {
+            "title": "Granularity",
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "granularities"
+      ]
+    }
+  },
+  "required": [
+    "nodes",
+    "config"
+  ],
+  "definitions": {
+    "id": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+}

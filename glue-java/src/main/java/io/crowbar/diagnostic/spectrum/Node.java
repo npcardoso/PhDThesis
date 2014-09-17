@@ -124,9 +124,9 @@ public class Node {
 
 
         if (p == null || getDepth() <= fromDepth)
-            return name;
+            return getName();
 
-        return p.getFullNameWithSymbol(fromDepth) + p.type.getSymbol() + name;
+        return p.getFullNameWithSymbol(fromDepth) + p.getType().getSymbol() + getName();
     }
 
     /**

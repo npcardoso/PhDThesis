@@ -9,8 +9,12 @@ import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;
 
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestProbesMatcher extends AbstractSpectrumMatcher<Activity, Metadata> {
+    Map<Integer, Boolean> map;
+
     public TestProbesMatcher () {
         super(true, false);
     }
@@ -19,6 +23,8 @@ public class TestProbesMatcher extends AbstractSpectrumMatcher<Activity, Metadat
     public BitSet matchProbes (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
         BitSet ret = new BitSet();
 
+
+        map = new HashMap<Integer, Boolean> ();
 
         for (int i = 0; i < spectrum.getProbeCount(); i++) {
             if (check(spectrum, spectrum.getProbe(i).getNode()))
@@ -30,14 +36,27 @@ public class TestProbesMatcher extends AbstractSpectrumMatcher<Activity, Metadat
         return ret;
     }
 
-    public boolean check (Spectrum< ? extends Activity, ? extends Metadata> spectrum,
-                          Node n) {
+    private boolean check (Spectrum< ? extends Activity, ? extends Metadata> spectrum,
+                           Node n) {
         if (n == null) return false;
 
-        for (Probe p : spectrum.getNodeProbes(n.getId())) {
-            if (p.getType() == ProbeType.TRANSACTION_START) return true;
+        if (map.containsKey(n.getId())) return map.get(n.getId());
+
+        boolean result = false;
+
+        for (Probe p : spectrum.byProbe()) {
+            if (p.getNodeId() == n.getId() && p.getType() == ProbeType.TRANSACTION_START) {
+                result = true;
+                break;
+            }
         }
 
-        return check(spectrum, n.getParent());
+        if (!result) {
+            result = check(spectrum, n.getParent());
+        }
+
+        map.put(n.getId(), result);
+
+        return result;
     }
 }

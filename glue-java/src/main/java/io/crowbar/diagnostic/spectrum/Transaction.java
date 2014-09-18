@@ -66,7 +66,6 @@ implements Iterable<Integer> {
     public abstract double getConfidence ();
 
     /**
-     * TODO:
      * @brief Returns an iterator that iterates over active probes.
      */
     @Override

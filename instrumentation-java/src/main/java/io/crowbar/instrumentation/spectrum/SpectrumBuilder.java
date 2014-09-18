@@ -52,16 +52,14 @@ public final class SpectrumBuilder extends AbstractEventListener {
                                       String exceptionClass,
                                       String exceptionMessage,
                                       boolean[] hitVector) {
-        TrM m = new TrM(exceptionClass,
-                        exceptionMessage);
-
-
         Transaction t =
-            new HitTransaction(
+            new HitTransactionWithException(
                 spectrum.getTransactionCount(),
                 hitVector,
                 error ? 1 : 0,
-                1);
+                1,
+                exceptionClass,
+                exceptionMessage);
 
 
         spectrum.setTransaction(t);

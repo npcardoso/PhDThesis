@@ -19,9 +19,7 @@ public class TestProbesMatcher extends AbstractSpectrumMatcher {
 
 
         for (int i = 0; i < spectrum.getProbeCount(); i++) {
-            if (check(spectrum, spectrum.getProbe(i).getNode()))
-                ret.clear(i);
-            else
+            if (!check(spectrum, spectrum.getProbe(i).getNode()))
                 ret.set(i);
         }
 

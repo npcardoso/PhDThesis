@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import io.crowbar.diagnostic.spectrum.HitTransaction;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.instrumentation.spectrum.TrM;
+import io.crowbar.instrumentation.spectrum.HitTransactionWithException;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -66,13 +66,12 @@ public class JUnitAssumeMatcherTest {
     @Test
     public void testMatchTransactions () {
         EditableSpectrum es = new EditableSpectrum();
-        /*
-         * //TODO: FIX this
-         *      Transaction transaction = new HitTransaction(0, activities, 1.0, 0.0, new TrM("org.junit.Assume$AssumptionViolatedException", ""));
-         *      es.setTransaction(transaction);
-         *
-         *      JUnitAssumeMatcher jm = new JUnitAssumeMatcher();
-         *      assertEquals(1, jm.matchTransactions(es).cardinality());
-         */
+        Transaction transaction = new HitTransactionWithException(0, 1.0, 0.0, JUnitAssumeMatcher.ASSUME_CLASS, "");
+
+
+        es.setTransaction(transaction);
+
+        JUnitAssumeMatcher jm = new JUnitAssumeMatcher();
+        assertEquals(1, jm.matchTransactions(es).cardinality());
     }
 }

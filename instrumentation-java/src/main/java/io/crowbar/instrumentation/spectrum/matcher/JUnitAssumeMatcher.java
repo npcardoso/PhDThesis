@@ -3,12 +3,13 @@ package io.crowbar.instrumentation.spectrum.matcher;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;
-import io.crowbar.instrumentation.spectrum.TrM;
+import io.crowbar.instrumentation.spectrum.HitTransactionWithException;
 
 
 import java.util.BitSet;
 
 public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher {
+    public static final String ASSUME_CLASS = "org.junit.Assume$AssumptionViolatedException";
     public JUnitAssumeMatcher () {
         this(true);
     }
@@ -24,18 +25,15 @@ public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher {
         int i = 0;
 
 
-        // TODO: Fix this
-        /*
-         *      for (Transaction t : spectrum.byTransaction()) {
-         *          TrM m = t.getMetadata();
-         *          if (m != null && "org.junit.Assume$AssumptionViolatedException".equals(m.getExceptionClass()))
-         *              ret.set(i);
-         *          else
-         *              ret.clear(i);
-         *
-         *          i++;
-         *      }
-         */
+        for (Transaction t : spectrum.byTransaction()) {
+            if (t instanceof HitTransactionWithException) {
+                String exClass = ((HitTransactionWithException) t).getExceptionClass();
+
+                if (ASSUME_CLASS.equals(exClass))
+                    ret.set(t.getId());
+            }
+        }
+
         return ret;
     }
 }

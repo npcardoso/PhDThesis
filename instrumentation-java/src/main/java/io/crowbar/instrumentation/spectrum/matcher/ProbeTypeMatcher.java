@@ -34,8 +34,6 @@ public final class ProbeTypeMatcher extends AbstractSpectrumMatcher {
 
             if (types.contains(type))
                 ret.set(i);
-            else
-                ret.clear(i);
         }
 
         return ret;

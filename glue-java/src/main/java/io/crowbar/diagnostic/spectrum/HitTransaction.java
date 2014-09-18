@@ -6,34 +6,38 @@ import java.util.BitSet;
 
 public class HitTransaction
 extends Transaction {
-    private final BitSet activity;
+    private BitSet activity;
     private final double error;
     private final double confidence;
 
 
     public HitTransaction (int id,
-                           boolean[] activity,
                            double error,
                            double confidence) {
         super(id);
+        this.error = error;
+        this.confidence = confidence;
+        this.activity = new BitSet();
+    }
+
+    public HitTransaction (int id,
+                           boolean[] activity,
+                           double error,
+                           double confidence) {
+        this(id, error, confidence);
         this.activity = new BitSet();
 
         for (int i = 0; i < activity.length; i++) {
             this.activity.set(i, activity[i]);
         }
-
-        this.error = error;
-        this.confidence = confidence;
     }
 
     public HitTransaction (int id,
                            BitSet activity,
                            double error,
                            double confidence) {
-        super(id);
+        this(id, error, confidence);
         this.activity = (BitSet) activity.clone();
-        this.error = error;
-        this.confidence = confidence;
     }
 
     @Override

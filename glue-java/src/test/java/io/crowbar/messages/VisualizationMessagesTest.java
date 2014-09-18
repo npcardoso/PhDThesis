@@ -51,6 +51,7 @@ public class VisualizationMessagesTest {
 
         // FIXME: this asser implies that the ordering of elements is always equal.
         // Its better to deserialize and test it using proper methods.
-        assertTrue(jsonRequest.startsWith("{\"scores\":[0.3624116251182534,0.23679368533093226,0.1716916465415933],\"tree\""));
+        String s = "{\"scores\":[0.3624116251182534,0.23679368533093226,0.1716916465415933],\"tree\"";
+        assertTrue(jsonRequest.startsWith(s));
     }
 }

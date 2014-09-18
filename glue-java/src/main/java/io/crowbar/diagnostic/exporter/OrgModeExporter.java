@@ -14,7 +14,6 @@ import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.Tree;
 import io.crowbar.diagnostic.spectrum.serializers.HitSpectrumTableSerializer;
 
 import java.util.Map;
@@ -22,20 +21,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-// TODO: Remove this
-import io.crowbar.diagnostic.DiagnosticSystemFactory;
-import io.crowbar.diagnostic.algorithms.*;
-import io.crowbar.diagnostic.runners.*;
-import io.crowbar.util.*;
-
-
 public final class OrgModeExporter {
-    private static String GEN_ANCHOR = "Generator";
-    private static String RANK_ANCHOR = "Ranker";
-    private static String CON_ANCHOR = "Connection";
-    private static String NODE_ANCHOR = "Node";
-    private static String PROBE_ANCHOR = "Probe";
-    private static String TRANSACTION_ANCHOR = "Transaction";
+    private static final String GEN_ANCHOR = "Generator";
+    private static final String RANK_ANCHOR = "Ranker";
+    private static final String CON_ANCHOR = "Connection";
+    private static final String NODE_ANCHOR = "Node";
+    private static final String PROBE_ANCHOR = "Probe";
+    private static final String TRANSACTION_ANCHOR = "Transaction";
 
     private int nodeListAtDepth = -1;
 
@@ -293,8 +285,9 @@ public final class OrgModeExporter {
         for (DiagnosticElement de : sd) {
             StringBuilder entry = new StringBuilder(de.getScore() + ":");
 
-            for (int id : de.getCandidate())
+            for (int id : de.getCandidate()) {
                 entry.append(" " + link(anchor(PROBE_ANCHOR, id)));
+            }
 
             listItem(0, entry.toString(), ret);
         }
@@ -303,8 +296,9 @@ public final class OrgModeExporter {
     private void header (int depth,
                          String text,
                          StringBuilder ret) {
-        while ((depth--) > 0)
+        while ((depth--) > 0) {
             ret.append("*");
+        }
 
         ret.append("* " + text + "\n");
     }
@@ -312,8 +306,9 @@ public final class OrgModeExporter {
     private void listItem (int depth,
                            String text,
                            StringBuilder ret) {
-        while ((depth--) > 0)
+        while ((depth--) > 0) {
             ret.append(" ");
+        }
 
         ret.append(" - " + text + "\n");
     }
@@ -334,34 +329,5 @@ public final class OrgModeExporter {
     private String link (String dest,
                          String lbl) {
         return "[[" + dest + "][" + lbl + "]]";
-    }
-
-    public static void main (String[] args) {
-        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
-
-
-        j.addGenerator(new SingleFaultGenerator());
-        j.addGenerator(new MHSGenerator());
-
-        j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
-        j.addConnection(0, 0);
-        j.addConnection(1, 0);
-
-        j.addRanker(new FuzzinelRanker());
-        j.addConnection(1, 1);
-
-        Spectrum s = SpectraGenerator.generateSpectrum(10, 20, 10, 0.5, 0.5);
-
-
-        DiagnosticSystem ds = j.create();
-        try {
-            JNARunner runner = new JNARunner();
-            DiagnosticReport dr = runner.run(ds, s);
-
-            System.out.println(new OrgModeExporter().export(ds, s, dr));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

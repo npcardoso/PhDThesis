@@ -4,8 +4,9 @@ package io.crowbar.diagnostic.spectrum.serializers;
 import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 public final class HitSpectrumTableSerializer {
@@ -20,7 +21,7 @@ public final class HitSpectrumTableSerializer {
                              int textWidth);
     }
 
-    public static class OrgModeTableStyle
+    public static final class OrgModeTableStyle
     implements TableStyle {
         @Override
         public String header (Probe p) {
@@ -42,8 +43,9 @@ public final class HitSpectrumTableSerializer {
             StringBuilder sb = new StringBuilder();
 
 
-            while (width-- > 0)
+            while (width-- > 0) {
                 sb.append("-");
+            }
 
             sb.append("+");
             return sb.toString();
@@ -56,8 +58,9 @@ public final class HitSpectrumTableSerializer {
             int width = (columnWidth - textWidth) / 2;
 
 
-            while (width-- > 0)
+            while (width-- > 0) {
                 sb.append(" ");
+            }
 
             return sb.toString();
         }

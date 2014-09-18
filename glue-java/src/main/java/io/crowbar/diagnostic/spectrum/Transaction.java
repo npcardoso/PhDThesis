@@ -100,9 +100,10 @@ implements Iterable<Integer> {
 
         Iterator it = t.iterator();
 
-        for (Integer id : this)
+        for (Integer id : this) {
             if (!id.equals(it.next()))
                 return false;
+        }
 
         return true;
     }

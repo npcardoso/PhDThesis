@@ -1,8 +1,6 @@
 package io.crowbar.diagnostic.spectrum;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.BitSet;
 
 
@@ -39,27 +37,27 @@ extends Transaction {
     }
 
     @Override
-    public boolean isActive (int id) {
+    public final boolean isActive (int id) {
         return activity.get(id);
     }
 
     @Override
-    public double getError () {
+    public final double getError () {
         return error;
     }
 
     @Override
-    public double getConfidence () {
+    public final double getConfidence () {
         return confidence;
     }
 
     @Override
-    public int numActive () {
+    public final int numActive () {
         return activity.cardinality();
     }
 
     @Override
-    public int size () {
+    public final int size () {
         return activity.length();
     }
 }

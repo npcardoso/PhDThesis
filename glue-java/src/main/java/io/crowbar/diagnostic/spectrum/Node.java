@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import flexjson.JSON;
-
+// TODO: Create an interface for Node
 public class Node {
     public static enum Type {
         PACKAGE(0, "."),

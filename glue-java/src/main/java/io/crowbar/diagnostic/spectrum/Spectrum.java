@@ -131,7 +131,7 @@ public abstract class Spectrum {
 
     public abstract List<Probe> getProbes ();
 
-    public List<Probe> getNodeProbes (int nodeId) {
+    public final List<Probe> getNodeProbes (int nodeId) {
         List<Probe> nodeProbes = new ArrayList<Probe> ();
 
         for (Probe p : getProbes()) {
@@ -170,12 +170,13 @@ public abstract class Spectrum {
      * @post ret.size() == getTree.size()
      * @return A list containing the score for each node.
      */
-    public List<Double> getScorePerNode (Diagnostic diagnostic,
-                                         MergeStrategy ms) {
+    public final List<Double> getScorePerNode (Diagnostic diagnostic,
+                                               MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
-        while (tmp.size() < getTree().size())
+        while (tmp.size() < getTree().size()) {
             tmp.add(null);
+        }
 
         for (DiagnosticElement e : diagnostic) {
             for (int probeId : e.getCandidate()) {
@@ -204,12 +205,13 @@ public abstract class Spectrum {
      * @post ret.size() == getProbeCount()
      * @return A list containing the score for each probe.
      */
-    public List<Double> getScorePerProbe (Diagnostic diagnostic,
-                                          MergeStrategy ms) {
+    public final List<Double> getScorePerProbe (Diagnostic diagnostic,
+                                                MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getProbeCount());
 
-        while (tmp.size() < getProbeCount())
+        while (tmp.size() < getProbeCount()) {
             tmp.add(null);
+        }
 
         for (DiagnosticElement e : diagnostic) {
             for (int probeId : e.getCandidate()) {

@@ -9,13 +9,11 @@ import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.SortedDiagnostic;
 import io.crowbar.diagnostic.UnsortedDiagnostic;
 import io.crowbar.diagnostic.algorithms.Algorithm;
-import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.Tree;
 import io.crowbar.diagnostic.spectrum.serializers.HitSpectrumTableSerializer;
 
 import java.util.Map;
@@ -23,20 +21,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-// TODO: Remove this
-import io.crowbar.diagnostic.DiagnosticSystemFactory;
-import io.crowbar.diagnostic.algorithms.*;
-import io.crowbar.diagnostic.runners.*;
-import io.crowbar.util.*;
-
-
 public final class OrgModeExporter {
-    private static String GEN_ANCHOR = "Generator";
-    private static String RANK_ANCHOR = "Ranker";
-    private static String CON_ANCHOR = "Connection";
-    private static String NODE_ANCHOR = "Node";
-    private static String PROBE_ANCHOR = "Probe";
-    private static String TRANSACTION_ANCHOR = "Transaction";
+    private static final String GEN_ANCHOR = "Generator";
+    private static final String RANK_ANCHOR = "Ranker";
+    private static final String CON_ANCHOR = "Connection";
+    private static final String NODE_ANCHOR = "Node";
+    private static final String PROBE_ANCHOR = "Probe";
+    private static final String TRANSACTION_ANCHOR = "Transaction";
 
     private int nodeListAtDepth = -1;
 
@@ -57,7 +48,7 @@ public final class OrgModeExporter {
     }
 
     public String export (DiagnosticSystem ds,
-                          Spectrum< ? , ? > spectrum,
+                          Spectrum spectrum,
                           DiagnosticReport dr) {
         int depth = 0;
         StringBuilder ret = new StringBuilder();
@@ -78,7 +69,7 @@ public final class OrgModeExporter {
 
     public void exportSingleRankings (int depth,
                                       DiagnosticSystem ds,
-                                      Spectrum< ? , ? > spectrum,
+                                      Spectrum spectrum,
                                       DiagnosticReport dr,
                                       StringBuilder ret) {
         int treeSize = spectrum.getTree().size();
@@ -110,7 +101,7 @@ public final class OrgModeExporter {
 
     public void exportNodeScores (int depth,
                                   DiagnosticSystem ds,
-                                  Spectrum< ? , ? > spectrum,
+                                  Spectrum spectrum,
                                   DiagnosticReport dr,
                                   StringBuilder ret) {
         for (Connection c : ds.getConnections()) {
@@ -122,7 +113,7 @@ public final class OrgModeExporter {
     }
 
     public void exportHitSpectrum (int depth,
-                                   Spectrum< ? , ? > spectrum,
+                                   Spectrum spectrum,
                                    StringBuilder ret) {
         header(depth, "Spectrum", ret);
         String tab = HitSpectrumTableSerializer.serialize(
@@ -176,7 +167,7 @@ public final class OrgModeExporter {
     }
 
     public void export (int depth,
-                        Spectrum< ? , ? > spectrum,
+                        Spectrum spectrum,
                         StringBuilder ret) {
         header(depth, "Spectrum", ret);
         header(depth + 1, "Tree", ret);
@@ -198,7 +189,7 @@ public final class OrgModeExporter {
 
         header(depth + 1, "Transactions", ret);
 
-        for (Transaction< ? , ? > t : spectrum.byTransaction()) {
+        for (Transaction t : spectrum.byTransaction()) {
             if (t != null)
                 export(depth + 2, spectrum, t, ret);
         }
@@ -248,7 +239,7 @@ public final class OrgModeExporter {
 
     public void export (int depth,
                         Spectrum spectrum,
-                        Transaction< ? , ? > t,
+                        Transaction t,
                         StringBuilder ret) {
         header(depth, anchor(TRANSACTION_ANCHOR, t.getId()), ret);
         listItem(0, "error: " + t.getError(), ret);
@@ -256,16 +247,9 @@ public final class OrgModeExporter {
 
         StringBuilder activeNodes = new StringBuilder();
         StringBuilder activeProbes = new StringBuilder();
-        int i = 0;
 
-        for (Activity a : t) {
-            if (a == null)
-                continue;
-
-            if (!a.isActive())
-                continue;
-
-            Probe p = spectrum.getProbe(i++);
+        for (Integer i : t) {
+            Probe p = spectrum.getProbe(i);
 
             if (p == null)
                 continue;
@@ -301,8 +285,9 @@ public final class OrgModeExporter {
         for (DiagnosticElement de : sd) {
             StringBuilder entry = new StringBuilder(de.getScore() + ":");
 
-            for (int id : de.getCandidate())
+            for (int id : de.getCandidate()) {
                 entry.append(" " + link(anchor(PROBE_ANCHOR, id)));
+            }
 
             listItem(0, entry.toString(), ret);
         }
@@ -311,8 +296,9 @@ public final class OrgModeExporter {
     private void header (int depth,
                          String text,
                          StringBuilder ret) {
-        while ((depth--) > 0)
+        while ((depth--) > 0) {
             ret.append("*");
+        }
 
         ret.append("* " + text + "\n");
     }
@@ -320,8 +306,9 @@ public final class OrgModeExporter {
     private void listItem (int depth,
                            String text,
                            StringBuilder ret) {
-        while ((depth--) > 0)
+        while ((depth--) > 0) {
             ret.append(" ");
+        }
 
         ret.append(" - " + text + "\n");
     }
@@ -342,34 +329,5 @@ public final class OrgModeExporter {
     private String link (String dest,
                          String lbl) {
         return "[[" + dest + "][" + lbl + "]]";
-    }
-
-    public static void main (String[] args) {
-        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
-
-
-        j.addGenerator(new SingleFaultGenerator());
-        j.addGenerator(new MHSGenerator());
-
-        j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
-        j.addConnection(0, 0);
-        j.addConnection(1, 0);
-
-        j.addRanker(new FuzzinelRanker());
-        j.addConnection(1, 1);
-
-        Spectrum< ? , ? > s = SpectraGenerator.generateSpectrum(10, 20, 10, 0.5, 0.5);
-
-
-        DiagnosticSystem ds = j.create();
-        try {
-            JNARunner runner = new JNARunner();
-            DiagnosticReport dr = runner.run(ds, s);
-
-            System.out.println(new OrgModeExporter().export(ds, s, dr));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

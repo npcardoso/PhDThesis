@@ -6,9 +6,9 @@ import java.util.List;
 import flexjson.JSON;
 
 public final class NodeView extends Node {
-    Node n;
-    TreeView t;
-    int id;
+    private final Node n;
+    private final TreeView t;
+    private final int id;
 
     NodeView (TreeView tree,
               Node node,

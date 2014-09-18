@@ -10,14 +10,13 @@ import java.util.List;
  * As this class does not make any copies of the original spectrum, it assumes its immutability.
  * Changes to the spectrum after the creation of the view may have unpredictable consequences.
  */
-final class SpectrumView<A extends Activity,
-                         TM extends Metadata>
-extends Spectrum<A, TM> {
-    private final Spectrum<A, TM> spectrum;
+final class SpectrumView
+extends Spectrum {
+    private final Spectrum spectrum;
     private final int[] probes;
     private final int[] transactions;
 
-    public SpectrumView (Spectrum<A, TM> spectrum,
+    public SpectrumView (Spectrum spectrum,
                          BitSet transactions,
                          BitSet probes) {
         this.spectrum = spectrum;
@@ -49,13 +48,14 @@ extends Spectrum<A, TM> {
     }
 
     @Override
-    public Transaction<A, TM> getTransaction (int transactionId) {
-        Transaction<A, TM> t = spectrum.getTransaction(transactions[transactionId]);
+    public Transaction getTransaction (int transactionId) {
+        Transaction t = spectrum.getTransaction(transactions[transactionId]);
+
 
         if (t == null)
             return null;
 
-        return new TransactionView<A, TM> (transactionId, this, t);
+        return new TransactionView(transactionId, this, t);
     }
 
     @Override

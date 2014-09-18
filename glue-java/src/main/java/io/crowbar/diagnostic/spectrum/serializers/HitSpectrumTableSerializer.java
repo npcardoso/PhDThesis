@@ -1,12 +1,12 @@
 package io.crowbar.diagnostic.spectrum.serializers;
 
 
-import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 public final class HitSpectrumTableSerializer {
@@ -21,7 +21,7 @@ public final class HitSpectrumTableSerializer {
                              int textWidth);
     }
 
-    public static class OrgModeTableStyle
+    public static final class OrgModeTableStyle
     implements TableStyle {
         @Override
         public String header (Probe p) {
@@ -43,8 +43,9 @@ public final class HitSpectrumTableSerializer {
             StringBuilder sb = new StringBuilder();
 
 
-            while (width-- > 0)
+            while (width-- > 0) {
                 sb.append("-");
+            }
 
             sb.append("+");
             return sb.toString();
@@ -57,8 +58,9 @@ public final class HitSpectrumTableSerializer {
             int width = (columnWidth - textWidth) / 2;
 
 
-            while (width-- > 0)
+            while (width-- > 0) {
                 sb.append(" ");
+            }
 
             return sb.toString();
         }
@@ -73,11 +75,11 @@ public final class HitSpectrumTableSerializer {
         }
     }
 
-    public static String serialize (Spectrum< ? extends Activity, ? > spectrum) {
+    public static String serialize (Spectrum spectrum) {
         return HitSpectrumSerializer.serialize(spectrum, "\n");
     }
 
-    public static String serialize (Spectrum< ? extends Activity, ? > spectrum,
+    public static String serialize (Spectrum spectrum,
                                     TableStyle ts) {
         StringBuilder ret = new StringBuilder();
 
@@ -124,7 +126,7 @@ public final class HitSpectrumTableSerializer {
         return ret.toString();
     }
 
-    public static String serialize (Transaction< ? extends Activity, ? > transaction,
+    public static String serialize (Transaction transaction,
                                     int probeCount,
                                     int maxWidth,
                                     TableStyle ts) {
@@ -137,7 +139,7 @@ public final class HitSpectrumTableSerializer {
         if (transaction != null) {
             for (i = 0; i < transaction.size(); i++) {
                 ret.append(ts.paddingLeft(maxWidth, 1));
-                ret.append(transaction.get(i).isActive() ? "1" : "0");
+                ret.append(transaction.isActive(i) ? "1" : "0");
                 ret.append(ts.paddingRight(maxWidth, 1));
             }
         }

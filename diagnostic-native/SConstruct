@@ -73,7 +73,7 @@ env['CCFLAGS'] += " -std=c++11  -Wall -pedantic"
 
 # Link Flags
 link_flags = ["-Wl,-rpath,'$$ORIGIN/../../lib/%s'" % env['PLATFORM']]
-              
+
 libs = [env['boost_filesystem'],
         env['boost_system'],
         env['boost_date_time'],

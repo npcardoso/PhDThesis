@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import java.util.Scanner;
 
@@ -19,7 +18,8 @@ public class HitSpectrumUnserializerTest {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
 
         assertEquals(s.getTransactionCount(), 9);
     }
@@ -29,7 +29,9 @@ public class HitSpectrumUnserializerTest {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+
         assertEquals(s.getProbeCount(), 10);
     }
 
@@ -38,9 +40,11 @@ public class HitSpectrumUnserializerTest {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         Probe c = s.getProbe(0);
+
+
         assertNull(c);
     }
 }

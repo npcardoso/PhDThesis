@@ -1,8 +1,6 @@
 package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Metadata;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.BitSet;
@@ -10,9 +8,8 @@ import java.util.BitSet;
 /**
  * \brief This class couples several matchers using some logic operator.
  */
-public final class CouplerMatcher<A extends Activity,
-                                  TM extends Metadata>
-implements SpectrumMatcher<A, TM> {
+public final class CouplerMatcher
+implements SpectrumMatcher {
     public interface Coupler {
         void couple (BitSet ret,
                      BitSet operand);
@@ -42,8 +39,8 @@ implements SpectrumMatcher<A, TM> {
 
 
     private final Coupler coupler;
-    private final List<SpectrumMatcher< ? super A, ? super TM> > matchers =
-        new LinkedList<SpectrumMatcher< ? super A, ? super TM> > ();
+    private final List<SpectrumMatcher> matchers =
+        new LinkedList<SpectrumMatcher> ();
 
     /**
      * \brief Constructs a CouplerMatcher.
@@ -51,20 +48,20 @@ implements SpectrumMatcher<A, TM> {
      * \param matcher A list of matchers.
      */
     public CouplerMatcher (Coupler coupler,
-                           SpectrumMatcher< ? super A, ? super TM> ... matchers) {
+                           SpectrumMatcher... matchers) {
         this.coupler = coupler;
 
-        for (SpectrumMatcher< ? super A, ? super TM> m : matchers) {
+        for (SpectrumMatcher m : matchers) {
             this.matchers.add(m);
         }
     }
 
     @Override
-    public BitSet matchProbes (Spectrum< ? extends A, ? extends TM> spectrum) {
+    public BitSet matchProbes (Spectrum spectrum) {
         BitSet ret = new BitSet();
 
 
-        for (SpectrumMatcher< ? super A, ? super TM> matcher : matchers) {
+        for (SpectrumMatcher matcher : matchers) {
             coupler.couple(ret, matcher.matchProbes(spectrum));
         }
 
@@ -72,11 +69,11 @@ implements SpectrumMatcher<A, TM> {
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends A, ? extends TM> spectrum) {
+    public BitSet matchTransactions (Spectrum spectrum) {
         BitSet ret = new BitSet();
 
 
-        for (SpectrumMatcher< ? super A, ? super TM> matcher : matchers) {
+        for (SpectrumMatcher matcher : matchers) {
             coupler.couple(ret, matcher.matchTransactions(spectrum));
         }
 

@@ -7,10 +7,9 @@ import java.util.List;
 /**
  * This class provides a way of creating a spectrum.
  */
-public final class EditableSpectrum<A extends Activity,
-                                    TM extends Metadata>
-extends Spectrum<A, TM> {
-    private final ArrayList<Transaction<A, TM> > transactions = new ArrayList<Transaction<A, TM> > ();
+public final class EditableSpectrum
+extends Spectrum {
+    private final ArrayList<Transaction> transactions = new ArrayList<Transaction> ();
     private final ArrayList<Probe> probes = new ArrayList<Probe> ();
 
     private final EditableTree tree = new EditableTree("root");
@@ -37,7 +36,7 @@ extends Spectrum<A, TM> {
      * does not exist.
      */
     @Override
-    public Transaction<A, TM> getTransaction (int transactionId) {
+    public Transaction getTransaction (int transactionId) {
         if (transactionId < 0 || transactionId >= transactions.size())
             return null;
 
@@ -70,7 +69,7 @@ extends Spectrum<A, TM> {
      * @brief Adds a new transactions to the spectrum.
      * @pre this.getTransaction(transaction.getId()) == null
      */
-    public void setTransaction (Transaction<A, TM> transaction) {
+    public void setTransaction (Transaction transaction) {
         assert (this.getTransaction(transaction.getId()) == null);
         transactions.ensureCapacity(transaction.getId() + 1);
 
@@ -99,6 +98,7 @@ extends Spectrum<A, TM> {
             probes.add(null);
         }
 
+        probeCount = Math.max(probeCount, id + 1);
         probes.set(id, new Probe(this, type, id, node.getId()));
     }
 }

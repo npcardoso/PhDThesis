@@ -1,8 +1,6 @@
 package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Metadata;
 import java.util.BitSet;
 
 
@@ -10,7 +8,7 @@ import java.util.BitSet;
  * \brief This class matches probes/transactions by id.
  */
 public final class IdMatcher
-implements SpectrumMatcher<Activity, Metadata> {
+implements SpectrumMatcher {
     private final BitSet transactions = new BitSet();
     private final BitSet probes = new BitSet();
 
@@ -34,12 +32,12 @@ implements SpectrumMatcher<Activity, Metadata> {
     }
 
     @Override
-    public BitSet matchProbes (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
+    public BitSet matchProbes (Spectrum spectrum) {
         return (BitSet) probes.clone();
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
+    public BitSet matchTransactions (Spectrum spectrum) {
         return (BitSet) transactions.clone();
     }
 }

@@ -3,11 +3,20 @@ package io.crowbar.diagnostic.spectrum;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public abstract class Transaction<A extends Activity,
-                                  TM extends Metadata>
-implements Iterable<A> {
-    private class TransactionIterator implements Iterator<A> {
+public abstract class Transaction
+implements Iterable<Integer> {
+    private class TransactionIterator implements Iterator<Integer> {
         private int i = 0;
+
+        TransactionIterator () {
+            goToNext();
+        }
+
+        private void goToNext () {
+            while (i < size() && !isActive(i)) {
+                i++;
+            }
+        }
 
         @Override
         public boolean hasNext () {
@@ -15,11 +24,13 @@ implements Iterable<A> {
         }
 
         @Override
-        public A next () {
+        public Integer next () {
             if (!hasNext())
                 throw new NoSuchElementException();
 
-            return get(i++);
+            int tmp = i++;
+            goToNext();
+            return tmp;
         }
 
         @Override
@@ -40,12 +51,11 @@ implements Iterable<A> {
     }
 
     /**
-     * @brief Retreives the activity by probe id.
+     * @brief Checks if probe is active.
      * @note iterator uses this function.
-     * @return the activity or null if activity for that probe
-     * does not exist.
+     * @return the activity or false if probe does not exist.
      */
-    public abstract A get (int id);
+    public abstract boolean isActive (int id);
 
     public final boolean isError () {
         return getError() >= 1;
@@ -55,10 +65,11 @@ implements Iterable<A> {
 
     public abstract double getConfidence ();
 
-    public abstract TM getMetadata ();
-
+    /**
+     * @brief Returns an iterator that iterates over active probes.
+     */
     @Override
-    public final Iterator<A> iterator () {
+    public final Iterator<Integer> iterator () {
         return new TransactionIterator();
     }
 
@@ -86,20 +97,12 @@ implements Iterable<A> {
         if (getConfidence() != t.getConfidence())
             return false;
 
-        if (getMetadata() == null || t.getMetadata() == null) {
-            if (getMetadata() != null)
-                return false;
-
-            if (t.getMetadata() != null)
-                return false;
-        } else if (!getMetadata().equals(t.getMetadata()))
-            return false;
-
         Iterator it = t.iterator();
 
-        for (A a : this)
-            if (!a.equals(it.next()))
+        for (Integer id : this) {
+            if (!id.equals(it.next()))
                 return false;
+        }
 
         return true;
     }
@@ -114,18 +117,17 @@ implements Iterable<A> {
         str.append("activity=[");
         boolean first = true;
 
-        for (A a : this) {
+        for (Integer id : this) {
             if (!first)
                 str.append(",");
 
-            str.append(a.toString());
+            str.append(id.toString());
             first = false;
         }
 
         str.append("], ");
         str.append("error=" + getError() + ", ");
-        str.append("confidence=" + getConfidence() + ", ");
-        str.append("metadata=" + getMetadata() + "}");
+        str.append("confidence=" + getConfidence() + "}");
 
         return str.toString();
     }

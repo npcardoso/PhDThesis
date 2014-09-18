@@ -6,7 +6,6 @@ import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import org.junit.Test;
 
@@ -16,7 +15,9 @@ public class SpectrumBuilderTest {
         SpectrumBuilder sb = new SpectrumBuilder();
 
 
-        Spectrum<Hit, TrM> spectrum = sb.getSpectrum();
+        Spectrum spectrum = sb.getSpectrum();
+
+
         assertEquals(0, spectrum.getProbeCount());
         assertEquals(0, spectrum.getTransactionCount());
     }
@@ -59,7 +60,7 @@ public class SpectrumBuilderTest {
 
         assertEquals(1, sb.getSpectrum().getTransactionCount());
 
-        Transaction<Hit, TrM> tr = sb.getSpectrum().getTransaction(0);
-        assertFalse(tr.get(0).isActive());
+        Transaction tr = sb.getSpectrum().getTransaction(0);
+        assertFalse(tr.isActive(0));
     }
 }

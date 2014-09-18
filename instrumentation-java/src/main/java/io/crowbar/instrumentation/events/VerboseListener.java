@@ -53,10 +53,10 @@ public class VerboseListener implements EventListener {
     }
 
     @Override
-    public void registerNode (int nodeId,
-                              int parentId,
-                              String name,
-                              Node.Type type) throws Exception {
+    public final void registerNode (int nodeId,
+                                    int parentId,
+                                    String name,
+                                    Node.Type type) throws Exception {
         if (!registerNode) return;
 
         String ret = prefix;

@@ -9,8 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public abstract class Spectrum<A extends Activity,
-                               TM extends Metadata> {
+public abstract class Spectrum {
     public interface MergeStrategy {
         double reduce (List<Double> scores);
     }
@@ -87,16 +86,16 @@ public abstract class Spectrum<A extends Activity,
         }
     }
 
-    private class TIterable implements Iterable<Transaction<A, TM> > {
-        public Iterator<Transaction<A, TM> > iterator () {
-            return new AbstractIterator<Transaction<A, TM> > () {
+    private class TIterable implements Iterable<Transaction> {
+        public Iterator<Transaction> iterator () {
+            return new AbstractIterator<Transaction> () {
                        @Override
                        public boolean hasNext () {
                            return getId() < getTransactionCount();
                        }
 
                        @Override
-                       protected Transaction<A, TM> get (int i) {
+                       protected Transaction get (int i) {
                            return getTransaction(i);
                        }
             };
@@ -126,13 +125,13 @@ public abstract class Spectrum<A extends Activity,
     public abstract int getTransactionCount ();
     public abstract int getProbeCount ();
 
-    public abstract Transaction<A, TM> getTransaction (int transactionId);
+    public abstract Transaction getTransaction (int transactionId);
 
     public abstract Probe getProbe (int probeId);
 
     public abstract List<Probe> getProbes ();
 
-    public List<Probe> getNodeProbes (int nodeId) {
+    public final List<Probe> getNodeProbes (int nodeId) {
         List<Probe> nodeProbes = new ArrayList<Probe> ();
 
         for (Probe p : getProbes()) {
@@ -147,7 +146,7 @@ public abstract class Spectrum<A extends Activity,
         return new PIterable();
     }
 
-    public final Iterable<Transaction<A, TM> > byTransaction () {
+    public final Iterable<Transaction> byTransaction () {
         return new TIterable();
     }
 
@@ -171,12 +170,13 @@ public abstract class Spectrum<A extends Activity,
      * @post ret.size() == getTree.size()
      * @return A list containing the score for each node.
      */
-    public List<Double> getScorePerNode (Diagnostic diagnostic,
-                                         MergeStrategy ms) {
+    public final List<Double> getScorePerNode (Diagnostic diagnostic,
+                                               MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
-        while (tmp.size() < getTree().size())
+        while (tmp.size() < getTree().size()) {
             tmp.add(null);
+        }
 
         for (DiagnosticElement e : diagnostic) {
             for (int probeId : e.getCandidate()) {
@@ -205,12 +205,13 @@ public abstract class Spectrum<A extends Activity,
      * @post ret.size() == getProbeCount()
      * @return A list containing the score for each probe.
      */
-    public List<Double> getScorePerProbe (Diagnostic diagnostic,
-                                          MergeStrategy ms) {
+    public final List<Double> getScorePerProbe (Diagnostic diagnostic,
+                                                MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getProbeCount());
 
-        while (tmp.size() < getProbeCount())
+        while (tmp.size() < getProbeCount()) {
             tmp.add(null);
+        }
 
         for (DiagnosticElement e : diagnostic) {
             for (int probeId : e.getCandidate()) {
@@ -300,7 +301,7 @@ public abstract class Spectrum<A extends Activity,
 
         first = true;
 
-        for (Transaction<A, TM> transaction : byTransaction()) {
+        for (Transaction transaction : byTransaction()) {
             if (!first)
                 str.append(",");
 

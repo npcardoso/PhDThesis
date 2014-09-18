@@ -15,7 +15,8 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server extends ThreadedServer {
+public class InstrumentationServer
+extends ThreadedServer {
     public interface Service {
         EventListener getEventListener ();
         void interrupted ();
@@ -115,8 +116,8 @@ public class Server extends ThreadedServer {
         }
     }
 
-    public Server (ServerSocket serverSocket,
-                   ServiceFactory serviceFactory) {
+    public InstrumentationServer (ServerSocket serverSocket,
+                                  ServiceFactory serviceFactory) {
         super(serverSocket);
         this.serviceFactory = serviceFactory;
     }

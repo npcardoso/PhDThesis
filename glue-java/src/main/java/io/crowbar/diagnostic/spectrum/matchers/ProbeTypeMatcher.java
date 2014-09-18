@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation.spectrum.matcher;
+package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;

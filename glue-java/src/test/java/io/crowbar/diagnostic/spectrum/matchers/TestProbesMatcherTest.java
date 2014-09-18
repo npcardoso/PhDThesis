@@ -1,4 +1,4 @@
-package io.crowbar.instrumentation.spectrum.matcher;
+package io.crowbar.diagnostic.spectrum.matchers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,7 +32,6 @@ public class TestProbesMatcherTest {
         activities.set(4);
         activities.set(5);
         activities.set(6);
-        activities.set(7);
 
 
         EditableSpectrum es = new EditableSpectrum();
@@ -50,7 +49,7 @@ public class TestProbesMatcherTest {
         t.addNode("other node", null, 2);
 
         for (int i = 0; i < 7; i++) {
-            es.setProbe(i, ProbeType.HIT_PROBE, es.getTree().getNode(i));
+            es.setProbe(6 - i, ProbeType.HIT_PROBE, es.getTree().getNode(i));
         }
 
         return es;
@@ -70,21 +69,21 @@ public class TestProbesMatcherTest {
         for (int i = 3; i < 7; i++) {
             EditableSpectrum s = setUp();
 
-            s.setProbe(i, ProbeType.TRANSACTION_START, s.getTree().getNode(i));
+            s.setProbe(6 - i, ProbeType.TRANSACTION_START, s.getTree().getNode(i));
             BitSet b = m.matchProbes(s);
 
             assertEquals(1, b.cardinality());
-            assertEquals(true, b.get(i));
+            assertEquals(true, b.get(6 - i));
         }
 
         EditableSpectrum s = setUp();
 
         for (int i = 3; i < 7; i++) {
-            s.setProbe(i, ProbeType.TRANSACTION_START, s.getTree().getNode(i));
+            s.setProbe(6 - i, ProbeType.TRANSACTION_START, s.getTree().getNode(i));
             BitSet b = m.matchProbes(s);
 
             assertEquals(i - 2, b.cardinality());
-            assertEquals(true, b.get(i));
+            assertEquals(true, b.get(6 - i));
         }
     }
 
@@ -109,13 +108,13 @@ public class TestProbesMatcherTest {
         EditableSpectrum s = setUp();
 
 
-        s.setProbe(1, ProbeType.TRANSACTION_START, s.getTree().getNode(1));
+        s.setProbe(5, ProbeType.TRANSACTION_START, s.getTree().getNode(1));
 
         BitSet b = m.matchProbes(s);
 
         assertEquals(3, b.cardinality());
-        assertTrue(b.get(1));
+        assertTrue(b.get(5));
         assertTrue(b.get(3));
-        assertTrue(b.get(4));
+        assertTrue(b.get(2));
     }
 }

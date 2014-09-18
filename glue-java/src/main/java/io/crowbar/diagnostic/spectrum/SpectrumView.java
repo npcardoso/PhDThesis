@@ -2,6 +2,7 @@ package io.crowbar.diagnostic.spectrum;
 
 import io.crowbar.util.ViewUtils;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
@@ -16,12 +17,20 @@ extends Spectrum {
     private final int[] probes;
     private final int[] transactions;
 
+    private List<Probe> probeViews;
+
     public SpectrumView (Spectrum spectrum,
                          BitSet transactions,
                          BitSet probes) {
         this.spectrum = spectrum;
         this.transactions = ViewUtils.toMappingArray(transactions);
         this.probes = ViewUtils.toMappingArray(probes);
+
+        this.probeViews = new ArrayList<Probe> (this.probes.length);
+
+        for (int i = 0; i < this.probes.length; i++) {
+            this.probeViews.add(null);
+        }
     }
 
     @Override
@@ -60,13 +69,21 @@ extends Spectrum {
 
     @Override
     public Probe getProbe (int probeId) {
-        Probe p = spectrum.getProbe(probes[probeId]);
+        Probe p = probeViews.get(probeId);
 
+
+        if (p != null)
+            return p;
+
+        p = spectrum.getProbe(probes[probeId]);
 
         if (p == null)
             return null;
 
-        return new Probe(spectrum, p.getType(), probeId, p.getNodeId());
+        p = new Probe(spectrum, p.getType(), probeId, p.getNodeId());
+        probeViews.set(probeId, p);
+
+        return p;
     }
 
     @Override

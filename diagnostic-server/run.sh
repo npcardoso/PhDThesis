@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-mvn package -q
 
 
 JUNITPATH=~/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar

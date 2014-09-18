@@ -67,10 +67,8 @@ extends Spectrum {
 
     /**
      * @brief Adds a new transactions to the spectrum.
-     * @pre this.getTransaction(transaction.getId()) == null
      */
     public void setTransaction (Transaction transaction) {
-        assert (this.getTransaction(transaction.getId()) == null);
         transactions.ensureCapacity(transaction.getId() + 1);
 
         while (transactions.size() <= transaction.getId()) {
@@ -85,13 +83,11 @@ extends Spectrum {
     /**
      * @brief Adds a new probe to the spectrum.
      * @pre node.getTree() == this.getTree()
-     * @pre this.getProbe(id) == null
      */
     public void setProbe (int id,
                           ProbeType type,
                           Node node) {
         assert (node.getTree() == this.getTree());
-        assert (this.getProbe(id) == null);
         probes.ensureCapacity(id + 1);
 
         while (probes.size() <= id) {

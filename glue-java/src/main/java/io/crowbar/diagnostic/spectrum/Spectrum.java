@@ -67,22 +67,37 @@ public abstract class Spectrum {
     implements Iterator<T> {
         private int id = 0;
 
+        private void goToNext () {
+            while (id < size() && get(id) == null) {
+                id++;
+            }
+        }
+
+        AbstractIterator () {
+            goToNext();
+        }
+
+        protected abstract int size ();
         protected abstract T get (int id);
-        protected int getId () {
-            return id;
+
+        @Override
+        public final boolean hasNext () {
+            return id < size();
         }
 
         @Override
-        public void remove () {
+        public final void remove () {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public T next () {
+        public final T next () {
             if (!hasNext())
                 throw new NoSuchElementException();
 
-            return get(id++);
+            int tmp = id++;
+            goToNext();
+            return get(tmp);
         }
     }
 
@@ -90,8 +105,8 @@ public abstract class Spectrum {
         public Iterator<Transaction> iterator () {
             return new AbstractIterator<Transaction> () {
                        @Override
-                       public boolean hasNext () {
-                           return getId() < getTransactionCount();
+                       public int size () {
+                           return getTransactionCount();
                        }
 
                        @Override
@@ -106,8 +121,8 @@ public abstract class Spectrum {
         public Iterator<Probe> iterator () {
             return new AbstractIterator<Probe> () {
                        @Override
-                       public boolean hasNext () {
-                           return getId() < getProbeCount();
+                       public int size () {
+                           return getProbeCount();
                        }
 
                        @Override
@@ -142,10 +157,18 @@ public abstract class Spectrum {
         return nodeProbes;
     }
 
+    /**
+     * @brief Returns an iterable over the spectrum's probes. null probes are ommited.
+     * The probes are iterated in ascending ID order.
+     */
     public final Iterable<Probe> byProbe () {
         return new PIterable();
     }
 
+    /**
+     * @brief Returns an iterable over the spectrum's transactions. null transactions are ommited.
+     * The transactions are iterated in ascending ID order.
+     */
     public final Iterable<Transaction> byTransaction () {
         return new TIterable();
     }

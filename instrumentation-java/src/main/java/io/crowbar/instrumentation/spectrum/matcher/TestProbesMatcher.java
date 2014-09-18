@@ -11,48 +11,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestProbesMatcher extends AbstractSpectrumMatcher {
-    Map<Integer, Boolean> map;
-
     public TestProbesMatcher () {
         super(true, false);
     }
 
     @Override
     public BitSet matchProbes (Spectrum spectrum) {
+        BitSet testNodes = new BitSet();
+
+
+        // Mark test nodes
+        for (Probe p : spectrum.byProbe()) {
+            if (p.getType() == ProbeType.TRANSACTION_START)
+                testNodes.set(p.getNode().getId());
+        }
+
+        // Mark test nodes' children
+        for (Node n : spectrum.getTree()) {
+            Node parent = n.getParent();
+
+            if (parent != null && testNodes.get(parent.getId()))
+                testNodes.set(n.getId());
+        }
+
+
+        // create probe matcher
         BitSet ret = new BitSet();
 
-
-        map = new HashMap<Integer, Boolean> ();
-
-        for (int i = 0; i < spectrum.getProbeCount(); i++) {
-            if (!check(spectrum, spectrum.getProbe(i).getNode()))
-                ret.set(i);
+        for (Probe p : spectrum.byProbe()) {
+            if (testNodes.get(p.getNode().getId()))
+                ret.set(p.getId());
         }
 
         return ret;
-    }
-
-    public boolean check (Spectrum spectrum,
-                          Node n) {
-        if (n == null) return false;
-
-        if (map.containsKey(n.getId())) return map.get(n.getId());
-
-        boolean result = false;
-
-        for (Probe p : spectrum.byProbe()) {
-            if (p.getNodeId() == n.getId() && p.getType() == ProbeType.TRANSACTION_START) {
-                result = true;
-                break;
-            }
-        }
-
-        if (!result) {
-            result = check(spectrum, n.getParent());
-        }
-
-        map.put(n.getId(), result);
-
-        return result;
     }
 }

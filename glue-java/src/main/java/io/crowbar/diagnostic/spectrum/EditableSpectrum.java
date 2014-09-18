@@ -98,6 +98,7 @@ extends Spectrum {
             probes.add(null);
         }
 
+        probeCount = Math.max(probeCount, id + 1);
         probes.set(id, new Probe(this, type, id, node.getId()));
     }
 }

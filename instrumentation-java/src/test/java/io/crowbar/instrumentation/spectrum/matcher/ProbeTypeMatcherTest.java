@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
+import io.crowbar.diagnostic.spectrum.HitTransaction;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Transaction;
@@ -31,17 +32,20 @@ public class ProbeTypeMatcherTest {
         ProbeTypeMatcher ptm = new ProbeTypeMatcher(ProbeType.TRANSACTION_START);
 
 
-        EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
+        EditableSpectrum es = new EditableSpectrum();
+
+
         assertEquals(true, ptm.matchProbes(es).isEmpty());
         assertEquals(true, ptm.matchTransactions(es).isEmpty());
     }
 
     @Test
     public void testFalseDefaultValueTransactions () {
-        EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
+        EditableSpectrum es = new EditableSpectrum();
 
-        TransactionFactory<Hit, TrM> tf = new TransactionFactory<Hit, TrM> ();
-        Transaction<Hit, TrM> transaction = tf.create(0, activities, 1.0, 0.0, null);
+        Transaction transaction = new HitTransaction(0, activities, 1.0, 0.0);
+
+
         es.setTransaction(transaction);
 
         ProbeTypeMatcher ptm = new ProbeTypeMatcher(true, ProbeType.TRANSACTION_START);
@@ -50,10 +54,11 @@ public class ProbeTypeMatcherTest {
 
     @Test
     public void testTrueDefaultValueTransactions () {
-        EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
+        EditableSpectrum es = new EditableSpectrum();
 
-        TransactionFactory<Hit, TrM> tf = new TransactionFactory<Hit, TrM> ();
-        Transaction<Hit, TrM> transaction = tf.create(0, activities, 1.0, 0.0, null);
+        Transaction transaction = new HitTransaction(0, activities, 1.0, 0.0);
+
+
         es.setTransaction(transaction);
 
         ProbeTypeMatcher ptm = new ProbeTypeMatcher(false, ProbeType.TRANSACTION_START);
@@ -62,19 +67,25 @@ public class ProbeTypeMatcherTest {
 
     @Test
     public void testMatchProbes () {
-        EditableSpectrum<Hit, TrM> es = new EditableSpectrum<Hit, TrM> ();
+        EditableSpectrum es = new EditableSpectrum();
 
         Node n = es.getTree().addNode("other node", null, 0);
+
+
         es.setProbe(0, ProbeType.HIT_PROBE, n);
         es.setProbe(1, ProbeType.ORACLE, n);
         es.setProbe(2, ProbeType.TRANSACTION_START, n);
 
-        TransactionFactory<Hit, TrM> tf = new TransactionFactory<Hit, TrM> ();
-        Transaction<Hit, TrM> transaction = tf.create(0, activities, 1.0, 0.0, null);
+        Transaction transaction = new HitTransaction(0, activities, 1.0, 0.0);
         es.setTransaction(transaction);
+
+
+        System.out.println(es.getProbeCount());
+        System.out.println(es);
 
         ProbeTypeMatcher ptm = new ProbeTypeMatcher(ProbeType.TRANSACTION_START);
         BitSet b = ptm.matchProbes(es);
+
         assertEquals(1, b.cardinality());
         assertEquals(3, b.length());
         assertFalse(b.get(0));

@@ -45,7 +45,8 @@ public final class Probe {
 
         str.append("{class='Probe', ");
         str.append("id=" + getId() + ", ");
-        str.append("nodeId=" + getNodeId() + ", ");
+        str.append("nodeId=" + getNodeId() + ",");
+        str.append("type=" + getType().getName() + "}");
 
         return str.toString();
     }

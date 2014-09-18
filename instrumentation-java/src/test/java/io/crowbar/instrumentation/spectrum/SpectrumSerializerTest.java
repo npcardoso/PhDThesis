@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.TransactionFactory;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import java.util.ArrayList;
 import java.util.List;

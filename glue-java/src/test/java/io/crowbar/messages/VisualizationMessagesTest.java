@@ -9,7 +9,6 @@ import io.crowbar.diagnostic.spectrum.EditableTree;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Tree;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.unserializers.HitSpectrumUnserializer;
 import io.crowbar.messages.DiagnosticMessages.Request;
 

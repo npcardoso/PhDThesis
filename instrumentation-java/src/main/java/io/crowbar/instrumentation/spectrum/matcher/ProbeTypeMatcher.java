@@ -1,8 +1,6 @@
 package io.crowbar.instrumentation.spectrum.matcher;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Metadata;
 import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
@@ -11,7 +9,7 @@ import java.util.BitSet;
 import java.util.Set;
 import java.util.HashSet;
 
-public final class ProbeTypeMatcher extends AbstractSpectrumMatcher<Activity, Metadata> {
+public final class ProbeTypeMatcher extends AbstractSpectrumMatcher {
     private final Set<ProbeType> types = new HashSet<ProbeType> ();
     public ProbeTypeMatcher (ProbeType... types) {
         this(true, types);
@@ -27,7 +25,7 @@ public final class ProbeTypeMatcher extends AbstractSpectrumMatcher<Activity, Me
     }
 
     @Override
-    public BitSet matchProbes (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
+    public BitSet matchProbes (Spectrum spectrum) {
         BitSet ret = new BitSet();
 
 

@@ -1,7 +1,6 @@
 package io.crowbar.diagnostic.spectrum.serializers;
 
 
-import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Spectrum;
@@ -73,11 +72,11 @@ public final class HitSpectrumTableSerializer {
         }
     }
 
-    public static String serialize (Spectrum< ? extends Activity, ? > spectrum) {
+    public static String serialize (Spectrum spectrum) {
         return HitSpectrumSerializer.serialize(spectrum, "\n");
     }
 
-    public static String serialize (Spectrum< ? extends Activity, ? > spectrum,
+    public static String serialize (Spectrum spectrum,
                                     TableStyle ts) {
         StringBuilder ret = new StringBuilder();
 
@@ -124,7 +123,7 @@ public final class HitSpectrumTableSerializer {
         return ret.toString();
     }
 
-    public static String serialize (Transaction< ? extends Activity, ? > transaction,
+    public static String serialize (Transaction transaction,
                                     int probeCount,
                                     int maxWidth,
                                     TableStyle ts) {
@@ -137,7 +136,7 @@ public final class HitSpectrumTableSerializer {
         if (transaction != null) {
             for (i = 0; i < transaction.size(); i++) {
                 ret.append(ts.paddingLeft(maxWidth, 1));
-                ret.append(transaction.get(i).isActive() ? "1" : "0");
+                ret.append(transaction.isActive(i) ? "1" : "0");
                 ret.append(ts.paddingRight(maxWidth, 1));
             }
         }

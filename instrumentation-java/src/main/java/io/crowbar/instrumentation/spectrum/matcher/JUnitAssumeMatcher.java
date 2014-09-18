@@ -1,7 +1,6 @@
 package io.crowbar.instrumentation.spectrum.matcher;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;
 import io.crowbar.instrumentation.spectrum.TrM;
@@ -9,7 +8,7 @@ import io.crowbar.instrumentation.spectrum.TrM;
 
 import java.util.BitSet;
 
-public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, TrM> {
+public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher {
     public JUnitAssumeMatcher () {
         this(true);
     }
@@ -19,23 +18,24 @@ public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher<Activity, 
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends TrM> spectrum) {
+    public BitSet matchTransactions (Spectrum spectrum) {
         BitSet ret = new BitSet();
 
         int i = 0;
 
 
-        for (Transaction< ? extends Activity, ? extends TrM> t : spectrum.byTransaction()) {
-            TrM m = t.getMetadata();
-
-            if (m != null && "org.junit.Assume$AssumptionViolatedException".equals(m.getExceptionClass()))
-                ret.set(i);
-            else
-                ret.clear(i);
-
-            i++;
-        }
-
+        // TODO: Fix this
+        /*
+         *      for (Transaction t : spectrum.byTransaction()) {
+         *          TrM m = t.getMetadata();
+         *          if (m != null && "org.junit.Assume$AssumptionViolatedException".equals(m.getExceptionClass()))
+         *              ret.set(i);
+         *          else
+         *              ret.clear(i);
+         *
+         *          i++;
+         *      }
+         */
         return ret;
     }
 }

@@ -3,24 +3,23 @@ package io.crowbar.instrumentation.spectrum.matcher;
 import static org.junit.Assert.assertEquals;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.TransactionFactory;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.instrumentation.spectrum.TrM;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class JUnitAssumeMatcherTest {
-    private static List<Hit> activities = new ArrayList<Hit> ();
+    private static BitSet activities = new BitSet();
 
     @BeforeClass
     public static void setUp () {
-        activities.add(new Hit(true));
-        activities.add(new Hit(false));
-        activities.add(new Hit(true));
+        activities.set(0);
+        activities.clear(1);
+        activities.set(2);
     }
 
     @Test

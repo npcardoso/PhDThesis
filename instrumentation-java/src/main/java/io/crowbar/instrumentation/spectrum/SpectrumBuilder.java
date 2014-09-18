@@ -1,11 +1,11 @@
 package io.crowbar.instrumentation.spectrum;
 
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
+import io.crowbar.diagnostic.spectrum.HitTransaction;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.instrumentation.events.AbstractEventListener;
 
 import java.util.HashMap;
@@ -17,11 +17,11 @@ public final class SpectrumBuilder extends AbstractEventListener {
 
     private Map<Integer, Node> nodeIdTranslation = new HashMap<Integer, Node> ();
 
-    private final EditableSpectrum<Hit, TrM> spectrum =
-        new EditableSpectrum<Hit, TrM> ();
+    private final EditableSpectrum spectrum =
+        new EditableSpectrum();
 
 
-    public Spectrum<Hit, TrM> getSpectrum () {
+    public Spectrum getSpectrum () {
         return spectrum;
     }
 
@@ -56,11 +56,12 @@ public final class SpectrumBuilder extends AbstractEventListener {
                         exceptionMessage);
 
 
-        Transaction<Hit, TrM> t =
-            Factory.createTransaction(spectrum.getTransactionCount(),
-                                      hitVector,
-                                      error ? 1 : 0,
-                                      1, m);
+        Transaction t =
+            new HitTransaction(
+                spectrum.getTransactionCount(),
+                hitVector,
+                error ? 1 : 0,
+                1);
 
 
         spectrum.setTransaction(t);

@@ -2,7 +2,6 @@ package io.crowbar.instrumentation.spectrum;
 
 import static org.junit.Assert.*;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import org.junit.Test;
 

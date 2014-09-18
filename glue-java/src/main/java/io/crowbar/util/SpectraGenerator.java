@@ -2,14 +2,14 @@ package io.crowbar.util;
 
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.EditableTree;
+import io.crowbar.diagnostic.spectrum.HitTransaction;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.TransactionFactory;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Random;
 
@@ -42,29 +42,26 @@ public final class SpectraGenerator {
     }
 
     // TODO: Improve generator.
-    public static Spectrum<Hit, ? > generateSpectrum (int ntrans,
-                                                      int numProbes,
-                                                      int numNodes,
-                                                      double actRate,
-                                                      double errRate) {
+    public static Spectrum generateSpectrum (int ntrans,
+                                             int numProbes,
+                                             int numNodes,
+                                             double actRate,
+                                             double errRate) {
         EditableSpectrum s = new EditableSpectrum();
 
 
         randomizeTree(s, numNodes);
         randomizeProbes(s, numProbes);
 
-
-        TransactionFactory<Hit, ? > tf = new TransactionFactory();
-
         for (int t = 0; t < ntrans; t++) {
-            List<Hit> activities = new ArrayList<Hit> (numProbes);
+            BitSet activity = new BitSet();
 
             for (int i = 0; i < numProbes; i++) {
-                activities.add(new Hit(Math.random() <= actRate));
+                activity.set(i, Math.random() <= actRate);
             }
 
             double error = (Math.random() <= errRate) ? 1 : 0;
-            s.setTransaction(tf.create(t, activities, error, 1.0, null));
+            s.setTransaction(new HitTransaction(t, activity, error, 1.0));
         }
 
         return s;

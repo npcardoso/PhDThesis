@@ -7,8 +7,6 @@ import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.TransactionFactory;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.instrumentation.spectrum.TrM;
 
 import java.util.ArrayList;
@@ -19,13 +17,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ProbeTypeMatcherTest {
-    private static List<Hit> activities = new ArrayList<Hit> ();
+    private static BitSet activities = new BitSet();
 
     @BeforeClass
     public static void setUp () {
-        activities.add(new Hit(false));
-        activities.add(new Hit(true));
-        activities.add(new Hit(false));
+        activities.clear(0);
+        activities.set(1);
+        activities.clear(2);
     }
 
     @Test

@@ -13,7 +13,6 @@ import io.crowbar.diagnostic.algorithms.MHSGenerator;
 import io.crowbar.diagnostic.algorithms.SimilarityRanker;
 import io.crowbar.diagnostic.algorithms.SingleFaultGenerator;
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.unserializers.HitSpectrumUnserializer;
 
 import java.util.ArrayList;
@@ -29,9 +28,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new SingleFaultGenerator());
 
@@ -68,9 +68,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new SingleFaultGenerator());
 
@@ -109,9 +110,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new SingleFaultGenerator());
 
@@ -148,9 +150,10 @@ public class JNARunnerTest {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new SingleFaultGenerator());
 
@@ -186,9 +189,10 @@ public class JNARunnerTest {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new SingleFaultGenerator());
 
@@ -222,9 +226,10 @@ public class JNARunnerTest {
         String in = "10 9 0 1 0 0 0 0 0 0 0 0 0.0 0 0 0 1 0 0 0 0 0 0 0.0 1 0 0 0 0 1 0 0 0 0 0.0 0 0 0 0 0 0 0 1 0 0 0.0 0 0 0 0 0 0 0 0 1 0 0.0 0 0 1 0 0 0 0 0 0 0 1.0 0 0 0 0 1 0 0 0 0 0 1.0 0 0 0 0 0 0 1 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 1.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new SingleFaultGenerator());
 
@@ -259,9 +264,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new MHSGenerator());
 
@@ -295,9 +301,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new MHSGenerator());
 
@@ -333,11 +340,13 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
 
         MHSGenerator mhs = new MHSGenerator();
+
+
         mhs.setLambda(1);
         j.addGenerator(mhs);
 
@@ -371,7 +380,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
+
+        System.out.println(s);
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
 
@@ -414,9 +426,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new MHSGenerator());
 
@@ -429,9 +442,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new MHSGenerator());
 
@@ -444,9 +458,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new MHSGenerator());
 
@@ -459,9 +474,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 0 1.0 1 1 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new MHSGenerator());
 
@@ -474,9 +490,10 @@ public class JNARunnerTest {
         String in = "3 3 1 0 1 1.0 0 1 1 1.0 0 1 1 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
         DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+
 
         j.addGenerator(new SingleFaultGenerator());
         j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));

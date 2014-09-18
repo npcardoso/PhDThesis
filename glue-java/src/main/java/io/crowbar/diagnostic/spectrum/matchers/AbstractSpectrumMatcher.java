@@ -1,8 +1,6 @@
 package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Metadata;
 import java.util.BitSet;
 
 /**
@@ -14,9 +12,8 @@ import java.util.BitSet;
  * probes/transactions. The default behavior can be selected using
  * the protected constructor.
  */
-public abstract class AbstractSpectrumMatcher<A extends Activity,
-                                              TM extends Metadata>
-implements SpectrumMatcher<A, TM> {
+public abstract class AbstractSpectrumMatcher
+implements SpectrumMatcher {
     private final boolean defaultValueProbes;
     private final boolean defaultValueTransactions;
 
@@ -41,7 +38,7 @@ implements SpectrumMatcher<A, TM> {
     }
 
     @Override
-    public BitSet matchProbes (Spectrum< ? extends A, ? extends TM> spectrum) {
+    public BitSet matchProbes (Spectrum spectrum) {
         BitSet ret = new BitSet();
 
 
@@ -53,7 +50,7 @@ implements SpectrumMatcher<A, TM> {
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends A, ? extends TM> spectrum) {
+    public BitSet matchTransactions (Spectrum spectrum) {
         BitSet ret = new BitSet();
 
 

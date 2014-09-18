@@ -1,8 +1,7 @@
 package io.crowbar.instrumentation.spectrum;
 
-import io.crowbar.diagnostic.spectrum.Metadata;
 
-public final class TrM implements Metadata {
+public final class TrM {
     private final String exceptionClass;
     private final String exceptionMessage;
 

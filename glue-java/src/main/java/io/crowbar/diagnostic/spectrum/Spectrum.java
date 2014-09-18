@@ -9,8 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public abstract class Spectrum<A extends Activity,
-                               TM extends Metadata> {
+public abstract class Spectrum {
     public interface MergeStrategy {
         double reduce (List<Double> scores);
     }
@@ -87,16 +86,16 @@ public abstract class Spectrum<A extends Activity,
         }
     }
 
-    private class TIterable implements Iterable<Transaction<A, TM> > {
-        public Iterator<Transaction<A, TM> > iterator () {
-            return new AbstractIterator<Transaction<A, TM> > () {
+    private class TIterable implements Iterable<Transaction> {
+        public Iterator<Transaction> iterator () {
+            return new AbstractIterator<Transaction> () {
                        @Override
                        public boolean hasNext () {
                            return getId() < getTransactionCount();
                        }
 
                        @Override
-                       protected Transaction<A, TM> get (int i) {
+                       protected Transaction get (int i) {
                            return getTransaction(i);
                        }
             };
@@ -126,7 +125,7 @@ public abstract class Spectrum<A extends Activity,
     public abstract int getTransactionCount ();
     public abstract int getProbeCount ();
 
-    public abstract Transaction<A, TM> getTransaction (int transactionId);
+    public abstract Transaction getTransaction (int transactionId);
 
     public abstract Probe getProbe (int probeId);
 
@@ -147,7 +146,7 @@ public abstract class Spectrum<A extends Activity,
         return new PIterable();
     }
 
-    public final Iterable<Transaction<A, TM> > byTransaction () {
+    public final Iterable<Transaction> byTransaction () {
         return new TIterable();
     }
 
@@ -300,7 +299,7 @@ public abstract class Spectrum<A extends Activity,
 
         first = true;
 
-        for (Transaction<A, TM> transaction : byTransaction()) {
+        for (Transaction transaction : byTransaction()) {
             if (!first)
                 str.append(",");
 

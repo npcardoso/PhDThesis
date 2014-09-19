@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.AbstractList;
 
 public abstract class Spectrum {
     public interface MergeStrategy {
@@ -62,27 +63,30 @@ public abstract class Spectrum {
         }
     };
 
-
-    private abstract class AbstractIterator<T>
+    private class SkipNullIterator<T>
     implements Iterator<T> {
-        private int id = 0;
+        private final Iterator<T> it;
+        T next;
 
-        private void goToNext () {
-            while (id < size() && get(id) == null) {
-                id++;
-            }
-        }
-
-        AbstractIterator () {
+        SkipNullIterator (Iterator<T> it) {
+            this.it = it;
             goToNext();
         }
 
-        protected abstract int size ();
-        protected abstract T get (int id);
+        private void goToNext () {
+            next = null;
+
+            while (it.hasNext()) {
+                next = it.next();
+
+                if (next != null)
+                    break;
+            }
+        }
 
         @Override
         public final boolean hasNext () {
-            return id < size();
+            return next != null;
         }
 
         @Override
@@ -95,43 +99,39 @@ public abstract class Spectrum {
             if (!hasNext())
                 throw new NoSuchElementException();
 
-            int tmp = id++;
+            T tmp = next;
+
             goToNext();
-            return get(tmp);
+            return tmp;
         }
     }
 
-    private class TIterable implements Iterable<Transaction> {
-        public Iterator<Transaction> iterator () {
-            return new AbstractIterator<Transaction> () {
-                       @Override
-                       public int size () {
-                           return getTransactionCount();
-                       }
-
-                       @Override
-                       protected Transaction get (int i) {
-                           return getTransaction(i);
-                       }
-            };
+    private final List<Transaction> transactions =
+        new AbstractList() {
+        @Override
+        public int size () {
+            return getTransactionCount();
         }
-    }
 
-    private class PIterable implements Iterable<Probe> {
-        public Iterator<Probe> iterator () {
-            return new AbstractIterator<Probe> () {
-                       @Override
-                       public int size () {
-                           return getProbeCount();
-                       }
-
-                       @Override
-                       protected Probe get (int i) {
-                           return getProbe(i);
-                       }
-            };
+        @Override
+        public Transaction get (int id) {
+            return getTransaction(id);
         }
-    }
+    };
+
+    private final List<Probe> probes =
+        new AbstractList() {
+        @Override
+        public int size () {
+            return getProbeCount();
+        }
+
+        @Override
+        public Probe get (int id) {
+            return getProbe(id);
+        }
+    };
+
 
     Spectrum () {}
 
@@ -140,12 +140,37 @@ public abstract class Spectrum {
     public abstract int getTransactionCount ();
     public abstract int getProbeCount ();
 
+    /**
+     * @brief Retreives a transaction by id.
+     * @return A transaction or null if a transaction with such id
+     * does not exist.
+     */
     public abstract Transaction getTransaction (int transactionId);
 
+    /**
+     * @brief Retreives a probe by id.
+     * @return A probe or null if a probe with such id does
+     * not exist/is not linked with any node in the tree.
+     */
     public abstract Probe getProbe (int probeId);
 
-    public abstract List<Probe> getProbes ();
 
+    /**
+     * @brief Returns an immutable list of transactions.
+     * @note Uses getTransaction()
+     */
+    public final List<Transaction> getTransactions () {
+        return transactions;
+    }
+
+    /**
+     * @brief Returns an immutable list of probes.
+     */
+    public final List<Probe> getProbes () {
+        return probes;
+    }
+
+    // TODO: Implement List as a view instead of actually creating a list
     public final List<Probe> getNodeProbes (int nodeId) {
         List<Probe> nodeProbes = new ArrayList<Probe> ();
 
@@ -158,19 +183,29 @@ public abstract class Spectrum {
     }
 
     /**
-     * @brief Returns an iterable over the spectrum's probes. null probes are ommited.
-     * The probes are iterated in ascending ID order.
-     */
-    public final Iterable<Probe> byProbe () {
-        return new PIterable();
-    }
-
-    /**
      * @brief Returns an iterable over the spectrum's transactions. null transactions are ommited.
      * The transactions are iterated in ascending ID order.
      */
     public final Iterable<Transaction> byTransaction () {
-        return new TIterable();
+        return new Iterable() {
+                   @Override
+                   public Iterator<Transaction> iterator () {
+                       return new SkipNullIterator(getTransactions().iterator());
+                   }
+        };
+    }
+
+    /**
+     * @brief Returns an iterable over the spectrum's probes. null probes are ommited.
+     * The probes are iterated in ascending ID order.
+     */
+    public final Iterable<Probe> byProbe () {
+        return new Iterable() {
+                   @Override
+                   public Iterator<Probe> iterator () {
+                       return new SkipNullIterator(getProbes().iterator());
+                   }
+        };
     }
 
     private List<Double> reduce (List<List<Double> > l,
@@ -190,7 +225,7 @@ public abstract class Spectrum {
     /**
      * @brief Calculates a score value per Tree Node using an arbitrary MergeStrategy.
      * This is used to convert a multiple fault ranking into single fault ranking.
-     * @post ret.size() == getTree.size()
+     * @post ret.size() == getTree().size()
      * @return A list containing the score for each node.
      */
     public final List<Double> getScorePerNode (Diagnostic diagnostic,

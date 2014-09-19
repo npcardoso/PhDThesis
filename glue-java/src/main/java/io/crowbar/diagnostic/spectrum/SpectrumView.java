@@ -85,9 +85,4 @@ extends Spectrum {
 
         return p;
     }
-
-    @Override
-    public List<Probe> getProbes () {
-        return spectrum.getProbes();
-    }
 }

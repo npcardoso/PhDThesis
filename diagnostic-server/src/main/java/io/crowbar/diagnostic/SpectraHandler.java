@@ -123,7 +123,8 @@ public final class SpectraHandler extends AbstractHttpHandler {
                               OutputStream os,
                               String id,
                               String specId) throws IOException {
-        Spectrum s = entries.get(id).getViews().get(Integer.parseInt(specId));
+        int spectrumId = Integer.parseInt(specId);
+        Spectrum s = entries.get(id).getViews().get(spectrumId);
 
 
         if (s == null)
@@ -131,6 +132,13 @@ public final class SpectraHandler extends AbstractHttpHandler {
 
 
         t.sendResponseHeaders(200, 0);
+
+        if (spectrumId > 0) {
+            SpectrumMatcher m = spectrumMatchers.get(spectrumId - 1);
+            os.write(m.toString().getBytes());
+            os.write("\n".getBytes());
+        }
+
         os.write(s.getTree().toString().getBytes());
         os.write("\n".getBytes());
         os.write(s.getProbes().toString().getBytes());

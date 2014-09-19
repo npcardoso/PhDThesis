@@ -89,7 +89,6 @@ class DiagnosticServer {
 
         public final void handle (HttpExchange t) throws IOException {
             t.sendResponseHeaders(200, 0);
-            System.out.println("asdasd" + links);
 
             OutputStream os = t.getResponseBody();
 
@@ -122,7 +121,7 @@ class DiagnosticServer {
         httpServer = HttpServer.create(new InetSocketAddress(httpPort), 0);
 
         List<SpectrumMatcher> spectrumMatchers = new ArrayList<SpectrumMatcher> ();
-        spectrumMatchers.add(new TestProbesMatcher());
+        spectrumMatchers.add(new NegateMatcher(new TestProbesMatcher()));
         spectrumMatchers.add(new ProbeTypeMatcher(ProbeType.HIT_PROBE));
         spectrumMatchers.add(new ActiveProbeMatcher());
         spectrumMatchers.add(new SuspiciousProbeMatcher());

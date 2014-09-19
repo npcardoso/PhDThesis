@@ -21,20 +21,15 @@ extends Spectrum {
     }
 
     @Override
-    public int getProbeCount () {
-        return probeCount;
-    }
-
-    @Override
     public int getTransactionCount () {
         return transactions.size();
     }
 
-    /**
-     * @brief Retreives a transaction by id.
-     * @return A transaction or null if a transaction with such id
-     * does not exist.
-     */
+    @Override
+    public int getProbeCount () {
+        return probeCount;
+    }
+
     @Override
     public Transaction getTransaction (int transactionId) {
         if (transactionId < 0 || transactionId >= transactions.size())
@@ -43,26 +38,12 @@ extends Spectrum {
         return transactions.get(transactionId);
     }
 
-    /**
-     * @brief Retreives a probe by id.
-     * @return A probe or null if a probe with such id does
-     * not exist/is not linked with any node in the tree.
-     */
     @Override
     public Probe getProbe (int id) {
         if (id < 0 || id >= probes.size())
             return null;
 
         return probes.get(id);
-    }
-
-    /**
-     * @brief Retreives the list of probes
-     * @return A list of probes
-     */
-    @Override
-    public List<Probe> getProbes () {
-        return Collections.unmodifiableList(probes);
     }
 
     /**

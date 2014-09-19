@@ -7,7 +7,7 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
-public final class TreeView implements Tree {
+public final class TreeView extends AbstractTree {
     private final Tree t;
     private int[] nodes;
 

@@ -6,12 +6,14 @@ import io.crowbar.messages.Messages;
 import io.crowbar.messages.VisualizationMessages;
 
 import com.sun.net.httpserver.HttpExchange;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 class DiagnosticReportHandler extends AbstractHttpHandler {
     private static class Entry {
@@ -44,40 +46,70 @@ class DiagnosticReportHandler extends AbstractHttpHandler {
     public void handle (HttpExchange t,
                         String relativePath)
     throws Exception {
-        String response = "";
+        StringTokenizer tok = new StringTokenizer(relativePath, "/");
+
+        OutputStream os = t.getResponseBody();
+
+        int nTok = tok.countTokens();
 
 
-        if (relativePath.equals("/")) {
-            for (String id : entries.keySet())
-                response += t.getHttpContext().getPath() + "/" + id + "\n";
-        } else {
-            Pattern p = Pattern.compile("/([^/]*)/([0-9]*)");
-            Matcher m = p.matcher(relativePath);
-            m.matches();
-            String id = m.group(1);
-            int connection = Integer.parseInt(m.group(2));
+        t.sendResponseHeaders(200, 0);
 
-
-            Entry e = entries.get(id);
-            DiagnosticSystem diagSystem = e.getDiagnosticSystem();
-            Spectrum spectrum = e.getSpectrum();
-            DiagnosticReport dr = e.getDiagnosticReport();
-            Connection c = diagSystem.getConnections().get(connection);
-            Diagnostic diag = dr.getDiagnostic(c);
-
-            List<Double> scores = spectrum.getScorePerNode(diag, Spectrum.SUM);
-            Tree tr = spectrum.getTree();
-
-            response = io.crowbar.messages.Messages.serialize(
-                VisualizationMessages.issueRequest(tr, scores));
+        if (nTok == 0) {
+            sendLinks(t, os);
+        } else if (nTok == 1) {
+            String id = tok.nextToken();
+            sendLinks(t, os, id);
         }
 
-        System.out.println("Response:" + response);
+        if (tok.countTokens() == 2) {
+            String id = tok.nextToken();
+            String con = tok.nextToken();
+            sendReport(t, os, id, con);
+        }
 
-        t.sendResponseHeaders(200, response.length());
-        OutputStream os = t.getResponseBody();
-        os.write(response.getBytes());
         os.close();
+
+        String response = "";
+    }
+
+    public void sendLinks (HttpExchange t,
+                           OutputStream os)
+    throws IOException {
+        for (String id : entries.keySet())
+            os.write(("<a href=\"" + t.getHttpContext().getPath() + "/" + id + "\">" + id + "</a>\n").getBytes());
+    }
+
+    public void sendLinks (HttpExchange t,
+                           OutputStream os,
+                           String id)
+    throws IOException {
+        Entry e = entries.get(id);
+        DiagnosticSystem ds = e.getDiagnosticSystem();
+
+
+        if (ds == null)
+            return;
+
+        for (Connection c : ds.getConnections()) {
+            os.write(("<a href=\"" + t.getRequestURI().getPath() + "/" + c.getId() + "\">" + c + "</a>\n").getBytes());
+        }
+    }
+
+    public void sendReport (HttpExchange t,
+                            OutputStream os,
+                            String id,
+                            String con) throws IOException {
+        Entry e = entries.get(id);
+
+        DiagnosticSystem ds = e.getDiagnosticSystem();
+        Spectrum spectrum = e.getSpectrum();
+        DiagnosticReport dr = e.getDiagnosticReport();
+        Connection c = ds.getConnections().get(Integer.parseInt(con));
+        Diagnostic diag = dr.getDiagnostic(c);
+
+
+        os.write(diag.toString().getBytes());
     }
 
     private final Map<String, Entry> entries = new HashMap<String, Entry> ();

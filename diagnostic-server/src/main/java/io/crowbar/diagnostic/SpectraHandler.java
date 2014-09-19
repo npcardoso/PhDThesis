@@ -65,7 +65,8 @@ public final class SpectraHandler extends AbstractHttpHandler {
 
     @Override
     public void handle (HttpExchange t,
-                        String relativePath) throws Exception {
+                        String relativePath)
+    throws Exception {
         StringTokenizer tok = new StringTokenizer(relativePath, "/");
 
         OutputStream os = t.getResponseBody();
@@ -90,7 +91,8 @@ public final class SpectraHandler extends AbstractHttpHandler {
     }
 
     public void sendLinks (HttpExchange t,
-                           OutputStream os) throws IOException {
+                           OutputStream os)
+    throws IOException {
         t.sendResponseHeaders(200, 0);
 
         for (String id : entries.keySet())
@@ -99,7 +101,8 @@ public final class SpectraHandler extends AbstractHttpHandler {
 
     public void sendLinks (HttpExchange t,
                            OutputStream os,
-                           String id) throws IOException {
+                           String id)
+    throws IOException {
         Entry e = entries.get(id);
 
 
@@ -128,6 +131,10 @@ public final class SpectraHandler extends AbstractHttpHandler {
 
 
         t.sendResponseHeaders(200, 0);
+        os.write(s.getTree().toString().getBytes());
+        os.write("\n".getBytes());
+        os.write(s.getProbes().toString().getBytes());
+        os.write("\n".getBytes());
         os.write(HitSpectrumSerializer.serialize(s).getBytes());
     }
 

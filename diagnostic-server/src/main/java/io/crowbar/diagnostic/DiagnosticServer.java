@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import io.crowbar.diagnostic.spectrum.Tree;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 class DiagnosticServer {
@@ -79,14 +80,27 @@ class DiagnosticServer {
         }
     }
 
+    private class StaticLinksHandler implements HttpHandler {
+        private List<String> links = new LinkedList<String> ();
 
-    public void handle (String id,
-                        DiagnosticReport dr) {
-        reports.put(id, dr);
-        System.out.println("reports: " + reports);
+        public void addLink (String link) {
+            links.add(link);
+        }
 
-        System.out.println("http://127.0.0.1:8080/json/" + id + "/0");
+        public final void handle (HttpExchange t) throws IOException {
+            t.sendResponseHeaders(200, 0);
+            System.out.println("asdasd" + links);
+
+            OutputStream os = t.getResponseBody();
+
+            for (String l : links) {
+                os.write(l.getBytes());
+            }
+
+            os.close();
+        }
     }
+
 
     private final Map<String, DiagnosticReport> reports = new HashMap<String, DiagnosticReport> ();
 
@@ -108,11 +122,11 @@ class DiagnosticServer {
         httpServer = HttpServer.create(new InetSocketAddress(httpPort), 0);
 
         List<SpectrumMatcher> spectrumMatchers = new ArrayList<SpectrumMatcher> ();
+        spectrumMatchers.add(new TestProbesMatcher());
         spectrumMatchers.add(new ProbeTypeMatcher(ProbeType.HIT_PROBE));
         spectrumMatchers.add(new ActiveProbeMatcher());
         spectrumMatchers.add(new SuspiciousProbeMatcher());
         spectrumMatchers.add(new NegateMatcher(new JUnitAssumeMatcher(false)));
-        spectrumMatchers.add(new TestProbesMatcher());
         spectrumMatchers.add(new ValidTransactionMatcher());
 
         specHandler = new SpectraHandler(spectrumMatchers);
@@ -120,6 +134,12 @@ class DiagnosticServer {
         diagReportHandler = new DiagnosticReportHandler();
 
 
+        StaticLinksHandler staticLinks = new StaticLinksHandler();
+        staticLinks.addLink("<a href=/spectra/>Spectra</a>\n");
+        staticLinks.addLink("<a href=/dr/>DiagnosticReport</a>\n");
+        staticLinks.addLink("<a href=/visualizations/>Visualizations</a>\n");
+
+        httpServer.createContext("/", staticLinks);
         httpServer.createContext("/spectra/", specHandler);
         httpServer.createContext("/dr/", diagReportHandler);
         httpServer.createContext("/visualizations/", new StaticContentHttpHandler("../visualizations/src"));

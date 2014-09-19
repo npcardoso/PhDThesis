@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public final class EditableTree implements Tree {
+public final class EditableTree extends AbstractTree {
     private ArrayList<Node> nodes = new ArrayList<Node> ();
 
     public EditableTree (String rootName) {

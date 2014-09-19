@@ -61,7 +61,7 @@ public class TestProbesMatcherTest {
 
 
         assertEquals(true, m.matchProbes(s).isEmpty());
-        assertEquals(false, m.matchTransactions(s).isEmpty());
+        assertEquals(true, m.matchTransactions(s).isEmpty());
     }
 
     @Test

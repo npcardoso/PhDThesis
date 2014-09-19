@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class TestProbesMatcher extends AbstractSpectrumMatcher {
     public TestProbesMatcher () {
-        super(true, false);
+        super(false, false);
     }
 
     @Override

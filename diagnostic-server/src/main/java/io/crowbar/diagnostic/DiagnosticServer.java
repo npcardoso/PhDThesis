@@ -5,6 +5,7 @@ import io.crowbar.diagnostic.algorithms.SingleFaultGenerator;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.SpectrumViewFactory;
+import io.crowbar.diagnostic.spectrum.matchers.SpectrumMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.ActiveProbeMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.NegateMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.ProbeTypeMatcher;
@@ -16,6 +17,7 @@ import io.crowbar.instrumentation.InstrumentationServer;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.spectrum.SpectrumBuilder;
 import io.crowbar.instrumentation.spectrum.matcher.JUnitAssumeMatcher;
+import io.crowbar.messages.VisualizationMessages;
 
 
 import java.io.IOException;
@@ -32,21 +34,10 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import io.crowbar.diagnostic.spectrum.Tree;
-import io.crowbar.messages.VisualizationMessages;
+import java.util.ArrayList;
 
 
 class DiagnosticServer {
-    private static final DiagnosticSystem DS;
-
-    static {
-        DiagnosticSystemFactory j = new DiagnosticSystemFactory();
-        j.addGenerator(new SingleFaultGenerator());
-        j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
-        j.addConnection(0, 0);
-
-        DS = j.create();
-    }
-
     private class InstrumentationService
     implements InstrumentationServer.Service {
         private final String id;
@@ -67,7 +58,17 @@ class DiagnosticServer {
 
         @Override
         public void terminate () {
-            handle(id, spectrumBuilder.getSpectrum());
+            SpectraHandler.Entry specRes = specHandler.handle(id, spectrumBuilder.getSpectrum());
+            try {
+                JNARunner runner = new JNARunner();
+                System.out.println("------ Inside JNA --------");
+                DiagnosticReport dr = runner.run(diagSystem, specRes.getFinal());
+                System.out.println("------ Inside JNA --------");
+                diagReportHandler.handle(id, diagSystem, specRes.getFinal(), dr);
+            }
+            catch (Throwable e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -80,38 +81,6 @@ class DiagnosticServer {
 
 
     public void handle (String id,
-                        Spectrum s) {
-        spectra.put(id, s);
-
-        SpectrumViewFactory svf = new SpectrumViewFactory(s);
-
-
-        svf.addStage(new ProbeTypeMatcher(ProbeType.HIT_PROBE));
-        svf.addStage(new ActiveProbeMatcher());
-        svf.addStage(new SuspiciousProbeMatcher());
-        svf.addStage(new NegateMatcher(new JUnitAssumeMatcher(false)));
-        svf.addStage(new TestProbesMatcher());
-        svf.addStage(new ValidTransactionMatcher());
-
-
-        Spectrum spectrum = svf.getView();
-
-
-        try {
-            JNARunner runner = new JNARunner();
-
-            System.out.println("------ Inside JNA --------");
-            DiagnosticReport dr = runner.run(DS, spectrum);
-            System.out.println("------ Inside JNA --------");
-
-            handle(id, dr);
-        }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void handle (String id,
                         DiagnosticReport dr) {
         reports.put(id, dr);
         System.out.println("reports: " + reports);
@@ -119,72 +88,40 @@ class DiagnosticServer {
         System.out.println("http://127.0.0.1:8080/json/" + id + "/0");
     }
 
-    private final Map<String, Spectrum> spectra = new HashMap<String, Spectrum> ();
     private final Map<String, DiagnosticReport> reports = new HashMap<String, DiagnosticReport> ();
-    class JSonHttpHandler implements HttpHandler {
-        public void handle (HttpExchange t) throws IOException {
-            String contextPath = t.getHttpContext().getPath();
-            String requestPath = t.getRequestURI().getPath();
 
-            String relativePath = requestPath.substring(contextPath.length() - 1);
-
-            String response = "";
-
-
-            System.out.println("relativePath: '" + relativePath + "'");
-            try {
-                if (relativePath.equals("/")) {
-                    for (String id : reports.keySet())
-                        response += id + "<br/>";
-                } else {
-                    Pattern p = Pattern.compile("/([^/]*)/([0-9]*)");
-                    Matcher m = p.matcher(relativePath);
-                    m.matches();
-                    String id = m.group(1);
-                    int connection = Integer.parseInt(m.group(2));
-
-
-                    Spectrum spectrum = spectra.get(id);
-                    Connection c = DS.getConnections().get(connection);
-                    DiagnosticReport dr = reports.get(id);
-                    System.out.println("id: " + id);
-                    System.out.println("Connection: " + c);
-                    System.out.println("spectrum: " + spectrum);
-                    System.out.println("dr: " + dr);
-
-                    Diagnostic diag = dr.getDiagnostic(c);
-                    List<Double> scores = spectrum.getScorePerNode(diag, Spectrum.SUM);
-                    Tree tr = spectrum.getTree();
-
-                    response = io.crowbar.messages.Messages.serialize(
-                        VisualizationMessages.issueRequest(tr, scores));
-                }
-            }
-            catch (Throwable e) {
-                e.printStackTrace();
-            }
-            System.out.println("Response:" + response);
-
-            t.sendResponseHeaders(200, response.length());
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
-        }
-    }
-
-
+    private final DiagnosticSystem diagSystem;
     private final InstrumentationServer instrServer;
     private final HttpServer httpServer;
 
+    private final SpectraHandler specHandler;
+    private final DiagnosticReportHandler diagReportHandler;
 
-    public DiagnosticServer (ServerSocket instrServerSocket,
+    public DiagnosticServer (DiagnosticSystem ds,
+                             int instrPort,
                              int httpPort) throws IOException {
-        instrServer = new InstrumentationServer(instrServerSocket,
+        diagSystem = ds;
+
+        instrServer = new InstrumentationServer(new ServerSocket(1234),
                                                 new InstrumentationServiceFactory());
 
         httpServer = HttpServer.create(new InetSocketAddress(httpPort), 0);
 
-        httpServer.createContext("/json/", new JSonHttpHandler());
+        List<SpectrumMatcher> spectrumMatchers = new ArrayList<SpectrumMatcher> ();
+        spectrumMatchers.add(new ProbeTypeMatcher(ProbeType.HIT_PROBE));
+        spectrumMatchers.add(new ActiveProbeMatcher());
+        spectrumMatchers.add(new SuspiciousProbeMatcher());
+        spectrumMatchers.add(new NegateMatcher(new JUnitAssumeMatcher(false)));
+        spectrumMatchers.add(new TestProbesMatcher());
+        spectrumMatchers.add(new ValidTransactionMatcher());
+
+        specHandler = new SpectraHandler(spectrumMatchers);
+
+        diagReportHandler = new DiagnosticReportHandler();
+
+
+        httpServer.createContext("/spectra/", specHandler);
+        httpServer.createContext("/dr/", diagReportHandler);
         httpServer.createContext("/visualizations/", new StaticContentHttpHandler("../visualizations/src"));
         httpServer.setExecutor(null); // creates a default executor
     }
@@ -196,7 +133,14 @@ class DiagnosticServer {
 
     public static void main (String[] args) {
         try {
-            DiagnosticServer diagServer = new DiagnosticServer(new ServerSocket(1234), 8080);
+            DiagnosticSystemFactory j = new DiagnosticSystemFactory();
+            j.addGenerator(new SingleFaultGenerator());
+            j.addRanker(new SimilarityRanker(SimilarityRanker.Type.OCHIAI));
+            j.addConnection(0, 0);
+
+            DiagnosticServer diagServer = new DiagnosticServer(j.create(),
+                                                               1234,
+                                                               8080);
             diagServer.start();
         }
         catch (Exception e) {

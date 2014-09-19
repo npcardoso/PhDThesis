@@ -1,13 +1,12 @@
 package io.crowbar.diagnostic;
 
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.FileInputStream;
 
-public final class StaticContentHttpHandler implements HttpHandler {
+public final class StaticContentHttpHandler extends AbstractHttpHandler {
     private String root;
 
     public String getRoot () {
@@ -22,16 +21,10 @@ public final class StaticContentHttpHandler implements HttpHandler {
         setRoot(root);
     }
 
-    public void handle (HttpExchange t) throws IOException {
-        String contextPath = t.getHttpContext().getPath();
-        String requestPath = t.getRequestURI().getPath();
-
-        String relativePath = requestPath.substring(contextPath.length());
-
-
-        System.out.println("Trying to access: " + relativePath + ": " + root + relativePath);
-
+    public void handle (HttpExchange t,
+                        String relativePath) throws Exception {
         File file = new File(root + relativePath).getCanonicalFile();
+
 
         if (!file.getPath().startsWith(root)) {
             // Suspected path traversal attack: reject with 403 error.

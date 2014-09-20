@@ -54,8 +54,8 @@ public final class TestWrapperPass extends AbstractPass {
                     injectOracles(c, m, n, tw, ep, op);
                     ca.computeMaxStack();
 
-                    m.insertAfter(getTransactionEndCode(ep, op, tw.isDefaultPass(c, m)),
-                                  false /* asFinally */);
+                    m.insertAfter(getTransactionEndCode(ep),
+                                  true);
                     ca.computeMaxStack();
                 } else if (ret == Action.REJECT) {
                     return Outcome.CONTINUE;
@@ -77,44 +77,41 @@ public final class TestWrapperPass extends AbstractPass {
         final String exceptionVar = "eeeeeeeeeee";
         final String collectorVar = "ccccccccccc";
         StringBuilder code = new StringBuilder();
-
+        String oracleCode = wrapper.getOracleCode(c, m, n, oracleProbe.getId(),
+                                                  collectorVar, exceptionVar);
 
         /*!
          * The following code generates something like this:
          * {Collector ccccccccccc = Collector.instance();
-         *  try {
-         *      // ... oracleCode ... throw eeeeeeeeeee; <-- if transaction is a pass should throw.
+         *      // ... oracleCode ... // if transaction is a pass, throw eeeeeeeeeee.
          *      ccccccccccc.hit(id);
          *      ccccccccccc.oracle(id, 1d, 1d);
-         *  }
-         *  finally {
-         *      ccccccccccc.hit(id);
-         *      ccccccccccc.transactionEnd(id,eeeeeeeeeee);
          *      throw eeeeeeeeeee;
          *  }
-         *  }
          */
-        code.append("{Collector " + collectorVar + " = Collector.instance();");
-        code.append("try {");
-        String oracleCode = wrapper.getOracleCode(c, m, n, oracleProbe.getId(), collectorVar, exceptionVar);
-        code.append((oracleCode != null) ? oracleCode : "");
 
-        // Oracle Fail
+        code.append("{Collector " + collectorVar + " = Collector.instance();");
+
+        if (oracleCode != null)
+            code.append(oracleCode);
+
         code.append(collectorVar + ".hit(" + oracleProbe.getId() + ");");
         code.append(collectorVar + "." + oracleProbe.getType().getMethodName() +
                     "(" + oracleProbe.getId() + ", 1d, 1d);");
-
-        code.append("} finally {");
-        // Transaction End
-        code.append(collectorVar + ".hit(" + transactionEndProbe.getId() + ");");
-        code.append(collectorVar + "." + transactionEndProbe.getType().getMethodName() + "(");
-        code.append(transactionEndProbe.getId() + ",");
-        code.append(exceptionVar + ");");
-
-        code.append("throw " + exceptionVar + ";}}");
+        code.append("throw " + exceptionVar + ";}");
 
         CtClass exceptionCls = ClassPool.getDefault().get("java.lang.Throwable");
         m.addCatch(code.toString(), exceptionCls, exceptionVar);
+
+        String quietCode = wrapper.getOracleCode(c, m, n, oracleProbe.getId(), collectorVar);
+
+        if (quietCode != null) {
+            code = new StringBuilder();
+            code.append("{Collector " + collectorVar + " = Collector.instance();");
+            code.append(quietCode);
+            code.append("}");
+            m.insertAfter(code.toString(), false /* asFinally */);
+        }
     }
 
     private String getTransactionStartCode (HitProbe p) {
@@ -128,20 +125,11 @@ public final class TestWrapperPass extends AbstractPass {
         return code.toString();
     }
 
-    private String getTransactionEndCode (HitProbe p,
-                                          HitProbe oracleProbe,
-                                          boolean isDefaultPass) {
+    private String getTransactionEndCode (HitProbe p) {
         assert (p.getType() == ProbeType.TRANSACTION_END);
 
         StringBuilder code = new StringBuilder();
         code.append("{Collector c = Collector.instance();");
-
-        if (!isDefaultPass) {
-            code.append("c.hit(" + oracleProbe.getId() + ");");
-            code.append("c." + oracleProbe.getType().getMethodName() +
-                        "(" + oracleProbe.getId() + ", 1d, 1d);");
-        }
-
         code.append("c.hit(" + p.getId() + ");");
         code.append("c." + p.getType().getMethodName() + "(" + p.getId() + ");");
         code.append("}");

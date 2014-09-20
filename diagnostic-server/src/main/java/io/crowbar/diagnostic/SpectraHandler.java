@@ -74,6 +74,8 @@ public final class SpectraHandler extends AbstractHttpHandler {
         int nTok = tok.countTokens();
 
 
+        t.sendResponseHeaders(200, 0);
+
         if (nTok == 0) {
             sendLinks(t, os);
         } else if (nTok == 1) {
@@ -93,8 +95,6 @@ public final class SpectraHandler extends AbstractHttpHandler {
     public void sendLinks (HttpExchange t,
                            OutputStream os)
     throws IOException {
-        t.sendResponseHeaders(200, 0);
-
         for (String id : entries.keySet())
             os.write(("<a href=\"" + t.getHttpContext().getPath() + "/" + id + "\">" + id + "</a>\n").getBytes());
     }
@@ -110,7 +110,6 @@ public final class SpectraHandler extends AbstractHttpHandler {
             return;
 
 
-        t.sendResponseHeaders(200, 0);
         os.write(("<a href=\"" + t.getRequestURI().getPath() + "/0\">original</a>\n").getBytes());
         os.write(("<a href=\"" + t.getRequestURI().getPath() + "/" + (e.getViews().size() - 1) + "\">final</a>\n").getBytes());
 
@@ -129,9 +128,6 @@ public final class SpectraHandler extends AbstractHttpHandler {
 
         if (s == null)
             return;
-
-
-        t.sendResponseHeaders(200, 0);
 
         if (spectrumId > 0) {
             SpectrumMatcher m = spectrumMatchers.get(spectrumId - 1);

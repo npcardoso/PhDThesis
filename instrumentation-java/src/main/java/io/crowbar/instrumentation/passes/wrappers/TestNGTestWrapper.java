@@ -13,9 +13,10 @@ import java.util.regex.Pattern;
 
 import javassist.CtClass;
 import javassist.CtMethod;
+import java.lang.annotation.Annotation;
 
 
-public class TestNGTestWrapper implements TestWrapper {
+public class TestNGTestWrapper extends AbstractTestWrapper {
     private static final String ANNOTATION_CLASS = "org.testng.annotations.Test";
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
@@ -23,103 +24,44 @@ public class TestNGTestWrapper implements TestWrapper {
                 new AnnotationMatcher(ANNOTATION_CLASS),
                 new ReturnTypeMatcher("void")));
 
-    private static boolean isSameType (Object o,
-                                       String type) {
+    public static final boolean isPass (Class cls,
+                                        String methodName) {
         try {
-            Class< ? > cls = Class.forName(type);
-            return cls.isAssignableFrom(o.getClass());
+            Method method = cls.getMethod(methodName);
+            Annotation annotation = method.getAnnotation((Class< ? extends Annotation> )Class.forName(ANNOTATION_CLASS));
+            method = annotation.getClass().getMethod("expectedExceptions");
+            Class< ? >[] expected = (Class[])method.invoke(annotation);
+            method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
+            String expectedMsgRegex = (String) method.invoke(annotation);
+            return expected.length == 0 && expectedMsgRegex.length() == 0;
         }
-        catch (ClassNotFoundException e) {
-            return false;
-        }
+        catch (Throwable e) {}
+        return true;
     }
 
-    public static final boolean isPass (Throwable e,
-                                        String[] expected,
-                                        String expectedMsgRegex) {
-        if (expected != null)
-            for (String cls : expected) {
-                if (isSameType(e, cls) &&
+    public static final boolean isPass (Class cls,
+                                        String methodName,
+                                        Throwable e) {
+        try {
+            Method method = cls.getMethod(methodName);
+            Object annotation = method.getAnnotation((Class< ? extends Annotation> )Class.forName(ANNOTATION_CLASS));
+            method = annotation.getClass().getMethod("expectedExceptions");
+            Class< ? >[] expected = (Class[])method.invoke(annotation);
+            method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
+            String expectedMsgRegex = (String) method.invoke(annotation);
+
+            for (Class c : expected) {
+                if (isSameType(e, c) &&
                     Pattern.matches(expectedMsgRegex, e.getMessage()))
                     return true;
             }
-
+        }
+        catch (Throwable ex) {}
         return false;
     }
 
     @Override
-    public final Action getAction (CtClass c) {
-        return ACTION_TAKER.getAction(c);
-    }
-
-    @Override
-    public final Action getAction (CtClass c,
-                                   CtMethod m) {
-        return ACTION_TAKER.getAction(c, m);
-    }
-
-    @Override
-    public final String getOracleCode (CtClass c,
-                                       CtMethod m,
-                                       Node n,
-                                       int probeId,
-                                       String collectorVar,
-                                       String exceptionVar) {
-        Class< ? >[] expected = null;
-        String expectedMsgRegex = null;
-
-        try {
-            Object annotation = m.getAnnotation(Class.forName(ANNOTATION_CLASS));
-            Method method = annotation.getClass().getMethod("expectedExceptions");
-            expected = (Class[])method.invoke(annotation);
-            method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
-            expectedMsgRegex = (String) method.invoke(annotation);
-        }
-        catch (Throwable e) {}
-
-        if (expected == null || expected.length == 0)
-            return "";
-
-        if (expectedMsgRegex == null)
-            expectedMsgRegex = ".*";
-
-        StringBuilder code = new StringBuilder();
-        code.append(getClass().getName() + ".isPass(");
-        code.append(exceptionVar + ", ");
-
-        if (expected.length == 0) {
-            code.append("null, ");
-        } else {
-            code.append("new String[]{");
-            boolean first = true;
-
-            for (Class< ? > cls : expected) {
-                if (!first)
-                    code.append(", ");
-
-                code.append("\"" + cls.getName() + "\"");
-                first = false;
-            }
-
-            code.append("}, ");
-        }
-
-        code.append("\"" + expectedMsgRegex + "\")");
-
-        return "if(" + code.toString() + ") throw " + exceptionVar + ";";
-    }
-
-    @Override
-    public boolean isDefaultPass (CtClass c,
-                                  CtMethod m) {
-        Class< ? >[] expected = null;
-        try {
-            Object annotation = m.getAnnotation(Class.forName(ANNOTATION_CLASS));
-            Method method = annotation.getClass().getMethod("expectedExceptions");
-            expected = (Class[])method.invoke(annotation);
-        }
-        catch (Throwable e) {}
-
-        return expected == null;
+    protected final ActionTaker getActionTaker () {
+        return ACTION_TAKER;
     }
 }

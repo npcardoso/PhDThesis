@@ -56,7 +56,7 @@ public class SpectrumBuilderTest {
 
         sb.registerNode(1, 0, "other node", null);
         sb.registerProbe(0, 1, ProbeType.TRANSACTION_START);
-        sb.endTransaction(3, "", "", new boolean[] {false});
+        sb.endTransaction(3, new boolean[] {false});
 
         assertEquals(1, sb.getSpectrum().getTransactionCount());
 

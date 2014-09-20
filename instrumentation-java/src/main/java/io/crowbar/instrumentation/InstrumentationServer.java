@@ -3,6 +3,7 @@ package io.crowbar.instrumentation;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.Messages.HelloMessage;
 import io.crowbar.instrumentation.Messages.ByeMessage;
+import io.crowbar.instrumentation.Messages.LogExceptionMessage;
 import io.crowbar.instrumentation.Messages.ProbeMessage;
 import io.crowbar.instrumentation.Messages.TransactionStartMessage;
 import io.crowbar.instrumentation.Messages.TransactionEndMessage;
@@ -87,8 +88,6 @@ extends ThreadedServer {
                         eventListener.startTransaction(m.getProbeId());
                     else if (o instanceof TransactionEndMessage)
                         eventListener.endTransaction(m.getProbeId(),
-                                                     ((TransactionEndMessage) m).getExceptionClass(),
-                                                     ((TransactionEndMessage) m).getExceptionMessage(),
                                                      ((TransactionEndMessage) m).getHitVector());
                     else if (o instanceof OracleMessage)
                         eventListener.oracle(m.getProbeId(),
@@ -106,6 +105,10 @@ extends ThreadedServer {
                                                rnm.getParentId(),
                                                rnm.getName(),
                                                rnm.getType());
+                } else if (o instanceof LogExceptionMessage) {
+                    LogExceptionMessage lem = (LogExceptionMessage) o;
+                    eventListener.logException(lem.getExceptionClass(),
+                                               lem.getExceptionMessage());
                 } else {
                     throw new Exception("Unknown Message Type: " + o);
                 }

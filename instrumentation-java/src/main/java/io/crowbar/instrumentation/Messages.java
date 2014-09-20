@@ -168,27 +168,13 @@ public class Messages {
 
     public static final class TransactionEndMessage extends ProbeMessage implements Serializable {
         private static final long serialVersionUID = 5478029092609894069L;
-        private final String exceptionClass;
-        private final String exceptionMessage;
         private final boolean[] hitVector;
 
 
         TransactionEndMessage (int probeId,
-                               String exceptionClass,
-                               String exceptionMessage,
                                boolean[] hitVector) {
             super(probeId);
-            this.exceptionClass = exceptionClass;
-            this.exceptionMessage = exceptionMessage;
             this.hitVector = hitVector;
-        }
-
-        public String getExceptionClass () {
-            return exceptionClass;
-        }
-
-        public String getExceptionMessage () {
-            return exceptionMessage;
         }
 
         public boolean[] getHitVector () {
@@ -201,14 +187,43 @@ public class Messages {
 
 
             ret += "probeId: " + getProbeId() + ", ";
-            ret += "exceptionClass: " + getExceptionClass() + ", ";
-            ret += "exceptionMessage: " + getExceptionMessage() + ", ";
             ret += "hitVector: " + getHitVector() + "]";
             return ret;
         }
 
         protected TransactionEndMessage () {
-            this(-1, null, null, null);
+            this(-1, null);
+        }
+    }
+
+    public static final class LogExceptionMessage implements Message, Serializable {
+        private static final long serialVersionUID = 3625078343434529712L;
+
+        private final String exceptionClass;
+        private final String exceptionMessage;
+
+        public LogExceptionMessage (String exceptionClass,
+                                    String exceptionMessage) {
+            this.exceptionClass = exceptionClass;
+            this.exceptionMessage = exceptionMessage;
+        }
+
+        public String getExceptionClass () {
+            return exceptionClass;
+        }
+
+        public String getExceptionMessage () {
+            return exceptionMessage;
+        }
+
+        @Override
+        public String toString () {
+            String ret = "[[" + this.getClass().getSimpleName() + "]: ";
+
+
+            ret += "exceptionClass: " + getExceptionClass() + ", ";
+            ret += "exceptionMessage: " + getExceptionMessage() + "]";
+            return ret;
         }
     }
 

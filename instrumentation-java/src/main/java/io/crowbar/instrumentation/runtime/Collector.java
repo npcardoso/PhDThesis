@@ -76,40 +76,19 @@ public final class Collector {
 
     public void transactionEnd (int probeId) {
         try {
-            listener.endTransaction(probeId, null, null, hitVector.get());
+            listener.endTransaction(probeId, hitVector.get());
         }
         catch (Throwable e) {
             e.printStackTrace();
         }
-        try {
-            hitVector.reset();
-        }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
+
+        hitVector.reset();
     }
 
-    public void transactionEnd (int probeId,
-                                Throwable exception) {
+    public void logException (String exceptionClass,
+                              String exceptionMessage) {
         try {
-            String exceptionClass = null;
-            String exceptionMessage = null;
-
-            if (exception != null) {
-                exceptionClass = exception.getClass().getName();
-                exceptionMessage = exception.getMessage();
-            }
-
-            listener.endTransaction(probeId,
-                                    exceptionClass,
-                                    exceptionMessage,
-                                    hitVector.get());
-        }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
-        try {
-            hitVector.reset();
+            listener.logException(exceptionClass, exceptionMessage);
         }
         catch (Throwable e) {
             e.printStackTrace();

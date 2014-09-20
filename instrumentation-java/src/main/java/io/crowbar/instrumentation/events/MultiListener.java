@@ -57,15 +57,23 @@ implements EventListener {
 
     @Override
     public void endTransaction (int probeId,
-                                String exceptionClass,
-                                String exceptionMessage,
                                 boolean[] hitVector) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.endTransaction(probeId,
-                                  exceptionClass,
-                                  exceptionMessage,
-                                  hitVector);
+                el.endTransaction(probeId, hitVector);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void logException (String exceptionClass,
+                              String exceptionMessage) throws Exception {
+        for (EventListener el : listeners) {
+            try {
+                el.logException(exceptionClass, exceptionMessage);
             }
             catch (Exception e) {
                 e.printStackTrace();

@@ -121,11 +121,11 @@ class DiagnosticServer {
         httpServer = HttpServer.create(new InetSocketAddress(httpPort), 0);
 
         List<SpectrumMatcher> spectrumMatchers = new ArrayList<SpectrumMatcher> ();
+        spectrumMatchers.add(new NegateMatcher(new JUnitAssumeMatcher(false)));
         spectrumMatchers.add(new NegateMatcher(new TestProbesMatcher()));
         spectrumMatchers.add(new ProbeTypeMatcher(ProbeType.HIT_PROBE));
         spectrumMatchers.add(new ActiveProbeMatcher());
         spectrumMatchers.add(new SuspiciousProbeMatcher());
-        spectrumMatchers.add(new NegateMatcher(new JUnitAssumeMatcher(false)));
         spectrumMatchers.add(new ValidTransactionMatcher());
 
         specHandler = new SpectraHandler(spectrumMatchers);

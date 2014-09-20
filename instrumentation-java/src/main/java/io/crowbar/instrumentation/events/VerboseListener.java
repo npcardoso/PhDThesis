@@ -94,8 +94,6 @@ public class VerboseListener implements EventListener {
 
     @Override
     public final void endTransaction (int probeId,
-                                      String exceptionClass,
-                                      String exceptionMessage,
                                       boolean[] hitVector) throws Exception {
         if (!endTransaction) return;
 
@@ -103,8 +101,6 @@ public class VerboseListener implements EventListener {
 
 
         ret += "Transaction End: [probeId: " + probeId;
-        ret += ", exceptionClass: " + exceptionClass;
-        ret += ", exceptionMessage: " + exceptionMessage;
         ret += ", hitVector: [ ";
 
         for (int i = 0; i < hitVector.length; i++) {
@@ -112,6 +108,17 @@ public class VerboseListener implements EventListener {
         }
 
         ret += "]]" + suffix;
+        out.println(ret);
+    }
+
+    @Override
+    public void logException (String exceptionClass,
+                              String exceptionMessage) throws Exception {
+        String ret = prefix;
+
+
+        ret += "Logging Exception: [" + exceptionClass + " : " + exceptionMessage + "]";
+        ret += suffix;
         out.println(ret);
     }
 

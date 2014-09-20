@@ -83,6 +83,7 @@ public final class TestWrapperPass extends AbstractPass {
         /*!
          * The following code generates something like this:
          * {Collector ccccccccccc = Collector.instance();
+         *      ccccccccccc.logException(eeeeeeeeeee.getClass().getName(), eeeeeeeeeee.getMessage());
          *      // ... oracleCode ... // if transaction is a pass, throw eeeeeeeeeee.
          *      ccccccccccc.hit(id);
          *      ccccccccccc.oracle(id, 1d, 1d);
@@ -91,6 +92,7 @@ public final class TestWrapperPass extends AbstractPass {
          */
 
         code.append("{Collector " + collectorVar + " = Collector.instance();");
+        code.append(collectorVar + ".logException(" + exceptionVar + ".getClass().getName()," + exceptionVar + ".getMessage());");
 
         if (oracleCode != null)
             code.append(oracleCode);

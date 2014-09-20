@@ -135,6 +135,8 @@ public final class SpectraHandler extends AbstractHttpHandler {
             os.write("\n".getBytes());
         }
 
+        os.write(s.toString().getBytes());
+        os.write("\n".getBytes());
         os.write(s.getTree().toString().getBytes());
         os.write("\n".getBytes());
         os.write(s.getProbes().toString().getBytes());

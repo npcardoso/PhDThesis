@@ -36,4 +36,30 @@ extends HitTransaction {
     public String getExceptionMessage () {
         return exceptionMessage;
     }
+
+    @Override
+    public String toString () {
+        StringBuilder str = new StringBuilder();
+
+
+        str.append("{class='Transaction', ");
+        str.append("id=" + getId() + ", ");
+        str.append("activity=[");
+        boolean first = true;
+
+        for (Integer id : this) {
+            if (!first)
+                str.append(",");
+
+            str.append(id.toString());
+            first = false;
+        }
+
+        str.append("], ");
+        str.append("error=" + getError() + ", ");
+        str.append("confidence=" + getConfidence() + ", ");
+        str.append("exceptionClass='" + getExceptionClass() + "', ");
+        str.append("exceptionMessage='" + getExceptionMessage() + "'}");
+        return str.toString();
+    }
 }

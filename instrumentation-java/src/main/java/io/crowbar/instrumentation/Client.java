@@ -138,13 +138,16 @@ public class Client implements EventListener {
 
     @Override
     public final void endTransaction (int probeId,
-                                      String exceptionClass,
-                                      String exceptionMessage,
                                       boolean[] hitVector) {
         postMessage(new Messages.TransactionEndMessage(probeId,
-                                                       exceptionClass,
-                                                       exceptionMessage,
                                                        hitVector));
+    }
+
+    @Override
+    public final void logException (String exceptionClass,
+                                    String exceptionMessage) {
+        postMessage(new Messages.LogExceptionMessage(exceptionClass,
+                                                     exceptionMessage));
     }
 
     @Override

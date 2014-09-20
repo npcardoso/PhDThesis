@@ -108,7 +108,7 @@ implements Iterable<Integer> {
     }
 
     @Override
-    public final String toString () {
+    public String toString () {
         StringBuilder str = new StringBuilder();
 
 

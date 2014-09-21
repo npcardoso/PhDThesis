@@ -2,6 +2,8 @@ package io.crowbar.diagnostic.spectrum;
 
 import io.crowbar.diagnostic.Diagnostic;
 import io.crowbar.diagnostic.DiagnosticElement;
+import io.crowbar.util.MergeStrategy;
+import io.crowbar.util.SkipNullIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,101 +13,6 @@ import java.util.NoSuchElementException;
 import java.util.AbstractList;
 
 public abstract class Spectrum {
-    public interface MergeStrategy {
-        double reduce (List<Double> scores);
-    }
-
-    public static final MergeStrategy AVG =
-        new MergeStrategy() {
-        @Override
-        public double reduce (List<Double> scores) {
-            if (scores.size() <= 0) return Double.NaN;
-
-            double total = 0;
-
-            for (Double s : scores) {
-                total += s;
-            }
-
-            return total / scores.size();
-        }
-    };
-
-    public static final MergeStrategy MAX =
-        new MergeStrategy() {
-        @Override
-        public double reduce (List<Double> scores) {
-            if (scores.size() <= 0) return Double.NaN;
-
-            double max = 0;
-
-            for (Double s : scores) {
-                max = Math.max(max, s);
-            }
-
-            return max;
-        }
-    };
-
-    public static final MergeStrategy SUM =
-        new MergeStrategy() {
-        @Override
-        public double reduce (List<Double> scores) {
-            if (scores.size() <= 0) return Double.NaN;
-
-            double total = 0;
-
-            for (Double s : scores) {
-                total += s;
-            }
-
-            return total;
-        }
-    };
-
-    private class SkipNullIterator<T>
-    implements Iterator<T> {
-        private final Iterator<T> it;
-        T next;
-
-        SkipNullIterator (Iterator<T> it) {
-            this.it = it;
-            goToNext();
-        }
-
-        private void goToNext () {
-            next = null;
-
-            while (it.hasNext()) {
-                next = it.next();
-
-                if (next != null)
-                    break;
-            }
-        }
-
-        @Override
-        public final boolean hasNext () {
-            return next != null;
-        }
-
-        @Override
-        public final void remove () {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public final T next () {
-            if (!hasNext())
-                throw new NoSuchElementException();
-
-            T tmp = next;
-
-            goToNext();
-            return tmp;
-        }
-    }
-
     private final List<Transaction> transactions =
         new AbstractList() {
         @Override
@@ -157,7 +64,7 @@ public abstract class Spectrum {
 
     /**
      * @brief Returns an immutable list of transactions.
-     * @note Uses getTransaction()
+     * @note Uses getTransaction()/getTransactionCount()
      */
     public final List<Transaction> getTransactions () {
         return transactions;
@@ -165,21 +72,10 @@ public abstract class Spectrum {
 
     /**
      * @brief Returns an immutable list of probes.
+     * @note Uses getProbe()/getProbeCount()
      */
     public final List<Probe> getProbes () {
         return probes;
-    }
-
-    // TODO: Implement List as a view instead of actually creating a list
-    public final List<Probe> getNodeProbes (int nodeId) {
-        List<Probe> nodeProbes = new ArrayList<Probe> ();
-
-        for (Probe p : getProbes()) {
-            if (p.getNodeId() == nodeId)
-                nodeProbes.add(p);
-        }
-
-        return nodeProbes;
     }
 
     /**

@@ -34,6 +34,11 @@ extends Transaction {
     }
 
     @Override
+    public Transaction getOriginal () {
+        return transaction;
+    }
+
+    @Override
     public final boolean isActive (int id) {
         return transaction.isActive(spectrumView.getProbeMapping(id));
     }

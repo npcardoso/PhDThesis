@@ -52,7 +52,7 @@ implements Iterable<Integer> {
 
     /**
      * @brief Checks if probe is active.
-     * @note iterator uses this function.
+     * @note iterator() uses this function.
      * @return the activity or false if probe does not exist.
      */
     public abstract boolean isActive (int id);
@@ -65,6 +65,17 @@ implements Iterable<Integer> {
 
     public abstract double getConfidence ();
 
+    public abstract int numActive ();
+
+    /**
+     * @brief Returns the original transaction.
+     * This can be used when using TransactionViews to get the backing transaction object.
+     * @note if t.getOriginal() == t, t is not a view.
+     */
+    public Transaction getOriginal () {
+        return this;
+    }
+
     /**
      * @brief Returns an iterator that iterates over active probes.
      */
@@ -72,9 +83,6 @@ implements Iterable<Integer> {
     public final Iterator<Integer> iterator () {
         return new TransactionIterator();
     }
-
-    public abstract int numActive ();
-
 
     /**
      * @brief Gets the size of the transaction

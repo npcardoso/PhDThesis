@@ -15,6 +15,7 @@ import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.serializers.HitSpectrumTableSerializer;
+import io.crowbar.util.MergeStrategy;
 
 import java.util.Map;
 import java.util.List;
@@ -78,7 +79,7 @@ public final class OrgModeExporter {
         for (Connection c : ds.getConnections()) {
             header(depth, "Ranking for " + link(anchor(CON_ANCHOR, c.getId())), ret);
             Diagnostic d = dr.getDiagnostic(c);
-            List<Double> scores = spectrum.getScorePerNode(d, Spectrum.MAX);
+            List<Double> scores = spectrum.getScorePerNode(d, MergeStrategy.MAX);
             List<Candidate> candidates = new ArrayList<Candidate> (treeSize);
 
             for (int i = 0; i < treeSize; i++) {
@@ -107,7 +108,7 @@ public final class OrgModeExporter {
         for (Connection c : ds.getConnections()) {
             header(depth, "Scores for " + link(anchor(CON_ANCHOR, c.getId())), ret);
             Diagnostic d = dr.getDiagnostic(c);
-            List<Double> scores = spectrum.getScorePerNode(d, Spectrum.MAX);
+            List<Double> scores = spectrum.getScorePerNode(d, MergeStrategy.MAX);
             export(0, spectrum.getTree().getRoot(), scores, ret);
         }
     }

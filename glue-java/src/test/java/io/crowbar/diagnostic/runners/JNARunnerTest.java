@@ -14,6 +14,7 @@ import io.crowbar.diagnostic.algorithms.SimilarityRanker;
 import io.crowbar.diagnostic.algorithms.SingleFaultGenerator;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.unserializers.HitSpectrumUnserializer;
+import io.crowbar.util.MergeStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.SUM);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.5, 0.5));
@@ -90,7 +91,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.AVG);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.AVG);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.5, 0.5));
@@ -130,7 +131,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.MAX);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.5, 0.5));
@@ -170,7 +171,7 @@ public class JNARunnerTest {
 
             // System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.AVG);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.AVG);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5));
 
@@ -207,7 +208,7 @@ public class JNARunnerTest {
             Diagnostic diag = dr.getDiagnostic(ochiaiCon);
 
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.MAX);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5));
 
@@ -245,7 +246,7 @@ public class JNARunnerTest {
             Diagnostic diag = dr.getDiagnostic(ochiaiCon);
 
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.SUM);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5));
 
@@ -284,7 +285,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.AVG);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.AVG);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.5, 0.666667));
 
@@ -322,7 +323,7 @@ public class JNARunnerTest {
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
             // FIXME: May use getScorePerProbe
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.SUM);
 
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 1.0, 0.666667));
@@ -363,7 +364,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.MAX);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
@@ -409,7 +410,7 @@ public class JNARunnerTest {
 
             System.out.println(new JSONSerializer().exclude("*.class").deepSerialize(dr));
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.MAX);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.MAX);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.333333, 0.666667, 0.666667));
 
@@ -509,7 +510,7 @@ public class JNARunnerTest {
 
             SortedDiagnostic sdiag = new SortedDiagnostic(diag);
 
-            List<Double> scores = s.getScorePerProbe(diag, Spectrum.SUM);
+            List<Double> scores = s.getScorePerProbe(diag, MergeStrategy.SUM);
 
             List<Double> cmp = new ArrayList<Double> (Arrays.asList(0.816497, 0.707107, 0.5));
 

@@ -26,6 +26,8 @@ public final class JUnitAssumeMatcher extends AbstractSpectrumMatcher {
 
 
         for (Transaction t : spectrum.byTransaction()) {
+            t = t.getOriginal();
+
             if (t instanceof HitTransactionWithException) {
                 String exClass = ((HitTransactionWithException) t).getExceptionClass();
 

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-/*!
- * This class creates a view of an arbitrary spectrum with some probes/transactions omitted.
+/**
+ * @brief This class creates a view of an arbitrary spectrum with some probes/transactions omitted.
  * As this class does not make any copies of the original spectrum, it assumes its immutability.
  * Changes to the spectrum after the creation of the view may have unpredictable consequences.
  */

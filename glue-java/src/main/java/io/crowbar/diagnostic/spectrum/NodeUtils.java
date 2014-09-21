@@ -2,6 +2,7 @@ package io.crowbar.diagnostic.spectrum;
 
 import io.crowbar.diagnostic.spectrum.Node;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NodeUtils {
@@ -43,5 +44,18 @@ public class NodeUtils {
         catch (NumberFormatException e) {}
 
         return -1;
+    }
+
+    // TODO: Implement List as a view instead of actually creating a list
+    public static List<Probe> getNodeProbes (Spectrum s,
+                                             int nodeId) {
+        List<Probe> nodeProbes = new ArrayList<Probe> ();
+
+        for (Probe p : s.getProbes()) {
+            if (p.getNodeId() == nodeId)
+                nodeProbes.add(p);
+        }
+
+        return nodeProbes;
     }
 }

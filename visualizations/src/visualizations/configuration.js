@@ -2,6 +2,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
     var self = this;
     this.render = function() {
         $(elementSel).html("");
+        self.setDimension();
         self.renderDefualtVis();
         self.renderAnimationTime();
         self.renderZoomAnimationTime();
@@ -15,6 +16,10 @@ function ConfigurationView(data, elementSel, configuration, events) {
         this.renderResetButton();
     };
 
+    this.setDimension = function(){
+        $(elementSel).css( "overflow-y","scroll");
+        $(elementSel).css( "height",$(window).height()-55);
+    }
 
     this.renderDefualtVis = function() {
         $(elementSel).append('<p><label for="defaultVis">Select the default visualization:</label></p><select name="defaultVis" id="defaultVis"></select>');

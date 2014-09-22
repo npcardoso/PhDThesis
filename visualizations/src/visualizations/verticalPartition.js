@@ -12,9 +12,9 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
 
     var partition = d3.layout.partition()
-        .value(function(node) {
-            return 1;
-        });
+    .value(function(node) {
+        return 1;
+    });
 
 
     var element = d3.select(elementSel);
@@ -31,26 +31,26 @@ function VerticalPartition(data, elementSel, configuration, events) {
         self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
-            .attr("width", dimensions.width)
-            .attr("height", dimensions.height)
-            .append("g");
+        .attr("width", dimensions.width)
+        .attr("height", dimensions.height)
+        .append("g");
 
         svg = zoomElement.append("g");
 
 
         rect = svg.selectAll("rect")
-            .data(partition.nodes(data))
-            .enter().append("rect")
-            .attr("x", rect_render.x)
-            .attr("y", rect_render.y)
-            .attr("width", rect_render.width)
-            .attr("height", rect_render.height)
-            .style("stroke", "#fff")
-            .attr("fill", configuration.gradiante.normal)
-            .on("click", self.click)
-            .on("dblclick", self.dblclick)
-            .on("mouseover", self.nodeInfoDisplay.mouseover)
-            .on("mouseleave", self.nodeInfoDisplay.mouseleave);
+        .data(partition.nodes(data))
+        .enter().append("rect")
+        .attr("x", rect_render.x)
+        .attr("y", rect_render.y)
+        .attr("width", rect_render.width)
+        .attr("height", rect_render.height)
+        .style("stroke", "#fff")
+        .attr("fill", configuration.gradiante.normal)
+        .on("click", self.click)
+        .on("dblclick", self.dblclick)
+        .on("mouseover", self.nodeInfoDisplay.mouseover)
+        .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
         self.nodeInfoDisplay.setClicked(data);
         self.nodeInfoDisplay.setPath(rect);
@@ -89,10 +89,16 @@ function VerticalPartition(data, elementSel, configuration, events) {
     }
 
     this.resize = function() {
-        dimensions = getDimensions();
-        rect_render = new RectRender(dimensions.width, dimensions.height, self.configuration);
-        self.render();
-        self.gotoNode(self.clicked, 0);
+        if(self.resizeTimeOut !== undefined){
+            clearTimeout(self.resizeTimeOut);
+        }
+        self.resizeTimeOut  = setTimeout(function(){
+            dimensions = getDimensions();
+            rect_render = new RectRender(dimensions.width, dimensions.height, self.configuration);
+            self.render();
+            self.gotoNode(self.clicked, 0);
+        }
+        ,250);
     }
 
     this.zoom = function() {
@@ -107,10 +113,10 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
 function RectRender(width, height, configuration) {
     var x = d3.scale.linear()
-        .range([0, width]);
+    .range([0, width]);
 
     var y = d3.scale.linear()
-        .range([0, height]);
+    .range([0, height]);
 
     this.x = function(node) {
         return x(node.x);
@@ -133,18 +139,18 @@ function RectRender(width, height, configuration) {
         y.domain([node.y, 1]).range([node.y ? 20 : 0, height]);
 
         return rect.transition()
-            .duration(time)
-            .attr("x", function(node) {
-                return x(node.x);
-            })
-            .attr("y", function(node) {
-                return y(node.y);
-            })
-            .attr("width", function(node) {
-                return x(node.x + node.dx) - x(node.x);
-            })
-            .attr("height", function(node) {
-                return y(node.y + node.dy) - y(node.y);
-            });
+        .duration(time)
+        .attr("x", function(node) {
+            return x(node.x);
+        })
+        .attr("y", function(node) {
+            return y(node.y);
+        })
+        .attr("width", function(node) {
+            return x(node.x + node.dx) - x(node.x);
+        })
+        .attr("height", function(node) {
+            return y(node.y + node.dy) - y(node.y);
+        });
     }
 }

@@ -14,7 +14,15 @@ function init() {
                 url: script,
                 dataType: "script"
             });
-        } else {
+        } else if (window.location.hash.indexOf("#jsonLoad_") >= 0) {
+            var src = window.location.hash.replace('#jsonLoad_', '');
+            $.ajax({
+                url:src,
+                dataType:'text',
+                success:initializeVisualization
+            });
+        }
+        else {
             $.each(configuration.currentConfig.scriptsLoad, function(index, script) {
                 $.ajax({
                     async: false,

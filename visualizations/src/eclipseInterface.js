@@ -10,8 +10,10 @@ function sendClickEvent(node) {
         "type": "click",
         "nodeId": node.id
     }));
-    triggerEvent(JSON.stringify({
-        "type": "click",
-        "nodeId": node.id
-    }));
+    if("triggerEvent" in window){
+        triggerEvent(JSON.stringify({
+            "type": "click",
+            "nodeId": node.id
+        }));
+    }
 }

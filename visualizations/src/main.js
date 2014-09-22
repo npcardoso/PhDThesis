@@ -54,6 +54,7 @@ function renderButtonsHtml(visActivationCallBack, defaultTab) {
         activate: function(event, ui) {
             var visualizationIndex = ui.newTab.children("a").attr("href").replace("#tabs-", "");
             visActivationCallBack(visualizationIndex);
+            event.currentTarget.blur();
         },
         active: defaultTab
     });

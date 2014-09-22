@@ -38,7 +38,7 @@ function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
 
     var lengthN = nodeArray.length;
     for (var i = 0; i < lengthN; i++) {
-        $('.breadcrumbs').append('<li><a id="node-' + i + '"><span>' + nodeArray[i].n + '</span></a></li>');
+        $('.breadcrumbs').append('<li><a id="node-' + i + '"><span>' + (false?'':nodeArray[i].n) + '</span></a></li>');
         if (isLastNode(nodeArray[i])) {
             $('#node-' + i).parent().addClass("leaf-node");
         }

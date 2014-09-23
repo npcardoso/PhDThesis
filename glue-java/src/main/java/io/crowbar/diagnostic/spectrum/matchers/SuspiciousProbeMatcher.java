@@ -26,7 +26,7 @@ extends AbstractSpectrumMatcher {
             if (!t.isError())
                 continue;
 
-            for (Integer i : t) {
+            for (Integer i : t.getActivity()) {
                 ret.set(i);
             }
         }

@@ -33,6 +33,7 @@ extends Spectrum {
         }
     }
 
+    @JSON(include = true)
     @Override
     public Tree getTree () {
         return spectrum.getTree();
@@ -46,11 +47,13 @@ extends Spectrum {
         return transactions[id];
     }
 
+    @JSON(include = false)
     @Override
     public int getProbeCount () {
         return probes.length;
     }
 
+    @JSON(include = false)
     @Override
     public int getTransactionCount () {
         return transactions.length;

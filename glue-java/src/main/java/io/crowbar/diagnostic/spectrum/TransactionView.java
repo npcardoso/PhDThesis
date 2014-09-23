@@ -26,7 +26,7 @@ extends Transaction {
         // compute correct numActive for transaction + view
         int active = 0;
 
-        for (Integer i : this) {
+        for (Integer i : getActivity()) {
             active++;
         }
 

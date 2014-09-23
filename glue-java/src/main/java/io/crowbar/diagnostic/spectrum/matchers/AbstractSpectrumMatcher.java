@@ -60,4 +60,9 @@ implements SpectrumMatcher {
 
         return ret;
     }
+
+    @Override
+    public String toString () {
+        return getClass().getSimpleName();
+    }
 }

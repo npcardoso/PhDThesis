@@ -3,6 +3,7 @@ package io.crowbar.diagnostic.spectrum;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import flexjson.JSON;
 
 /**
  * This class provides a way of creating a spectrum.
@@ -20,11 +21,13 @@ extends Spectrum {
         return tree;
     }
 
+    @JSON(include = false)
     @Override
     public int getTransactionCount () {
         return transactions.size();
     }
 
+    @JSON(include = false)
     @Override
     public int getProbeCount () {
         return probeCount;

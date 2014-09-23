@@ -5,6 +5,7 @@ import io.crowbar.diagnostic.DiagnosticElement;
 import io.crowbar.util.MergeStrategy;
 import io.crowbar.util.SkipNullIterator;
 
+import flexjson.JSON;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,9 +43,13 @@ public abstract class Spectrum {
 
     Spectrum () {}
 
+    @JSON(include = true)
     public abstract Tree getTree ();
 
+    @JSON(include = false)
     public abstract int getTransactionCount ();
+
+    @JSON(include = false)
     public abstract int getProbeCount ();
 
     /**
@@ -66,6 +71,7 @@ public abstract class Spectrum {
      * @brief Returns an immutable list of transactions.
      * @note Uses getTransaction()/getTransactionCount()
      */
+    @JSON(include = true)
     public final List<Transaction> getTransactions () {
         return transactions;
     }
@@ -74,6 +80,7 @@ public abstract class Spectrum {
      * @brief Returns an immutable list of probes.
      * @note Uses getProbe()/getProbeCount()
      */
+    @JSON(include = true)
     public final List<Probe> getProbes () {
         return probes;
     }

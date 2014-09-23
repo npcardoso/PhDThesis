@@ -249,7 +249,7 @@ public final class OrgModeExporter {
         StringBuilder activeNodes = new StringBuilder();
         StringBuilder activeProbes = new StringBuilder();
 
-        for (Integer i : t) {
+        for (Integer i : t.getActivity()) {
             Probe p = spectrum.getProbe(i);
 
             if (p == null)

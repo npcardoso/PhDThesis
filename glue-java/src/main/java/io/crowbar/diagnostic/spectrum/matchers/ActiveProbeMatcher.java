@@ -22,7 +22,7 @@ public final class ActiveProbeMatcher extends AbstractSpectrumMatcher {
 
 
         for (Transaction t : spectrum.byTransaction()) {
-            for (Integer id : t) {
+            for (Integer id : t.getActivity()) {
                 ret.set(id);
             }
         }

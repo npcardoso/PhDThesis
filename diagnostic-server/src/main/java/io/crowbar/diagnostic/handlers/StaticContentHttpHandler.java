@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic;
+package io.crowbar.diagnostic.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
@@ -23,8 +23,10 @@ public final class StaticContentHttpHandler extends AbstractHttpHandler {
 
     public void handle (HttpExchange t,
                         String relativePath) throws Exception {
-        File file = new File(root + relativePath).getCanonicalFile();
+        File file = new File(root + "/" + relativePath).getCanonicalFile();
 
+
+        System.out.println("trying to access: " + file);
 
         if (!file.getPath().startsWith(root)) {
             // Suspected path traversal attack: reject with 403 error.

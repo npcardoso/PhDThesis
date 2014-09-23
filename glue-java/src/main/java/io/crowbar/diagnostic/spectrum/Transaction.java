@@ -3,8 +3,7 @@ package io.crowbar.diagnostic.spectrum;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public abstract class Transaction
-implements Iterable<Integer> {
+public abstract class Transaction {
     private class TransactionIterator implements Iterator<Integer> {
         private int i = 0;
 
@@ -77,11 +76,15 @@ implements Iterable<Integer> {
     }
 
     /**
-     * @brief Returns an iterator that iterates over active probes.
+     * @brief Returns an iterable that iterates over active probes.
      */
-    @Override
-    public final Iterator<Integer> iterator () {
-        return new TransactionIterator();
+    public final Iterable<Integer> getActivity () {
+        return new Iterable<Integer> () {
+                   @Override
+                   public Iterator<Integer> iterator () {
+                       return new TransactionIterator();
+                   }
+        };
     }
 
     /**
@@ -105,9 +108,9 @@ implements Iterable<Integer> {
         if (getConfidence() != t.getConfidence())
             return false;
 
-        Iterator it = t.iterator();
+        Iterator it = t.getActivity().iterator();
 
-        for (Integer id : this) {
+        for (Integer id : getActivity()) {
             if (!id.equals(it.next()))
                 return false;
         }
@@ -125,7 +128,7 @@ implements Iterable<Integer> {
         str.append("activity=[");
         boolean first = true;
 
-        for (Integer id : this) {
+        for (Integer id : getActivity()) {
             if (!first)
                 str.append(",");
 

@@ -24,6 +24,11 @@ implements SpectrumMatcher {
 
             ret.and(operand);
         }
+
+        @Override
+        public String toString () {
+            return "&&";
+        }
     }
 
     private static final class Or implements Coupler {
@@ -31,6 +36,11 @@ implements SpectrumMatcher {
         public void couple (BitSet ret,
                             BitSet operand) {
             ret.or(operand);
+        }
+
+        @Override
+        public String toString () {
+            return "||";
         }
     }
 
@@ -78,5 +88,23 @@ implements SpectrumMatcher {
         }
 
         return ret;
+    }
+
+    @Override
+    public String toString () {
+        StringBuilder str = new StringBuilder();
+        boolean first = true;
+
+
+        for (SpectrumMatcher m : matchers) {
+            str.append(m.toString());
+
+            if (!first)
+                str.append(" " + coupler.toString() + " ");
+
+            first = false;
+        }
+
+        return str.toString();
     }
 }

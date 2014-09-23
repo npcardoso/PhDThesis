@@ -23,7 +23,7 @@ extends AbstractSpectrumMatcher {
 
 
         for (Transaction t : spectrum.byTransaction()) {
-            boolean valid = t.iterator().hasNext();
+            boolean valid = t.getActivity().iterator().hasNext();
             ret.set(t.getId(), valid);
         }
 

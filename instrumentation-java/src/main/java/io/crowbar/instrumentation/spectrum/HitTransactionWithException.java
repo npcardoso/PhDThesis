@@ -47,7 +47,7 @@ extends HitTransaction {
         str.append("activity=[");
         boolean first = true;
 
-        for (Integer id : this) {
+        for (Integer id : getActivity()) {
             if (!first)
                 str.append(",");
 

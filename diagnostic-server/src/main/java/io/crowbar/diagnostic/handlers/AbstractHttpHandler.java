@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic;
+package io.crowbar.diagnostic.handlers;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;

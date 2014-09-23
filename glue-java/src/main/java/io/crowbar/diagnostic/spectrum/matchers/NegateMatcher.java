@@ -34,4 +34,9 @@ implements SpectrumMatcher {
 
         return ret;
     }
+
+    @Override
+    public String toString () {
+        return "Not(" + matcher.toString() + ")";
+    }
 }

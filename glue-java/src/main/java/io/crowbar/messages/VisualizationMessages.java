@@ -24,7 +24,14 @@ public class VisualizationMessages {
 
         /*! Used for JSON deserialization */
         private void setScores (List<Double> scores) {
-            this.scores = scores;
+            this.scores = new ArrayList<Double> ();
+
+            for (Double d : scores) {
+                if (Double.isNaN(d))
+                    scores.add(-1d);
+                else
+                    scores.add(d);
+            }
         }
 
         /**

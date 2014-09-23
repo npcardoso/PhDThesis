@@ -107,7 +107,7 @@ public final class DiagnosticServer {
 
         StaticLinksHandler staticLinks = new StaticLinksHandler();
         staticLinks.addLink("<div><a href=/spectra/>Spectra</a></div>\n");
-        staticLinks.addLink("<div><a href=/dr/>DiagnosticReport</a></div>\n");
+        staticLinks.addLink("<div><a href=/reports/>DiagnosticReport</a></div>\n");
         staticLinks.addLink("<div><a href=/visualizations/index.html>Visualizations</a></div>\n");
 
         URI endpoint = new URI("http://localhost:" + httpPort + "/");

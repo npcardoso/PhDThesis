@@ -49,12 +49,23 @@
       </roles>
       <timezone>0</timezone>
     </developer>
+    <developer>
+      <id>rm</id>
+      <name>Rui Maranhão</name>
+      <email>rui.maranhao@gmail.com</email>
+      <organization>Crowbar</organization>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
   </developers>
 
   <modules>
     <module>diagnostic-native</module>
     <module>glue-java</module>
     <module>instrumentation-java</module>
+    <module>diagnostic-server</module>
   </modules>
 
   <profiles>

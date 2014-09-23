@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+import flexjson.JSON;
+
 /**
  * @brief This class creates a view of an arbitrary spectrum with some probes/transactions omitted.
  * As this class does not make any copies of the original spectrum, it assumes its immutability.

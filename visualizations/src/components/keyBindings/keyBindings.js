@@ -91,7 +91,8 @@ function keyBindings(visualization, configuration) {
     setKeyBinding("Move Right", zoomEvents.right);
     setKeyBinding("Move Down", zoomEvents.down);
     setKeyBinding("Move Down", zoomEvents.down);
-    setKeyBinding("Undo", visualization.stateManager.recoverState);
+    setKeyBinding("Undo", visualization.stateManager.undo);
+    setKeyBinding("Redo", visualization.stateManager.redo);
     setKeyBinding("Goto Sunburst", function() {
         visualization.events.switchToViz(0, null)
     });

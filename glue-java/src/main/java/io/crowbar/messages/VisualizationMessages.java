@@ -4,6 +4,7 @@ import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Tree;
 
 import flexjson.JSON;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VisualizationMessages {
@@ -28,9 +29,9 @@ public class VisualizationMessages {
 
             for (Double d : scores) {
                 if (Double.isNaN(d))
-                    scores.add(-1d);
+                    this.scores.add(-1d);
                 else
-                    scores.add(d);
+                    this.scores.add(d);
             }
         }
 

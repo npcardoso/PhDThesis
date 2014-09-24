@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.handlers;
+package io.crowbar.rest.handlers;
 
 import java.util.List;
 import java.util.LinkedList;

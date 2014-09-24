@@ -1,17 +1,17 @@
-package io.crowbar.diagnostic.handlers;
+package io.crowbar.rest.handlers;
 
 import io.crowbar.diagnostic.DiagnosticSystem;
 import io.crowbar.diagnostic.Connection;
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.Diagnostic;
-import io.crowbar.diagnostic.database.Database;
-import io.crowbar.diagnostic.database.DiagnosticEntry;
-import io.crowbar.diagnostic.database.SpectrumEntry;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.TreeView;
 import io.crowbar.diagnostic.spectrum.TreeViewFactory;
 import io.crowbar.diagnostic.spectrum.matchers.tree.TestNodesMatcher;
 import io.crowbar.messages.VisualizationMessages;
+import io.crowbar.rest.database.Database;
+import io.crowbar.rest.database.DiagnosticEntry;
+import io.crowbar.rest.database.SpectrumEntry;
 import io.crowbar.util.MergeStrategy;
 
 import flexjson.JSONSerializer;

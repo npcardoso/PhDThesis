@@ -1,10 +1,10 @@
-package io.crowbar.diagnostic.handlers;
+package io.crowbar.rest.handlers;
 
 
-import io.crowbar.diagnostic.database.Database;
-import io.crowbar.diagnostic.database.SpectrumEntry;
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.handlers.spectrum.SpectrumModel;
+import io.crowbar.rest.database.Database;
+import io.crowbar.rest.database.SpectrumEntry;
+import io.crowbar.rest.models.SpectrumModel;
 
 import flexjson.JSONSerializer;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.handlers.spectrum;
+package io.crowbar.rest.models;
 
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Tree;

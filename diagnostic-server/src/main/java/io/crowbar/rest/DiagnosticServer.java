@@ -1,15 +1,11 @@
-package io.crowbar.diagnostic;
+package io.crowbar.rest;
 
 
+import io.crowbar.diagnostic.DiagnosticReport;
+import io.crowbar.diagnostic.DiagnosticSystem;
+import io.crowbar.diagnostic.DiagnosticSystemFactory;
 import io.crowbar.diagnostic.algorithms.SimilarityRanker;
 import io.crowbar.diagnostic.algorithms.SingleFaultGenerator;
-import io.crowbar.diagnostic.database.DiagnosticEntry;
-import io.crowbar.diagnostic.database.SpectrumEntry;
-import io.crowbar.diagnostic.database.Database;
-import io.crowbar.diagnostic.handlers.DiagnosticReportHandler;
-import io.crowbar.diagnostic.handlers.SpectraHandler;
-import io.crowbar.diagnostic.handlers.StaticContentHttpHandler;
-import io.crowbar.diagnostic.handlers.StaticLinksHandler;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.matchers.SpectrumMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.ActiveProbeMatcher;
@@ -23,19 +19,22 @@ import io.crowbar.instrumentation.InstrumentationServer;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.spectrum.SpectrumBuilder;
 import io.crowbar.instrumentation.spectrum.matcher.JUnitAssumeMatcher;
+import io.crowbar.rest.handlers.DiagnosticReportHandler;
+import io.crowbar.rest.handlers.SpectraHandler;
+import io.crowbar.rest.handlers.StaticContentHttpHandler;
+import io.crowbar.rest.handlers.StaticLinksHandler;
+import io.crowbar.rest.database.Database;
+import io.crowbar.rest.database.DiagnosticEntry;
+import io.crowbar.rest.database.SpectrumEntry;
 import io.crowbar.util.JSonUtils;
 
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.net.ServerSocket;
 
 import com.sun.net.httpserver.HttpServer;
 import java.net.URI;
-import javax.ws.rs.Path;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;

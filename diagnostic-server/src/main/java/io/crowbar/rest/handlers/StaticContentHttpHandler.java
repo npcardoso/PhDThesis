@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.handlers;
+package io.crowbar.rest.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;

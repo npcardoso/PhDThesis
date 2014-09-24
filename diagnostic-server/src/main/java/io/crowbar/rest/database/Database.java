@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.database;
+package io.crowbar.rest.database;
 
 import java.util.Collections;
 import java.util.HashMap;

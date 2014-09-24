@@ -1,4 +1,4 @@
-package io.crowbar.diagnostic.database;
+package io.crowbar.rest.database;
 
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.DiagnosticSystem;

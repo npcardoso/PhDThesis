@@ -8,7 +8,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Probe",
           description = "Probe resource representation")
-public class ProbeModel {
+public final class ProbeModel {
     private final Probe original;
     public ProbeModel (Probe original) {
         this.original = original;

@@ -30,7 +30,7 @@ public final class SpectrumModel {
     }
 
     @ApiModelProperty(value = "Spectrum's transactions", required = true)
-    public final List<TransactionModel> getTransactions () {
+    public List<TransactionModel> getTransactions () {
         return new AbstractList<TransactionModel> () {
                    @Override
                    public int size () {
@@ -51,7 +51,7 @@ public final class SpectrumModel {
     }
 
     @ApiModelProperty(value = "Spectrum's probes", required = true)
-    public final List<ProbeModel> getProbes () {
+    public List<ProbeModel> getProbes () {
         return new AbstractList<ProbeModel> () {
                    @Override
                    public int size () {
@@ -72,7 +72,7 @@ public final class SpectrumModel {
     }
 
     @ApiModelProperty(value = "Spectrum's tree", required = true)
-    public final TreeModel getTree () {
+    public TreeModel getTree () {
         return new TreeModel(original.getTree());
     }
 }

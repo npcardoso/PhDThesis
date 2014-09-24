@@ -1,0 +1,3 @@
+[submodule "diagnostic-server/src/main/resources/swagger-ui"]
+	path = diagnostic-server/src/main/resources/swagger-ui
+	url = https://github.com/wordnik/swagger-ui.git

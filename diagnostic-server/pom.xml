@@ -48,8 +48,8 @@
             <apiSource>
               <locations>io.crowbar.diagnostic</locations>
               <apiVersion>1.0</apiVersion>
-              <basePath>http://example.com</basePath>
-              <swaggerDirectory>generated/swagger-ui</swaggerDirectory>
+              <basePath>http://localhost:8080/api-docs/v1</basePath>
+              <swaggerDirectory>target/swagger-ui</swaggerDirectory>
             </apiSource>
           </apiSources>
         </configuration>

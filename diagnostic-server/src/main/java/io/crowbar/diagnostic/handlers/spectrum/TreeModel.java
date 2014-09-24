@@ -10,7 +10,7 @@ import java.util.AbstractList;
 
 @ApiModel(value = "Tree",
           description = "Tree resource representation")
-public class TreeModel {
+public final class TreeModel {
     private final Tree original;
     public TreeModel (Tree original) {
         this.original = original;
@@ -22,7 +22,7 @@ public class TreeModel {
     }
 
     @ApiModelProperty(value = "Tree's nodes", required = true)
-    public final List<NodeModel> getNodes () {
+    public List<NodeModel> getNodes () {
         return new AbstractList<NodeModel> () {
                    @Override
                    public int size () {

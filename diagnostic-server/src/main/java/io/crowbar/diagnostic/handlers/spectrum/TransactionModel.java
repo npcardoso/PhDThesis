@@ -7,7 +7,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Transaction",
           description = "Transaction resource representation")
-public class TransactionModel {
+public final class TransactionModel {
     private final Transaction original;
     public TransactionModel (Transaction original) {
         this.original = original;

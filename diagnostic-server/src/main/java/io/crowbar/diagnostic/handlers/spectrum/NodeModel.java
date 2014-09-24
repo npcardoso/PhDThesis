@@ -7,7 +7,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Node",
           description = "Node resource representation")
-public class NodeModel {
+public final class NodeModel {
     private final Node original;
     public NodeModel (Node original) {
         this.original = original;

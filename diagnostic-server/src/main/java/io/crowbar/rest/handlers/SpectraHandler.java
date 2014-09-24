@@ -6,6 +6,7 @@ import io.crowbar.rest.database.Database;
 import io.crowbar.rest.database.SpectrumEntry;
 import io.crowbar.rest.models.SpectrumModel;
 
+import com.wordnik.swagger.annotations.*;
 import flexjson.JSONSerializer;
 import java.util.Map;
 import javax.ws.rs.NotFoundException;
@@ -16,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Context;
-import com.wordnik.swagger.annotations.*;
 
 
 @Path("/spectra")
@@ -31,57 +31,13 @@ public final class SpectraHandler {
         this.json = json;
     }
 
-    @GET
-    @Produces("text/html")
-    public String links (@Context UriInfo uriInfo) {
-        StringBuilder str = new StringBuilder();
-
-
-        Map<String, ? > entries = db.getSpectra();
-
-        for (String id : entries.keySet()) {
-            UriBuilder uri = uriInfo.getAbsolutePathBuilder();
-            str.append("<div><a href=\"" + uri.path(id).build() + "/\">" + id + "</a></div>\n");
-        }
-
-        return str.toString();
-    }
-
-    @GET
-    @Produces("text/html")
-    @Path("/{specId}")
-    public String links (@PathParam("specId") String specId,
-                         @Context UriInfo uriInfo) {
-        StringBuilder str = new StringBuilder();
-
-
-        Map<String, SpectrumEntry> entries = db.getSpectra();
-        SpectrumEntry e = entries.get(specId);
-
-        if (e == null)
-            throw new NotFoundException();
-
-        UriBuilder uri = uriInfo.getAbsolutePathBuilder();
-
-        str.append("<div><a href=\"" + uri.path("0").build() + "/\">original</a></div>\n");
-
-        for (int i = 0; i < e.getViews().size(); i++) {
-            uri = uriInfo.getAbsolutePathBuilder();
-            str.append("<div><a href=\"" + uri.path("" + (i + 1)).build() + "/\">" + e.getMatchers().get(i).toString() + "</a></div>\n");
-        }
-
-        uri = uriInfo.getAbsolutePathBuilder();
-        str.append("<div><a href=\"" + uri.path("" + e.getViews().size()).build() + "/\">final</a></div>\n");
-        return str.toString();
-    }
-
-    private SpectrumModel getSpectrum (String specId,
+    private SpectrumModel getSpectrum (int sessionId,
                                        int viewId) {
-        Map<String, SpectrumEntry> entries = db.getSpectra();
-        SpectrumEntry e = entries.get(specId);
+        Map<Integer, SpectrumEntry> entries = db.getSpectra();
+        SpectrumEntry e = entries.get(sessionId);
 
         if (e == null)
-            throw new NotFoundException("Invalid Spectrum Id");
+            throw new NotFoundException("Invalid session Id");
 
 
         Spectrum s = null;
@@ -98,53 +54,53 @@ public final class SpectraHandler {
     }
 
     @GET
-    @ApiOperation(value = "/{specId}/{viewId}",
+    @ApiOperation(value = "/{sessionId}/{viewId}",
                   notes = "Retrieves a spectrum view.",
                   response = SpectrumModel.class)
-    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
     @Produces("application/json")
-    @Path("/{specId}/{viewId}")
-    public String sendSpectrum (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
-                                @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
-        return json.deepSerialize(getSpectrum(specId, viewId));
+    @Path("/{sessionId}/{viewId}")
+    public String sendSpectrum (@ApiParam(value = "The session's id.") @PathParam("sessionId") int sessionId,
+                                @ApiParam(value = "The view's id.") @PathParam("viewId") int viewId) {
+        return json.deepSerialize(getSpectrum(sessionId, viewId));
     }
 
     @GET
-    @Path("/{specId}/{viewId}/tree")
-    @ApiOperation(value = "/{specId}/{viewId}/tree",
+    @Path("/{sessionId}/{viewId}/tree")
+    @ApiOperation(value = "/{sessionId}/{viewId}/tree",
                   notes = "Retrieves the tree for a spectrum view.", response = SpectrumModel.class)
-    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
     @Produces("application/json")
-    public String sendTree (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
-                            @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
-        SpectrumModel s = getSpectrum(specId, viewId);
+    public String sendTree (@ApiParam(value = "The session's id.") @PathParam("sessionId") int sessionId,
+                            @ApiParam(value = "The view's id.") @PathParam("viewId") int viewId) {
+        SpectrumModel s = getSpectrum(sessionId, viewId);
 
 
         return json.deepSerialize(s.getTree());
     }
 
     @GET
-    @Path("/{specId}/{viewId}/probes")
-    @ApiOperation(value = "/{specId}/{viewId}/probes",
-                  notes = "Retrieves the tree for a spectrum view.", response = Iterable.class)
-    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @Path("/{sessionId}/{viewId}/probes")
+    @ApiOperation(value = "/{sessionId}/{viewId}/probes",
+                  notes = "Retrieves the probes for a spectrum view.", response = Iterable.class)
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
     @Produces("application/json")
-    public String sendProbes (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
-                              @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
-        SpectrumModel s = getSpectrum(specId, viewId);
+    public String sendProbes (@ApiParam(value = "The session's id.") @PathParam("sessionId") int sessionId,
+                              @ApiParam(value = "The view's id.") @PathParam("viewId") int viewId) {
+        SpectrumModel s = getSpectrum(sessionId, viewId);
 
 
         return json.deepSerialize(s.getProbes());
     }
 
     @GET
-    @Path("/{specId}/{viewId}/transactions")
-    @ApiOperation(value = "/{specId}/{viewId}/transactions", notes = "Retrieves the transactions for a spectrum view.", response = SpectrumModel.class)
-    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @Path("/{sessionId}/{viewId}/transactions")
+    @ApiOperation(value = "/{sessionId}/{viewId}/transactions", notes = "Retrieves the transactions for a spectrum view.", response = SpectrumModel.class)
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
     @Produces("application/json")
-    public String sendTransactions (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
-                                    @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
-        SpectrumModel s = getSpectrum(specId, viewId);
+    public String sendTransactions (@ApiParam(value = "The session's id.") @PathParam("sessionId") int sessionId,
+                                    @ApiParam(value = "The view's id.") @PathParam("viewId") int viewId) {
+        SpectrumModel s = getSpectrum(sessionId, viewId);
 
 
         return json.deepSerialize(s.getTransactions());

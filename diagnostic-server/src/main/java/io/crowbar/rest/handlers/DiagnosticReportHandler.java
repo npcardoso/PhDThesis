@@ -14,6 +14,7 @@ import io.crowbar.rest.database.DiagnosticEntry;
 import io.crowbar.rest.database.SpectrumEntry;
 import io.crowbar.util.MergeStrategy;
 
+import com.wordnik.swagger.annotations.*;
 import flexjson.JSONSerializer;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import javax.ws.rs.QueryParam;
 
 
 @Path("/reports")
+@Api(value = "/reports", description = "Operations about reports")
 public final class DiagnosticReportHandler {
     private final Database db;
     private final JSONSerializer json;
@@ -39,62 +41,13 @@ public final class DiagnosticReportHandler {
         this.json = json;
     }
 
-    @GET
-    @Produces("text/html")
-    public String links (@Context UriInfo uriInfo) {
-        StringBuilder str = new StringBuilder();
-
-
-        Map<String, ? > entries = db.getDiagnostics();
-
-        for (String id : entries.keySet()) {
-            UriBuilder uri = uriInfo.getAbsolutePathBuilder();
-            str.append("<div><a href=\"" + uri.path(id).build() + "\">" + id + "</a></div>\n");
-        }
-
-        return str.toString();
-    }
-
-    @GET
-    @Produces("text/html")
-    @Path("/{specId}")
-    public String links (@PathParam("specId") String specId,
-                         @Context UriInfo uriInfo) {
-        StringBuilder str = new StringBuilder();
-
-
-        Map<String, DiagnosticEntry> entries = db.getDiagnostics();
-        DiagnosticEntry e = entries.get(specId);
+    private Diagnostic getDiagnostic (int sessionId,
+                                      int conId) {
+        Map<Integer, DiagnosticEntry> entries = db.getDiagnostics();
+        DiagnosticEntry e = entries.get(sessionId);
 
         if (e == null)
-            throw new NotFoundException();
-
-        DiagnosticSystem ds = e.getDiagnosticSystem();
-
-        for (Connection c : ds.getConnections()) {
-            UriBuilder uri = uriInfo.getAbsolutePathBuilder();
-            str.append("<div><a href=\"" + uri.path("" + c.getId()).build() + "\">" + c + "</a></div>\n");
-            uri.queryParam("type", "visualization");
-
-            UriBuilder uri2 = uriInfo.getAbsolutePathBuilder();
-            String vizURI = uri2.path("../../visualizations/index.html").build() + "#jsonLoad_" + uri.build();
-            str.append("<div><a href=\"" + vizURI + "\">Visualization (" + c + ")</a></div>\n");
-        }
-
-        return str.toString();
-    }
-
-    @GET
-    @Produces("application/json")
-    @Path("/{specId}/{conId}")
-    public String sendReport (@PathParam("specId") String specId,
-                              @PathParam("conId") int conId,
-                              @QueryParam("type") String returnType) {
-        Map<String, DiagnosticEntry> entries = db.getDiagnostics();
-        DiagnosticEntry e = entries.get(specId);
-
-        if (e == null)
-            throw new NotFoundException();
+            throw new NotFoundException("Invalid session Id");
 
 
         DiagnosticSystem ds = e.getDiagnosticSystem();
@@ -102,26 +55,54 @@ public final class DiagnosticReportHandler {
         Connection c = ds.getConnections().get(conId);
 
         if (c == null)
-            throw new NotFoundException();
+            throw new NotFoundException("Invalid connection Id");
 
-        Diagnostic diag = dr.getDiagnostic(c);
-
-        if (returnType == null)
-            return sendReportNormal(diag);
-
-        if (returnType.equals("visualization"))
-            return sendReportVisualization(specId, diag);
-
-        throw new NotFoundException();
+        return dr.getDiagnostic(c);
     }
 
-    public String sendReportVisualization (String specId,
-                                           Diagnostic diag) {
-        SpectrumEntry e = db.getSpectra().get(specId);
+    @GET
+    @Produces("application/json")
+    @ApiOperation(value = "/",
+                  notes = "Retrieves the list of session ids.",
+                  response = List.class)
+    public String sessions () {
+        return json.deepSerialize(db.getDiagnostics().keySet());
+    }
+
+    @GET
+    @Path("/{sessionId}")
+    @Produces("application/json")
+    @ApiOperation(value = "/{sessionId}",
+                  notes = "Retrieves the diagnostic engine used in particular session.",
+                  response = List.class)
+    public String diagnosticSessions (@ApiParam(value = "The session's id.") @PathParam("sessionId") int sessionId) {
+        return "----TODO----";
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("/{sessionId}/{conId}/raw")
+    @ApiOperation(value = "/{sessionId}/{conId}/raw",
+                  notes = "Retrieves the raw diagnostic for a particular connection in the diagnostic engine.")
+    public String sendReportRaw (@ApiParam(value = "The session's id.") @PathParam("sessionId") int sessionId,
+                                 @ApiParam(value = "The connection's id.") @PathParam("conId") int conId) {
+        return json.deepSerialize(getDiagnostic(sessionId, conId));
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("/{sessionId}/{conId}/visualization")
+    @ApiOperation(value = "/{sessionId}/{conId}/visualization",
+                  notes = "Retrieves the visualization input for a particular connection in the diagnostic engine.")
+    public String sendReportVisualization (@ApiParam(value = "The session's id.") @PathParam("sessionId") int sessionId,
+                                           @ApiParam(value = "The connection's id.") @PathParam("conId") int conId) {
+        Diagnostic diag = getDiagnostic(sessionId, conId);
+
+        SpectrumEntry e = db.getSpectra().get(sessionId);
 
 
         if (e == null)
-            throw new NotFoundException();
+            throw new NotFoundException("Invalid session Id");
 
 
         Spectrum s = e.getFinal();
@@ -133,13 +114,7 @@ public final class DiagnosticReportHandler {
         TreeView t = tvf.getView();
         List<Double> scores = t.updateScores(s.getScorePerNode(diag, MergeStrategy.SUM));
 
-        String jsonRequest = io.crowbar.messages.Messages.serialize(
+        return io.crowbar.messages.Messages.serialize(
             VisualizationMessages.issueRequest(t, scores));
-
-        return jsonRequest;
-    }
-
-    public String sendReportNormal (Diagnostic diag) {
-        return json.deepSerialize(diag);
     }
 }

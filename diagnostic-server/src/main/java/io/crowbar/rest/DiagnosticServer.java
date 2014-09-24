@@ -23,6 +23,7 @@ import io.crowbar.rest.handlers.DiagnosticReportHandler;
 import io.crowbar.rest.handlers.SpectraHandler;
 import io.crowbar.rest.handlers.StaticContentHttpHandler;
 import io.crowbar.rest.handlers.StaticLinksHandler;
+import io.crowbar.rest.handlers.SwaggerHandler;
 import io.crowbar.rest.database.Database;
 import io.crowbar.rest.database.DiagnosticEntry;
 import io.crowbar.rest.database.SpectrumEntry;
@@ -45,12 +46,15 @@ public final class DiagnosticServer {
     implements InstrumentationServer.ServiceFactory {
         private class InstrumentationService
         implements InstrumentationServer.Service {
-            private final String id;
+            private final String serviceId;
+            private final int sessionId;
+
             private final SpectrumBuilder spectrumBuilder =
                 new SpectrumBuilder();
 
-            InstrumentationService (String id) {
-                this.id = id;
+            InstrumentationService (String serviceId) {
+                this.serviceId = serviceId;
+                this.sessionId = db.newSession();
             }
 
             @Override
@@ -66,13 +70,13 @@ public final class DiagnosticServer {
                 SpectrumEntry e = new SpectrumEntry(spectrumBuilder.getSpectrum(), specMatchers);
 
 
-                db.handle(id, e);
+                db.handle(sessionId, e);
                 try {
                     JNARunner runner = new JNARunner();
                     System.out.println(">>>>>> Inside JNA >>>>>>");
                     DiagnosticReport dr = runner.run(diagSystem, e.getFinal());
                     System.out.println("<<<<<< Inside JNA <<<<<<");
-                    db.handle(id, new DiagnosticEntry(diagSystem, e.getFinal(), dr));
+                    db.handle(sessionId, new DiagnosticEntry(diagSystem, e.getFinal(), dr));
                 }
                 catch (Throwable ex) {
                     ex.printStackTrace();
@@ -114,7 +118,8 @@ public final class DiagnosticServer {
         ResourceConfig rc = new ResourceConfig();
         rc.registerInstances(new SpectraHandler(db, JSonUtils.getPrettySerializer()));
         rc.registerInstances(new DiagnosticReportHandler(db, JSonUtils.getPrettySerializer()));
-        rc.registerInstances(staticLinks);
+        rc.registerInstances(new SwaggerHandler("target/swagger-ui/"));
+        // rc.registerInstances(staticLinks);
         rc.register(new LoggingFilter());
 
         httpServer = JdkHttpServerFactory.createHttpServer(endpoint, rc, false);
@@ -122,7 +127,7 @@ public final class DiagnosticServer {
 
         httpServer.createContext("/visualizations/", new StaticContentHttpHandler("../visualizations/src"));
         httpServer.createContext("/api-docs/", new StaticContentHttpHandler("src/main/resources/swagger-ui/dist"));
-        httpServer.createContext("/api-docs/v1", new StaticContentHttpHandler("target/swagger-ui/"));
+        // httpServer.createContext("/.*\\.json",  new StaticContentHttpHandler("target/swagger-ui/"));
 
         httpServer.setExecutor(null); // creates a default executor
     }

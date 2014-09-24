@@ -46,9 +46,9 @@
         <configuration>
           <apiSources>
             <apiSource>
-              <locations>io.crowbar.diagnostic</locations>
+              <locations>io.crowbar.rest</locations>
               <apiVersion>1.0</apiVersion>
-              <basePath>http://localhost:8080/api-docs/v1</basePath>
+              <basePath>http://localhost:8080</basePath>
               <swaggerDirectory>target/swagger-ui</swaggerDirectory>
             </apiSource>
           </apiSources>

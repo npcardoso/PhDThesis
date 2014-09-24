@@ -112,14 +112,14 @@ public final class DiagnosticServer {
         staticLinks.addLink("<div><a href=/spectra/>Spectra</a></div>\n");
         staticLinks.addLink("<div><a href=/reports/>DiagnosticReport</a></div>\n");
         staticLinks.addLink("<div><a href=/visualizations/index.html>Visualizations</a></div>\n");
-        staticLinks.addLink("<div><a href=api-docs/index.html?url=/api-docs/v1/service.json>Swagger</a></div>\n");
+        staticLinks.addLink("<div><a href=api-docs/index.html?url=/service.json>Swagger</a></div>\n");
 
         URI endpoint = new URI("http://localhost:" + httpPort + "/");
         ResourceConfig rc = new ResourceConfig();
         rc.registerInstances(new SpectraHandler(db, JSonUtils.getPrettySerializer()));
         rc.registerInstances(new DiagnosticReportHandler(db, JSonUtils.getPrettySerializer()));
         rc.registerInstances(new SwaggerHandler("target/swagger-ui/"));
-        // rc.registerInstances(staticLinks);
+        rc.registerInstances(staticLinks);
         rc.register(new LoggingFilter());
 
         httpServer = JdkHttpServerFactory.createHttpServer(endpoint, rc, false);
@@ -127,7 +127,6 @@ public final class DiagnosticServer {
 
         httpServer.createContext("/visualizations/", new StaticContentHttpHandler("../visualizations/src"));
         httpServer.createContext("/api-docs/", new StaticContentHttpHandler("src/main/resources/swagger-ui/dist"));
-        // httpServer.createContext("/.*\\.json",  new StaticContentHttpHandler("target/swagger-ui/"));
 
         httpServer.setExecutor(null); // creates a default executor
     }

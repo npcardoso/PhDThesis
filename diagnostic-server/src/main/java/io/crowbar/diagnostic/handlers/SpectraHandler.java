@@ -4,6 +4,7 @@ package io.crowbar.diagnostic.handlers;
 import io.crowbar.diagnostic.database.Database;
 import io.crowbar.diagnostic.database.SpectrumEntry;
 import io.crowbar.diagnostic.spectrum.Spectrum;
+import io.crowbar.diagnostic.handlers.spectrum.SpectrumModel;
 
 import flexjson.JSONSerializer;
 import java.util.Map;
@@ -15,9 +16,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Context;
+import com.wordnik.swagger.annotations.*;
 
 
 @Path("/spectra")
+@Api(value = "/spectra", description = "Operations about spectra")
 public final class SpectraHandler {
     private final Database db;
     private final JSONSerializer json;
@@ -72,16 +75,13 @@ public final class SpectraHandler {
         return str.toString();
     }
 
-    @GET
-    @Produces("application/json")
-    @Path("/{specId}/{viewId}")
-    public String sendSpectrum (@PathParam("specId") String specId,
-                                @PathParam("viewId") int viewId) {
+    private SpectrumModel getSpectrum (String specId,
+                                       int viewId) {
         Map<String, SpectrumEntry> entries = db.getSpectra();
         SpectrumEntry e = entries.get(specId);
 
         if (e == null)
-            throw new NotFoundException();
+            throw new NotFoundException("Invalid Spectrum Id");
 
 
         Spectrum s = null;
@@ -92,8 +92,61 @@ public final class SpectraHandler {
             s = e.getViews().get(viewId - 1);
 
         if (s == null)
-            throw new NotFoundException();
+            throw new NotFoundException("Invalid View Id");
 
-        return json.deepSerialize(s);
+        return new SpectrumModel(s);
+    }
+
+    @GET
+    @ApiOperation(value = "/{specId}/{viewId}",
+                  notes = "Retrieves a spectrum view.",
+                  response = SpectrumModel.class)
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @Produces("application/json")
+    @Path("/{specId}/{viewId}")
+    public String sendSpectrum (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
+                                @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
+        return json.deepSerialize(getSpectrum(specId, viewId));
+    }
+
+    @GET
+    @Path("/{specId}/{viewId}/tree")
+    @ApiOperation(value = "/{specId}/{viewId}/tree",
+                  notes = "Retrieves the tree for a spectrum view.", response = SpectrumModel.class)
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @Produces("application/json")
+    public String sendTree (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
+                            @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
+        SpectrumModel s = getSpectrum(specId, viewId);
+
+
+        return json.deepSerialize(s.getTree());
+    }
+
+    @GET
+    @Path("/{specId}/{viewId}/probes")
+    @ApiOperation(value = "/{specId}/{viewId}/probes",
+                  notes = "Retrieves the tree for a spectrum view.", response = Iterable.class)
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @Produces("application/json")
+    public String sendProbes (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
+                              @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
+        SpectrumModel s = getSpectrum(specId, viewId);
+
+
+        return json.deepSerialize(s.getProbes());
+    }
+
+    @GET
+    @Path("/{specId}/{viewId}/transactions")
+    @ApiOperation(value = "/{specId}/{viewId}/transactions", notes = "Retrieves the transactions for a spectrum view.", response = SpectrumModel.class)
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum/view Ids.")})
+    @Produces("application/json")
+    public String sendTransactions (@ApiParam(value = "The spectrum id.") @PathParam("specId") String specId,
+                                    @ApiParam(value = "The view id.") @PathParam("viewId") int viewId) {
+        SpectrumModel s = getSpectrum(specId, viewId);
+
+
+        return json.deepSerialize(s.getTransactions());
     }
 }

@@ -1,84 +1,91 @@
-function initializeBreadcrumbTrail(elementSel) {
-
-
-    $('#breadcrumbs').remove();
-    $('#trail').remove();
-    $('#endlabel').remove();
-
-    d3.select(elementSel).append("div")
-    .attr("id", "breadcrumbs")
-
-    // Add the label at the end, for the percentage.
-    d3.select(elementSel).append("div")
-    .attr("id", "endlabel");
-}
-
-
-
-// Update the breadcrumb trail to show the current sequence and percentage.
-function updateBreadcrumbs(nodeArray, clickFunction, configuration) {
-    var last = nodeArray.slice(-1)[0];
-
-    var color = configuration.gradiante.normal(last);
-    // Now move and update the percentage at the end.
-    var percentage, displayText;
-    if (last.score >= 0) {
-        percentage = d3.round(last.score * 100, 2);
-        displayText = percentage + '%';
-    } else {
-        percentage = 0;
-        displayText = 'Uncalculated';
-    }
-    $("#endlabel").html('<div class="pace pace-active" style="border-color: ' + color + ';"><div class="pace-progress" data-progress="' + percentage + '" data-progress-text="' + displayText + '" style="width: ' + percentage + '%;   background: ' + color + '; color: ' + color + ';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
-
-    $('#breadcrumbs').html('');
-    $('.breadcrumbsStyle').remove();
-    $('.breadcrumbs').remove();
-    $('#breadcrumbs').html('<ol class="breadcrumbs"></ol>');
-
-    var lengthN = nodeArray.length;
-    for (var i = 0; i < lengthN; i++) {
-        $('.breadcrumbs').append('<li><a id="node-' + i + '"><span>' + (false?'':nodeArray[i].n) + '</span></a></li>');
-        if (isLastNode(nodeArray[i])) {
-            $('#node-' + i).parent().addClass("leaf-node");
-        }
-        var x = $('body').append('<style class="breadcrumbsStyle">.breadcrumbs li:nth-child(' + (i + 1) + ') a, .breadcrumbs li:nth-child(' + (i + 1) + ') a:before, .breadcrumbs li:nth-child(' + (i + 1) + ') a:after{background-color: ' + configuration.gradiante.normal(nodeArray[i]) + ';}</style>');
-        $('.breadcrumbs a').click(function() {
-            var id = $(this).attr('id').replace("node-", "");
-            clickFunction(nodeArray[id]);
-        })
-    };
-}
-
-
-
 function NodeInfoDisplay(elementSel, clickFunction, configuration) {
     var self = this;
-    initializeBreadcrumbTrail(elementSel);
 
-    this.updataBreadcumb = function(node) {
-        updateBreadcrumbs(getAncestors(node), clickFunction, configuration);
-    }
+    this.init = function() {
+        $('#breadcrumbs').remove();
+        $('#endlabel').remove();
+        $(elementSel).append('<div id="breadcrumbs"></div>');
+        $(elementSel).append('<div id="endlabel"></div>');
+    };
+
+    this.nodeInfo = function(node) {
+        self.updateScore(node);
+        self.breadcrumbsRender(getAncestors(node));
+    };
+
+
+    this.breadcrumbsRender = function(nodesArray) {
+        function idNodeI(i) {
+            return 'node-' + i;
+        }
+
+        $('#breadcrumbs').html('');
+        $('.breadcrumbsStyle').remove();
+        $('.breadcrumbs').remove();
+        var renderElement = $('<ol class="breadcrumbs"></ol>');
+        $('#breadcrumbs').html(renderElement);
+
+        var lengthN = nodesArray.length;
+        for (var i = 0; i < lengthN; i++) {
+            var elem = $('<li><a id="' + idNodeI(i) + '"><span>' + (false ? '' : nodesArray[i].n) + '</span></a></li>');
+            if (isLastNode(nodesArray[i])) {
+                elem.addClass("leaf-node");
+            }
+            renderElement.append(elem);
+            var x = $('body').append('<style class="breadcrumbsStyle">#' + idNodeI(i) + ', #' + idNodeI(i) + ':before, #' + idNodeI(i) + ':after{background-color: ' + configuration.gradiante.normal(nodesArray[i]) + ';}</style>');
+            $('a', renderElement).click(function() {
+                var id = $(this).attr('id').replace("node-", "");
+                clickFunction(nodesArray[id]);
+            })
+        };
+
+        var i = 0;
+        console.log(renderElement.height());
+        while (renderElement.height() > 30) {
+            console.log(renderElement.height());
+            $('#' + idNodeI(i)).remove();
+            ++i;
+        }
+    };
+
+    this.simpleBreadCrumbsRender = function(nodesArray) {
+
+    };
+
+
+    this.updateScore = function(node) {
+        var color = configuration.gradiante.normal(node);
+        // Now move and update the percentage at the end.
+        var percentage, displayText;
+        if (node.score >= 0) {
+            percentage = d3.round(node.score * 100, 2);
+            displayText = percentage + '%';
+        } else {
+            percentage = 0;
+            displayText = 'Uncalculated';
+        }
+        $("#endlabel").html('<div class="pace pace-active" style="border-color: ' + color + ';"><div class="pace-progress" data-progress="' + percentage + '" data-progress-text="' + displayText + '" style="width: ' + percentage + '%;   background: ' + color + '; color: ' + color + ';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
+    };
 
 
     this.updataBreadcumbTimed = function(node) {
-        if(self.updateBreadcumbTimeOut !== undefined){
+        if (self.updateBreadcumbTimeOut !== undefined) {
             clearTimeout(self.updateBreadcumbTimeOut);
         }
-        self.updateBreadcumbTimeOut  = setTimeout(function(){
-            self.updataBreadcumb(node);
-        },250);
-    }
+        self.updateBreadcumbTimeOut = setTimeout(function() {
+            self.nodeInfo(node);
+        }, 250);
+    };
 
 
     this.setClicked = function(node) {
         self.clickedNode = node;
-        self.updataBreadcumb(node);
-    }
+        self.nodeInfo(node);
+    };
 
     this.setPath = function(path) {
         self.path = path;
-    }
+    };
 
     this.mouseover = function(node) {
         self.updataBreadcumbTimed(node);
@@ -86,10 +93,10 @@ function NodeInfoDisplay(elementSel, clickFunction, configuration) {
         self.path.style("opacity", 0.3);
 
         self.path.filter(function(node) {
-            return (sequenceArray.indexOf(node) >= 0);
-        })
-        .style("opacity", 1);
-    }
+                return (sequenceArray.indexOf(node) >= 0);
+            })
+            .style("opacity", 1);
+    };
 
 
     this.mouseleave = function(node) {
@@ -98,11 +105,13 @@ function NodeInfoDisplay(elementSel, clickFunction, configuration) {
         self.path.style("opacity", 1);
         return;
         self.path.transition()
-        .duration(1000)
-        .style("opacity", 1)
-        .each("end", function() {
-            d3.select(this).on("mouseover", self.mouseover);
-        });
-    }
+            .duration(1000)
+            .style("opacity", 1)
+            .each("end", function() {
+                d3.select(this).on("mouseover", self.mouseover);
+            });
+    };
+
+    this.init();
 
 }

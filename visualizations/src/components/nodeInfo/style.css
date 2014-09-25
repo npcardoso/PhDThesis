@@ -66,7 +66,6 @@
   top: 3px;
   height: 15px;
   font-size: 12px;
-  line-height: 60px;
   font-weight: bold;
   font-family:  Helvetica, Arial, "Lucida Grande", sans-serif;
 }
@@ -74,6 +73,7 @@
 .pace .pace-progress:after {
   content: attr(data-progress-text);
   display: inline-block;
+  margin-left: 200px;
 }
 
 .pace.pace-inactive {

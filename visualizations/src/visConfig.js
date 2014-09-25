@@ -12,4 +12,14 @@ visualizations = [{
 }, {
     displayName: "Configuration",
     obj: ConfigurationView
-}];
+}
+/*{
+    displayName: "New View",
+    obj: function(){
+        this.render = function(){
+            alert('hello world');
+        };
+    }
+}*/
+
+];

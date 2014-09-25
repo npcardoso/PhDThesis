@@ -5,13 +5,13 @@ DEFAULT_CONFIG = {
     filterMostRelevamtNodes: 400,
     filterMinProbability: 0,
     normalGradiante: [{
-        color: "green",
+        color: "rgba(93,220,74,1)",
         position: 1
     }, {
-        color: "yellow",
+        color: "rgba(218,196,113,1)",
         position: 50
     }, {
-        color: "rgba(255,0,0,1)",
+        color: "rgba(211,49,49,1)",
         position: 99
     }],
     scriptsLoad: [],

@@ -6,7 +6,6 @@ import io.crowbar.diagnostic.spectrum.Tree;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.List;
-import java.util.AbstractList;
 
 @ApiModel(value = "Tree",
           description = "Tree resource representation")
@@ -23,22 +22,15 @@ public final class TreeModel {
 
     @ApiModelProperty(value = "Tree's nodes", required = true)
     public List<NodeModel> getNodes () {
-        return new AbstractList<NodeModel> () {
-                   @Override
-                   public int size () {
-                       return original.size();
-                   }
-
-                   @Override
-                   public NodeModel get (int i) {
-                       Node n = original.getNodes().get(i);
-
-
-                       if (n == null)
-                           return null;
-
-                       return new NodeModel(n);
-                   }
+        ListWrapper.WrapperFactory<Node, NodeModel> factory =
+            new ListWrapper.WrapperFactory<Node, NodeModel> () {
+            @Override
+            public NodeModel create (Node original) {
+                return new NodeModel(original);
+            }
         };
+
+        return new ListWrapper<Node, NodeModel> (original.getNodes(),
+                                                 factory);
     }
 }

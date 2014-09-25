@@ -23,7 +23,7 @@ public final class DiagnosticElementModel {
 
     @ApiModelProperty(value = "The element's candidate",
                       required = true,
-                      dataType = "array[int]")
+                      dataType = "array[integer]")
     public Iterable<Integer> getC () {
         return original.getCandidate();
     }

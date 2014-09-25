@@ -121,6 +121,7 @@ public final class DiagnosticServer {
         rc.registerInstances(new SwaggerHandler("target/swagger-ui/"));
         rc.registerInstances(staticLinks);
         rc.register(new LoggingFilter());
+        rc.register(new EntityNotFoundMapper());
 
         httpServer = JdkHttpServerFactory.createHttpServer(endpoint, rc, false);
 

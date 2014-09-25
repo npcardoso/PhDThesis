@@ -9,9 +9,9 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.AbstractList;
 
-@ApiModel(value = "Spectrum", description = "Spectrum resource representation")
+@ApiModel(value = "Spectrum",
+          description = "Spectrum resource representation")
 public final class SpectrumModel {
     private final Spectrum original;
 
@@ -19,59 +19,52 @@ public final class SpectrumModel {
         this.original = original;
     }
 
-    @ApiModelProperty(value = "Number of transactions in the spectrum", required = false)
+    @ApiModelProperty(value = "Number of transactions in the spectrum",
+                      required = false,
+                      dataType = "integer")
     public int getTransactionCount () {
         return original.getTransactionCount();
     }
 
-    @ApiModelProperty(value = "Number of probes in the spectrum", required = false)
+    @ApiModelProperty(value = "Number of probes in the spectrum",
+                      required = false,
+                      dataType = "integer")
     public int getProbeCount () {
         return original.getProbeCount();
     }
 
-    @ApiModelProperty(value = "Spectrum's transactions", required = true)
+    @ApiModelProperty(value = "Spectrum's transactions",
+                      required = true)
     public List<TransactionModel> getTransactions () {
-        return new AbstractList<TransactionModel> () {
-                   @Override
-                   public int size () {
-                       return original.getTransactions().size();
-                   }
-
-                   @Override
-                   public TransactionModel get (int i) {
-                       Transaction t = original.getTransactions().get(i);
-
-
-                       if (t == null)
-                           return null;
-
-                       return new TransactionModel(t);
-                   }
+        ListWrapper.WrapperFactory<Transaction, TransactionModel> factory =
+            new ListWrapper.WrapperFactory<Transaction, TransactionModel> () {
+            @Override
+            public TransactionModel create (Transaction original) {
+                return new TransactionModel(original);
+            }
         };
+
+        return new ListWrapper<Transaction, TransactionModel> (original.getTransactions(),
+                                                               factory);
     }
 
-    @ApiModelProperty(value = "Spectrum's probes", required = true)
+    @ApiModelProperty(value = "Spectrum's probes",
+                      required = true)
     public List<ProbeModel> getProbes () {
-        return new AbstractList<ProbeModel> () {
-                   @Override
-                   public int size () {
-                       return original.getProbes().size();
-                   }
-
-                   @Override
-                   public ProbeModel get (int i) {
-                       Probe p = original.getProbes().get(i);
-
-
-                       if (p == null)
-                           return null;
-
-                       return new ProbeModel(p);
-                   }
+        ListWrapper.WrapperFactory<Probe, ProbeModel> factory =
+            new ListWrapper.WrapperFactory<Probe, ProbeModel> () {
+            @Override
+            public ProbeModel create (Probe original) {
+                return new ProbeModel(original);
+            }
         };
+
+        return new ListWrapper<Probe, ProbeModel> (original.getProbes(),
+                                                   factory);
     }
 
-    @ApiModelProperty(value = "Spectrum's tree", required = true)
+    @ApiModelProperty(value = "Spectrum's tree",
+                      required = true)
     public TreeModel getTree () {
         return new TreeModel(original.getTree());
     }

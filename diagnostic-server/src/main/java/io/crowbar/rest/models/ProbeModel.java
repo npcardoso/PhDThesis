@@ -14,12 +14,15 @@ public final class ProbeModel {
         this.original = original;
     }
 
-    @ApiModelProperty(value = "Probe type", required = true)
+    @ApiModelProperty(value = "Probe type",
+                      required = true)
     public ProbeType getType () {
         return original.getType();
     }
 
-    @ApiModelProperty(value = "Node in the tree where the probe was placed", required = true)
+    @ApiModelProperty(value = "Node in the tree where the probe was placed",
+                      required = true,
+                      dataType = "integer")
     public int getNodeId () {
         return original.getNodeId();
     }

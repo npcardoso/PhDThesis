@@ -20,22 +20,15 @@ public final class DiagnosticModel {
 
     @ApiModelProperty(value = "The diagnostic's elements", required = true)
     public List<DiagnosticElementModel> getElements () {
-        return new AbstractList<DiagnosticElementModel> () {
-                   @Override
-                   public int size () {
-                       return original.size();
-                   }
-
-                   @Override
-                   public DiagnosticElementModel get (int i) {
-                       DiagnosticElement de = original.get(i);
-
-
-                       if (de == null)
-                           return null;
-
-                       return new DiagnosticElementModel(de);
-                   }
+        ListWrapper.WrapperFactory<DiagnosticElement, DiagnosticElementModel> factory =
+            new ListWrapper.WrapperFactory<DiagnosticElement, DiagnosticElementModel> () {
+            @Override
+            public DiagnosticElementModel create (DiagnosticElement original) {
+                return new DiagnosticElementModel(original);
+            }
         };
+
+        return new ListWrapper<DiagnosticElement, DiagnosticElementModel> (original,
+                                                                           factory);
     }
 }

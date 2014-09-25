@@ -13,22 +13,23 @@ public final class TransactionModel {
         this.original = original;
     }
 
-    @ApiModelProperty(value = "Error value for the transaction.",
+    @ApiModelProperty(value = "Error value for the transaction",
                       required = true,
                       allowableValues = "range[0, 1]")
     public double getError () {
         return original.getError();
     }
 
-    @ApiModelProperty(value = "Confidence value for the error score.",
+    @ApiModelProperty(value = "Confidence value for the error score",
                       required = true,
                       allowableValues = "range[0, 1]")
     public double getConfidence () {
         return original.getConfidence();
     }
 
-    @ApiModelProperty(value = "List of active probes in the transaction.",
-                      required = true)
+    @ApiModelProperty(value = "List of active probes in the transaction",
+                      required = true,
+                      dataType = "array[integer]")
     public Iterable<Integer> getActivity () {
         return original.getActivity();
     }

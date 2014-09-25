@@ -4,7 +4,9 @@ package io.crowbar.rest.handlers;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.rest.database.Database;
 import io.crowbar.rest.database.SpectrumEntry;
+import io.crowbar.rest.models.IdListModel;
 import io.crowbar.rest.models.SpectrumModel;
+import io.crowbar.rest.models.TreeModel;
 
 import com.wordnik.swagger.annotations.*;
 import flexjson.JSONSerializer;
@@ -14,9 +16,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Context;
 
 
 @Path("/spectra")
@@ -56,20 +55,20 @@ public final class SpectraHandler {
     @GET
     @Produces("application/json")
     @ApiOperation(value = "/",
-                  notes = "Retrieves the list of session ids.")
+                  notes = "Retrieves the list of session ids.",
+                  response = IdListModel.class)
     public String sessions () {
-        return json.deepSerialize(db.getSpectra().keySet());
+        return json.deepSerialize(new IdListModel(db.getSpectra().keySet()));
     }
 
     @GET
     @Path("/{sessionId}")
     @Produces("application/json")
     @ApiOperation(value = "/{sessionId}",
-                  notes = "Retrieves the list of views for a particular session.",
-                  response = Iterable.class)
+                  notes = "Retrieves the list of views for a particular session.")
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session Id.")})
     public String diagnosticSessions (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId) {
-        return "{'TODO':'TODO'}";
+        return "[\"TODO\"]";
     }
 
     @GET
@@ -88,7 +87,8 @@ public final class SpectraHandler {
     @Path("/{sessionId}/{viewId}/tree")
     @Produces("application/json")
     @ApiOperation(value = "/{sessionId}/{viewId}/tree",
-                  notes = "Retrieves the tree for a spectrum view.", response = SpectrumModel.class)
+                  notes = "Retrieves the tree for a spectrum view.",
+                  response = TreeModel.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
     public String sendTree (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
                             @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
@@ -98,11 +98,15 @@ public final class SpectraHandler {
         return json.deepSerialize(s.getTree());
     }
 
+    class ProbesResponse {}
+
+
     @GET
     @Path("/{sessionId}/{viewId}/probes")
     @Produces("application/json")
     @ApiOperation(value = "/{sessionId}/{viewId}/probes",
-                  notes = "Retrieves the probes for a spectrum view.", response = Iterable.class)
+                  notes = "Retrieves the probes for a spectrum view.",
+                  response = Iterable.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
     public String sendProbes (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
                               @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
@@ -115,7 +119,9 @@ public final class SpectraHandler {
     @GET
     @Path("/{sessionId}/{viewId}/transactions")
     @Produces("application/json")
-    @ApiOperation(value = "/{sessionId}/{viewId}/transactions", notes = "Retrieves the transactions for a spectrum view.", response = SpectrumModel.class)
+    @ApiOperation(value = "/{sessionId}/{viewId}/transactions",
+                  notes = "Retrieves the transactions for a spectrum view.",
+                  response = SpectrumModel.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
     public String sendTransactions (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
                                     @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {

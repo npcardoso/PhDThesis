@@ -13,12 +13,16 @@ public final class NodeModel {
         this.original = original;
     }
 
-    @ApiModelProperty(value = "The node's name with a prefix representing the node type", required = true)
+    @ApiModelProperty(value = "The node's name with a prefix representing the node type",
+                      required = true,
+                      dataType = "string")
     public String getN () {
         return original.getNameWithSymbol();
     }
 
-    @ApiModelProperty(value = "The node's parent Id", required = false)
+    @ApiModelProperty(value = "The node's parent Id",
+                      required = false,
+                      dataType = "int")
     public int getP () {
         return original.getParentId();
     }

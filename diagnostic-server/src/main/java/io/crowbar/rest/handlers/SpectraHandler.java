@@ -4,30 +4,31 @@ package io.crowbar.rest.handlers;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.rest.database.Database;
 import io.crowbar.rest.database.SpectrumEntry;
+import io.crowbar.rest.models.ApiResponseModel;
 import io.crowbar.rest.models.IdListModel;
 import io.crowbar.rest.models.SpectrumModel;
 import io.crowbar.rest.models.TreeModel;
 
 import com.wordnik.swagger.annotations.*;
-import flexjson.JSONSerializer;
 import java.util.Map;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
+import java.util.List;
+import io.crowbar.rest.models.TransactionModel;
+import io.crowbar.rest.models.ProbeModel;
 
 
 @Path("/spectra")
+@Produces("application/json")
 @Api(value = "/spectra", description = "Operations about spectra")
 public final class SpectraHandler {
     private final Database db;
-    private final JSONSerializer json;
 
-    public SpectraHandler (Database db,
-                           JSONSerializer json) {
+    public SpectraHandler (Database db) {
         this.db = db;
-        this.json = json;
     }
 
     private SpectrumModel getSpectrum (int sessionId,
@@ -53,17 +54,15 @@ public final class SpectraHandler {
     }
 
     @GET
-    @Produces("application/json")
     @ApiOperation(value = "/",
                   notes = "Retrieves the list of session ids.",
-                  response = IdListModel.class)
-    public String sessions () {
-        return json.deepSerialize(new IdListModel(db.getSpectra().keySet()));
+                  response = Integer.class)
+    public ApiResponseModel<Iterable<Integer> > sessions () {
+        return new ApiResponseModel<Iterable<Integer> > (db.getSpectra().keySet());
     }
 
     @GET
     @Path("/{sessionId}")
-    @Produces("application/json")
     @ApiOperation(value = "/{sessionId}",
                   notes = "Retrieves the list of views for a particular session.")
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session Id.")})
@@ -73,61 +72,57 @@ public final class SpectraHandler {
 
     @GET
     @Path("/{sessionId}/{viewId}")
-    @Produces("application/json")
     @ApiOperation(value = "/{sessionId}/{viewId}",
                   notes = "Retrieves a spectrum view.",
                   response = SpectrumModel.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
-    public String sendSpectrum (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
-                                @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
-        return json.deepSerialize(getSpectrum(sessionId, viewId));
+    public ApiResponseModel<SpectrumModel> sendSpectrum (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
+                                                         @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
+        SpectrumModel s = getSpectrum(sessionId, viewId);
+
+
+        return new ApiResponseModel<SpectrumModel> (s);
     }
 
     @GET
     @Path("/{sessionId}/{viewId}/tree")
-    @Produces("application/json")
     @ApiOperation(value = "/{sessionId}/{viewId}/tree",
                   notes = "Retrieves the tree for a spectrum view.",
                   response = TreeModel.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
-    public String sendTree (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
-                            @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
+    public ApiResponseModel<TreeModel> sendTree (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
+                                                 @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
         SpectrumModel s = getSpectrum(sessionId, viewId);
 
 
-        return json.deepSerialize(s.getTree());
+        return new ApiResponseModel<TreeModel> (s.getTree());
     }
-
-    class ProbesResponse {}
-
 
     @GET
     @Path("/{sessionId}/{viewId}/probes")
-    @Produces("application/json")
     @ApiOperation(value = "/{sessionId}/{viewId}/probes",
                   notes = "Retrieves the probes for a spectrum view.",
-                  response = Iterable.class)
+                  response = ProbeModel.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
-    public String sendProbes (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
-                              @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
+    public ApiResponseModel<List<ProbeModel> > sendProbes (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
+                                                           @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
         SpectrumModel s = getSpectrum(sessionId, viewId);
 
 
-        return json.deepSerialize(s.getProbes());
+        return new ApiResponseModel<List<ProbeModel> > (s.getProbes());
     }
 
     @GET
     @Path("/{sessionId}/{viewId}/transactions")
-    @Produces("application/json")
     @ApiOperation(value = "/{sessionId}/{viewId}/transactions",
                   notes = "Retrieves the transactions for a spectrum view.",
-                  response = SpectrumModel.class)
+                  response = TransactionModel.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
-    public String sendTransactions (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
-                                    @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
+    public ApiResponseModel<List<TransactionModel> > sendTransactions (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
+                                                                       @ApiParam(value = "The view's id") @PathParam("viewId") int viewId) {
         SpectrumModel s = getSpectrum(sessionId, viewId);
 
 
-        return json.deepSerialize(s.getTransactions());
+        return new ApiResponseModel<List<TransactionModel> > (s.getTransactions());
     }
 }

@@ -21,6 +21,15 @@ function init() {
                 dataType:'text',
                 success:initializeVisualization
             });
+        } else if (window.location.hash.indexOf("#rest:") >= 0) {
+            var src = window.location.hash.replace('#rest:', '');
+            src = src.replace(':', '/')
+            src = '/reports/' + src + '/visualization/'
+            $.ajax({
+                url:src,
+                dataType:'text',
+                success:initializeVisualizationREST
+            });
         }
         else {
             $.each(configuration.currentConfig.scriptsLoad, function(index, script) {

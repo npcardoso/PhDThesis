@@ -19,7 +19,9 @@ import io.crowbar.instrumentation.InstrumentationServer;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.spectrum.SpectrumBuilder;
 import io.crowbar.instrumentation.spectrum.matcher.JUnitAssumeMatcher;
+import io.crowbar.rest.handlers.ApiResponseHandler;
 import io.crowbar.rest.handlers.DiagnosticReportHandler;
+import io.crowbar.rest.handlers.ExceptionHandler;
 import io.crowbar.rest.handlers.SpectraHandler;
 import io.crowbar.rest.handlers.StaticContentHttpHandler;
 import io.crowbar.rest.handlers.StaticLinksHandler;
@@ -116,12 +118,14 @@ public final class DiagnosticServer {
 
         URI endpoint = new URI("http://localhost:" + httpPort + "/");
         ResourceConfig rc = new ResourceConfig();
-        rc.registerInstances(new SpectraHandler(db, JSonUtils.getPrettySerializer()));
-        rc.registerInstances(new DiagnosticReportHandler(db, JSonUtils.getPrettySerializer()));
+        rc.registerInstances(new SpectraHandler(db));
+        rc.registerInstances(new DiagnosticReportHandler(db));
         rc.registerInstances(new SwaggerHandler("target/swagger-ui/"));
         rc.registerInstances(staticLinks);
         rc.register(new LoggingFilter());
-        rc.register(new EntityNotFoundMapper());
+        rc.register(new ExceptionHandler(JSonUtils.getPrettySerializer()));
+        rc.register(new ApiResponseHandler(JSonUtils.getPrettySerializer()));
+
 
         httpServer = JdkHttpServerFactory.createHttpServer(endpoint, rc, false);
 

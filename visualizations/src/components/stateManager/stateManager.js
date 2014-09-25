@@ -5,18 +5,26 @@ function StateManager(visualization) {
     var maxRedo = 0;
 
     this.initRender = function(elementSel) {
-        $(elementSel).append('<div class="iButtons"><img src="components/stateManager/backButton.png" /></div>');
-        $('.iButtons').click(self.recoverState);
+        $(elementSel).append('<div class="iButtons"></div>');
+        $('.iButtons').append('<img class="undoButton" src="components/stateManager/backButton.png" />');
+        $('.iButtons').append('<img class="redoButton" src="components/stateManager/redoButton.png" />');
+        $('.undoButton').click(self.undo);
+        $('.redoButton').click(self.redo);
         self.setButtonVis();
     }
 
     this.setButtonVis = function() {
         if (self.undoPossible()) {
-            $('.iButtons').css('display', 'block');
+            $('.undoButton').css('display', 'inline');
         } else {
-            $('.iButtons').css('display', 'none');
+            $('.undoButton').css('display', 'none');
         }
 
+        if (self.redoPossible()) {
+            $('.redoButton').css('display', 'inline');
+        } else {
+            $('.redoButton').css('display', 'none');
+        }
     }
 
     this.getLast = function() {
@@ -27,6 +35,7 @@ function StateManager(visualization) {
     }
 
     this.undoPossible = function() {
+        console.log(currentNumber);
         return currentNumber > 0;
     }
 
@@ -34,8 +43,16 @@ function StateManager(visualization) {
         return maxRedo > 0;
     }
 
+    this.getState = function(){
+        return [visualization.clicked, visualization.zoomEvents.getZoom()];
+    }
+
+    this.saveStateStack = function(){
+        stack[currentNumber] = self.getState();
+    }
+
     this.saveState = function() {
-        stack[currentNumber] = [visualization.clicked, visualization.zoomEvents.getZoom()];
+        self.saveStateStack();
         currentNumber++;
         maxRedo = 0;
         self.setButtonVis();
@@ -44,26 +61,34 @@ function StateManager(visualization) {
     this.gotoState  = function(state){
         if (visualization.gotoNode(state[0], visualization.configuration.currentConfig.animationTransitionTime) != false) {
             visualization.zoomEvents.setZoom(state[1]);
-            self.setButtonVis();
             return true;
         }
         return false;
     }
 
-    this.recoverState = function() {
+    this.undo = function() {
         if (!self.undoPossible()) {
             return;
         }
-        if (gotoState(stack[currentNumber-1])) {
+        if(maxRedo == 0){
+            self.saveStateStack();
+        }
+        if (self.gotoState(stack[currentNumber-1])) {
             currentNumber--;
             maxRedo++;
+            self.setButtonVis();
         }
     }
 
-    this.redoState = function (){
-        if (gotoState(stack[currentNumber+1])) {
+    this.redo = function (){
+        if(!self.redoPossible()){
+            return;
+        }
+        console.log(stack);
+        if (self.gotoState(stack[currentNumber+1])) {
             currentNumber++;
             maxRedo--;
+            self.setButtonVis();
         }
     }
 }

@@ -35,6 +35,9 @@ DEFAULT_CONFIG = {
             name: "Undo",
             keyCodes: [66]
         }, {
+            name: "Redo",
+            keyCodes: [82]
+        }, {
             name: "Goto Sunburst",
             keyCodes: [49]
         }, {

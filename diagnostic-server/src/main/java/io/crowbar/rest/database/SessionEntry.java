@@ -1,15 +1,29 @@
 package io.crowbar.rest.database;
 
-import io.crowbar.rest.models.SessionModel;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 
+@ApiModel(value = "Session",
+          description = "Session representation")
 public final class SessionEntry {
-    private final SessionModel ses;
+    private final String globalId;
+    private final Date d;
 
-    public SessionEntry (SessionModel ses) {
-        this.ses = ses;
+    public SessionEntry (String globalId) {
+        d = new Date();
+        this.globalId = globalId;
     }
 
-    public SessionModel getSession () {
-        return ses;
+    @ApiModelProperty(value = "The session start date",
+                      required = true)
+    public Date getDate () {
+        return d;
+    }
+
+    @ApiModelProperty(value = "The global session Id",
+                      required = true)
+    public String getGlobalId () {
+        return globalId;
     }
 }

@@ -6,7 +6,6 @@ import io.crowbar.diagnostic.DiagnosticSystem;
 import io.crowbar.diagnostic.DiagnosticSystemFactory;
 import io.crowbar.diagnostic.algorithms.SimilarityRanker;
 import io.crowbar.diagnostic.algorithms.SingleFaultGenerator;
-import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.matchers.SpectrumMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.ActiveProbeMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.NegateMatcher;
@@ -19,17 +18,10 @@ import io.crowbar.instrumentation.InstrumentationServer;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.spectrum.SpectrumBuilder;
 import io.crowbar.instrumentation.spectrum.matcher.JUnitAssumeMatcher;
-import io.crowbar.rest.handlers.ApiResponseHandler;
-import io.crowbar.rest.handlers.DiagnosticReportHandler;
-import io.crowbar.rest.handlers.ExceptionHandler;
-import io.crowbar.rest.handlers.SessionHandler;
-import io.crowbar.rest.handlers.SpectraHandler;
-import io.crowbar.rest.handlers.StaticContentHttpHandler;
-import io.crowbar.rest.handlers.StaticLinksHandler;
-import io.crowbar.rest.handlers.SwaggerHandler;
-import io.crowbar.rest.database.Database;
-import io.crowbar.rest.database.DiagnosticEntry;
-import io.crowbar.rest.database.SpectrumEntry;
+import io.crowbar.diagnostic.spectrum.*;
+import io.crowbar.rest.handlers.*;
+import io.crowbar.rest.database.*;
+import io.crowbar.rest.models.*;
 import io.crowbar.util.JSonUtils;
 
 
@@ -60,7 +52,7 @@ public final class DiagnosticServer {
 
             InstrumentationService (String serviceId) {
                 this.serviceId = serviceId;
-                this.sessionId = db.newSession(serviceId);
+                this.sessionId = db.getSessions().add(new SessionEntry(serviceId));
             }
 
             @Override
@@ -71,18 +63,42 @@ public final class DiagnosticServer {
             @Override
             public void interrupted () {}
 
+
+            private int createViews (Spectrum s) {
+                SpectrumViewFactory svf = new SpectrumViewFactory(s);
+
+                SpectrumModel tmp = new SpectrumModel(sessionId, s);
+                int parentId = db.getSpectra().add(tmp);
+
+
+                for (SpectrumMatcher m : specMatchers) {
+                    svf.addStage(m);
+                    tmp = new SpectrumModel(sessionId, parentId, m.toString(), svf.getView());
+                    parentId = db.getSpectra().add(tmp);
+                }
+
+                return parentId;
+            }
+
             @Override
             public void terminate () {
-                SpectrumEntry e = new SpectrumEntry(spectrumBuilder.getSpectrum(), specMatchers);
-
-
-                db.handle(sessionId, e);
                 try {
-                    JNARunner runner = new JNARunner();
+                    int diagnosticSystemId = 0;
+                    int spectrumId = createViews(spectrumBuilder.getSpectrum());
+
+                    DiagnosticSystem ds = db.getDiagnosticSystems().get(diagnosticSystemId);
+                    Spectrum s = db.getSpectra().get(spectrumId).getOriginal();
+
                     System.out.println(">>>>>> Inside JNA >>>>>>");
-                    DiagnosticReport dr = runner.run(diagSystem, e.getFinal());
+                    JNARunner runner = new JNARunner();
+                    DiagnosticReport dr = runner.run(ds, s);
                     System.out.println("<<<<<< Inside JNA <<<<<<");
-                    db.handle(sessionId, new DiagnosticEntry(diagSystem, e.getFinal(), dr));
+
+                    DiagnosticReportModel drm =
+                        new DiagnosticReportModel(spectrumId,
+                                                  diagnosticSystemId,
+                                                  dr);
+                    db.getDiagnosticReports().add(drm);
                 }
                 catch (Throwable ex) {
                     ex.printStackTrace();
@@ -96,15 +112,14 @@ public final class DiagnosticServer {
     }
 
 
-    private final Database db = new Database();
+    private final Database db;
 
-    private final DiagnosticSystem diagSystem;
     private final List<SpectrumMatcher> specMatchers;
 
     private final InstrumentationServer instrServer;
     private final HttpServer httpServer;
 
-    public DiagnosticServer (DiagnosticSystem ds,
+    public DiagnosticServer (Database db,
                              List<SpectrumMatcher> spectrumMatchers,
                              int instrPort,
                              int httpPort) throws Exception {
@@ -112,7 +127,7 @@ public final class DiagnosticServer {
                               .transform(new DateTransformer("yyyy/MM/dd hh:mm:ss"), Date.class);
 
 
-        diagSystem = ds;
+        this.db = db;
         specMatchers = spectrumMatchers;
         instrServer = new InstrumentationServer(new ServerSocket(instrPort),
                                                 new InstrumentationServiceFactory());
@@ -126,9 +141,11 @@ public final class DiagnosticServer {
 
         URI endpoint = new URI("http://localhost:" + httpPort + "/");
         ResourceConfig rc = new ResourceConfig();
+        rc.registerInstances(new SessionHandler(db));
+        rc.registerInstances(new DiagnosticSystemHandler(db));
         rc.registerInstances(new SpectraHandler(db));
         rc.registerInstances(new DiagnosticReportHandler(db));
-        rc.registerInstances(new SessionHandler(db));
+
         rc.registerInstances(new SwaggerHandler("target/swagger-ui/"));
         rc.registerInstances(staticLinks);
         rc.register(new LoggingFilter());
@@ -165,8 +182,10 @@ public final class DiagnosticServer {
             specMatchers.add(new SuspiciousProbeMatcher());
             specMatchers.add(new ValidTransactionMatcher());
 
+            Database db = new Database();
+            db.getDiagnosticSystems().add(j.create());
 
-            DiagnosticServer diagServer = new DiagnosticServer(j.create(),
+            DiagnosticServer diagServer = new DiagnosticServer(db,
                                                                specMatchers,
                                                                1234,
                                                                8080);

@@ -5,7 +5,7 @@ import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.rest.database.Database;
 import io.crowbar.rest.database.SessionEntry;
 import io.crowbar.rest.models.ApiResponseModel;
-import io.crowbar.rest.models.SessionModel;
+import io.crowbar.rest.models.IndexListModel;
 
 import com.wordnik.swagger.annotations.*;
 import java.util.Map;
@@ -26,31 +26,35 @@ public final class SessionHandler {
         this.db = db;
     }
 
-    private SessionModel getSessionPvt (int sessionId) {
-        Map<Integer, SessionEntry> entries = db.getSessions();
-        SessionEntry e = entries.get(sessionId);
+    private SessionEntry getSessionPvt (int sessionId) {
+        SessionEntry e = db.getSessions().get(sessionId);
+
 
         if (e == null)
             throw new NotFoundException("Invalid session Id");
 
 
-        return e.getSession();
+        return e;
     }
 
     @GET
     @ApiOperation(value = "/",
                   notes = "Retrieves the list of session ids.",
                   response = Integer.class)
-    public ApiResponseModel<Iterable<Integer> > getSessions () {
-        return new ApiResponseModel<Iterable<Integer> > (db.getSessions().keySet());
+    public ApiResponseModel<IndexListModel> getSessionIds () {
+        IndexListModel il = new IndexListModel(db.getSessions().elements().size());
+
+
+        return new ApiResponseModel<IndexListModel> (il);
     }
 
     @GET
     @Path("/{sessionId}")
     @ApiOperation(value = "/{sessionId}",
-                  notes = "Retrieves a session.")
+                  notes = "Retrieves a session.",
+                  response = SessionEntry.class)
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid session Id.")})
-    public ApiResponseModel<SessionModel> getSession (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId) {
-        return new ApiResponseModel<SessionModel> (getSessionPvt(sessionId));
+    public ApiResponseModel<SessionEntry> getSession (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId) {
+        return new ApiResponseModel<SessionEntry> (getSessionPvt(sessionId));
     }
 }

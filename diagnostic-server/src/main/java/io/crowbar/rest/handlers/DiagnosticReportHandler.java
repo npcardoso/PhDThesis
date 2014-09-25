@@ -10,11 +10,12 @@ import io.crowbar.diagnostic.spectrum.TreeViewFactory;
 import io.crowbar.diagnostic.spectrum.matchers.tree.TestNodesMatcher;
 import io.crowbar.messages.VisualizationMessages;
 import io.crowbar.rest.database.Database;
-import io.crowbar.rest.database.DiagnosticEntry;
-import io.crowbar.rest.database.SpectrumEntry;
 import io.crowbar.rest.models.ApiResponseModel;
 import io.crowbar.rest.models.DiagnosticModel;
+import io.crowbar.rest.models.DiagnosticReportModel;
 import io.crowbar.rest.models.DiagnosticSystemModel;
+import io.crowbar.rest.models.IndexListModel;
+
 import io.crowbar.util.MergeStrategy;
 
 import com.wordnik.swagger.annotations.*;
@@ -26,6 +27,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
+import io.crowbar.rest.models.SpectrumModel;
 
 
 @Path("/reports")
@@ -38,24 +40,17 @@ public final class DiagnosticReportHandler {
         this.db = db;
     }
 
-    private DiagnosticEntry getDiagnosticEntry (int sessionId) {
-        Map<Integer, DiagnosticEntry> entries = db.getDiagnostics();
-        DiagnosticEntry e = entries.get(sessionId);
-
-        if (e == null)
-            throw new NotFoundException("Invalid session Id");
-
-        return e;
-    }
-
-    private Diagnostic getDiagnostic (int sessionId,
+    private Diagnostic getDiagnostic (int drId,
                                       int conId) {
-        DiagnosticEntry e = getDiagnosticEntry(sessionId);
+        DiagnosticReportModel drm = db.getDiagnosticReports().get(drId);
 
-        DiagnosticSystem ds = e.getDiagnosticSystem();
-        DiagnosticReport dr = e.getDiagnosticReport();
+
+        if (drm == null)
+            throw new NotFoundException("Invalid diagnostic report Id");
+
+        DiagnosticSystem ds = db.getDiagnosticSystems().get(drm.getDiagnosticSystemId());
+        DiagnosticReport dr = drm.getOriginal();
         Connection c = ds.getConnections().get(conId);
-
 
         if (c == null)
             throw new NotFoundException("Invalid connection Id");
@@ -65,64 +60,54 @@ public final class DiagnosticReportHandler {
 
     @GET
     @ApiOperation(value = "/",
-                  notes = "Retrieves the list of session ids.",
-                  response = Integer.class)
-    public ApiResponseModel<Iterable<Integer> > sessions () {
-        return new ApiResponseModel<Iterable<Integer> > (db.getDiagnostics().keySet());
+                  notes = "Retrieves the list of diagnostic report ids.",
+                  response = IndexListModel.class)
+    public ApiResponseModel<IndexListModel> getDiagnosticReportIds () {
+        IndexListModel il = new IndexListModel(db.getDiagnosticReports().elements().size());
+
+
+        return new ApiResponseModel<IndexListModel> (il);
     }
 
     @GET
-    @Path("/{sessionId}")
-    @ApiOperation(value = "/{sessionId}",
-                  notes = "Retrieves the diagnostic engine used in particular session.",
-                  response = DiagnosticSystemModel.class)
-    @ApiResponses({@ApiResponse(code = 404, message = "Invalid session Id.")})
-    public ApiResponseModel<DiagnosticSystemModel> diagnosticSessions (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId) {
-        DiagnosticEntry e = getDiagnosticEntry(sessionId);
-        DiagnosticSystemModel ds = new DiagnosticSystemModel(e.getDiagnosticSystem());
-
-
-        return new ApiResponseModel<DiagnosticSystemModel> (ds);
-    }
-
-    @GET
-    @Path("/{sessionId}/{conId}/raw")
-    @ApiOperation(value = "/{sessionId}/{conId}/raw",
-                  notes = "Retrieves the raw diagnostic for a particular connection in the diagnostic engine.",
+    @Path("/{drId}/{conId}/raw")
+    @ApiOperation(value = "/{drId}/{conId}/raw",
+                  notes = "Retrieves the raw diagnostic for a particular connection in a diagnostic report.",
                   response = DiagnosticModel.class)
-    @ApiResponses({@ApiResponse(code = 404, message = "Invalid session/view Ids.")})
-    public ApiResponseModel<DiagnosticModel> sendReportRaw (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
-                                                            @ApiParam(value = "The connection's id") @PathParam("conId") int conId) {
-        DiagnosticModel d = new DiagnosticModel(getDiagnostic(sessionId, conId));
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid diagnostic report/connection Id.")})
+    public ApiResponseModel<DiagnosticModel> getDiagnosticReportRaw (@ApiParam(value = "The diagnostic reports's id") @PathParam("drId") int drId,
+                                                                     @ApiParam(value = "The connection's id") @PathParam("conId") int conId) {
+        DiagnosticModel d = new DiagnosticModel(getDiagnostic(drId, conId));
 
 
         return new ApiResponseModel<DiagnosticModel> (d);
     }
 
     @GET
-    @Path("/{sessionId}/{conId}/visualization")
-    @ApiOperation(value = "/{sessionId}/{conId}/visualization",
+    @Path("/{drId}/{conId}/visualization")
+    @ApiOperation(value = "/{drId}/{conId}/visualization",
                   notes = "Retrieves the visualization input for a particular connection in the diagnostic engine.")
-    public ApiResponseModel sendReportVisualization (@ApiParam(value = "The session's id") @PathParam("sessionId") int sessionId,
-                                                     @ApiParam(value = "The connection's id") @PathParam("conId") int conId) {
-        Diagnostic diag = getDiagnostic(sessionId, conId);
+    public ApiResponseModel getDiagnosticReportVisualization (@ApiParam(value = "The diagnostic reports's id") @PathParam("drId") int drId,
+                                                              @ApiParam(value = "The connection's id") @PathParam("conId") int conId) {
+        Diagnostic diag = getDiagnostic(drId, conId);
+        DiagnosticReportModel drm = db.getDiagnosticReports().get(drId);
 
-        SpectrumEntry e = db.getSpectra().get(sessionId);
-
-
-        if (e == null)
-            throw new NotFoundException("Invalid session Id");
+        SpectrumModel se = db.getSpectra().get(drm.getSpectrumId());
 
 
-        Spectrum s = e.getFinal();
-        Spectrum original = e.getOriginal();
-        TreeViewFactory tvf = new TreeViewFactory(s.getTree());
-        tvf.addStage(new TestNodesMatcher(original));
+        Spectrum s = se.getOriginal();
 
 
-        TreeView t = tvf.getView();
-        List<Double> scores = t.updateScores(s.getScorePerNode(diag, MergeStrategy.SUM));
+        List<Double> scores = s.getScorePerNode(diag, MergeStrategy.SUM);
+        /*
+         * //TODO: Refactor
+         * Spectrum original = e.getOriginal();
+         * TreeViewFactory tvf = new TreeViewFactory(s.getTree());
+         * tvf.addStage(new TestNodesMatcher(original));
+         * TreeView t = tvf.getView();
+         * scores = t.updateScores(scores);
+         */
 
-        return new ApiResponseModel(VisualizationMessages.issueRequest(t, scores));
+        return new ApiResponseModel(VisualizationMessages.issueRequest(s.getTree(), scores));
     }
 }

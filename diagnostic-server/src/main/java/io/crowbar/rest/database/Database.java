@@ -1,45 +1,55 @@
 package io.crowbar.rest.database;
 
-import io.crowbar.rest.models.SessionModel;
+import io.crowbar.diagnostic.DiagnosticSystem;
+import io.crowbar.rest.models.SpectrumModel;
+import io.crowbar.rest.models.DiagnosticReportModel;
 
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 public final class Database {
-    private final Map<Integer, SessionEntry> sesEntries = new HashMap<Integer, SessionEntry> ();
-    private final Map<Integer, SpectrumEntry> specEntries = new HashMap<Integer, SpectrumEntry> ();
-    private final Map<Integer, DiagnosticEntry> diagEntries = new HashMap<Integer, DiagnosticEntry> ();
+    public static class Table<T> {
+        private final List<T> elements = new ArrayList<T> ();
+        public synchronized int add (T e) {
+            elements.add(e);
+            return elements.size() - 1;
+        }
 
-    public synchronized int newSession (String globalId) {
-        int sessionId = sesEntries.size();
+        public T get (int id) {
+            if (id < 0 || id >= elements.size())
+                return null;
 
+            return elements.get(id);
+        }
 
-        sesEntries.put(sessionId, new SessionEntry(new SessionModel(sessionId, globalId)));
-        return sessionId;
+        public List<T> elements () {
+            return Collections.unmodifiableList(elements);
+        }
     }
 
-    public Map<Integer, SessionEntry> getSessions () {
-        return Collections.unmodifiableMap(sesEntries);
+
+    private final Table<SessionEntry> sessions = new Table<SessionEntry> ();
+    private final Table<DiagnosticSystem> diagnosticSystems = new Table<DiagnosticSystem> ();
+    private final Table<SpectrumModel> spectra = new Table<SpectrumModel> ();
+    private final Table<DiagnosticReportModel> diagnosticReports = new Table<DiagnosticReportModel> ();
+
+    public Table<SessionEntry> getSessions () {
+        return sessions;
     }
 
-    public synchronized void handle (int sessionId,
-                                     SpectrumEntry e) {
-        specEntries.put(sessionId, e);
+    public Table<DiagnosticSystem> getDiagnosticSystems () {
+        return diagnosticSystems;
     }
 
-    public Map<Integer, SpectrumEntry> getSpectra () {
-        return Collections.unmodifiableMap(specEntries);
+    public Table<SpectrumModel> getSpectra () {
+        return spectra;
     }
 
-    public synchronized void handle (int sessionId,
-                                     DiagnosticEntry e) {
-        diagEntries.put(sessionId, e);
-    }
-
-    public Map<Integer, DiagnosticEntry> getDiagnostics () {
-        return Collections.unmodifiableMap(diagEntries);
+    public Table<DiagnosticReportModel> getDiagnosticReports () {
+        return diagnosticReports;
     }
 }

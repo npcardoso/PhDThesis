@@ -9,8 +9,8 @@ import java.util.AbstractList;
 import java.util.List;
 
 
-@ApiModel(value = "Node",
-          description = "Node resource representation")
+@ApiModel(value = "Diagnostic",
+          description = "Diagnostic resource representation")
 public final class DiagnosticModel {
     private final Diagnostic original;
 

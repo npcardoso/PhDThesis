@@ -1,5 +1,8 @@
 package io.crowbar.rest.database;
 
+import io.crowbar.rest.models.SessionModel;
+
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +13,11 @@ public final class Database {
     private final Map<Integer, SpectrumEntry> specEntries = new HashMap<Integer, SpectrumEntry> ();
     private final Map<Integer, DiagnosticEntry> diagEntries = new HashMap<Integer, DiagnosticEntry> ();
 
-    public synchronized int newSession () {
+    public synchronized int newSession (String globalId) {
         int sessionId = sesEntries.size();
 
 
-        sesEntries.put(sessionId, new SessionEntry());
+        sesEntries.put(sessionId, new SessionEntry(new SessionModel(sessionId, globalId)));
         return sessionId;
     }
 

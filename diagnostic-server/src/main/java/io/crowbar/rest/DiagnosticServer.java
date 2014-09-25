@@ -22,6 +22,7 @@ import io.crowbar.instrumentation.spectrum.matcher.JUnitAssumeMatcher;
 import io.crowbar.rest.handlers.ApiResponseHandler;
 import io.crowbar.rest.handlers.DiagnosticReportHandler;
 import io.crowbar.rest.handlers.ExceptionHandler;
+import io.crowbar.rest.handlers.SessionHandler;
 import io.crowbar.rest.handlers.SpectraHandler;
 import io.crowbar.rest.handlers.StaticContentHttpHandler;
 import io.crowbar.rest.handlers.StaticLinksHandler;
@@ -41,6 +42,9 @@ import java.net.URI;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import java.util.Date;
+import flexjson.transformer.DateTransformer;
+import flexjson.JSONSerializer;
 
 
 public final class DiagnosticServer {
@@ -56,7 +60,7 @@ public final class DiagnosticServer {
 
             InstrumentationService (String serviceId) {
                 this.serviceId = serviceId;
-                this.sessionId = db.newSession();
+                this.sessionId = db.newSession(serviceId);
             }
 
             @Override
@@ -104,6 +108,10 @@ public final class DiagnosticServer {
                              List<SpectrumMatcher> spectrumMatchers,
                              int instrPort,
                              int httpPort) throws Exception {
+        JSONSerializer json = JSonUtils.getPrettySerializer()
+                              .transform(new DateTransformer("yyyy/MM/dd hh:mm:ss"), Date.class);
+
+
         diagSystem = ds;
         specMatchers = spectrumMatchers;
         instrServer = new InstrumentationServer(new ServerSocket(instrPort),
@@ -120,11 +128,12 @@ public final class DiagnosticServer {
         ResourceConfig rc = new ResourceConfig();
         rc.registerInstances(new SpectraHandler(db));
         rc.registerInstances(new DiagnosticReportHandler(db));
+        rc.registerInstances(new SessionHandler(db));
         rc.registerInstances(new SwaggerHandler("target/swagger-ui/"));
         rc.registerInstances(staticLinks);
         rc.register(new LoggingFilter());
-        rc.register(new ExceptionHandler(JSonUtils.getPrettySerializer()));
-        rc.register(new ApiResponseHandler(JSonUtils.getPrettySerializer()));
+        rc.register(new ExceptionHandler(json));
+        rc.register(new ApiResponseHandler(json));
 
 
         httpServer = JdkHttpServerFactory.createHttpServer(endpoint, rc, false);

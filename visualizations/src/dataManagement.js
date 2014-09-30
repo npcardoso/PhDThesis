@@ -20,6 +20,7 @@ function dataInlining(data) {
     }
 }
 
+
 function nodeHasFather(node) {
     return node.p >= 0;
 }

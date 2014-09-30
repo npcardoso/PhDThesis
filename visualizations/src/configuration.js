@@ -1,7 +1,7 @@
 function Configuration() {
     var self = this;
 
-    this.CONFIG_STORE = 'configv33';
+    this.CONFIG_STORE = 'configv34';
 
 
     this.resetConfig = function() {

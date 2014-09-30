@@ -1,7 +1,7 @@
 package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.matchers.AbstractSpectrumMatcher;
+import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 
 
@@ -30,7 +30,12 @@ public final class ProbeTypeMatcher extends AbstractSpectrumMatcher {
 
 
         for (int i = 0; i < spectrum.getProbeCount(); i++) {
-            ProbeType type = spectrum.getProbe(i).getType();
+            Probe p = spectrum.getProbe(i);
+
+            if (p == null)
+                continue;
+
+            ProbeType type = p.getType();
 
             if (types.contains(type))
                 ret.set(i);

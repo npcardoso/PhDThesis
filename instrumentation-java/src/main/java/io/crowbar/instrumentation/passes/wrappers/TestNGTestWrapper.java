@@ -16,7 +16,7 @@ import javassist.CtMethod;
 import java.lang.annotation.Annotation;
 
 
-public class TestNGTestWrapper extends AbstractTestWrapper {
+public final class TestNGTestWrapper extends AbstractTestWrapper {
     private static final String ANNOTATION_CLASS = "org.testng.annotations.Test";
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
@@ -24,26 +24,47 @@ public class TestNGTestWrapper extends AbstractTestWrapper {
                 new AnnotationMatcher(ANNOTATION_CLASS),
                 new ReturnTypeMatcher("void")));
 
+
+    private static Annotation getAnnotation (Method method) throws Exception {
+        return method.getAnnotation((Class< ? extends Annotation> )Class.forName(ANNOTATION_CLASS));
+    }
+
+    private static Class< ? >[] getExpectedEx (Annotation annotation) throws Exception {
+        Method method = annotation.getClass().getMethod("expectedExceptions");
+
+
+        Class< ? >[] expected = (Class[])method.invoke(annotation);
+
+        expected = expected == null ? new Class[] {} : expected;
+
+
+        return expected;
+    }
+
+    private static String getExpectedMsgRegex (Annotation annotation) throws Exception {
+        Method method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
+
+        String expectedMsgRegex = (String) method.invoke(annotation);
+
+
+        expectedMsgRegex = expectedMsgRegex == null ? ".*" : expectedMsgRegex;
+
+        return expectedMsgRegex;
+    }
+
     public static final boolean isPass (Class cls,
                                         String methodName) {
         try {
-            System.out.println("isPass(" + cls + ", " + methodName + ")");
-
             Method method = cls.getMethod(methodName);
-            Annotation annotation = method.getAnnotation((Class< ? extends Annotation> )Class.forName(ANNOTATION_CLASS));
-            method = annotation.getClass().getMethod("expectedExceptions");
-            Class< ? >[] expected = (Class[])method.invoke(annotation);
-            System.out.println("expected: " + expected);
-            System.out.println("expected.length: " + expected.length);
-
-            method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
-            String expectedMsgRegex = (String) method.invoke(annotation);
-
-            System.out.println("expectedMsgRegex: " + expectedMsgRegex);
+            Annotation an = getAnnotation(method);
+            Class< ? >[] expected = getExpectedEx(an);
+            String expectedMsgRegex = getExpectedMsgRegex(an);
 
             return expected.length == 0 && Pattern.matches(expectedMsgRegex, "");
         }
-        catch (Throwable e) {}
+        catch (Throwable ex) {
+            ex.printStackTrace();
+        }
         return true;
     }
 
@@ -52,19 +73,20 @@ public class TestNGTestWrapper extends AbstractTestWrapper {
                                         Throwable e) {
         try {
             Method method = cls.getMethod(methodName);
-            Object annotation = method.getAnnotation((Class< ? extends Annotation> )Class.forName(ANNOTATION_CLASS));
-            method = annotation.getClass().getMethod("expectedExceptions");
-            Class< ? >[] expected = (Class[])method.invoke(annotation);
-            method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
-            String expectedMsgRegex = (String) method.invoke(annotation);
+            Annotation an = getAnnotation(method);
+            Class< ? >[] expected = getExpectedEx(an);
+            String expectedMsgRegex = getExpectedMsgRegex(an);
+            String msg = e.getMessage() == null ? "" : e.getMessage();
 
             for (Class c : expected) {
                 if (isSameType(e, c) &&
-                    Pattern.matches(expectedMsgRegex, e.getMessage()))
+                    Pattern.matches(expectedMsgRegex, msg))
                     return true;
             }
         }
-        catch (Throwable ex) {}
+        catch (Throwable ex) {
+            ex.printStackTrace();
+        }
         return false;
     }
 

@@ -13,6 +13,7 @@ import java.util.Map;
 
 
 public final class SpectrumBuilder extends AbstractEventListener {
+    private int transactionNestingLevel = 0;
     private boolean error = false;
     private String exceptionClass = null;
     private String exceptionMessage = null;
@@ -56,8 +57,20 @@ public final class SpectrumBuilder extends AbstractEventListener {
     }
 
     @Override
+    public final void startTransaction (int probeId) {
+        transactionNestingLevel += 1;
+    }
+
+    @Override
     public final void endTransaction (int probeId,
                                       boolean[] hitVector) {
+        assert (transactionNestingLevel > 0);
+        transactionNestingLevel -= 1;
+
+        if (transactionNestingLevel > 0)
+            return;
+
+
         Transaction t =
             new HitTransactionWithException(
                 spectrum.getTransactionCount(),

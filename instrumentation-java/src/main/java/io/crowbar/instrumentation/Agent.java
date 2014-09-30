@@ -27,6 +27,7 @@ public class Agent implements ClassFileTransformer {
 
         a.agentConfigs.configure();
         inst.addTransformer(a);
+        System.err.println("----------- Crowbar Agent Ready -----------");
     }
 
     @Override

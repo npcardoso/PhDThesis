@@ -54,6 +54,8 @@ public class SpectrumBuilderTest {
         SpectrumBuilder sb = new SpectrumBuilder();
 
 
+        sb.startTransaction(1);
+
         sb.registerNode(1, 0, "other node", null);
         sb.registerProbe(0, 1, ProbeType.TRANSACTION_START);
         sb.endTransaction(3, new boolean[] {false});

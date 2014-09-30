@@ -98,7 +98,8 @@ public final class DiagnosticServer {
                         new DiagnosticReportModel(spectrumId,
                                                   diagnosticSystemId,
                                                   dr);
-                    db.getDiagnosticReports().add(drm);
+                    int drId = db.getDiagnosticReports().add(drm);
+                    System.out.println(endpoint.toString() + "visualizations/index.html#rest:" + drId + ":0");
                 }
                 catch (Throwable ex) {
                     ex.printStackTrace();
@@ -118,6 +119,7 @@ public final class DiagnosticServer {
 
     private final InstrumentationServer instrServer;
     private final HttpServer httpServer;
+    private final URI endpoint;
 
     public DiagnosticServer (Database db,
                              List<SpectrumMatcher> spectrumMatchers,
@@ -139,7 +141,7 @@ public final class DiagnosticServer {
         staticLinks.addLink("<div><a href=/visualizations/index.html>Visualizations</a></div>\n");
         staticLinks.addLink("<div><a href=api-docs/index.html?url=/service.json>Swagger</a></div>\n");
 
-        URI endpoint = new URI("http://localhost:" + httpPort + "/");
+        endpoint = new URI("http://localhost:" + httpPort + "/");
         ResourceConfig rc = new ResourceConfig();
         rc.registerInstances(new SessionHandler(db));
         rc.registerInstances(new DiagnosticSystemHandler(db));

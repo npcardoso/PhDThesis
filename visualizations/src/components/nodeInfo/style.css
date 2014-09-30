@@ -19,7 +19,6 @@
   -moz-user-select: none;
   user-select: none;
 
-  z-index: 2000;
   position: relative;
   margin: auto;
   top: 2px;
@@ -59,7 +58,6 @@
 
   max-width: 190px;
   position: fixed;
-  z-index: 2000;
   display: block;
   position: absolute;
   left: 3px;

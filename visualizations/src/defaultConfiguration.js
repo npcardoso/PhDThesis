@@ -20,6 +20,9 @@ DEFAULT_CONFIG = {
     defaultTableEntries: 100,
     keyBindings: {
         allwaysActive: [{
+            name: "Show Key bindings",
+            keyCodes: [72]
+        },{
             name: "Move Left",
             keyCodes: [37]
         }, {
@@ -71,3 +74,5 @@ DEFAULT_CONFIG = {
         }]
     }
 };
+
+var CONFIG_VERSION = 'configv35';

@@ -86,6 +86,7 @@ function keyBindings(visualization, configuration) {
         $('#zoomContainer').show();
     }
 
+    setKeyBinding("Show Key bindings", function(){showKeybindingsPopup(configuration)});
     setKeyBinding("Move Left", zoomEvents.left);
     setKeyBinding("Move Up", zoomEvents.up);
     setKeyBinding("Move Right", zoomEvents.right);

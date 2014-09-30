@@ -42,6 +42,9 @@ public final class TestWrapperPass extends AbstractPass {
                 Action ret = tw.getAction(c, m);
 
                 if (ret == Action.ACCEPT) {
+                    System.out.println(tw.toString() + " accepted " + c.getName() + m.getName());
+
+
                     ca.computeMaxStack();
                     Node n = getNode(c, m);
                     HitProbe sp = registerProbe(c, n, ProbeType.TRANSACTION_START);

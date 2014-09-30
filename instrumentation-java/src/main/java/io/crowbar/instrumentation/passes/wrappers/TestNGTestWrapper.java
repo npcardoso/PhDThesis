@@ -27,13 +27,21 @@ public class TestNGTestWrapper extends AbstractTestWrapper {
     public static final boolean isPass (Class cls,
                                         String methodName) {
         try {
+            System.out.println("isPass(" + cls + ", " + methodName + ")");
+
             Method method = cls.getMethod(methodName);
             Annotation annotation = method.getAnnotation((Class< ? extends Annotation> )Class.forName(ANNOTATION_CLASS));
             method = annotation.getClass().getMethod("expectedExceptions");
             Class< ? >[] expected = (Class[])method.invoke(annotation);
+            System.out.println("expected: " + expected);
+            System.out.println("expected.length: " + expected.length);
+
             method = annotation.getClass().getMethod("expectedExceptionsMessageRegExp");
             String expectedMsgRegex = (String) method.invoke(annotation);
-            return expected.length == 0 && expectedMsgRegex.length() == 0;
+
+            System.out.println("expectedMsgRegex: " + expectedMsgRegex);
+
+            return expected.length == 0 && Pattern.matches(expectedMsgRegex, "");
         }
         catch (Throwable e) {}
         return true;

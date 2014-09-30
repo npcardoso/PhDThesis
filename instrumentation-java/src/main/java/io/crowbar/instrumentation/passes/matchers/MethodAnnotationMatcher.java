@@ -4,21 +4,16 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 
-public class AnnotationMatcher implements Matcher {
+public class MethodAnnotationMatcher implements Matcher {
     private final String annotation;
 
-    public AnnotationMatcher (String annotation) {
+    public MethodAnnotationMatcher (String annotation) {
         this.annotation = annotation;
     }
 
     @Override
     public final boolean matches (CtClass c) {
-        try {
-            return c.hasAnnotation(Class.forName(annotation));
-        }
-        catch (Exception e) {
-            return false;
-        }
+        return false;
     }
 
     @Override

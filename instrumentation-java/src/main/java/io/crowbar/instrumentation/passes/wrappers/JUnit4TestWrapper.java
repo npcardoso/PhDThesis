@@ -4,7 +4,7 @@ import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.passes.matchers.AndMatcher;
 import io.crowbar.instrumentation.passes.matchers.OrMatcher;
-import io.crowbar.instrumentation.passes.matchers.AnnotationMatcher;
+import io.crowbar.instrumentation.passes.matchers.MethodAnnotationMatcher;
 import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
@@ -24,8 +24,8 @@ public final class JUnit4TestWrapper extends AbstractTestWrapper {
         new WhiteList(
             new AndMatcher(
                 new OrMatcher(
-                    new AnnotationMatcher(ANNOTATION_CLASS),
-                    new AnnotationMatcher("org.junit.experimental.theories.Theory")),
+                    new MethodAnnotationMatcher(ANNOTATION_CLASS),
+                    new MethodAnnotationMatcher("org.junit.experimental.theories.Theory")),
                 new ReturnTypeMatcher("void")));
 
 

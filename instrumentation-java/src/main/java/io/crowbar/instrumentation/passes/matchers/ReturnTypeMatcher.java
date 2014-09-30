@@ -17,7 +17,8 @@ public class ReturnTypeMatcher implements Matcher {
     }
 
     @Override
-    public final boolean matches (CtClass c, CtMethod m) {
+    public final boolean matches (CtClass c,
+                                  CtMethod m) {
         try {
             return returnType.equals(m.getReturnType().getName());
         }

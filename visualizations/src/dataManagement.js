@@ -4,6 +4,7 @@ function dataInlining(data) {
     var node;
     for (var i = tree.length - 1; i >= 0; i--) {
         node = tree[i];
+        node.n = node.n.slice(1);
         node.id = i;
         if (nodeHasFather(node)) {
             node.parent = tree[node.p];

@@ -139,13 +139,9 @@ public class AgentConfigs {
 
         MultiListener ml = new MultiListener();
         VerboseListener vl = new VerboseListener();
-        vl.enableRegisterNode(false);
-        vl.enableRegisterProbe(false);
 
-        vl.setPrefix("!!!!!!!! ");
-        vl.setSuffix(" !!!!!!!!");
-
-        if (verbose) ml.add(vl);
+        if (verbose)
+            ml.add(vl);
 
         Client cl = new Client(null, port);
         ml.add(cl);

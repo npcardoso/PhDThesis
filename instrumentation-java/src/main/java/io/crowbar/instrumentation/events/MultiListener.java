@@ -6,9 +6,14 @@ import io.crowbar.diagnostic.spectrum.ProbeType;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 public final class MultiListener
 implements EventListener {
+    private static final Logger logger = LogManager.getLogger(MultiListener.class);
+
     public final void add (EventListener l) {
         assert l != null;
         this.listeners.add(l);
@@ -24,7 +29,7 @@ implements EventListener {
                 el.registerNode(nodeId, parentId, name, type);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e, e);
             }
         }
     }
@@ -38,7 +43,7 @@ implements EventListener {
                 el.registerProbe(probeId, nodeId, type);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e, e);
             }
         }
     }
@@ -50,7 +55,7 @@ implements EventListener {
                 el.startTransaction(probeId);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e, e);
             }
         }
     }
@@ -63,7 +68,7 @@ implements EventListener {
                 el.endTransaction(probeId, hitVector);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e, e);
             }
         }
     }
@@ -76,7 +81,7 @@ implements EventListener {
                 el.logException(exceptionClass, exceptionMessage);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e, e);
             }
         }
     }
@@ -90,7 +95,7 @@ implements EventListener {
                 el.oracle(probeId, error, confidence);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e, e);
             }
         }
     }

@@ -11,7 +11,13 @@ import java.security.ProtectionDomain;
 import javassist.ClassPool;
 import javassist.CtClass;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+
 public class Agent implements ClassFileTransformer {
+    private static final Logger logger = LogManager.getLogger(Agent.class);
+
     public static void premain (String agentArgs,
                                 Instrumentation inst) {
         Agent a = new Agent();
@@ -26,8 +32,11 @@ public class Agent implements ClassFileTransformer {
         }
 
         a.agentConfigs.configure();
+        logger.info("----------- Crowbar Agent Ready -----------");
+        logger.info("----------- Agent Configs -----------");
+        logger.info(a.agentConfigs.serialize());
+        logger.info("----------- Agent Configs -----------");
         inst.addTransformer(a);
-        System.err.println("----------- Crowbar Agent Ready -----------");
     }
 
     @Override
@@ -51,9 +60,11 @@ public class Agent implements ClassFileTransformer {
             c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
         }
         catch (IOException e) {
+            logger.error(e, e);
             return null;
         }
         catch (RuntimeException e) {
+            logger.error(e, e);
             return null;
         }
 
@@ -68,7 +79,7 @@ public class Agent implements ClassFileTransformer {
 
                 case ABORT:
                     c.detach();
-                    // System.err.println("Ignoring Class: " + c.getName());
+                    logger.debug("Ignoring Class: {}", c.getName());
                     return null;
 
                 case RETURN:
@@ -78,12 +89,11 @@ public class Agent implements ClassFileTransformer {
             }
 
             ret = c.toBytecode();
-
-            // System.err.println("Instrumented Class: " + c.getName());
+            logger.debug("Instrumented Class: {}", c.getName());
         }
         catch (Throwable ex) {
-            System.err.println("Error in Class: " + c.getName());
-            ex.printStackTrace();
+            logger.error("Error in Class: {}", c.getName());
+            logger.error(ex, ex);
         }
 
         c.detach();

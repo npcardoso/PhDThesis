@@ -16,8 +16,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 public final class TestWrapperPass extends AbstractPass {
+    private static final Logger logger = LogManager.getLogger(TestWrapperPass.class);
+
     private final List<TestWrapper> testWrappers = new LinkedList<TestWrapper> ();
 
 
@@ -42,7 +47,8 @@ public final class TestWrapperPass extends AbstractPass {
                 Action ret = tw.getAction(c, m);
 
                 if (ret == Action.ACCEPT) {
-                    System.out.println(tw.toString() + " accepted " + c.getName() + m.getName());
+                    logger.info(tw.getClass().getSimpleName() + " accepted " +
+                                c.getName() + "#" + m.getName());
 
 
                     ca.computeMaxStack();

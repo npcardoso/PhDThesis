@@ -8,12 +8,18 @@ import io.crowbar.instrumentation.passes.matchers.OrMatcher;
 import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.SuperclassMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
+
 import javassist.CtClass;
 import javassist.CtMethod;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 public final class JUnit3TestWrapper
 extends AbstractTestWrapper {
+    private static final Logger logger = LogManager.getLogger(JUnit3TestWrapper.class);
+
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
             new AndMatcher(
@@ -27,12 +33,22 @@ extends AbstractTestWrapper {
 
     public static boolean isPass (Class cls,
                                   String methodName) {
+        logger.debug("isPass({},{}) = {}",
+                     cls.getName(),
+                     methodName,
+                     true);
+
         return true;
     }
 
     public static boolean isPass (Class cls,
                                   String methodName,
                                   Throwable e) {
+        logger.debug("isPass({},{},{}) = {}",
+                     cls.getName(),
+                     methodName,
+                     e.getClass().getName(),
+                     false);
         return false;
     }
 

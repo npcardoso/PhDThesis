@@ -11,8 +11,12 @@ import io.crowbar.instrumentation.events.AbstractEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public final class SpectrumBuilder extends AbstractEventListener {
+    private static final Logger logger = LogManager.getLogger(SpectrumBuilder.class);
+
     private int transactionNestingLevel = 0;
     private boolean error = false;
     private String exceptionClass = null;

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Properties>
+    <Property name="log-path">log/crowbar-instrumentation-java</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="console-log" target="SYSTEM_OUT">
+      <PatternLayout pattern="%highlight{[%level{length=1}]} (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
+    </Console>
+
+    <RollingFile name="trace-log" fileName="${log-path}-trace.log"
+                 filePattern="${log-path}-trace-%d{yyyy-MM-dd}.log">
+      <PatternLayout pattern="[%level{length=1}] (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+    </RollingFile>
+
+    <RollingFile name="error-log" fileName="${log-path}-trace.log"
+                 filePattern="${log-path}-error-%d{yyyy-MM-dd}.log">
+      <PatternLayout pattern="[%level{length=1}] (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <Root level="trace" additivity="false">
+      <AppenderRef ref="trace-log" level="trace"/>
+      <AppenderRef ref="error-log" level="error"/>
+      <AppenderRef ref="console-log" level="info"/>
+    </Root>
+  </Loggers>
+</Configuration>

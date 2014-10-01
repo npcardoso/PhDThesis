@@ -30,7 +30,6 @@ public abstract class AbstractTestWrapper implements TestWrapper {
         if (cls == null || o == null)
             return false;
 
-        System.out.println("Object: " + o + ", Class: " + cls + ", res: " + cls.isAssignableFrom(o.getClass()));
         return cls.isAssignableFrom(o.getClass());
     }
 

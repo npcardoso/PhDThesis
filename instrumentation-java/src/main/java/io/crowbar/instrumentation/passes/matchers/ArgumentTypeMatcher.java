@@ -3,8 +3,12 @@ package io.crowbar.instrumentation.passes.matchers;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class ArgumentTypeMatcher implements Matcher {
+    private static final Logger logger = LogManager.getLogger(ArgumentTypeMatcher.class);
+
     private final CtClass[] types;
 
     public ArgumentTypeMatcher (CtClass[] types) {
@@ -35,8 +39,10 @@ public class ArgumentTypeMatcher implements Matcher {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e, e);
+            return false;
         }
+
         return true;
     }
 }

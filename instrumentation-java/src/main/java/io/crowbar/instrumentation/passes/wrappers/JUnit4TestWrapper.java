@@ -10,15 +10,19 @@ import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
 
 
-import java.lang.reflect.Method;
-
 import javassist.CtClass;
 import javassist.CtMethod;
+
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 public final class JUnit4TestWrapper
 extends AbstractTestWrapper {
+    private static final Logger logger = LogManager.getLogger(JUnit4TestWrapper.class);
     private static final String ANNOTATION_CLASS = "org.junit.Test";
     private static final String EXPECTED_NONE_CLASS = ANNOTATION_CLASS + "$None";
     private static final ActionTaker ACTION_TAKER =
@@ -37,7 +41,7 @@ extends AbstractTestWrapper {
             return (Class) method.invoke(an);
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.warn(e, e);
         }
 
         return null;
@@ -45,35 +49,54 @@ extends AbstractTestWrapper {
 
     public static boolean isPass (Class cls,
                                   String methodName) {
+        boolean ret = true;
+
+
         try {
             Method method = cls.getMethod(methodName);
             Class c = getExpected(method);
-            return (c == null || c.getName() == EXPECTED_NONE_CLASS);
+            ret = (c == null || c.getName() == EXPECTED_NONE_CLASS);
         }
-        catch (NoSuchMethodException e) {}
-        return true;
+        catch (NoSuchMethodException e) {
+            logger.warn(e, e);
+        }
+        logger.debug("isPass({},{}) = {}",
+                     cls.getName(),
+                     methodName,
+                     ret);
+
+        return ret;
     }
 
     public static boolean isPass (Class cls,
                                   String methodName,
                                   Throwable e) {
+        boolean ret = false;
+
+
         if (e == null)
-            return true;
+            ret = true;
+        else if (isSameType(e, "org.junit.Assume$AssumptionViolatedException"))
+            ret = true;
+        else if (isSameType(e, "org.junit.internal.AssumptionViolatedException"))
+            ret = true;
+        else
+            try {
+                Method method = cls.getMethod(methodName);
+                Class expected = getExpected(method);
+                ret = isSameType(e, expected);
+            }
+            catch (NoSuchMethodException ex) {
+                logger.warn(ex, ex);
+            }
 
-        if (isSameType(e, "org.junit.Assume$AssumptionViolatedException"))
-            return true;
+        logger.debug("isPass({},{},{}) = {}",
+                     cls.getName(),
+                     methodName,
+                     e.getClass().getName(),
+                     ret);
 
-        if (isSameType(e, "org.junit.internal.AssumptionViolatedException"))
-            return true;
-
-        try {
-            Method method = cls.getMethod(methodName);
-            Class expected = getExpected(method);
-            return isSameType(e, expected);
-        }
-        catch (NoSuchMethodException ex) {}
-
-        return false;
+        return ret;
     }
 
     @Override

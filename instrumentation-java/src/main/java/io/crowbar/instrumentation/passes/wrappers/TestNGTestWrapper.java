@@ -13,16 +13,21 @@ import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
 import io.crowbar.instrumentation.runtime.Collector;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.Modifier;
-import java.lang.annotation.Annotation;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 public final class TestNGTestWrapper extends AbstractTestWrapper {
+    private static final Logger logger = LogManager.getLogger(TestNGTestWrapper.class);
+
     private static final String ANNOTATION_CLASS = "org.testng.annotations.Test";
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
@@ -76,27 +81,40 @@ public final class TestNGTestWrapper extends AbstractTestWrapper {
 
     public static final boolean isPass (Class cls,
                                         String methodName) {
+        boolean ret = true;
+
+
         try {
             Method method = cls.getMethod(methodName);
             Annotation an = getAnnotation(method);
 
-            if (an == null)
-                return true;
+            if (an == null) {
+                ret = true;
+            } else {
+                Class< ? >[] expected = getExpectedEx(an);
+                String expectedMsgRegex = getExpectedMsgRegex(an);
 
-            Class< ? >[] expected = getExpectedEx(an);
-            String expectedMsgRegex = getExpectedMsgRegex(an);
-
-            return expected.length == 0 && Pattern.matches(expectedMsgRegex, "");
+                ret = (expected.length == 0 && Pattern.matches(expectedMsgRegex, ""));
+            }
         }
         catch (Throwable ex) {
-            // ex.printStackTrace();
+            logger.warn(ex, ex);
         }
-        return true;
+
+        logger.debug("isPass({},{},{}) = {}",
+                     cls.getName(),
+                     methodName,
+                     ret);
+
+        return ret;
     }
 
     public static final boolean isPass (Class cls,
                                         String methodName,
                                         Throwable e) {
+        boolean ret = false;
+
+
         try {
             Method method = cls.getMethod(methodName);
             Annotation an = getAnnotation(method);
@@ -110,14 +128,23 @@ public final class TestNGTestWrapper extends AbstractTestWrapper {
 
             for (Class c : expected) {
                 if (isSameType(e, c) &&
-                    Pattern.matches(expectedMsgRegex, msg))
-                    return true;
+                    Pattern.matches(expectedMsgRegex, msg)) {
+                    ret = true;
+                    break;
+                }
             }
         }
         catch (Throwable ex) {
-            // ex.printStackTrace();
+            logger.warn(ex, ex);
         }
-        return false;
+
+        logger.debug("isPass({},{},{}) = {}",
+                     cls.getName(),
+                     methodName,
+                     e.getClass().getName(),
+                     ret);
+
+        return ret;
     }
 
     @Override

@@ -6,7 +6,13 @@ import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.events.EventListener;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+
 public final class Collector {
+    private static final Logger logger = LogManager.getLogger(Collector.class);
     private static Collector collector = null;
     private final EventListener listener;
     private final HitVector hitVector = new HitVector();
@@ -40,7 +46,7 @@ public final class Collector {
             listener.registerNode(n.getId(), parentId, name, type);
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e, e);
         }
         return n;
     }
@@ -57,7 +63,7 @@ public final class Collector {
             listener.registerProbe(p.getId(), p.getNodeId(), p.getType());
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e, e);
         }
         return p;
     }
@@ -70,7 +76,7 @@ public final class Collector {
             listener.startTransaction(probeId);
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e, e);
         }
     }
 
@@ -79,7 +85,7 @@ public final class Collector {
             listener.endTransaction(probeId, hitVector.get());
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e, e);
         }
 
         hitVector.reset();
@@ -91,7 +97,7 @@ public final class Collector {
             listener.logException(exceptionClass, exceptionMessage);
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e, e);
         }
     }
 
@@ -102,7 +108,7 @@ public final class Collector {
             listener.oracle(probeId, error, confidence);
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e, e);
         }
     }
 
@@ -115,7 +121,7 @@ public final class Collector {
             hitVector.hit(globalProbeId);
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e, e);
         }
     }
 

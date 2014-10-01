@@ -17,7 +17,8 @@ import javassist.CtMethod;
 import java.lang.annotation.Annotation;
 
 
-public final class JUnit4TestWrapper extends AbstractTestWrapper {
+public final class JUnit4TestWrapper
+extends AbstractTestWrapper {
     private static final String ANNOTATION_CLASS = "org.junit.Test";
     private static final String EXPECTED_NONE_CLASS = ANNOTATION_CLASS + "$None";
     private static final ActionTaker ACTION_TAKER =

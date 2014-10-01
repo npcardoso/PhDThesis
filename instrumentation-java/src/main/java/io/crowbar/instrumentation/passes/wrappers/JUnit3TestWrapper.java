@@ -12,7 +12,8 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 
-public class JUnit3TestWrapper implements TestWrapper {
+public final class JUnit3TestWrapper
+extends AbstractTestWrapper {
     private static final ActionTaker ACTION_TAKER =
         new WhiteList(
             new AndMatcher(
@@ -23,33 +24,20 @@ public class JUnit3TestWrapper implements TestWrapper {
                     new PrefixMatcher("run")
                     )));
 
-    @Override
-    public final Action getAction (CtClass c) {
-        return ACTION_TAKER.getAction(c);
+
+    public static boolean isPass (Class cls,
+                                  String methodName) {
+        return true;
+    }
+
+    public static boolean isPass (Class cls,
+                                  String methodName,
+                                  Throwable e) {
+        return false;
     }
 
     @Override
-    public final Action getAction (CtClass c,
-                                   CtMethod m) {
-        return ACTION_TAKER.getAction(c, m);
-    }
-
-    @Override
-    public final String getOracleCode (CtClass c,
-                                       CtMethod m,
-                                       Node n,
-                                       int probeId,
-                                       String collectorVar,
-                                       String exceptionVar) {
-        return null;
-    }
-
-    @Override
-    public final String getOracleCode (CtClass c,
-                                       CtMethod m,
-                                       Node n,
-                                       int probeId,
-                                       String collectorVar) {
-        return null;
+    protected ActionTaker getActionTaker () {
+        return ACTION_TAKER;
     }
 }

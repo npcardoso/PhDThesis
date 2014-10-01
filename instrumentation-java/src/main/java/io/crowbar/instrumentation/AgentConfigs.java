@@ -12,7 +12,9 @@ import io.crowbar.instrumentation.passes.Pass;
 import io.crowbar.instrumentation.passes.StackSizePass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
 import io.crowbar.instrumentation.passes.matchers.BlackList;
+import io.crowbar.instrumentation.passes.matchers.Matcher;
 import io.crowbar.instrumentation.passes.matchers.ModifierMatcher;
+import io.crowbar.instrumentation.passes.matchers.OrMatcher;
 import io.crowbar.instrumentation.passes.matchers.PrefixMatcher;
 import io.crowbar.instrumentation.passes.wrappers.ActionTakerToTestWrapper;
 import io.crowbar.instrumentation.passes.wrappers.JUnit3TestWrapper;
@@ -112,7 +114,8 @@ public class AgentConfigs {
         // Ignores classes in particular packages
         PrefixMatcher pMatcher = new PrefixMatcher(prefixes);
 
-        ModifierMatcher mMatcher = new ModifierMatcher(Modifier.NATIVE);
+        Matcher mMatcher = new OrMatcher(new ModifierMatcher(Modifier.NATIVE),
+                                         new ModifierMatcher(Modifier.INTERFACE));
 
         FilterPass fp = new FilterPass(new BlackList(mMatcher),
                                        new BlackList(pMatcher));

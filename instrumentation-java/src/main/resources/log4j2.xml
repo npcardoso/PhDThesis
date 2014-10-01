@@ -9,21 +9,13 @@
       <PatternLayout pattern="%highlight{[%level{length=1}]} (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
     </Console>
 
-    <RollingFile name="trace-log" fileName="${log-path}-trace.log"
-                 filePattern="${log-path}-trace-%d{yyyy-MM-dd}.log">
+    <File append="false" name="trace-log" fileName="${log-path}-trace.log">
       <PatternLayout pattern="[%level{length=1}] (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
-      <Policies>
-        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-      </Policies>
-    </RollingFile>
+    </File>
 
-    <RollingFile name="error-log" fileName="${log-path}-trace.log"
-                 filePattern="${log-path}-error-%d{yyyy-MM-dd}.log">
-      <PatternLayout pattern="[%level{length=1}] (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
-      <Policies>
-        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-      </Policies>
-    </RollingFile>
+    <File name="error-log" fileName="${log-path}-trace.log">
+      <PatternLayout pattern="[%level{length=1}] %d [%t] %c{2.}#%M:%L - %msg%n"/>
+    </File>
   </Appenders>
 
   <Loggers>

@@ -6,6 +6,7 @@ import io.crowbar.rest.database.Database;
 import io.crowbar.rest.models.ApiResponseModel;
 import io.crowbar.rest.models.IdListModel;
 import io.crowbar.rest.models.SpectrumModel;
+import io.crowbar.rest.models.SpectrumSummaryModel;
 import io.crowbar.rest.models.TreeModel;
 import io.crowbar.rest.models.TransactionModel;
 import io.crowbar.rest.models.ProbeModel;
@@ -102,5 +103,19 @@ public final class SpectraHandler {
 
 
         return new ApiResponseModel<List<TransactionModel> > (s.getTransactions());
+    }
+
+    @GET
+    @Path("/{spectrumId}/summary")
+    @ApiOperation(value = "/{spectrumId}/summary",
+                  notes = "Retrieves the transactions for a spectrum.",
+                  response = SpectrumSummaryModel.class)
+    @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum Id.")})
+    public ApiResponseModel<SpectrumSummaryModel> getSummary (@ApiParam(value = "The spectrum's id") @PathParam("spectrumId") int spectrumId) {
+        SpectrumModel s = getSpectrumPvt(spectrumId);
+        SpectrumSummaryModel ss = new SpectrumSummaryModel(spectrumId, s.getOriginal());
+
+
+        return new ApiResponseModel<SpectrumSummaryModel> (ss);
     }
 }

@@ -190,6 +190,61 @@ public abstract class Spectrum {
         return reduce(tmp, ms);
     }
 
+    /**
+     * @brief Returns the average number of active probes per transaction.
+     * @note Uses getTransactionCount()
+     */
+    public final double getAverageActivationCount () {
+        int totalActive = 0;
+
+
+        for (Transaction t : byTransaction()) {
+            totalActive += t.numActive();
+        }
+
+        return totalActive / ((double) getTransactionCount());
+    }
+
+    /**
+     * @brief Returns the activation rate.
+     * @note Uses getProbeCount()/getTransactionCount()
+     */
+    public final double getActivationRate () {
+        return getAverageActivationCount() / (double) getProbeCount();
+    }
+
+    /**
+     * @brief Returns the error rate for this spectrum.
+     * @note Uses getTransactionCount()
+     */
+    public final double getErrorRate (double threshold) {
+        return getErrorCount(threshold) / (double) getTransactionCount();
+    }
+
+    /**
+     * @brief Returns the number of errors in this spectrum.
+     * Uses a threshold to discretize the error values.
+     */
+    public final int getErrorCount (double threshold) {
+        int totalError = 0;
+
+
+        for (Transaction t : byTransaction()) {
+            if (t.getError() >= threshold)
+                totalError++;
+        }
+
+        return totalError;
+    }
+
+    /**
+     * @brief Returns the number of passes in this spectrum.
+     * Uses a threshold to discretize the error values.
+     */
+    public final int getPassCount (double threshold) {
+        return getTransactionCount() - getErrorCount(threshold);
+    }
+
     @Override
     public final boolean equals (Object o) {
         if (!(o instanceof Spectrum))

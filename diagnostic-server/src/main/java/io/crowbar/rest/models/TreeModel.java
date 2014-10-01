@@ -15,11 +15,6 @@ public final class TreeModel {
         this.original = original;
     }
 
-    @ApiModelProperty(value = "Number of nodes on the tree", required = false)
-    public int getNodeCount () {
-        return original.size();
-    }
-
     @ApiModelProperty(value = "Tree's nodes", required = true)
     public List<NodeModel> getNodes () {
         ListWrapper.WrapperFactory<Node, NodeModel> factory =

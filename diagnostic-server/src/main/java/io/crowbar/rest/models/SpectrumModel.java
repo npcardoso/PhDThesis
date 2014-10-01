@@ -53,20 +53,6 @@ public final class SpectrumModel {
         return matcherName;
     }
 
-    @ApiModelProperty(value = "Number of transactions in the spectrum",
-                      required = false,
-                      dataType = "integer")
-    public int getTransactionCount () {
-        return original.getTransactionCount();
-    }
-
-    @ApiModelProperty(value = "Number of probes in the spectrum",
-                      required = false,
-                      dataType = "integer")
-    public int getProbeCount () {
-        return original.getProbeCount();
-    }
-
     @ApiModelProperty(value = "Spectrum's transactions",
                       required = true)
     public List<TransactionModel> getTransactions () {
@@ -103,6 +89,7 @@ public final class SpectrumModel {
         return new TreeModel(original.getTree());
     }
 
+    @ApiModelProperty(hidden = true)
     @JSON(include = false)
     public Spectrum getOriginal () {
         return original;

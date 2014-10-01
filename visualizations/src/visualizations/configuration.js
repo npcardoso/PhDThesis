@@ -234,34 +234,6 @@ function ConfigurationView(data, elementSel, configuration, events) {
         var keyBindingToChange = null;
         var pressedKeys = [];
 
-
-        function renderKeyCodesArray(keyCodes) {
-            var renderStr = '';
-            for (var i = 0; i < keyCodes.length; i++) {
-                renderStr += KeyboardJS.key.name(keyCodes[i])[0] + ' ';
-            };
-            return renderStr;
-        }
-
-        function keyBindingsRender(arrayKeyBindings, modeID) {
-            var renderStr = '';
-            for (var i = 0; i < arrayKeyBindings.length; i++) {
-                renderStr += '<p><small>' + arrayKeyBindings[i].name + ': ';
-                renderStr += renderKeyCodesArray(arrayKeyBindings[i].keyCodes);
-                renderStr += ' <a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></small></p>';
-            }
-            return renderStr;
-        }
-
-        function modesRender(modes) {
-            var str = '';
-            for (var i = 0; i < modes.length; i++) {
-                str += '<br /><small>' + modes[i].name + ' Mode</small>';
-                str += keyBindingsRender(modes[i].keyBindings, i);
-            }
-            return str;
-        }
-
         function getKeyBindingById(id) {
             var tmp = id.replace('mode_', '').split('_');
             if (tmp[0] >= 0) {
@@ -281,14 +253,6 @@ function ConfigurationView(data, elementSel, configuration, events) {
             };
             return false;
         }
-
-        function renderConfigDisplay() {
-            $('.keyConfig').html('<p>Key Bindings:</p>' +
-                keyBindingsRender(configuration.currentConfig.keyBindings.allwaysActive, -1) +
-                modesRender(configuration.currentConfig.keyBindings.modes));
-            $('.keyChange').on("click", changeClicked);
-        }
-
 
         function dialogOkButtonClicked() {
             if (keyBindingToChange !== null && pressedKeys.length > 0) {
@@ -319,10 +283,15 @@ function ConfigurationView(data, elementSel, configuration, events) {
             });
         }
 
+        function renderConfigDisplay(){
+            $('.keyConfig').remove();
+            $(elementSel).append('<div class="keyConfig"></div>');
+            $('.keyConfig').html('<p>Key Bindings:</p>' + renderKeyBindingsDisplay(configuration,true));
+            $('.keyChange').on("click", changeClicked);
+        }
 
-
-        $(elementSel).append('<div class="keyConfig"></div>');
         renderConfigDisplay();
+ 
         dialogInit();
     };
 }

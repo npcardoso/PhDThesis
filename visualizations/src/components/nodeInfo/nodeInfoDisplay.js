@@ -39,7 +39,7 @@ function NodeInfoDisplay(elementSel, clickFunction, configuration) {
             })
         };
 
-        var i = 0;
+        var i = 1;
         console.log(renderElement.height());
         while (renderElement.height() > 30) {
             console.log(renderElement.height());

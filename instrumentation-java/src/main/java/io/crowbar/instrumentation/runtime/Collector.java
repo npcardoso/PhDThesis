@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 
 public final class Collector {
     private static final Logger logger = LogManager.getLogger(Collector.class);
+
     private static Collector collector = null;
     private final EventListener listener;
     private final HitVector hitVector = new HitVector();
@@ -27,6 +28,10 @@ public final class Collector {
 
     public static void start (String name,
                               EventListener listener) {
+        logger.info("Starting Collector");
+
+        assert collector == null;
+
         collector = new Collector(name, listener);
     }
 
@@ -36,9 +41,9 @@ public final class Collector {
         tree = new EditableTree(name);
     }
 
-    public Node registerNode (String name,
-                              Node.Type type,
-                              int parentId) {
+    public synchronized Node registerNode (String name,
+                                           Node.Type type,
+                                           int parentId) {
         Node n = tree.addNode(name, type, parentId);
 
 
@@ -51,9 +56,9 @@ public final class Collector {
         return n;
     }
 
-    public HitProbe registerProbe (String groupName,
-                                   int nodeId,
-                                   ProbeType type) {
+    public synchronized HitProbe registerProbe (String groupName,
+                                                int nodeId,
+                                                ProbeType type) {
         HitProbe p = hitVector.registerProbe(groupName,
                                              nodeId,
                                              type);
@@ -68,7 +73,7 @@ public final class Collector {
         return p;
     }
 
-    public void transactionStart (int probeId) {
+    public synchronized void transactionStart (int probeId) {
         try {
             if (resetOnTransactionStart)
                 hitVector.reset();
@@ -80,7 +85,7 @@ public final class Collector {
         }
     }
 
-    public void transactionEnd (int probeId) {
+    public synchronized void transactionEnd (int probeId) {
         try {
             listener.endTransaction(probeId, hitVector.get());
         }
@@ -91,8 +96,8 @@ public final class Collector {
         hitVector.reset();
     }
 
-    public void logException (String exceptionClass,
-                              String exceptionMessage) {
+    public synchronized void logException (String exceptionClass,
+                                           String exceptionMessage) {
         try {
             listener.logException(exceptionClass, exceptionMessage);
         }
@@ -101,9 +106,9 @@ public final class Collector {
         }
     }
 
-    public void oracle (int probeId,
-                        double error,
-                        double confidence) {
+    public synchronized void oracle (int probeId,
+                                     double error,
+                                     double confidence) {
         try {
             listener.oracle(probeId, error, confidence);
         }
@@ -112,11 +117,11 @@ public final class Collector {
         }
     }
 
-    public boolean[] getHitVector (String className) {
+    public synchronized boolean[] getHitVector (String className) {
         return hitVector.get(className);
     }
 
-    public void hit (int globalProbeId) {
+    public synchronized void hit (int globalProbeId) {
         try {
             hitVector.hit(globalProbeId);
         }

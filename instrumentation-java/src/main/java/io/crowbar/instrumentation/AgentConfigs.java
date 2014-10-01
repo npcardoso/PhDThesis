@@ -28,6 +28,8 @@ import java.util.List;
 import javassist.CtClass;
 import javassist.Modifier;
 
+import org.apache.logging.log4j.Level;
+
 public class AgentConfigs {
     private Granularity granularity = Granularity.FUNCTION;
     private int port = 1234;
@@ -138,10 +140,9 @@ public class AgentConfigs {
 
 
         MultiListener ml = new MultiListener();
-        VerboseListener vl = new VerboseListener();
+        VerboseListener vl = new VerboseListener(verbose ? Level.INFO : Level.DEBUG);
 
-        if (verbose)
-            ml.add(vl);
+        ml.add(vl);
 
         Client cl = new Client(null, port);
         ml.add(cl);

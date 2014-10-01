@@ -12,8 +12,13 @@ import javassist.bytecode.CodeIterator;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.MethodInfo;
 import javassist.bytecode.Opcode;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 public class InjectPass extends AbstractPass {
+    private static final Logger logger = LogManager.getLogger(InjectPass.class);
+
     public enum Granularity {
         STATEMENT,
         FUNCTION
@@ -52,6 +57,7 @@ public class InjectPass extends AbstractPass {
         }
 
         if (injected) {
+            logger.debug("Adding hit vector to {}", c.getName());
             CtField f = CtField.make("public static boolean[]  " + hitVectorName + " = " +
                                      "Collector.instance().getHitVector(" +
                                      "\"" + c.getName() + "\");", c);
@@ -61,17 +67,18 @@ public class InjectPass extends AbstractPass {
         return Outcome.CONTINUE;
     }
 
-    /*!
+    /**
      * \brief Handles instrumentation injection on a method level
      * @return Returns false if no probe was injected, true otherwise.
      */
     private boolean handleMethod (CtClass c,
                                   CtMethod m) throws Exception {
+        logger.debug("Injecting instrumentation for {}#{}", c.getName(), m.getName());
+
         MethodInfo info = m.getMethodInfo();
         CodeAttribute ca = info.getCodeAttribute();
         CodeIterator ci = ca.iterator();
         boolean injected = false;
-
 
         for (int lastLine = -1, index, curLine;
              ci.hasNext();

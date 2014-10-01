@@ -4,6 +4,7 @@ import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.instrumentation.passes.matchers.ActionTaker;
 import io.crowbar.instrumentation.passes.matchers.AndMatcher;
 import io.crowbar.instrumentation.passes.matchers.PrefixMatcher;
+import io.crowbar.instrumentation.passes.matchers.OrMatcher;
 import io.crowbar.instrumentation.passes.matchers.ReturnTypeMatcher;
 import io.crowbar.instrumentation.passes.matchers.SuperclassMatcher;
 import io.crowbar.instrumentation.passes.matchers.WhiteList;
@@ -16,9 +17,11 @@ public class JUnit3TestWrapper implements TestWrapper {
         new WhiteList(
             new AndMatcher(
                 new SuperclassMatcher("junit.framework.TestCase"),
-                new AndMatcher(
-                    new ReturnTypeMatcher("void"),
-                    new PrefixMatcher("test"))));
+                new ReturnTypeMatcher("void"),
+                new OrMatcher(
+                    new PrefixMatcher("test"),
+                    new PrefixMatcher("run")
+                    )));
 
     @Override
     public final Action getAction (CtClass c) {

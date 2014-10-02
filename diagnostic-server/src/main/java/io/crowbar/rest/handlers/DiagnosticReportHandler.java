@@ -5,9 +5,6 @@ import io.crowbar.diagnostic.Connection;
 import io.crowbar.diagnostic.DiagnosticReport;
 import io.crowbar.diagnostic.Diagnostic;
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.TreeView;
-import io.crowbar.diagnostic.spectrum.TreeViewFactory;
-import io.crowbar.diagnostic.spectrum.matchers.tree.TestNodesMatcher;
 import io.crowbar.messages.VisualizationMessages;
 import io.crowbar.rest.database.Database;
 import io.crowbar.rest.models.ApiResponseModel;
@@ -15,19 +12,16 @@ import io.crowbar.rest.models.DiagnosticModel;
 import io.crowbar.rest.models.DiagnosticReportModel;
 import io.crowbar.rest.models.DiagnosticSystemModel;
 import io.crowbar.rest.models.IndexListModel;
-
+import io.crowbar.rest.models.SpectrumModel;
 import io.crowbar.util.MergeStrategy;
 
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
-import java.util.Map;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.GET;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
-import io.crowbar.rest.models.SpectrumModel;
 
 
 @Path("/reports")

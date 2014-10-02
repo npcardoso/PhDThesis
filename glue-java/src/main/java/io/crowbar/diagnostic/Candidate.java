@@ -1,45 +1,44 @@
 package io.crowbar.diagnostic;
 
 import java.util.AbstractSet;
-import java.util.Set;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 
 public final class Candidate
-    extends AbstractSet <Integer> {
+extends AbstractSet<Integer> {
     private final Set<Integer> elements;
 
     private Candidate () {
-        this.elements = new HashSet();
+        this.elements = new HashSet<Integer> ();
     }
 
-    Candidate (int[] elements) {
-        this.elements = new HashSet();
+    public Candidate (int... elements) {
+        this.elements = new HashSet<Integer> ();
 
         for (int e:elements) {
             this.elements.add(e);
         }
     }
 
-    Candidate (List<Integer> elements) {
-        this.elements = new HashSet(elements);
+    public Candidate (List<Integer> elements) {
+        this.elements = new HashSet<Integer> (elements);
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains (Object o) {
         return elements.contains(o);
     }
 
     @Override
-    public int size() {
+    public int size () {
         return elements.size();
     }
 
     @Override
-    public Iterator<Integer> iterator() {
+    public Iterator<Integer> iterator () {
         return elements.iterator();
     }
 
@@ -49,7 +48,7 @@ public final class Candidate
 
 
         str.append("{class='Candidate', ");
-        str.append("components=[");
+        str.append("probes=[");
         boolean first = true;
 
         for (int c : this) {

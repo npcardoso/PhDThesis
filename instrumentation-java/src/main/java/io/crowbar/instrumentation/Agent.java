@@ -1,98 +1,41 @@
 package io.crowbar.instrumentation;
 
-import io.crowbar.instrumentation.events.MultiListener;
-import io.crowbar.instrumentation.events.VerboseListener;
-import io.crowbar.instrumentation.passes.FilterPass;
-import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
-import io.crowbar.instrumentation.passes.StackSizePass;
-import io.crowbar.instrumentation.passes.TestWrapperPass;
-import io.crowbar.instrumentation.passes.matchers.BlackList;
-import io.crowbar.instrumentation.passes.matchers.ModifierMatcher;
-import io.crowbar.instrumentation.passes.matchers.PrefixMatcher;
-import io.crowbar.instrumentation.passes.wrappers.ActionTakerToTestWrapper;
-import io.crowbar.instrumentation.passes.wrappers.TestNGTestWrapper;
-import io.crowbar.instrumentation.passes.wrappers.JUnit3TestWrapper;
-import io.crowbar.instrumentation.passes.wrappers.JUnit4TestWrapper;
-import io.crowbar.instrumentation.runtime.Collector;
-
 
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
-import java.util.LinkedList;
-import java.util.List;
 
 import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.Modifier;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 public class Agent implements ClassFileTransformer {
-    public static void premain (String agentArgs, Instrumentation inst) {
-        CtClass.debugDump = "debug";
+    private static final Logger logger = LogManager.getLogger(Agent.class);
 
+    public static void premain (String agentArgs,
+                                Instrumentation inst) {
         Agent a = new Agent();
 
 
-        // Ignores classes in particular packages
-        PrefixMatcher pMatcher = new PrefixMatcher("javax.",
-                                                   "java.",
-                                                   "sun.",
-                                                   "javassist.",
-                                                   "io.crowbar.instrumentation",
-                                                   "org.apache.",
-                                                   "org.junit.",
-                                                   "org.hamcrest",
-                                                   "org.eclipse.",
-                                                   "org.testng",
-                                                   "com.beust",
-                                                   "com.sun.",
-                                                   "junit.");
+        if (agentArgs != null && agentArgs.length() >= 0) {
+            a.agentConfigs = AgentConfigs.deserialize(agentArgs);
+        }
 
-        ModifierMatcher mMatcher = new ModifierMatcher(Modifier.NATIVE);
+        if (a.agentConfigs == null) {
+            a.agentConfigs = new AgentConfigs();
+        }
 
-        FilterPass fp = new FilterPass(new BlackList(mMatcher),
-                                       new BlackList(pMatcher));
-        a.passes.add(fp);
-
-
-        // Injects instrumentation instructions
-        InjectPass inject = new InjectPass(InjectPass.Granularity.FUNCTION);
-        a.passes.add(inject);
-
-
-        // Wraps unit tests with instrumentation instrunctions
-        TestWrapperPass twp = new TestWrapperPass(
-            new ActionTakerToTestWrapper(
-                new BlackList(
-                    new ModifierMatcher(Modifier.ABSTRACT))), // Skip Abstract Methods
-            new JUnit3TestWrapper(),
-            new JUnit4TestWrapper(),
-            new TestNGTestWrapper());
-        a.passes.add(twp);
-
-        // Recalculates the stack size for all methods
-        StackSizePass stackSizePass = new StackSizePass();
-        a.passes.add(stackSizePass);
-
-
-        MultiListener ml = new MultiListener();
-        VerboseListener vl = new VerboseListener();
-        vl.enableRegisterNode(false);
-        vl.enableRegisterProbe(false);
-
-        vl.setPrefix("!!!!!!!! ");
-        // vl.setSuffix(" !!!!!!!!");
-        // ml.add(vl);
-
-        Client cl = new Client(null, Integer.parseInt(agentArgs));
-        ml.add(cl);
-
-        Collector.start("Workspace-" + cl.getCliendId(), ml);
-
-
+        a.agentConfigs.configure();
+        logger.info("----------- Crowbar Agent Ready -----------");
+        logger.info("----------- Agent Configs -----------");
+        logger.info(a.agentConfigs.serialize());
+        logger.info("----------- Agent Configs -----------");
         inst.addTransformer(a);
     }
 
@@ -117,9 +60,11 @@ public class Agent implements ClassFileTransformer {
             c = cp.makeClass(new java.io.ByteArrayInputStream(bytes));
         }
         catch (IOException e) {
+            logger.error(e, e);
             return null;
         }
         catch (RuntimeException e) {
+            logger.error(e, e);
             return null;
         }
 
@@ -127,14 +72,14 @@ public class Agent implements ClassFileTransformer {
         try {
             cp.importPackage("io.crowbar.instrumentation.runtime");
 
-            for (Pass p : passes) {
+            for (Pass p : agentConfigs.getPasses()) {
                 switch (p.transform(c)) {
                 case CONTINUE:
                     continue;
 
                 case ABORT:
                     c.detach();
-                    // System.err.println("Ignoring Class: " + c.getName());
+                    logger.debug("Ignoring Class: {}", c.getName());
                     return null;
 
                 case RETURN:
@@ -144,17 +89,16 @@ public class Agent implements ClassFileTransformer {
             }
 
             ret = c.toBytecode();
-
-            // System.err.println("Instrumented Class: " + c.getName());
+            logger.debug("Instrumented Class: {}", c.getName());
         }
         catch (Throwable ex) {
-            System.err.println("Error in Class: " + c.getName());
-            ex.printStackTrace();
+            logger.error("Error in Class: {}", c.getName());
+            logger.error(ex, ex);
         }
 
         c.detach();
         return ret;
     }
 
-    private List<Pass> passes = new LinkedList<Pass> ();
+    private AgentConfigs agentConfigs = null;
 }

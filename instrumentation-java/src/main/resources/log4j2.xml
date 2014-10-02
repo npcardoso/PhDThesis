@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Properties>
+    <Property name="log-path">log/crowbar-instrumentation-java</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="console-log" target="SYSTEM_OUT">
+      <PatternLayout pattern="%highlight{[%level{length=1}]} (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
+    </Console>
+
+    <File append="false" name="trace-log" fileName="${log-path}-trace.log">
+      <PatternLayout pattern="[%level{length=1}] (@%rms) [%t] %c{2.}#%M:%L - %msg%n"/>
+    </File>
+
+    <File name="error-log" fileName="${log-path}-trace.log">
+      <PatternLayout pattern="[%level{length=1}] %d [%t] %c{2.}#%M:%L - %msg%n"/>
+    </File>
+  </Appenders>
+
+  <Loggers>
+    <Root level="trace" additivity="false">
+      <AppenderRef ref="trace-log" level="trace"/>
+      <AppenderRef ref="error-log" level="error"/>
+      <AppenderRef ref="console-log" level="info"/>
+    </Root>
+  </Loggers>
+</Configuration>

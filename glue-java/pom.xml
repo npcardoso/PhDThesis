@@ -6,7 +6,7 @@
     <relativePath>../pom.xml</relativePath>
     <groupId>io.crowbar</groupId>
     <artifactId>libcrowbar</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
 
@@ -19,7 +19,36 @@
     <dependency>
       <groupId>io.crowbar</groupId>
       <artifactId>diagnostic-native</artifactId>
-      <version>1.0.0</version>
+      <classifier>osx</classifier>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.crowbar</groupId>
+      <artifactId>diagnostic-native</artifactId>
+      <classifier>linux32</classifier>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.crowbar</groupId>
+      <artifactId>diagnostic-native</artifactId>
+      <classifier>linux64</classifier>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.crowbar</groupId>
+      <artifactId>diagnostic-native</artifactId>
+      <classifier>win32</classifier>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.crowbar</groupId>
+      <artifactId>diagnostic-native</artifactId>
+      <classifier>win64</classifier>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -37,7 +66,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.4</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -90,22 +119,6 @@
 
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <!--executions>
-            <execution>
-            <id>verify-style</id>
-            <phase>process-sources</phase>
-            <goals>
-            <goal>check</goal>
-            </goals>
-            </execution>
-            </executions-->
-        <configuration>
-          <logViolationsToConsole>true</logViolationsToConsole>
-        </configuration>
       </plugin>
     </plugins>
   </build>

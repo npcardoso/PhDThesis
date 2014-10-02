@@ -3,11 +3,19 @@ package io.crowbar.diagnostic.spectrum;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public abstract class Transaction<A extends Activity,
-                                  TM extends Metadata>
-implements Iterable<A> {
-    private class TransactionIterator implements Iterator<A> {
+public abstract class Transaction {
+    private class TransactionIterator implements Iterator<Integer> {
         private int i = 0;
+
+        TransactionIterator () {
+            goToNext();
+        }
+
+        private void goToNext () {
+            while (i < size() && !isActive(i)) {
+                i++;
+            }
+        }
 
         @Override
         public boolean hasNext () {
@@ -15,11 +23,13 @@ implements Iterable<A> {
         }
 
         @Override
-        public A next () {
+        public Integer next () {
             if (!hasNext())
                 throw new NoSuchElementException();
 
-            return get(i++);
+            int tmp = i++;
+            goToNext();
+            return tmp;
         }
 
         @Override
@@ -40,12 +50,11 @@ implements Iterable<A> {
     }
 
     /**
-     * @brief Retreives the activity by component id.
-     * @note iterator uses this function.
-     * @return the activity or null if activity for that component
-     * does not exist.
+     * @brief Checks if probe is active.
+     * @note iterator() uses this function.
+     * @return the activity or false if probe does not exist.
      */
-    public abstract A get (int id);
+    public abstract boolean isActive (int id);
 
     public final boolean isError () {
         return getError() >= 1;
@@ -55,26 +64,62 @@ implements Iterable<A> {
 
     public abstract double getConfidence ();
 
-    public abstract TM getMetadata ();
-
-    @Override
-    public final Iterator<A> iterator () {
-        return new TransactionIterator();
-    }
-
     public abstract int numActive ();
 
+    /**
+     * @brief Returns the original transaction.
+     * This can be used when using TransactionViews to get the backing transaction object.
+     * @note if t.getOriginal() == t, t is not a view.
+     */
+    public Transaction getOriginal () {
+        return this;
+    }
+
+    /**
+     * @brief Returns an iterable that iterates over active probes.
+     */
+    public final Iterable<Integer> getActivity () {
+        return new Iterable<Integer> () {
+                   @Override
+                   public Iterator<Integer> iterator () {
+                       return new TransactionIterator();
+                   }
+        };
+    }
 
     /**
      * @brief Gets the size of the transaction
      * @note iterator uses this function.
      * @return The size of the transaction is equal to the id of the
-     * last component + 1.
+     * last active probe + 1.
      */
     public abstract int size ();
 
     @Override
-    public final String toString () {
+    public boolean equals (Object o) {
+        if (!(o instanceof Transaction))
+            return false;
+
+        Transaction t = (Transaction) o;
+
+        if (getError() != t.getError())
+            return false;
+
+        if (getConfidence() != t.getConfidence())
+            return false;
+
+        Iterator it = t.getActivity().iterator();
+
+        for (Integer id : getActivity()) {
+            if (!id.equals(it.next()))
+                return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public String toString () {
         StringBuilder str = new StringBuilder();
 
 
@@ -83,18 +128,17 @@ implements Iterable<A> {
         str.append("activity=[");
         boolean first = true;
 
-        for (A a : this) {
+        for (Integer id : getActivity()) {
             if (!first)
                 str.append(",");
 
-            str.append(a.toString());
+            str.append(id.toString());
             first = false;
         }
 
         str.append("], ");
         str.append("error=" + getError() + ", ");
-        str.append("confidence=" + getConfidence() + ", ");
-        str.append("metadata=" + getMetadata() + "}");
+        str.append("confidence=" + getConfidence() + "}");
 
         return str.toString();
     }

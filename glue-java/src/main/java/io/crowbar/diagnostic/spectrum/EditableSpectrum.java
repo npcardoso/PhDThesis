@@ -1,67 +1,58 @@
 package io.crowbar.diagnostic.spectrum;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import flexjson.JSON;
 
 /**
  * This class provides a way of creating a spectrum.
  */
-public final class EditableSpectrum<A extends Activity,
-                                      TM extends Metadata>
-extends Spectrum<A, TM> {
-    private final ArrayList<Transaction<A, TM> > transactions = new ArrayList();
-    private final ArrayList<Component> components = new ArrayList();
+public final class EditableSpectrum
+extends Spectrum {
+    private final ArrayList<Transaction> transactions = new ArrayList<Transaction> ();
+    private final ArrayList<Probe> probes = new ArrayList<Probe> ();
 
     private final EditableTree tree = new EditableTree("root");
-    private int componentCount = 0;
+    private int probeCount = 0;
 
     @Override
     public EditableTree getTree () {
         return tree;
     }
 
-    @Override
-    public int getComponentCount () {
-        return componentCount;
-    }
-
+    @JSON(include = false)
     @Override
     public int getTransactionCount () {
         return transactions.size();
     }
 
-    /**
-     * @brief Retreives a transaction by id.
-     * @return A transaction or null if a transaction with such id
-     * does not exist.
-     */
+    @JSON(include = false)
     @Override
-    public Transaction<A, TM> getTransaction (int transactionId) {
+    public int getProbeCount () {
+        return probeCount;
+    }
+
+    @Override
+    public Transaction getTransaction (int transactionId) {
         if (transactionId < 0 || transactionId >= transactions.size())
             return null;
 
         return transactions.get(transactionId);
     }
 
-
-    /**
-     * @brief Retreives a component by id.
-     * @return A component or null if a component with such id does
-     * not exist.
-     */
     @Override
-    public Component getComponent (int id) {
-        if (id < 0 || id >= components.size())
+    public Probe getProbe (int id) {
+        if (id < 0 || id >= probes.size())
             return null;
 
-        return components.get(id);
+        return probes.get(id);
     }
 
     /**
      * @brief Adds a new transactions to the spectrum.
-     * @pre this.getTransaction(transaction.getId()) == null
      */
-    public void setTransaction (Transaction<A, TM> transaction) {
-        assert(this.getTransaction(transaction.getId()) == null);
+    public void setTransaction (Transaction transaction) {
         transactions.ensureCapacity(transaction.getId() + 1);
 
         while (transactions.size() <= transaction.getId()) {
@@ -70,25 +61,24 @@ extends Spectrum<A, TM> {
 
         transactions.set(transaction.getId(), transaction);
 
-        componentCount = Math.max(componentCount, transaction.size());
+        probeCount = Math.max(probeCount, transaction.size());
     }
 
     /**
-     * @brief Adds a new component to the spectrum.
+     * @brief Adds a new probe to the spectrum.
      * @pre node.getTree() == this.getTree()
-     * @pre this.getComponent(id) == null
      */
-    public void setComponent (int id,
-                              ProbeType type,
-                              Node node) {
-        assert(node.getTree() == this.getTree());
-        assert(this.getComponent(id) == null);
- components.ensureCapacity(id + 1);
+    public void setProbe (int id,
+                          ProbeType type,
+                          Node node) {
+        assert (node.getTree() == this.getTree());
+        probes.ensureCapacity(id + 1);
 
-        while (components.size() <= id){
-            components.add(null);
+        while (probes.size() <= id) {
+            probes.add(null);
         }
 
-        components.set(id, new Component(this, type, id, node.getId()));
+        probeCount = Math.max(probeCount, id + 1);
+        probes.set(id, new Probe(this, type, id, node.getId()));
     }
 }

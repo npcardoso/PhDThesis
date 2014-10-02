@@ -1,24 +1,34 @@
 package io.crowbar.instrumentation.events;
 
 import io.crowbar.diagnostic.spectrum.Node;
-import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 
-public class VerboseListener implements EventListener {
-    private String prefix = "";
-    private String suffix = "";
+import java.io.PrintStream;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+
+public class VerboseListener
+implements EventListener {
+    private static final Logger logger = LogManager.getLogger(VerboseListener.class);
+
+    private final Level level;
 
     private boolean registerNode = true;
     private boolean registerProbe = true;
     private boolean startTransaction = true;
     private boolean endTransaction = true;
+    private boolean logException = true;
     private boolean oracle = true;
 
-    public final void setPrefix (String str) {
-        prefix = str;
+    public VerboseListener () {
+        this(Level.DEBUG);
     }
 
-    public final void setSuffix (String str) {
-        suffix = str;
+    public VerboseListener (Level level) {
+        this.level = level;
     }
 
     public final void enableRegisterNode (boolean enable) {
@@ -37,65 +47,55 @@ public class VerboseListener implements EventListener {
         endTransaction = enable;
     }
 
+    public final void enableLogException (boolean enable) {
+        logException = enable;
+    }
+
     public final void enableOracle (boolean enable) {
         oracle = enable;
     }
 
     @Override
-    public final void registerNode (String name, int id, int parentId) throws Exception {
+    public final void registerNode (int nodeId,
+                                    int parentId,
+                                    String name,
+                                    Node.Type type) throws Exception {
         if (!registerNode) return;
 
-        String ret = prefix;
-
-
-        ret += "Registering Node: (" + name + ", " + id + ", " + parentId + ")";
-        ret += suffix;
-        System.out.println(ret);
+        logger.log(level, "Registering Node (nId: {}, name: '{}', pnId: {})", nodeId, name, parentId);
     }
 
     @Override
-    public final void registerProbe (Probe p) throws Exception {
+
+    public void registerProbe (int probeId,
+                               int nodeId,
+                               ProbeType type) throws Exception {
         if (!registerProbe) return;
 
-        String ret = prefix;
-        ret += "Registering Probe: " + p;
-        ret += suffix;
-        System.out.println(ret);
+        logger.log(level, "Registering Probe (pId:{}, nId: {}, type: '{}')", probeId, nodeId, type);
     }
 
     @Override
     public final void startTransaction (int probeId) throws Exception {
         if (!startTransaction) return;
 
-        String ret = prefix;
-
-
-        ret += "Transaction Start: [probeId: " + probeId + "]";
-        ret += suffix;
-        System.out.println(ret);
+        logger.log(level, "Registering Transaction Start (pId: {})", probeId);
     }
 
     @Override
     public final void endTransaction (int probeId,
-                                      String exceptionClass,
-                                      String exceptionMessage,
                                       boolean[] hitVector) throws Exception {
         if (!endTransaction) return;
 
-        String ret = prefix;
+        logger.log(level, "Registering Transaction End (pId: {})", probeId);
+    }
 
+    @Override
+    public void logException (String exceptionClass,
+                              String exceptionMessage) throws Exception {
+        if (!logException) return;
 
-        ret += "Transaction End: [probeId: " + probeId;
-        ret += ", exceptionClass: " + exceptionClass;
-        ret += ", exceptionMessage: " + exceptionMessage;
-        ret += ", hitVector: [ ";
-
-        for (int i = 0; i < hitVector.length; i++) {
-            ret += hitVector[i] ? (i + " ") : "";
-        }
-
-        ret += "]]" + suffix;
-        System.out.println(ret);
+        logger.log(level, "Logging Exception (cls: {}, msg: '{}')", exceptionClass, exceptionMessage);
     }
 
     @Override
@@ -104,13 +104,6 @@ public class VerboseListener implements EventListener {
                               double confidence) throws Exception {
         if (!oracle) return;
 
-        String ret = prefix;
-
-
-        ret += "Oracle: [probeId: " + probeId + ", ";
-        ret += "error: " + error + ", ";
-        ret += "confidence: " + confidence + "]";
-        ret += suffix;
-        System.out.println(ret);
+        logger.log(level, "Logging Oracle (pId: {}, err: {}, conf: {})", probeId, error, confidence);
     }
 }

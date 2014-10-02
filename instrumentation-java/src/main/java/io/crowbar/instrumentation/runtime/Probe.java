@@ -5,6 +5,7 @@ import io.crowbar.diagnostic.spectrum.ProbeType;
 import java.io.Serializable;
 
 public class Probe implements Serializable {
+    private static final long serialVersionUID = -5210419034521124023L;
     private final int id;
     private final int nodeId;
     private final ProbeType type;

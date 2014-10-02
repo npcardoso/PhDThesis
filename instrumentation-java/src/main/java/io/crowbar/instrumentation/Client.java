@@ -1,16 +1,16 @@
 package io.crowbar.instrumentation;
 
 import io.crowbar.diagnostic.spectrum.Node;
-import io.crowbar.instrumentation.events.EventListener;
+import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.instrumentation.Messages.ByeMessage;
-import io.crowbar.instrumentation.Messages.Message;
 import io.crowbar.instrumentation.Messages.HelloMessage;
-import io.crowbar.instrumentation.runtime.Probe;
+import io.crowbar.instrumentation.Messages.Message;
+import io.crowbar.instrumentation.events.EventListener;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 public class Client implements EventListener {
@@ -61,7 +61,8 @@ public class Client implements EventListener {
     private int port;
 
 
-    public Client (String host, int port) {
+    public Client (String host,
+                   int port) {
         this.host = host;
         this.port = port;
 
@@ -111,13 +112,23 @@ public class Client implements EventListener {
     }
 
     @Override
-    public void registerNode (String name, int id, int parentId) {
-        postMessage(new Messages.RegisterNodeMessage(name, id, parentId));
+    public void registerNode (int nodeId,
+                              int parentId,
+                              String name,
+                              Node.Type type) throws Exception {
+        postMessage(new Messages.RegisterNodeMessage(nodeId,
+                                                     parentId,
+                                                     name,
+                                                     type));
     }
 
     @Override
-    public final void registerProbe (Probe probe) {
-        postMessage(new Messages.RegisterProbeMessage(probe));
+    public void registerProbe (int probeId,
+                               int nodeId,
+                               ProbeType type) throws Exception {
+        postMessage(new Messages.RegisterProbeMessage(probeId,
+                                                      nodeId,
+                                                      type));
     }
 
     @Override
@@ -127,13 +138,16 @@ public class Client implements EventListener {
 
     @Override
     public final void endTransaction (int probeId,
-                                      String exceptionClass,
-                                      String exceptionMessage,
                                       boolean[] hitVector) {
         postMessage(new Messages.TransactionEndMessage(probeId,
-                                                       exceptionClass,
-                                                       exceptionMessage,
                                                        hitVector));
+    }
+
+    @Override
+    public final void logException (String exceptionClass,
+                                    String exceptionMessage) {
+        postMessage(new Messages.LogExceptionMessage(exceptionClass,
+                                                     exceptionMessage));
     }
 
     @Override

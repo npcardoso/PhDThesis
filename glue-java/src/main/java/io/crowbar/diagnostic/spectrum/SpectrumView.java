@@ -1,73 +1,93 @@
 package io.crowbar.diagnostic.spectrum;
 
-import java.util.BitSet;
+import io.crowbar.util.ViewUtils;
 
-/*!
- * This class creates a view of an arbitrary spectrum with some components/transactions ommited.
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+
+import flexjson.JSON;
+
+/**
+ * @brief This class creates a view of an arbitrary spectrum with some probes/transactions omitted.
  * As this class does not make any copies of the original spectrum, it assumes its immutability.
  * Changes to the spectrum after the creation of the view may have unpredictable consequences.
  */
-final class SpectrumView<A extends Activity,
-                        TM extends Metadata>
-extends Spectrum<A, TM> {
-    private final Spectrum<A, TM> spectrum;
-    private final int[] components;
+public final class SpectrumView
+extends Spectrum {
+    private final Spectrum spectrum;
+    private final int[] probes;
     private final int[] transactions;
 
-    public SpectrumView (Spectrum<A, TM> spectrum,
-                        BitSet transactions,
-                        BitSet components) {
+    private List<Probe> probeViews;
+
+    public SpectrumView (Spectrum spectrum,
+                         BitSet transactions,
+                         BitSet probes) {
         this.spectrum = spectrum;
-        this.transactions = toArray(transactions);
-        this.components = toArray(components);
-    }
+        this.transactions = ViewUtils.toMappingArray(transactions);
+        this.probes = ViewUtils.toMappingArray(probes);
 
-    private static int[] toArray (BitSet bs) {
-        int[] ret = new int[bs.cardinality()];
-        int i = 0;
+        this.probeViews = new ArrayList<Probe> (this.probes.length);
 
-        for (int el = bs.nextSetBit(0); el >= 0; el = bs.nextSetBit(el + 1)) {
-            ret[i++] = el;
+        for (int i = 0; i < this.probes.length; i++) {
+            this.probeViews.add(null);
         }
-
-        return ret;
     }
 
+    @JSON(include = true)
     @Override
     public Tree getTree () {
         return spectrum.getTree();
     }
 
-    public int getComponentMapping (int id) {
-        return components[id];
+    public int getProbeMapping (int id) {
+        return probes[id];
     }
 
     public int getTransactionMapping (int id) {
         return transactions[id];
     }
 
+    @JSON(include = false)
     @Override
-    public int getComponentCount () {
-        return components.length;
+    public int getProbeCount () {
+        return probes.length;
     }
 
+    @JSON(include = false)
     @Override
     public int getTransactionCount () {
         return transactions.length;
     }
 
     @Override
-    public Transaction<A, TM> getTransaction (int transactionId) {
-        Transaction<A, TM> t = spectrum.getTransaction(transactions[transactionId]);
+    public Transaction getTransaction (int transactionId) {
+        Transaction t = spectrum.getTransaction(transactions[transactionId]);
+
 
         if (t == null)
             return null;
 
-        return new TransactionView<A, TM> (transactionId, this, t);
+        return new TransactionView(transactionId, this, t);
     }
 
     @Override
-    public Component getComponent (int componentId) {
-        return spectrum.getComponent(components[componentId]);
+    public Probe getProbe (int probeId) {
+        Probe p = probeViews.get(probeId);
+
+
+        if (p != null)
+            return p;
+
+        p = spectrum.getProbe(probes[probeId]);
+
+        if (p == null)
+            return null;
+
+        p = new Probe(spectrum, p.getType(), probeId, p.getNodeId());
+        probeViews.set(probeId, p);
+
+        return p;
     }
 }

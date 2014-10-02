@@ -8,12 +8,10 @@
 
 namespace diagnostic {
 namespace configuration {
-
 t_const_ptr<t_diagnostic_system> construct_diagnostic_system (const boost::property_tree::ptree & pt,
-                                                                  const t_algorithm_creator & ac = t_algorithm_creator::get_default());
+                                                              t_ptr<t_algorithm_creator> ac=t_algorithm_creator::get_default());
 }
 }
-
 
 
 #endif

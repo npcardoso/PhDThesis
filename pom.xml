@@ -7,13 +7,17 @@
     <checkstyle.config.location>
       ${user.dir}/configs/checkstyle.xml
     </checkstyle.config.location>
+    <server.id>crowbar-io</server.id>
+    <server.name>crowbar-io</server.name>
+    <server.sftp>sftp://sftp.dc2.gpaas.net/vhosts/crowbar.io/htdocs/maven</server.sftp>
+    <server.url>http://crowbar.io/maven/</server.url>
   </properties>
 
 
   <groupId>io.crowbar</groupId>
   <artifactId>libcrowbar</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>libcrowbar</name>
   <url>http://crowbar.io</url>
   <inceptionYear>2014</inceptionYear>
@@ -35,14 +39,33 @@
       </roles>
       <timezone>0</timezone>
     </developer>
+    <developer>
+      <id>ap</id>
+      <name>Alexandre Perez</name>
+      <email>alexandrecperez@gmail.com</email>
+      <organization>Crowbar</organization>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
+    <developer>
+      <id>rm</id>
+      <name>Rui Maranhão</name>
+      <email>rui.maranhao@gmail.com</email>
+      <organization>Crowbar</organization>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
   </developers>
-
-
 
   <modules>
     <module>diagnostic-native</module>
     <module>glue-java</module>
     <module>instrumentation-java</module>
+    <module>diagnostic-server</module>
   </modules>
 
   <profiles>
@@ -56,13 +79,59 @@
     </profile>
   </profiles>
 
+  <repositories>
+    <repository>
+      <id>${server.id}</id>
+      <name>${server.name}</name>
+      <url>${server.url}</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <!--updatePolicy>always</updatePolicy-->
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <distributionManagement>
+      <repository>
+        <id>${server.id}</id>
+        <name>${server.name}</name>
+        <url>${server.sftp}</url>
+      </repository>
+    </distributionManagement>
+
  <build>
+   <extensions>
+     <extension>
+       <groupId>org.apache.maven.wagon</groupId>
+       <artifactId>wagon-ssh</artifactId>
+       <version>2.6</version>
+    </extension>
+   </extensions>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>verify-style</id>
+            <phase>package</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <failOnViolation>false</failOnViolation>
+          <failsOnError>false</failsOnError>
+          <logViolationsToConsole>true</logViolationsToConsole>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.17</version>
         <configuration>
+          <testNGArtifactName>none:none</testNGArtifactName>
           <skipTests>${skipTests}</skipTests>
         </configuration>
       </plugin>

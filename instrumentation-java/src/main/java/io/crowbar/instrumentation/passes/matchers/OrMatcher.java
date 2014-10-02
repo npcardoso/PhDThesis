@@ -4,22 +4,30 @@ import javassist.CtClass;
 import javassist.CtMethod;
 
 public class OrMatcher implements Matcher {
-    private final Matcher matcherA;
-    private final Matcher matcherB;
+    private final Matcher[] matchers;
 
-    public OrMatcher (Matcher matcherA,
-                      Matcher matcherB) {
-        this.matcherA = matcherA;
-        this.matcherB = matcherB;
+    public OrMatcher (Matcher... matchers) {
+        this.matchers = matchers;
     }
 
     @Override
     public final boolean matches (CtClass c) {
-        return matcherA.matches(c) || matcherB.matches(c);
+        for (Matcher mat : matchers) {
+            if (mat.matches(c))
+                return true;
+        }
+
+        return false;
     }
 
     @Override
-    public final boolean matches (CtClass c, CtMethod m) {
-        return matcherA.matches(c,m) || matcherB.matches(c,m);
+    public final boolean matches (CtClass c,
+                                  CtMethod m) {
+        for (Matcher mat : matchers) {
+            if (mat.matches(c, m))
+                return true;
+        }
+
+        return false;
     }
 }

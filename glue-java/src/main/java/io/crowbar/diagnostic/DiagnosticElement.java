@@ -1,7 +1,7 @@
 package io.crowbar.diagnostic;
 
 public final class DiagnosticElement
-    implements Comparable<DiagnosticElement> {
+implements Comparable<DiagnosticElement> {
     private final Candidate candidate;
     private final double score;
 
@@ -21,6 +21,20 @@ public final class DiagnosticElement
 
     @Override
     public int compareTo (DiagnosticElement e) {
-        return (int) ((e.score - score) * 1e6); // compare with 1e6 precision
+        if (Double.isNaN(e.score)) {
+            if (Double.isNaN(score))
+                return 0;
+            else return -1;
+        } else {
+            if (Double.isNaN(score))
+                return 1;
+        }
+
+        return -Double.compare(score, e.score);
+    }
+
+    @Override
+    public String toString () {
+        return "[" + candidate + "," + score + "]";
     }
 }

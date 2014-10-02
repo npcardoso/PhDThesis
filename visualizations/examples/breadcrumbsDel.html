@@ -1,0 +1,82 @@
+<style>
+.breadcrumbs {
+	list-style: none;
+	overflow: hidden;
+	color: white;
+	font: 10px arial, Helvetica, clean, sans-serif;
+	margin: 0;
+	background: rgb(233,233,233);
+}
+.breadcrumbs li {
+	float: left;
+	line-height: 20px;
+}
+.breadcrumbs li a {
+	color: #fff;
+	text-decoration: none;
+	padding: 0 10px 0 15px;
+	background: rgb(142,142,142);
+	display: block;
+	float: left;
+}
+.breadcrumbs li .after {
+	position: relative;
+	display: block;
+	margin-top: -10px;
+	margin-left: auto;
+	margin-right: -15px;
+	height: 10px;
+	width: 10px;
+	content: " ";
+	-webkit-transform: skew(-30deg);
+	background: rgb(142,142,142);
+	border-right: 2px solid white;
+	-moz-transform: skew(-30deg);
+	-o-transform: skew(-30deg);
+	transform: skew(-30deg);
+}
+.breadcrumbs li .before {
+	float: right;
+	display: block;
+	margin-bottom: -10px;
+	margin-left: auto;
+	margin-right: -15px;
+	height: 10px;
+	width: 10px;
+	content: " ";
+	-webkit-transform: skew(30deg);
+	background: rgb(142,142,142);
+	border-right: 2px solid white;
+	-moz-transform: skew(30deg);
+	-o-transform: skew(30deg);
+	transform: skew(30deg);
+}
+
+.breadcrumbs li:last-child {
+	padding-left: 15px;
+	background: transparent !important;
+	color: rgb(50,116,208);
+	font-weight: 900;
+}
+
+.breadcrumbs li.scope a,
+.breadcrumbs li.scope .before,
+.breadcrumbs li.scope .after {background: rgb(50,116,208);}
+
+
+
+.breadcrumbs li a span
+{
+	margin-left: -5px
+}
+</style>
+
+<div id="breadcrumbs">
+<ol class="breadcrumbs">
+<li class="scope"><a href="#"><span>Tags</span></a></li>
+<li><a href="#"><span>webdesign</span></a></li>
+<li><a href="#"><span>html5</span></a></li>
+<li><a href="#"><span>css3</span></a></li>
+<li>tutorials</li>
+</ol>
+</div>

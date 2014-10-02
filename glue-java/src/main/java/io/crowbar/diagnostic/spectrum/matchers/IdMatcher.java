@@ -1,43 +1,43 @@
 package io.crowbar.diagnostic.spectrum.matchers;
 
 import io.crowbar.diagnostic.spectrum.Spectrum;
-import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Metadata;
 import java.util.BitSet;
 
 
 /**
- * \brief This class matches components/transactions by id.
+ * \brief This class matches probes/transactions by id.
  */
 public final class IdMatcher
-implements SpectrumMatcher<Activity, Metadata> {
+implements SpectrumMatcher {
     private final BitSet transactions = new BitSet();
-    private final BitSet components = new BitSet();
+    private final BitSet probes = new BitSet();
 
     public IdMatcher (BitSet transactions,
-                      BitSet components) {
+                      BitSet probes) {
         this.transactions.or(transactions);
-        this.components.or(components);
+        this.probes.or(probes);
     }
 
     public IdMatcher (int[] transactions,
-                      int[] components) {
-        for (int t : transactions) {
-            this.transactions.set(t);
-        }
+                      int[] probes) {
+        if (transactions != null)
+            for (int t : transactions) {
+                this.transactions.set(t);
+            }
 
-        for (int c : components) {
-            this.components.set(c);
-        }
+        if (probes != null)
+            for (int c : probes) {
+                this.probes.set(c);
+            }
     }
 
     @Override
-    public BitSet matchComponents (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
-        return components;
+    public BitSet matchProbes (Spectrum spectrum) {
+        return (BitSet) probes.clone();
     }
 
     @Override
-    public BitSet matchTransactions (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
-        return transactions;
+    public BitSet matchTransactions (Spectrum spectrum) {
+        return (BitSet) transactions.clone();
     }
 }

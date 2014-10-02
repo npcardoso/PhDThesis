@@ -36,7 +36,6 @@ class HitVector {
     }
 
     public final boolean[] get (String groupName) {
-        assert exists(groupName);
         return groups.get(groupName).get();
     }
 

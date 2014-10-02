@@ -7,25 +7,66 @@ import java.util.List;
 import java.util.Map;
 
 import flexjson.JSON;
+// TODO: Create an interface for Node
+public class Node {
+    public static enum Type {
+        PACKAGE(0, "."),
+        CLASS(1, "$"),
+        METHOD(2, "!"),
+        LINE(3, ":");
 
-public final class Node {
-    private final Tree tree;
-    private final String name;
-    private final int id;
-    private final int depth;
-    private final Node parent;
-    private final List<Node> children = new ArrayList<Node> ();
-    private final Map<String, Node> childrenByName = new HashMap<String, Node> ();
+        private final String symbol;
+        private int depth;
+
+        private Type(int depth,
+                     String symbol) {
+            this.depth = depth;
+            this.symbol = symbol;
+        }
+
+        public boolean canContain (Type type) {
+            if (type == null)
+                return false;
+
+            if (depth > type.depth)
+                return false;
+
+            if (this == METHOD && type == this)
+                return false;
+
+            if (this == LINE && type == this)
+                return false;
+
+            return true;
+        }
+
+        public String getSymbol () {
+            return symbol;
+        }
+    }
+
+    private Tree tree;
+    private Type type;
+    private String name;
+    private int id;
+    private int depth;
+    private Node parent;
+    private List<Node> children = new ArrayList<Node> ();
+
+    Node () {}
 
     Node (Tree tree,
           String name,
+          Type type,
           int id,
           Node parent) {
         this.tree = tree;
+        this.type = type;
         this.name = name;
         this.id = id;
         this.parent = parent;
-        if(isRoot())
+
+        if (isRoot())
             this.depth = 0;
         else {
             this.depth = parent.getDepth() + 1;
@@ -33,32 +74,65 @@ public final class Node {
         }
     }
 
-    @JSON(include=false)
+    @JSON(include = false)
     public boolean isRoot () {
         return parent == null;
     }
 
-    @JSON(include=false)
+    @JSON(include = false)
     public int getId () {
         return id;
     }
 
-    @JSON(name="n")
+    @JSON(include = false)
+    public int getPermanentId () {
+        return id;
+    }
+
+    @JSON(include = false)
+    public Type getType () {
+        return type;
+    }
+
+    @JSON(include = false)
     public String getName () {
         return name;
     }
 
-    @JSON(name="p")
+    @JSON(name = "n")
+    public String getNameWithSymbol () {
+        return type.getSymbol() + name;
+    }
+
+    @JSON(name = "p")
     public int getParentId () {
-        if(isRoot())
+        if (isRoot())
             return -1;
+
         return parent.getId();
     }
+
+    /**
+     * @brief Concatenates the names of all nodes with depth greater
+     * than "fromDepth" in the path from the root to this node using
+     * the type's symbol as separator.
+     */
+    @JSON(include = false)
+    public String getFullNameWithSymbol (int fromDepth) {
+        Node p = getParent();
+
+
+        if (p == null || getDepth() <= fromDepth)
+            return getName();
+
+        return p.getFullNameWithSymbol(fromDepth) + p.getType().getSymbol() + getName();
+    }
+
     /**
      * @brief Concatenates the names of all nodes in the path from the
      * root to this node using ":" as separator.
      */
-    @JSON(include=false)
+    @JSON(include = false)
     public String getFullName () {
         return getFullName(":");
     }
@@ -67,7 +141,7 @@ public final class Node {
      * @brief Concatenates the names of all nodes in the path from the
      * root to this node using "separator" as separator.
      */
-    @JSON(include=false)
+    @JSON(include = false)
     public String getFullName (String separator) {
         return getFullName(separator, 0);
     }
@@ -77,7 +151,7 @@ public final class Node {
      * than "fromDepth" in the path from the root to this node using
      * "separator" as separator.
      */
-    @JSON(include=false)
+    @JSON(include = false)
     public String getFullName (String separator,
                                int fromDepth) {
         Node p = getParent();
@@ -93,17 +167,17 @@ public final class Node {
      * @brief Gets this node's parent node.
      * @return The parent node or null if the node is a root node.
      */
-    @JSON(include=false)
+    @JSON(include = false)
     public Node getParent () {
         return parent;
     }
 
-    @JSON(include=false)
+    @JSON(include = false)
     public int getDepth () {
         return depth;
     }
 
-    @JSON(include=false)
+    @JSON(include = false)
     public List<Node> getChildren () {
         return Collections.unmodifiableList(children);
     }
@@ -112,19 +186,26 @@ public final class Node {
      * @brief Retreives children nodes by name.
      * @return The child node or null if no such node exists.
      */
-    @JSON(include=false)
+    @JSON(include = false)
     public Node getChild (String name) {
-        return childrenByName.get(name);
+        for (Node n : children) {
+            if (n.getName().equals(name))
+                return n;
+        }
+
+        return null;
     }
 
-    @JSON(include=false)
-    public Tree getTree() {
+    @JSON(include = false)
+    public Tree getTree () {
         return tree;
     }
 
     @Override
     public String toString () {
         String ret = "[";
+
+
         ret += "name: \"" + getFullName() + "\", ";
         ret += "id: " + getId() + ", ";
         ret += "parentId: " + getParentId() + ", ";
@@ -132,10 +213,8 @@ public final class Node {
         return ret;
     }
 
-
-    @JSON(include=false)
+    @JSON(include = false)
     void addChild (Node node) {
         children.add(node);
-        childrenByName.put(node.getName(), node);
     }
 }

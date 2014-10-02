@@ -17,7 +17,7 @@ vars = Variables('.scons.conf')
 vars.Add('PATH', '', '')
 vars.Add('LIBPATH', '', '')
 vars.Add('CPPPATH', '', '')
-vars.Add('CXX', '', '')
+vars.Add('COMPILER', '', '')
 
 vars.Add('prefix', '', '#/target/install/')
 vars.Add('build_dir', '', '#/target/build/')
@@ -42,7 +42,6 @@ elif plat == 'linux' and machine == 'i686':
     env['PLATFORM'] = 'linux-x86'
 else:
   env['PLATFORM'] = (plat + "_" + platform.machine()).replace("_", "-").lower()
-print env['PLATFORM']
 
 # Install/Build Dirs
 for i in ['prefix', 'build_dir']:
@@ -61,6 +60,9 @@ env['CPPPATH'].extend([env['include_dir']])
 env['CPPPATH'].extend(['/usr/local/include/'])
 env['ENV']['PATH'] = env['PATH']
 env['ENV']['LD_LIBRARY_PATH'] = env['LIBPATH']
+
+if env['COMPILER'] != '':
+  env['CXX'] = env['COMPILER']
 
 
 # Build Flags

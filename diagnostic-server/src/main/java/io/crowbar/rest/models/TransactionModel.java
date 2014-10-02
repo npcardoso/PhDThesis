@@ -1,6 +1,7 @@
 package io.crowbar.rest.models;
 
 import io.crowbar.diagnostic.spectrum.Transaction;
+import io.crowbar.instrumentation.spectrum.HitTransactionWithException;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -32,5 +33,44 @@ public final class TransactionModel {
                       dataType = "array[integer]")
     public Iterable<Integer> getActivity () {
         return original.getActivity();
+    }
+
+    @ApiModelProperty(value = "The test name",
+                      required = false,
+                      dataType = "string")
+    public String getTestName () {
+        Transaction t = original.getOriginal();
+
+
+        if (t instanceof HitTransactionWithException)
+            return ((HitTransactionWithException) t).getTestName();
+
+        return null;
+    }
+
+    @ApiModelProperty(value = "The exception class",
+                      required = false,
+                      dataType = "string")
+    public String getExceptionClass () {
+        Transaction t = original.getOriginal();
+
+
+        if (t instanceof HitTransactionWithException)
+            return ((HitTransactionWithException) t).getExceptionClass();
+
+        return null;
+    }
+
+    @ApiModelProperty(value = "The exception message",
+                      required = false,
+                      dataType = "string")
+    public String getExceptionMessage () {
+        Transaction t = original.getOriginal();
+
+
+        if (t instanceof HitTransactionWithException)
+            return ((HitTransactionWithException) t).getExceptionMessage();
+
+        return null;
     }
 }

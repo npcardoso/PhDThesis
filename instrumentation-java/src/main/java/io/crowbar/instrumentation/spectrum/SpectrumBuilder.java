@@ -3,6 +3,7 @@ package io.crowbar.instrumentation.spectrum;
 import io.crowbar.diagnostic.spectrum.EditableSpectrum;
 import io.crowbar.diagnostic.spectrum.HitTransaction;
 import io.crowbar.diagnostic.spectrum.Node;
+import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.ProbeType;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
@@ -16,9 +17,9 @@ import org.apache.logging.log4j.LogManager;
 
 public final class SpectrumBuilder extends AbstractEventListener {
     private static final Logger logger = LogManager.getLogger(SpectrumBuilder.class);
-
     private int transactionNestingLevel = 0;
     private boolean error = false;
+    private String testName = null;
     private String exceptionClass = null;
     private String exceptionMessage = null;
 
@@ -33,6 +34,7 @@ public final class SpectrumBuilder extends AbstractEventListener {
     }
 
     private void reset () {
+        testName = null;
         exceptionClass = null;
         exceptionMessage = null;
         error = false;
@@ -62,6 +64,15 @@ public final class SpectrumBuilder extends AbstractEventListener {
 
     @Override
     public final void startTransaction (int probeId) {
+        if (transactionNestingLevel == 0) {
+            assert (testName == null);
+            Probe p = spectrum.getProbe(probeId);
+
+            if (p != null) {
+                testName = p.getNode().getFullNameWithSymbol(0);
+            }
+        }
+
         transactionNestingLevel += 1;
     }
 
@@ -81,6 +92,7 @@ public final class SpectrumBuilder extends AbstractEventListener {
                 hitVector,
                 error ? 1 : 0,
                 1,
+                testName,
                 exceptionClass,
                 exceptionMessage);
 

@@ -35,7 +35,7 @@ extends Transaction {
 
     @Override
     public Transaction getOriginal () {
-        return transaction;
+        return transaction.getOriginal();
     }
 
     @Override

@@ -8,7 +8,7 @@ public class HitTransactionWithExceptionTest {
     @Test
     public void testEmptyExceptionEmptyMessage () {
         HitTransactionWithException tr =
-            new HitTransactionWithException(0, 0, 0, "", "");
+            new HitTransactionWithException(0, 0, 0, null, "", "");
 
 
         assertEquals("", tr.getExceptionClass());
@@ -19,7 +19,7 @@ public class HitTransactionWithExceptionTest {
     public void testGetExceptionClass () {
         String s = "exceptionClass";
         HitTransactionWithException tr =
-            new HitTransactionWithException(0, 0, 0, s, "");
+            new HitTransactionWithException(0, 0, 0, null, s, "");
 
 
         assertEquals(s, tr.getExceptionClass());
@@ -29,7 +29,7 @@ public class HitTransactionWithExceptionTest {
     public void testGetExceptionMessage () {
         String s = "exceptionMessage";
         HitTransactionWithException tr =
-            new HitTransactionWithException(0, 0, 0, "", s);
+            new HitTransactionWithException(0, 0, 0, null, "", s);
 
 
         assertEquals(s, tr.getExceptionMessage());

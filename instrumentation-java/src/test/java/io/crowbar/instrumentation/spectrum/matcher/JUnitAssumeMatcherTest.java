@@ -66,7 +66,7 @@ public class JUnitAssumeMatcherTest {
     @Test
     public void testMatchTransactions () {
         EditableSpectrum es = new EditableSpectrum();
-        Transaction transaction = new HitTransactionWithException(0, 1.0, 0.0, JUnitAssumeMatcher.ASSUME_CLASS, "");
+        Transaction transaction = new HitTransactionWithException(0, 1.0, 0.0, null, JUnitAssumeMatcher.ASSUME_CLASS, "");
 
 
         es.setTransaction(transaction);

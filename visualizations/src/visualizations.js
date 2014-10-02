@@ -1,6 +1,7 @@
 function Visualizations(configuration, dataManager) {
     var self = this;
     var nodeToRender = null;
+    var currentVisualizationN, currentVisualization;
 
     var events = {
         click: sendClickEvent,
@@ -10,9 +11,13 @@ function Visualizations(configuration, dataManager) {
                 active: visN
             });
         },
-        filtersUpdate: dataManager.updatefilter,
+        filtersUpdate: function(){
+            dataManager.updatefilter();
+            currentVisualization.data = dataManager.getData().tree[0];
+            currentVisualization.render();
+        }
     };
-    var currentVisualizationN, currentVisualization;
+
 
 
     this.createVisualization = function(visN) {

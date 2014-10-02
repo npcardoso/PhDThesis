@@ -22,7 +22,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
 
     this.zoomEvents = null;
-    this.clicked = data;
+    this.clicked = self.data;
     this.stateManager = new StateManager(self);
     this.render = function() {
         element.html("");
@@ -39,7 +39,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
 
         rect = svg.selectAll("rect")
-        .data(partition.nodes(data))
+        .data(partition.nodes(self.data))
         .enter().append("rect")
         .attr("x", rect_render.x)
         .attr("y", rect_render.y)
@@ -52,7 +52,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
-        self.nodeInfoDisplay.setClicked(data);
+        self.nodeInfoDisplay.setClicked(self.data);
         self.nodeInfoDisplay.setPath(rect);
         self.zoomEvents = ZoomController(elementSel, zoomElement, svg, self.configuration);
         keyBindings(self, configuration);

@@ -70,7 +70,7 @@ function filterWithAncestorsAndDescents(nodesArray, filterFunction) {
         if (filterFunction(nodesArray[i])) {
             setState(getAncestorsAndDescends(nodesArray[i]), true);
         }
-    }
+    };
     treeFilter(nodesArray[0]);
     return filterTrue(nodesArray);
 }

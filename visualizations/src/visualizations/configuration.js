@@ -129,7 +129,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
     };
 
     this.renderRegexFilter = function() {
-        $(elementSel).append('<br /><br/><div class="ui-widget"><label for="regex">Regular Expression to filter nodes: </label><br /><input id="regex" size="50"></div>');
+        $(elementSel).append('<br /><br/><div class="ui-widget"><label for="regex">Regular Expression to filter nodes: </label><br /><input id="regex" size="30"></div>');
         $("#regex").val(configuration.currentConfig.regexFilter);
         $("#regex").change(function() {
             configuration.currentConfig.regexFilter = $("#regex").val();

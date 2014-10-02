@@ -41,7 +41,7 @@ function showKeybindingsPopup(configuration){
    $('#tabs').append('<div id="dialog" title="Key Bindings">'+renderKeyBindingsDisplay(configuration,false)+'</div>');
    $("#dialog").dialog({
     autoOpen: true,
-    modal: true,
+    modal: false,
     height: "200",
     show: {
         effect: "blind",

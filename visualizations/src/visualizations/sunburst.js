@@ -27,7 +27,7 @@ function Sunburst(data, elementSel, configuration, events) {
     var element = d3.select(elementSel);
 
     this.zoomEvents = null;
-    this.clicked = data;
+    this.clicked = self.data;
     this.stateManager = new StateManager(self);
     console.log(this.stateManager);
 
@@ -67,7 +67,7 @@ function Sunburst(data, elementSel, configuration, events) {
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
-        self.nodeInfoDisplay.setClicked(data);
+        self.nodeInfoDisplay.setClicked(self.data);
         self.nodeInfoDisplay.setPath(path);
         self.zoomEvents = ZoomController(elementSel, zoomElement, svg, self.configuration);
         keyBindings(self, configuration);

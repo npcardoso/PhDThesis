@@ -50,6 +50,56 @@ function keyBindings(visualization, configuration) {
         };
     }
 
+    function initFilteringMode() {
+
+
+
+        filteringMode = getModeByName("Filtering");
+
+        setModeKeyBinding(filteringMode, "Most Relevant", function(){
+            $("#dialog").remove();
+            $("#dialog").html('');
+            $('body').append('<div id="dialog" title="Filter"></div>');
+            $("#dialog").html('');
+            $("#dialog").dialog({
+                autoOpen: true,
+                modal: true,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                }
+            });
+            var conf_view = new ConfigurationView(null,"#dialog",configuration,visualization.events);
+            conf_view.renderFilterNodes();
+        });
+        setModeKeyBinding(filteringMode, "Regular Expression", function(){
+            $("#dialog").remove();
+            $("#dialog").html('');
+            $('body').append('<div id="dialog" title="Filter"></div>');
+
+            $("#dialog").dialog({
+                autoOpen: true,
+                modal: true,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                }
+            });
+            var conf_view = new ConfigurationView(null,"#dialog",configuration,visualization.events);
+            conf_view.renderRegexFilter();
+        });
+        setModeKeyBinding(filteringMode, "Probability", function(){alert('ok2');});
+    }
+
+
     function loadModeKeyBindings(mode) {
         currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive.concat(mode.keyBindings);
     }
@@ -86,6 +136,12 @@ function keyBindings(visualization, configuration) {
         $('#zoomContainer').show();
     }
 
+    function gotoFilteringMode() {
+        exitLastMode();
+        currentMode = getModeByName("Filtering");
+        loadModeKeyBindings(currentMode);
+    }
+
     setKeyBinding("Show Key bindings", function(){showKeybindingsPopup(configuration)});
     setKeyBinding("Move Left", zoomEvents.left);
     setKeyBinding("Move Up", zoomEvents.up);
@@ -108,9 +164,10 @@ function keyBindings(visualization, configuration) {
     });
     setKeyBinding("Goto starting mode", gotoStartingMode);
     setKeyBinding("Zoom Mode", gotoZoomMode);
+    setKeyBinding("Filtering Mode", gotoFilteringMode);
 
     initZoomMode();
-
+    initFilteringMode();
 
 
     document.onkeydown = function(e) {

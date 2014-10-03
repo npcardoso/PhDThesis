@@ -92,25 +92,37 @@
   </repositories>
 
   <distributionManagement>
-      <repository>
-        <id>${server.id}</id>
-        <name>${server.name}</name>
-        <url>${server.sftp}</url>
-      </repository>
-    </distributionManagement>
+    <repository>
+      <id>${server.id}</id>
+      <name>${server.name}</name>
+      <url>${server.sftp}</url>
+    </repository>
+  </distributionManagement>
 
- <build>
-   <extensions>
-     <extension>
-       <groupId>org.apache.maven.wagon</groupId>
-       <artifactId>wagon-ssh</artifactId>
-       <version>2.6</version>
-    </extension>
-   </extensions>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>doodleproject-repo</id>
+      <name>DoodleProject Maven 2 Repository</name>
+      <url>http://doodleproject.sourceforge.net/maven2/release</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>2.6</version>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.13</version>
         <executions>
           <execution>
             <id>verify-style</id>
@@ -136,5 +148,20 @@
         </configuration>
       </plugin>
     </plugins>
- </build>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>net.sf.doodleproject</groupId>
+        <artifactId>doxygen-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <configurationFile>
+            ${basedir}/configs/doxygen.conf
+          </configurationFile>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

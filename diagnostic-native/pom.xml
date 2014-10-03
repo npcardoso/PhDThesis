@@ -25,26 +25,28 @@
       </resource>
     </resources>
 
-    <plugins>
-      <plugin>
-        <artifactId>exec-maven-plugin</artifactId>
-        <groupId>org.codehaus.mojo</groupId>
-        <executions>
-          <execution>
-            <id>diagnostic-native Compile</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>scons</executable>
-              <workingDirectory>${basedir}</workingDirectory>
-              <commandlineArgs></commandlineArgs>
-            </configuration>
-          </execution> 
-        </executions>
-      </plugin>
-    </plugins>
+	<pluginManagement>
+	    <plugins>
+	      <plugin>
+	        <artifactId>exec-maven-plugin</artifactId>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <executions>
+	          <execution>
+	            <id>diagnostic-native Compile</id>
+	            <phase>generate-sources</phase>
+	            <goals>
+	              <goal>exec</goal>
+	            </goals>
+	            <configuration>
+	              <executable>scons</executable>
+	              <workingDirectory>${basedir}</workingDirectory>
+	              <commandlineArgs></commandlineArgs>
+	            </configuration>
+	          </execution> 
+	        </executions>
+	      </plugin>
+	    </plugins>
+    </pluginManagement>
   </build>
   
   <profiles>

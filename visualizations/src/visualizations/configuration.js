@@ -231,6 +231,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
     };
 
     this.renderKeyBindings = function() {
+
         var keyBindingToChange = null;
         var pressedKeys = [];
 
@@ -246,7 +247,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
             keyBindingToChange = getKeyBindingById($(this).attr('id'));
             pressedKeys = [];
             $('.pressed_keys').html('');
-            $("#dialog").dialog("open");
+            $("#dialogKeyChange").dialog("open");
             document.onkeydown = function(e) {
                 pressedKeys.push(e.keyCode);
                 $('.pressed_keys').html(renderKeyCodesArray(pressedKeys));
@@ -257,16 +258,16 @@ function ConfigurationView(data, elementSel, configuration, events) {
         function dialogOkButtonClicked() {
             if (keyBindingToChange !== null && pressedKeys.length > 0) {
                 keyBindingToChange.keyCodes = pressedKeys;
-                $("#dialog").dialog("close");
+                $("#dialogKeyChange").dialog("close");
                 configuration.saveConfig();
                 renderConfigDisplay();
             }
         }
 
         function dialogInit() {
-            $("#dialog").remove();
-            $(elementSel).append('<div id="dialog" title="Press the keys, then click ok!"><b>Selected Key(s):</b><br /> <span class="pressed_keys"></span></div>');
-            $("#dialog").dialog({
+            $("#dialogKeyChange").remove();
+            $(elementSel).append('<div id="dialogKeyChange" title="Press the keys, then click ok!"><b>Selected Key(s):</b><br /> <span class="pressed_keys"></span></div>');
+            $("#dialogKeyChange").dialog({
                 autoOpen: false,
                 modal: true,
                 show: {
@@ -286,12 +287,11 @@ function ConfigurationView(data, elementSel, configuration, events) {
         function renderConfigDisplay(){
             $('.keyConfig').remove();
             $(elementSel).append('<div class="keyConfig"></div>');
-            $('.keyConfig').html('<p>Key Bindings:</p>' + renderKeyBindingsDisplay(configuration,true));
+            $('.keyConfig').html('<p class="keyBindingsp">Key Bindings:</p>' + renderKeyBindingsDisplay(configuration,true));
             $('.keyChange').on("click", changeClicked);
         }
 
         renderConfigDisplay();
- 
         dialogInit();
     };
 }

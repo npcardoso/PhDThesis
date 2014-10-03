@@ -94,4 +94,4 @@ DEFAULT_CONFIG = {
     }
 };
 
-var CONFIG_VERSION = 'configv39';
+var CONFIG_VERSION = 'configv40';

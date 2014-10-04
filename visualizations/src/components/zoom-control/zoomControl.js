@@ -4,7 +4,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
     var showZoom = false;
     var eventsBlocked = false;
     var zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom",
-        function() {
+        function () {
             if (d3.event) {
                 d3.event.zoomed = true;
                 svg.attr("transform", "translate(" + d3.event.translate + ")" + "scale(" + d3.event.scale + ")");
@@ -18,7 +18,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
         eventsBlocked = false;
     }
     var events = {
-        up: function() {
+        up: function () {
             if (eventsBlocked)
                 return;
             eventsBlocked = true;
@@ -27,7 +27,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             zoomListener.translate(curTranslate);
             zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
         },
-        down: function() {
+        down: function () {
             if (eventsBlocked)
                 return;
             eventsBlocked = true;
@@ -36,7 +36,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             zoomListener.translate(curTranslate);
             zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
         },
-        right: function() {
+        right: function () {
             if (eventsBlocked)
                 return;
             eventsBlocked = true;
@@ -45,7 +45,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             zoomListener.translate(curTranslate);
             zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
         },
-        left: function() {
+        left: function () {
             if (eventsBlocked)
                 return;
             eventsBlocked = true;
@@ -54,7 +54,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             zoomListener.translate(curTranslate);
             zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
         },
-        zoomIn: function() {
+        zoomIn: function () {
             if (eventsBlocked)
                 return;
             eventsBlocked = true;
@@ -66,7 +66,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             }
             eventsUnlock();
         },
-        zoomOut: function() {
+        zoomOut: function () {
             if (eventsBlocked)
                 return;
             eventsBlocked = true;
@@ -78,7 +78,7 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             zoomListener.scale(curScale);
             zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
         },
-        zoomReset: function() {
+        zoomReset: function () {
             //if(eventsBlocked)
             //   return;
             //eventsBlocked = true;
@@ -87,11 +87,11 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
         },
 
-        zoomSave: function() {
+        zoomSave: function () {
             zoomStack.push([zoomListener.translate(), zoomListener.scale()]);
         },
 
-        zoomRecover: function() {
+        zoomRecover: function () {
             var lastZoom = zoomStack.pop();
             if (lastZoom != null) {
                 zoomListener.translate(lastZoom[0]);
@@ -100,21 +100,21 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             }
         },
 
-        setZoom: function(zoom) {
+        setZoom: function (zoom) {
             zoomListener.translate(zoom[0]);
             zoomListener.scale(zoom[1]);
             zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
         },
 
-        getZoom: function() {
+        getZoom: function () {
             return [zoomListener.translate(), zoomListener.scale()];
         },
 
-        zoomBlock: function() {
+        zoomBlock: function () {
             eventsBlocked = true;
         },
 
-        zoomUnlock: function() {
+        zoomUnlock: function () {
             eventsBlocked = false;
         }
 
@@ -124,23 +124,23 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
     zoomListener(zoomElement);
     zoomElement.on("dblclick.zoom", null)
     zoomListener.event(zoomElement);
-    zoomElement.on("mousedown", function() {
+    zoomElement.on("mousedown", function () {
         d3.event.preventDefault();
     });
 
     $('#zoomContainer').remove();
     $(elementSel).prepend(ZoomController_HTML);
-    $('#panUp').click(events.up);
-    $('#panDown').click(events.down);
-    $('#panLeft').click(events.left);
-    $('#panRight').click(events.right);
-    $('#zoomIn').click(events.zoomIn);
-    $('#zoomOut').click(events.zoomOut);
-    $('#zoomReset').click(events.zoomReset);
+    continuousClick($('#panUp'), events.up);
+    continuousClick($('#panDown'), events.down);
+    continuousClick($('#panLeft'), events.left);
+    continuousClick($('#panRight'), events.right);
+    continuousClick($('#zoomIn'), events.zoomIn);
+    continuousClick($('#zoomOut'), events.zoomOut);
+    continuousClick($('#zoomReset'), events.zoomReset);
 
     $('#zoomContainer').hide();
 
-    $(document).click(function(e) {
+    $(document).click(function (e) {
         if (e.which == 2) {
             events.zoomReset();
         }
@@ -151,6 +151,26 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
     return events;
 }
 
+function continuousClick(element, func) {
+    var timeout;
+    element.mousedown(function () {
+        func();
+        timeout = setInterval(function () {
+            func();
+        }, 100);
+
+        return false;
+    });
+    element.mouseup(function () {
+        clearInterval(timeout);
+        return false;
+    });
+    element.mouseout(function () {
+        clearInterval(timeout);
+        return false;
+    });
+}
+
 function multiline(f) {
     return f.toString().
     replace(/^[^\/]+\/\*!?/, '').
@@ -158,7 +178,8 @@ function multiline(f) {
 }
 
 
-ZoomController_HTML = multiline(function() {
+
+ZoomController_HTML = multiline(function () {
     /*!
           <div id="zoomContainer" class="leaflet-control-container">
             <div id="zoomInside">
@@ -188,5 +209,5 @@ ZoomController_HTML = multiline(function() {
             </div>
           </div>
           </div>
-    */
+          */
 });

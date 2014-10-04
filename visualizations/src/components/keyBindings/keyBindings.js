@@ -51,52 +51,46 @@ function keyBindings(visualization, configuration) {
     }
 
     function initFilteringMode() {
-
-
+        function dialogRender(){
+            sel = $('<div title="Filter"></div>');
+            $('body').append(sel);
+            sel.dialog({
+                autoOpen: true,
+                modal: true,
+                show: {
+                    effect: "blind",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 1000
+                },
+            close: function(event, ui) 
+            { 
+                $(this).dialog('close');
+                $(this).remove();
+            } 
+            });
+            return sel;
+        }
 
         filteringMode = getModeByName("Filtering");
 
         setModeKeyBinding(filteringMode, "Most Relevant", function(){
-            $("#dialog").remove();
-            $("#dialog").html('');
-            $('body').append('<div id="dialog" title="Filter"></div>');
-            $("#dialog").html('');
-            $("#dialog").dialog({
-                autoOpen: true,
-                modal: true,
-                show: {
-                    effect: "blind",
-                    duration: 1000
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 1000
-                }
-            });
-            var conf_view = new ConfigurationView(null,"#dialog",configuration,visualization.events);
+            var sel = dialogRender();
+            var conf_view = new ConfigurationView(null,sel,configuration,visualization.events);
             conf_view.renderFilterNodes();
         });
         setModeKeyBinding(filteringMode, "Regular Expression", function(){
-            $("#dialog").remove();
-            $("#dialog").html('');
-            $('body').append('<div id="dialog" title="Filter"></div>');
-
-            $("#dialog").dialog({
-                autoOpen: true,
-                modal: true,
-                show: {
-                    effect: "blind",
-                    duration: 1000
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 1000
-                }
-            });
-            var conf_view = new ConfigurationView(null,"#dialog",configuration,visualization.events);
+            var sel = dialogRender();
+            var conf_view = new ConfigurationView(null,sel,configuration,visualization.events);
             conf_view.renderRegexFilter();
         });
-        setModeKeyBinding(filteringMode, "Probability", function(){alert('ok2');});
+        setModeKeyBinding(filteringMode, "Probability", function(){
+            var sel = dialogRender();
+            var conf_view = new ConfigurationView(null,sel,configuration,visualization.events);
+            conf_view.renderFilterProbabilty();
+        });
     }
 
 

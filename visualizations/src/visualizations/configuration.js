@@ -47,29 +47,38 @@ function ConfigurationView(data, elementSel, configuration, events) {
         return "Disabled";
     }
 
-    function sliderRender(element, id, initValue, maxValue, renderValue, updateValue) {
-        $(element).append('<input type="text" id="input_' + id + '" readonly style="border:0; color:#f6931f; font-weight:bold;"><br /><br /><div id="slider_' + id + '"></div>');
-        $('#slider_' + id).slider({
+    function sliderRender(element, initValue, maxValue, renderValue, updateValue) {
+        var render = $('<div style="display: inline;"><input style="border:0; color:#f6931f; font-weight:bold; width:50px" readonly><br /><br /><div></div></div>');
+        $(element).append(render);
+        var slider = $('div',render);
+        var input = $('input',render);
+
+        var timeOut;
+        slider.slider({
             range: "min",
             value: initValue,
             min: 0,
             max: Math.max(initValue * 2, maxValue),
             slide: function(event, ui) {
-                $('#input_' + id).val(renderValue(ui.value));
-                updateValue(ui.value);
+                input.val(renderValue(ui.value));
+                clearTimeout(timeOut);
+                timeOut = setTimeout(function(){
+                    updateValue(ui.value);
+                },100);
             }
         });
-        $('#input_' + id).val(renderValue(initValue));
+        input.val(renderValue(initValue));
+        return render;
     }
 
     this.renderAnimationTime = function() {
-        $(elementSel).append('<br /><br /><label for="input_aniTime">Animation time (ms):</label>');
-        sliderRender(elementSel, 'aniTime', configuration.currentConfig.animationTransitionTime, 5000, defaultRenderValue, configuration.saveAnimationTime);
+        $(elementSel).append('<br /><br /><label">Animation time (ms):</label>');
+        sliderRender(elementSel, configuration.currentConfig.animationTransitionTime, 5000, defaultRenderValue, configuration.saveAnimationTime);
     };
 
     this.renderZoomAnimationTime = function() {
-        $(elementSel).append('<br /><br /><label for="zoomAniTime">Zoom animation time (ms):</label>');
-        sliderRender(elementSel, 'zoomAniTime', configuration.currentConfig.zoomAnimationTime, 5000, defaultRenderValue, configuration.saveZoomAnimationTime);
+        $(elementSel).append('<br /><br /><label>Zoom animation time (ms):</label>');
+        sliderRender(elementSel, configuration.currentConfig.zoomAnimationTime, 5000, defaultRenderValue, configuration.saveZoomAnimationTime);
     };
 
 
@@ -81,7 +90,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
         }
 
         $(elementSel).append('<br /><br /><label>Filter to most relevant nodes:</label>');
-        sliderRender(elementSel, 'filterMRelevant', configuration.currentConfig.filterMostRelevamtNodes, 500, zeroDisableRenderValue, filterUpdated);
+        sliderRender(elementSel,  configuration.currentConfig.filterMostRelevamtNodes, 500, zeroDisableRenderValue, filterUpdated);
     };
 
 
@@ -93,7 +102,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
         }
 
         $(elementSel).append('<br /><br /><label>Filter by probability:</label>');
-        sliderRender(elementSel, 'filterProbabilty', configuration.currentConfig.filterMinProbability, 100, zeroDisableRenderValue, filterUpdated);
+        sliderRender(elementSel, configuration.currentConfig.filterMinProbability, 100, zeroDisableRenderValue, filterUpdated);
     };
 
     this.renderGradiante = function() {
@@ -129,10 +138,12 @@ function ConfigurationView(data, elementSel, configuration, events) {
     };
 
     this.renderRegexFilter = function() {
-        $(elementSel).append('<br /><br/><div class="ui-widget"><label for="regex">Regular Expression to filter nodes: </label><br /><input id="regex" size="30"></div>');
-        $("#regex").val(configuration.currentConfig.regexFilter);
-        $("#regex").change(function() {
-            configuration.currentConfig.regexFilter = $("#regex").val();
+        var elem = $('<br /><br/><div class="ui-widget"><label>Regular Expression to filter nodes: </label><br /><input size="30"></div>');
+        $(elementSel).append(elem);
+        var input = $('input',elem);
+        input.val(configuration.currentConfig.regexFilter);
+        input.change(function() {
+            configuration.currentConfig.regexFilter = input.val();
             configuration.saveConfig();
             events.filtersUpdate();
         });

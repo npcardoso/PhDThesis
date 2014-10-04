@@ -13,8 +13,10 @@ function Visualizations(configuration, dataManager) {
         },
         filtersUpdate: function(){
             dataManager.updatefilter();
+            if(currentVisualizationN < 3){
             currentVisualization.data = dataManager.getData().tree[0];
             currentVisualization.render();
+            }
         }
     };
 

@@ -37,9 +37,9 @@ function renderKeyBindingsDisplay(configuration, renderChange) {
 
 
 function showKeybindingsPopup(configuration) {
-    $("#dialog").remove();
-    $('body').append('<div id="dialog" title="Key Bindings"></div>');
-    $("#dialog").dialog({
+    $("#dialogKeybindings").remove();
+    $('body').append('<div id="dialogKeybindings" title="Key Bindings"></div>');
+    $("#dialogKeybindings").dialog({
         autoOpen: true,
         modal: false,
         height: "200",
@@ -52,7 +52,7 @@ function showKeybindingsPopup(configuration) {
             duration: 1000
         }
     });
-    var conf_view = new ConfigurationView(null, "#dialog", configuration, null);
+    var conf_view = new ConfigurationView(null, "#dialogKeybindings", configuration, null);
     conf_view.renderKeyBindings();
     $('.keyBindingsp').remove();
 

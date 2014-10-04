@@ -6,8 +6,8 @@ function StateManager(visualization) {
 
     this.initRender = function(elementSel) {
         $(elementSel).append('<div class="iButtons"></div>');
-        $('.iButtons').append('<img class="undoButton" src="components/stateManager/backButton.png" />');
-        $('.iButtons').append('<img class="redoButton" src="components/stateManager/redoButton.png" />');
+        $('.iButtons').append('<img class="undoButton" style="display: inline" src="components/stateManager/backButton.png" />');
+        $('.iButtons').append('<img class="redoButton" style="display: inline" src="components/stateManager/redoButton.png" />');
         $('.undoButton').click(self.undo);
         $('.redoButton').click(self.redo);
         self.setButtonVis();
@@ -15,15 +15,15 @@ function StateManager(visualization) {
 
     this.setButtonVis = function() {
         if (self.undoPossible()) {
-            $('.undoButton').css('display', 'inline');
+            $('.undoButton').css('opacity', '1');
         } else {
-            $('.undoButton').css('display', 'none');
+            $('.undoButton').css('opacity', '0.3');
         }
 
         if (self.redoPossible()) {
-            $('.redoButton').css('display', 'inline');
+            $('.redoButton').css('opacity', '1');
         } else {
-            $('.redoButton').css('display', 'none');
+            $('.redoButton').css('opacity', '0.3');
         }
     }
 

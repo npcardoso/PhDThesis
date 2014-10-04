@@ -269,6 +269,8 @@ function ConfigurationView(data, elementSel, configuration, events) {
         function dialogOkButtonClicked() {
             if (keyBindingToChange !== null && pressedKeys.length > 0) {
                 keyBindingToChange.keyCodes = pressedKeys;
+                pressedKeys = [];
+                keyBindingToChange = null;
                 $("#dialogKeyChange").dialog("close");
                 configuration.saveConfig();
                 renderConfigDisplay();

@@ -7,7 +7,7 @@ function Table(data, elementSel, configuration, events) {
         var ret = [];
         for (len = data.length, i = 0; i < len; i++) {
             var node = data[i];
-            if (isLastNode(node) && node.parent != undefined && node.parent.parent != undefined) {
+            if (node !== null && node !== undefined && isLastNode(node) && node.parent != undefined && node.parent.parent != undefined) {
                 ret.push([node.parent.parent.n, node.parent.n, node.n, node.score, i]);
             }
         }

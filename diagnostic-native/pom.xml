@@ -25,30 +25,31 @@
       </resource>
     </resources>
 
-    <plugins>
-      <plugin>
-        <artifactId>exec-maven-plugin</artifactId>
-        <groupId>org.codehaus.mojo</groupId>
-        <executions>
-          <execution>
-            <id>diagnostic-native Compile</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>scons</executable>
-              <workingDirectory>${basedir}</workingDirectory>
-              <commandlineArgs></commandlineArgs>
-            </configuration>
-          </execution> 
-        </executions>
-      </plugin>
-    </plugins>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.3.2</version>
+          <executions>
+            <execution>
+              <id>diagnostic-native Compile</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+              <configuration>
+                <executable>scons</executable>
+                <workingDirectory>${basedir}</workingDirectory>
+                <commandlineArgs></commandlineArgs>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
   </build>
-  
+
   <profiles>
-    
+
     <profile>
       <id>linux32</id>
       <activation>
@@ -60,7 +61,9 @@
       <build>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
+          <version>2.5</version>
           <configuration>
             <classifier>linux32</classifier>
           </configuration>
@@ -68,7 +71,7 @@
       </plugins>
     </build>
     </profile>
-    
+
     <profile>
       <id>linux64</id>
       <activation>
@@ -80,7 +83,9 @@
       <build>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
+          <version>2.5</version>
           <configuration>
             <classifier>linux64</classifier>
           </configuration>
@@ -88,7 +93,7 @@
       </plugins>
     </build>
     </profile>
-    
+
     <profile>
       <id>osx</id>
       <activation>
@@ -99,7 +104,9 @@
       <build>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
+          <version>2.5</version>
           <configuration>
             <classifier>osx</classifier>
           </configuration>
@@ -107,7 +114,7 @@
       </plugins>
     </build>
     </profile>
-    
+
     <profile>
       <id>win32</id>
       <activation>
@@ -119,7 +126,9 @@
       <build>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
+          <version>2.5</version>
           <configuration>
             <classifier>win32</classifier>
           </configuration>
@@ -127,7 +136,7 @@
       </plugins>
     </build>
     </profile>
-    
+
     <profile>
       <id>win64</id>
       <activation>
@@ -139,7 +148,9 @@
       <build>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
+          <version>2.5</version>
           <configuration>
             <classifier>win64</classifier>
           </configuration>
@@ -147,7 +158,7 @@
       </plugins>
     </build>
     </profile>
-    
+
   </profiles>
-  
+
 </project>

@@ -55,7 +55,7 @@
         </configuration>
         <executions>
           <execution>
-            <phase>compile</phase>
+            <phase>compiler:compile</phase>
             <goals>
               <goal>generate</goal>
             </goals>

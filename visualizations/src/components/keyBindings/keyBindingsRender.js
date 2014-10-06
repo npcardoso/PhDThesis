@@ -9,15 +9,17 @@ function renderKeyCodesArray(keyCodes) {
 function renderKeyBindingsDisplay(configuration, renderChange) {
 
     function keyBindingsRender(arrayKeyBindings, modeID) {
-        var renderStr = '';
+        var renderStr = '<table>';
         for (var i = 0; i < arrayKeyBindings.length; i++) {
-            renderStr += '<p><small>' + arrayKeyBindings[i].name + ': ';
-            renderStr += renderKeyCodesArray(arrayKeyBindings[i].keyCodes);
+            renderStr += '<small><tr><td>' + arrayKeyBindings[i].name + '</td>';
+            renderStr += '<td>'+renderKeyCodesArray(arrayKeyBindings[i].keyCodes)+'</td>';
             if (renderChange) {
-                renderStr += ' <a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a>';
+                renderStr += '<td><a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></td>';
+                renderStr += '<td><a id="modeTry_' + modeID + '_' + i + '" href="#" class="keyTry">Try</a></td>';
             }
-            renderStr += '</small></p>';
+            renderStr += '</tr></small>';
         }
+        renderStr += '</table>';
         return renderStr;
     }
 
@@ -43,14 +45,6 @@ function showKeybindingsPopup(configuration) {
         autoOpen: true,
         modal: false,
         height: "200",
-        show: {
-            effect: "blind",
-            duration: 1000
-        },
-        hide: {
-            effect: "explode",
-            duration: 1000
-        }
     });
     var conf_view = new ConfigurationView(null, "#dialogKeybindings", configuration, null);
     conf_view.renderKeyBindings();

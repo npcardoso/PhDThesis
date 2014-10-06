@@ -57,14 +57,6 @@ function keyBindings(visualization, configuration) {
             sel.dialog({
                 autoOpen: true,
                 modal: true,
-                show: {
-                    effect: "blind",
-                    duration: 1000
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 1000
-                },
             close: function(event, ui) 
             { 
                 $(this).dialog('close');

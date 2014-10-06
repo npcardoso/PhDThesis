@@ -247,7 +247,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
         var pressedKeys = [];
 
         function getKeyBindingById(id) {
-            var tmp = id.replace('mode_', '').split('_');
+            var tmp = id.replace('mode_', '').replace('modeTry_', '').split('_');
             if (tmp[0] >= 0) {
                 return configuration.currentConfig.keyBindings.modes[tmp[0]].keyBindings[tmp[1]];
             }
@@ -264,6 +264,12 @@ function ConfigurationView(data, elementSel, configuration, events) {
                 $('.pressed_keys').html(renderKeyCodesArray(pressedKeys));
             };
             return false;
+        }
+
+
+        function tryClicked() {
+            keyBinding = getKeyBindingById($(this).attr('id'));
+            keyBinding.func();
         }
 
         function dialogOkButtonClicked() {
@@ -283,14 +289,6 @@ function ConfigurationView(data, elementSel, configuration, events) {
             $("#dialogKeyChange").dialog({
                 autoOpen: false,
                 modal: true,
-                show: {
-                    effect: "blind",
-                    duration: 1000
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 1000
-                },
                 buttons: {
                     "Ok": dialogOkButtonClicked
                 },
@@ -302,6 +300,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
             $(elementSel).append('<div class="keyConfig"></div>');
             $('.keyConfig').html('<p class="keyBindingsp">Key Bindings:</p>' + renderKeyBindingsDisplay(configuration,true));
             $('.keyChange').on("click", changeClicked);
+            $('.keyTry').on("click", tryClicked);
         }
 
         renderConfigDisplay();

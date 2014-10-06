@@ -193,7 +193,6 @@ function filterData(data, N) {
 
 
 function filterByScore(data, minScore) {
-    minScore /= 100;
     setState(data, false);
     var array = getLastLevelNodes(data);
     var end = array.length;

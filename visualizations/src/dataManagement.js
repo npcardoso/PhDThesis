@@ -4,14 +4,14 @@ function dataInlining(data) {
     var node;
     for (var i = tree.length - 1; i >= 0; i--) {
         node = tree[i];
-        node.n = node.n.slice(1);
+        typeInline(node);
         node.id = i;
         if (nodeHasFather(node)) {
             node.parent = tree[node.p];
         }
-        node.score = scores[i];
-        node.children = [];
+        node.score = (scores[i]>=0?Math.round(scores[i]*10000)/100:-1);
 
+        node.children = [];
     }
     for (var j = tree.length - 1; j >= 0; j--) {
         node = tree[j];
@@ -21,6 +21,57 @@ function dataInlining(data) {
     }
 }
 
+
+function typeInline(node){
+    var types = [];
+    types['.'] = 'package';
+    types['$'] = 'class';
+    types['!'] = 'function';
+    types[':'] = 'line';
+
+    type = types[node.n[0]];
+    if(type !== undefined){
+        node.n = node.n.slice(1);
+    }
+    node.type = type;
+}
+
+function mixChild(dataArray, parentNode){
+    var child = parentNode.children[0];
+     console.log(dataArray[0]);
+    console.log(parentNode.n);
+    console.log(child.n);
+    if(parentNode.n == 'root'){
+        parentNode.n = child.n;
+    }
+    else {
+        parentNode.n += '.' + child.n;
+        
+    }
+    parentNode.score = child.score;
+    dataArray[child.id] = {};
+    parentNode.children = child.children;
+}
+
+function isMixable(node){
+    return node !== null && node.children !== undefined && node.children.length == 1 && node.type == 'package' && node.children[0].type == 'package';
+}
+
+function compressNodes(nodesArray){
+    var len = nodesArray.length;
+    var node;
+    var nodeHasMixed;
+    do{
+        nodeHasMixed = false;
+    for (var i = 0; i < len; i++) {
+       node =  nodesArray[i];
+       if(isMixable(node)){
+        mixChild(nodesArray,node);
+        nodeHasMixed = true;
+       }
+    };
+    } while(nodeHasMixed);
+}
 
 function nodeHasFather(node) {
     return node.p >= 0;
@@ -209,6 +260,8 @@ function DataManager(data, configuration) {
             if (configuration.currentConfig.filterMostRelevamtNodes > 0) {
                 data.tree = filterData(data.tree, configuration.currentConfig.filterMostRelevamtNodes);
             }
+
+            compressNodes(data.tree);
         }
     };
 

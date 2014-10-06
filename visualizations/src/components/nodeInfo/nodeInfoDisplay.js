@@ -58,7 +58,7 @@ function NodeInfoDisplay(elementSel, clickFunction, configuration) {
         // Now move and update the percentage at the end.
         var percentage, displayText;
         if (node.score >= 0) {
-            percentage = d3.round(node.score * 100, 2);
+            percentage = node.score;
             displayText = percentage + '%';
         } else {
             percentage = 0;

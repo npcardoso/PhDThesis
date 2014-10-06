@@ -3,7 +3,7 @@ function Gradiant(normal) {
 
     this.normal = function(node) {
         if (node.score >= 0) {
-            return normalGradient[Math.floor(node.score * 100)];
+            return normalGradient[Math.round(node.score)];
         }
         return "grey";
     };

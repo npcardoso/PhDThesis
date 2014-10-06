@@ -25,7 +25,7 @@ function Table(data, elementSel, configuration, events) {
         $(elementSel).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="tableData"></table>');
 
         var table = $('#tableData').DataTable({
-            "scrollY": $(window).height() - 205 + "px",
+            "scrollY": $(window).height() - 160 + "px",
             "retrieve": true,
             "scrollCollapse": true,
             "data": tableData,
@@ -54,7 +54,6 @@ function Table(data, elementSel, configuration, events) {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
             }
-            location.hash = "asa";
         });
 
 

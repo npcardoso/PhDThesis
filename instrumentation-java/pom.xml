@@ -65,24 +65,26 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2</version>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <index>true</index>
-            <manifest>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-            </manifest>
-            <manifestEntries>
-              <Premain-Class>io.crowbar.instrumentation.Agent</Premain-Class>
-              <Can-Redefine-Classes>true</Can-Redefine-Classes>
-              <Can-Retransform-Classes>true</Can-Retransform-Classes>
-            </manifestEntries>
-          </archive>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
+          <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+          <transformers>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+              <manifestEntries>
+                <Premain-Class>io.crowbar.instrumentation.Agent</Premain-Class>
+                <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                <Can-Retransform-Classes>true</Can-Retransform-Classes>
+              </manifestEntries>
+            </transformer>
+          </transformers>
+          <relocations>
+            <relocation>
+              <pattern>javassist</pattern>
+              <shadedPattern>io.crowbar.javassist</shadedPattern>
+            </relocation>
+          </relocations>
         </configuration>
         <executions>
           <execution>
@@ -91,7 +93,7 @@
             <phase>package</phase>
             <!-- append to the packaging phase. -->
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
               <!-- goals == mojos -->
             </goals>
 

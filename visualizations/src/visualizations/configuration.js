@@ -12,7 +12,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
         self.renderRegexFilter();
         self.renderDefualtTableEntries();
         self.renderChosenScript();
-        this.renderKeyBindings();
+        this.renderKeyBindings(false);
         this.renderResetButton();
     };
 
@@ -241,7 +241,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
             });
     };
 
-    this.renderKeyBindings = function() {
+    this.renderKeyBindings = function(renderTry) {
 
         var keyBindingToChange = null;
         var pressedKeys = [];
@@ -298,7 +298,7 @@ function ConfigurationView(data, elementSel, configuration, events) {
         function renderConfigDisplay(){
             $('.keyConfig').remove();
             $(elementSel).append('<div class="keyConfig"></div>');
-            $('.keyConfig').html('<p class="keyBindingsp">Key Bindings:</p>' + renderKeyBindingsDisplay(configuration,true));
+            $('.keyConfig').html('<p class="keyBindingsp">Key Bindings:</p>' + renderKeyBindingsDisplay(configuration,renderTry));
             $('.keyChange').on("click", changeClicked);
             $('.keyTry').on("click", tryClicked);
         }

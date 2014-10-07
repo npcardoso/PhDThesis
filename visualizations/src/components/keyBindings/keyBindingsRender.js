@@ -6,15 +6,15 @@ function renderKeyCodesArray(keyCodes) {
     return renderStr;
 }
 
-function renderKeyBindingsDisplay(configuration, renderChange) {
+function renderKeyBindingsDisplay(configuration, renderTry) {
 
     function keyBindingsRender(arrayKeyBindings, modeID) {
         var renderStr = '<table>';
         for (var i = 0; i < arrayKeyBindings.length; i++) {
             renderStr += '<small><tr><td>' + arrayKeyBindings[i].name + '</td>';
             renderStr += '<td>'+renderKeyCodesArray(arrayKeyBindings[i].keyCodes)+'</td>';
-            if (renderChange) {
-                renderStr += '<td><a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></td>';
+            renderStr += '<td><a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></td>';
+            if (renderTry) {
                 renderStr += '<td><a id="modeTry_' + modeID + '_' + i + '" href="#" class="keyTry">Try</a></td>';
             }
             renderStr += '</tr></small>';
@@ -47,7 +47,7 @@ function showKeybindingsPopup(configuration) {
         height: "200",
     });
     var conf_view = new ConfigurationView(null, "#dialogKeybindings", configuration, null);
-    conf_view.renderKeyBindings();
+    conf_view.renderKeyBindings(true);
     $('.keyBindingsp').remove();
 
 }

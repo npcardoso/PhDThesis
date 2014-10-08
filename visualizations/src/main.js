@@ -37,13 +37,14 @@ function init() {
     dataManager.applyFilters();
 
     var visualization = new Visualizations(configuration, dataManager);
+    window.addEventListener("resize", visualization.resize);
     renderButtonsHtml(visualization.setVisualization, visualization.getInitVisN());
 
 
 
     visualization.init();
 
-    $(window).resize(visualization.resize);
+
 }
 
 function getVizID(vizNo) {

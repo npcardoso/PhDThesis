@@ -15,7 +15,7 @@ function Visualizations(configuration, dataManager) {
             dataManager.updatefilter();
             if(currentVisualizationN < 3){
             currentVisualization.data = dataManager.getData().tree[0];
-            currentVisualization.render();
+            self.setVisualization(currentVisualizationN);
             }
         }
     };

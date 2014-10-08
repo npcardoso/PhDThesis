@@ -6,12 +6,14 @@ import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMethod;
+import javassist.Modifier;
 import javassist.bytecode.Bytecode;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.CodeIterator;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.MethodInfo;
 import javassist.bytecode.Opcode;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -58,7 +60,7 @@ public class InjectPass extends AbstractPass {
 
         if (injected) {
             logger.debug("Adding hit vector to {}", c.getName());
-            CtField f = CtField.make("public static boolean[]  " + hitVectorName + " = " +
+            CtField f = CtField.make("private static boolean[]  " + hitVectorName + " = " +
                                      "Collector.instance().getHitVector(" +
                                      "\"" + c.getName() + "\");", c);
             c.addField(f);

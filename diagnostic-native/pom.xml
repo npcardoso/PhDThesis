@@ -25,6 +25,7 @@
       </resource>
     </resources>
 
+<<<<<<< HEAD
       <plugins>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -46,6 +47,29 @@
           </executions>
         </plugin>
       </plugins>
+=======
+    <plugins>
+      <plugin>
+        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
+        <version>1.3.2</version>
+        <executions>
+          <execution>
+            <id>diagnostic-native Compile</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>scons</executable>
+              <workingDirectory>${basedir}</workingDirectory>
+              <commandlineArgs></commandlineArgs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+>>>>>>> dev-nc
   </build>
 
   <profiles>

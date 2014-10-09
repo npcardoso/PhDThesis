@@ -28,7 +28,7 @@ function Sunburst(data, elementSel, configuration, events) {
     this.zoomEvents = null;
     this.clicked = self.data;
     this.stateManager = new StateManager(self);
-    console.log(this.stateManager);
+
 
     self.keyBindings = null;
     //Public rendering function renders the visualion on the element passed
@@ -70,11 +70,15 @@ function Sunburst(data, elementSel, configuration, events) {
         self.nodeInfoDisplay.setClicked(self.data);
         self.nodeInfoDisplay.setPath(path);
 
-        if (self.zoomEvents === null) {
-            self.zoomEvents = ZoomController(elementSel, zoomElement, svg, self.configuration);
-        }
+       
+        self.zoomEvents = ZoomController(elementSel, zoomElement, svg, self.configuration);
+
         if (self.keyBindings === null) {
             self.keyBindings = new KeyBindings(self, configuration);
+        }
+        else
+        {
+            self.keyBindings.setKeyBindings();
         }
     };
 

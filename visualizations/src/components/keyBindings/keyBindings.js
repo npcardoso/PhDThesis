@@ -1,5 +1,4 @@
 function KeyBindings(visualization, configuration) {
-    var zoomEvents = visualization.zoomEvents;
     var currentKeyBindings = configuration.currentConfig.keyBindings.allwaysActive;
     var pressedKeys = [];
     var currentMode = null;
@@ -51,11 +50,11 @@ function KeyBindings(visualization, configuration) {
 
     function initZoomMode() {
         zoomMode = getModeByName("Zoom");
-        setModeKeyBinding(zoomMode, "Zoom In", zoomEvents.zoomIn);
-        setModeKeyBinding(zoomMode, "Zoom Out", zoomEvents.zoomOut);
-        setModeKeyBinding(zoomMode, "Zoom Reset", zoomEvents.zoomReset);
+        setModeKeyBinding(zoomMode, "Zoom In", visualization.zoomEvents.zoomIn);
+        setModeKeyBinding(zoomMode, "Zoom Out", visualization.zoomEvents.zoomOut);
+        setModeKeyBinding(zoomMode, "Zoom Reset", visualization.zoomEvents.zoomReset);
         zoomMode.exitHandler = function() {
-            zoomEvents.hideZoom();
+            visualization.zoomEvents.hideZoom();
         };
     }
 
@@ -127,7 +126,7 @@ function KeyBindings(visualization, configuration) {
         exitLastMode();
         currentMode = getModeByName("Zoom");
         loadModeKeyBindings(currentMode);
-        zoomEvents.showZoom();
+        visualization.zoomEvents.showZoom();
     }
 
     function gotoFilteringMode() {
@@ -141,10 +140,10 @@ function KeyBindings(visualization, configuration) {
             showKeybindingsPopup(configuration)
         });
         setKeyBinding("Move Left", visualization.zoomEvents.left);
-        setKeyBinding("Move Up", zoomEvents.up);
-        setKeyBinding("Move Right", zoomEvents.right);
-        setKeyBinding("Move Down", zoomEvents.down);
-        setKeyBinding("Move Down", zoomEvents.down);
+        setKeyBinding("Move Up", visualization.zoomEvents.up);
+        setKeyBinding("Move Right", visualization.zoomEvents.right);
+        setKeyBinding("Move Down", visualization.zoomEvents.down);
+        setKeyBinding("Move Down", visualization.zoomEvents.down);
         setKeyBinding("Undo", visualization.stateManager.undo);
         setKeyBinding("Redo", visualization.stateManager.redo);
         setKeyBinding("Goto Sunburst", function() {
@@ -165,6 +164,10 @@ function KeyBindings(visualization, configuration) {
 
         initZoomMode();
         initFilteringMode();
+
+        if(currentMode !== null &&  currentMode.name == 'Zoom'){
+            visualization.zoomEvents.showZoom();
+        }
     };
     this.setKeyBindings();
 }

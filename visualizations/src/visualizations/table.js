@@ -8,7 +8,7 @@ function Table(data, elementSel, configuration, events) {
         for (len = data.length, i = 0; i < len; i++) {
             var node = data[i];
             if (node !== null && node !== undefined && isLastNode(node) && node.parent != undefined && node.parent.parent != undefined) {
-                ret.push([node.parent.parent.n, node.parent.n, node.n, node.score, i]);
+                ret.push([getClass(node), getFunction(node), getName(node), node.score, i]);
             }
         }
         return ret;
@@ -42,7 +42,9 @@ function Table(data, elementSel, configuration, events) {
             }],
             "order": [3, "desc"],
             "createdRow": function(row, tdata, index) {
-                $('td', row).eq(0).prepend('<div class="tableCircle" style="background-color: ' + configuration.gradiante.normal(data[tdata[4]]) + ';">+</div>');
+                var node = data[tdata[4]];
+                $(row).attr('title',getPackage(node));
+                $('td', row).eq(0).prepend('<div class="tableCircle" style="background-color: ' + configuration.gradiante.normal(node) + ';">+</div>');
             },
             "iDisplayLength": configuration.currentConfig.defaultTableEntries
         });
@@ -57,8 +59,14 @@ function Table(data, elementSel, configuration, events) {
         });
 
 
-        function format(data) {
-            return '<button class="vizb" id="vizb0">Go to Sunburst</button><button class="vizb" id="vizb1">Go to Vertical Partition</button>';
+        function format(rowData) {
+            var node = data[rowData[4]];
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            '<tr>'+
+            '<td>Package:</td>'+
+            '<td>'+getPackage(node)+'</td>'+
+            '</tr>'+
+            '</table><button class="vizb" id="vizb0">Go to Sunburst</button><button class="vizb" id="vizb1">Go to Vertical Partition</button>';
 
         }
 

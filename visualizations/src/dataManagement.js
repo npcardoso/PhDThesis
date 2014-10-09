@@ -72,6 +72,7 @@ function compressNodes(nodesArray) {
     } while (nodeHasMixed);
 }
 
+
 function nodeHasFather(node) {
     return node.p >= 0;
 }
@@ -91,6 +92,37 @@ function getAncestors(node) {
         return parentAncestors;
     }
     return new Array(node);
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function getFunction(lastNode){
+    return lastNode.parent.n;
+}
+
+function getClass(lastNode){
+    var name = lastNode.parent.parent.n;
+    if(isNumber(name)){
+        if(lastNode.parent.parent.parent !== null){
+            name = lastNode.parent.parent.parent.n + '$'+name;
+        }
+    }
+    return name;
+}
+
+function getPackage(lastNode){
+    var ances = getAncestors(lastNode);
+    var packageStr = '';
+    for (var i = 0; i < ances.length; i++) {
+        var ancesN = ances[i];
+        if(ancesN.type != 'package'){
+            return packageStr.slice(1);
+        }
+        packageStr += '.' + ancesN.n;
+    };
+    return packageStr.slice(1);
 }
 
 function setState(nodesArray, state) {

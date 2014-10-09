@@ -1,11 +1,19 @@
 function NodeInfoDisplay(elementSel, clickFunction, configuration) {
     var self = this;
 
+    var iD = $(elementSel).attr('id');
+
+    var percentageArea, breadcrumbsArea, styleArea;
     this.init = function() {
-        $('#breadcrumbs').remove();
-        $('#endlabel').remove();
-        $(elementSel).append('<div id="breadcrumbs"></div>');
-        $(elementSel).append('<div id="endlabel"></div>');
+        breadcrumbsArea = $('<div></div>');
+        $(elementSel).append(breadcrumbsArea);
+
+        percentageArea = $('<div></div>');
+        $(elementSel).append(percentageArea);
+
+        styleArea = $('<style></style>');
+        $('body').append(styleArea);
+
     };
 
     this.nodeInfo = function(node) {
@@ -15,16 +23,16 @@ function NodeInfoDisplay(elementSel, clickFunction, configuration) {
 
 
     this.breadcrumbsRender = function(nodesArray) {
+
         function idNodeI(i) {
-            return 'node-' + i;
+            return iD + 'node-' + i;
         }
 
-        $('#breadcrumbs').html('');
-        $('.breadcrumbsStyle').remove();
-        $('.breadcrumbs').remove();
+        breadcrumbsArea.html('');
         var renderElement = $('<ol class="breadcrumbs"></ol>');
-        $('#breadcrumbs').html(renderElement);
+        breadcrumbsArea.html(renderElement);
 
+        var cssTring = '';
         var lengthN = nodesArray.length;
         for (var i = 0; i < lengthN; i++) {
             var elem = $('<li><a id="' + idNodeI(i) + '"><span>' + (false ? '' : nodesArray[i].n) + '</span></a></li>');
@@ -32,26 +40,19 @@ function NodeInfoDisplay(elementSel, clickFunction, configuration) {
                 elem.addClass("leaf-node");
             }
             renderElement.append(elem);
-            var x = $('body').append('<style class="breadcrumbsStyle">#' + idNodeI(i) + ', #' + idNodeI(i) + ':before, #' + idNodeI(i) + ':after{background-color: ' + configuration.gradiante.normal(nodesArray[i]) + ';}</style>');
+            cssTring += '#' + idNodeI(i) + ', #' + idNodeI(i) + ':before, #' + idNodeI(i) + ':after{background-color: ' + configuration.gradiante.normal(nodesArray[i]) + ';}';
             $('a', renderElement).click(function() {
-                var id = $(this).attr('id').replace("node-", "");
+                var id = $(this).attr('id').replace(iD + "node-", "");
                 clickFunction(nodesArray[id]);
             })
         };
-
+        styleArea.html(cssTring);
         var i = 1;
-        console.log(renderElement.height());
         while (renderElement.height() > 30) {
-            console.log(renderElement.height());
             $('#' + idNodeI(i)).remove();
             ++i;
         }
     };
-
-    this.simpleBreadCrumbsRender = function(nodesArray) {
-
-    };
-
 
     this.updateScore = function(node) {
         var color = configuration.gradiante.normal(node);
@@ -64,7 +65,7 @@ function NodeInfoDisplay(elementSel, clickFunction, configuration) {
             percentage = 0;
             displayText = 'Uncalculated';
         }
-        $("#endlabel").html('<div class="pace pace-active" style="border-color: ' + color + ';"><div class="pace-progress" data-progress="' + percentage + '" data-progress-text="' + displayText + '" style="width: ' + percentage + '%;   background: ' + color + '; color: ' + color + ';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
+        percentageArea.html('<div class="pace pace-active" style="border-color: ' + color + ';"><div class="pace-progress" data-progress="' + percentage + '" data-progress-text="' + displayText + '" style="width: ' + percentage + '%;   background: ' + color + '; color: ' + color + ';"><div class="pace-progress-inner"></div></div><div class="pace-activity"></div></div>');
     };
 
 

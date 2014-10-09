@@ -4,26 +4,30 @@ function StateManager(visualization) {
     var currentNumber = 0;
     var maxRedo = 0;
 
+    var interfaceButtons,undoButton,redoButton;
     this.initRender = function(elementSel) {
-        $(elementSel).append('<div class="iButtons"></div>');
-        $('.iButtons').append('<img class="undoButton" style="display: inline" src="components/stateManager/backButton.png" />');
-        $('.iButtons').append('<img class="redoButton" style="display: inline" src="components/stateManager/redoButton.png" />');
-        $('.undoButton').click(self.undo);
-        $('.redoButton').click(self.redo);
+        interfaceButtons = $('<div class="iButtons"></div>');
+        $(elementSel).append(interfaceButtons);
+        undoButton = $('<img class="undoButton" style="display: inline" src="components/stateManager/backButton.png" />');
+        redoButton = $('<img class="redoButton" style="display: inline" src="components/stateManager/redoButton.png" />');
+        interfaceButtons.append(undoButton);
+        interfaceButtons.append(redoButton);
+        undoButton.click(self.undo);
+        redoButton.click(self.redo);
         self.setButtonVis();
     }
 
     this.setButtonVis = function() {
         if (self.undoPossible()) {
-            $('.undoButton').css('opacity', '1');
+            undoButton.css('opacity', '1');
         } else {
-            $('.undoButton').css('opacity', '0.3');
+            undoButton.css('opacity', '0.3');
         }
 
         if (self.redoPossible()) {
-            $('.redoButton').css('opacity', '1');
+            redoButton.css('opacity', '1');
         } else {
-            $('.redoButton').css('opacity', '0.3');
+            redoButton.css('opacity', '0.3');
         }
     }
 

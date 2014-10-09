@@ -2,6 +2,7 @@ function Visualizations(configuration, dataManager) {
     var self = this;
     var nodeToRender = null;
     var currentVisualizationN, currentVisualization;
+    var visualizationsStructure = [];
 
     var events = {
         click: sendClickEvent,
@@ -11,11 +12,12 @@ function Visualizations(configuration, dataManager) {
                 active: visN
             });
         },
-        filtersUpdate: function(){
+        filtersUpdate: function() {
             dataManager.updatefilter();
-            if(currentVisualizationN < 3){
-            currentVisualization.data = dataManager.getData().tree[0];
-            self.setVisualization(currentVisualizationN);
+            if (currentVisualizationN < 3) {
+                visualizationsStructure = [];
+                currentVisualization.data = dataManager.getData().tree[0];
+                self.setVisualization(currentVisualizationN);
             }
         }
     };
@@ -35,16 +37,25 @@ function Visualizations(configuration, dataManager) {
         configuration.currentConfig.lastViewed = visN;
         configuration.saveConfig();
         currentVisualizationN = visN;
-        currentVisualization = self.createVisualization(visN);
+        if (visualizationsStructure[visN] === undefined) {
+            visualizationsStructure[visN] = self.createVisualization(visN);
+            visualizationsStructure[visN].render();
+        }
+        currentVisualization = visualizationsStructure[visN];
     }
 
     this.setVisualization = function(visN) {
         if (dataManager.getData() != undefined || visN == 3) {
             self.prepareVisualization(visN);
-            currentVisualization.render();
             if (nodeToRender != null) {
                 currentVisualization.dblclick(nodeToRender);
                 nodeToRender = null;
+            }
+            if (currentVisualization.hasOwnProperty('keyBindings')) {
+                currentVisualization.keyBindings.setKeyBindings();
+                document.onkeydown = currentVisualization.keyBindings.keyPress;
+            } else {
+                document.onkeydown = null;
             }
         }
     }
@@ -57,15 +68,15 @@ function Visualizations(configuration, dataManager) {
     }
 
     this.resize = function() {
-        if (currentVisualization.hasOwnProperty('resize')) {
-            currentVisualization.resize();
-        }
+        visualizationsStructure.forEach(function(visualization) {
+            if (visualization.hasOwnProperty('resize')) {
+                visualization.resize();
+            }
+        });
     }
 
     this.init = function() {
         self.setVisualization(self.getInitVisN());
     }
-
-
 
 }

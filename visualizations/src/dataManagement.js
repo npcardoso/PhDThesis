@@ -103,10 +103,14 @@ function getFunction(lastNode){
 }
 
 function getClass(lastNode){
-    var name = lastNode.parent.parent.n;
-    if(isNumber(name)){
-        if(lastNode.parent.parent.parent !== null){
-            name = lastNode.parent.parent.parent.n + '$'+name;
+    var classNode = lastNode.parent.parent;
+    var curname = lastNode.parent.parent.n;
+    var name = curname
+    while(isNumber(curname)){
+        classNode.n = classNode.parent
+        if(classNode !== null){
+            curname = classNode.n;
+            name = curname + '$'+name;
         }
     }
     return name;

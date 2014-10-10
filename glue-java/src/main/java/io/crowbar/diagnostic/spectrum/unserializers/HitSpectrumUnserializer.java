@@ -44,7 +44,6 @@ public final class HitSpectrumUnserializer {
             error = s.nextDouble();
         } else {
             String errStr = s.next();
-            System.out.println(errStr);
 
             error = (errStr.equals("-") || errStr.equals("x") || errStr.equals("X")) ? 1 : 0;
         }

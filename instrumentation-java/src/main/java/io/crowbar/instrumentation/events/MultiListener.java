@@ -44,7 +44,7 @@ implements EventListener {
     }
 
     @Override
-    public final void startTransaction (int probeId) throws Exception {
+    public void startTransaction (int probeId) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.startTransaction(probeId);
@@ -56,16 +56,11 @@ implements EventListener {
     }
 
     @Override
-    public final void endTransaction (int probeId,
-                                      String exceptionClass,
-                                      String exceptionMessage,
-                                      boolean[] hitVector) throws Exception {
+    public void endTransaction (int probeId,
+                                boolean[] hitVector) throws Exception {
         for (EventListener el : listeners) {
             try {
-                el.endTransaction(probeId,
-                                  exceptionClass,
-                                  exceptionMessage,
-                                  hitVector);
+                el.endTransaction(probeId, hitVector);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -74,9 +69,22 @@ implements EventListener {
     }
 
     @Override
-    public final void oracle (int probeId,
-                              double error,
-                              double confidence) throws Exception {
+    public void logException (String exceptionClass,
+                              String exceptionMessage) throws Exception {
+        for (EventListener el : listeners) {
+            try {
+                el.logException(exceptionClass, exceptionMessage);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void oracle (int probeId,
+                        double error,
+                        double confidence) throws Exception {
         for (EventListener el : listeners) {
             try {
                 el.oracle(probeId, error, confidence);

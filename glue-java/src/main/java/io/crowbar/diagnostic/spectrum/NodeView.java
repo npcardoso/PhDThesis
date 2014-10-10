@@ -1,14 +1,14 @@
 package io.crowbar.diagnostic.spectrum;
 
-import flexjson.JSON;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import flexjson.JSON;
+
 public final class NodeView extends Node {
-    Node n;
-    TreeView t;
-    int id;
+    private final Node n;
+    private final TreeView t;
+    private final int id;
 
     NodeView (TreeView tree,
               Node node,
@@ -33,9 +33,19 @@ public final class NodeView extends Node {
         return n.getPermanentId();
     }
 
-    @JSON(name = "n")
+    @JSON(include = false)
     public String getName () {
         return n.getName();
+    }
+
+    @JSON(include = false)
+    public Type getType () {
+        return n.getType();
+    }
+
+    @JSON(name = "n")
+    public String getNameWithSymbol () {
+        return getType().getSymbol() + getName();
     }
 
     @JSON(name = "p")

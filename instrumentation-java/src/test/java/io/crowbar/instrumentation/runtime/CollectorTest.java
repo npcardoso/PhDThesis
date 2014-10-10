@@ -112,8 +112,8 @@ public class CollectorTest {
 
 
         checks.endTransactionId = id;
-        checks.endTransactionExceptionClass = null;
-        checks.endTransactionExceptionMessage = null;
+        checks.exceptionClass = null;
+        checks.exceptionMessage = null;
 
         collector.transactionEnd(id);
         assertTrue(ttel.wasTriggered());
@@ -129,10 +129,12 @@ public class CollectorTest {
 
 
         checks.endTransactionId = id;
-        checks.endTransactionExceptionClass = "java.lang.Exception";
-        checks.endTransactionExceptionMessage = exceptionMessage;
+        checks.exceptionClass = "java.lang.Exception";
+        checks.exceptionMessage = exceptionMessage;
 
-        collector.transactionEnd(id, new Exception(exceptionMessage));
+        collector.logException(checks.exceptionClass, exceptionMessage);
+
+        collector.transactionEnd(id);
         assertTrue(ttel.wasTriggered());
     }
 

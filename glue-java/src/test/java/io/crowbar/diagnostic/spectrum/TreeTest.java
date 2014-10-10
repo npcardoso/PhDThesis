@@ -2,7 +2,6 @@ package io.crowbar.diagnostic.spectrum;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import java.util.ArrayList;
 import java.util.List;
 

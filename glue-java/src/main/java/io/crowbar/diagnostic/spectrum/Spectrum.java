@@ -2,153 +2,113 @@ package io.crowbar.diagnostic.spectrum;
 
 import io.crowbar.diagnostic.Diagnostic;
 import io.crowbar.diagnostic.DiagnosticElement;
+import io.crowbar.util.MergeStrategy;
+import io.crowbar.util.SkipNullIterator;
 
+import flexjson.JSON;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.AbstractList;
 
-public abstract class Spectrum<A extends Activity,
-                               TM extends Metadata> {
-    public interface MergeStrategy {
-        double reduce (List<Double> scores);
-    }
-
-    public static final MergeStrategy AVG =
-        new MergeStrategy() {
+public abstract class Spectrum {
+    private final List<Transaction> transactions =
+        new AbstractList() {
         @Override
-        public double reduce (List<Double> scores) {
-            if (scores.size() <= 0) return Double.NaN;
+        public int size () {
+            return getTransactionCount();
+        }
 
-            double total = 0;
-
-            for (Double s : scores) {
-                total += s;
-            }
-
-            return total / scores.size();
+        @Override
+        public Transaction get (int id) {
+            return getTransaction(id);
         }
     };
 
-    public static final MergeStrategy MAX =
-        new MergeStrategy() {
+    private final List<Probe> probes =
+        new AbstractList() {
         @Override
-        public double reduce (List<Double> scores) {
-            if (scores.size() <= 0) return Double.NaN;
+        public int size () {
+            return getProbeCount();
+        }
 
-            double max = 0;
-
-            for (Double s : scores) {
-                max = Math.max(max, s);
-            }
-
-            return max;
+        @Override
+        public Probe get (int id) {
+            return getProbe(id);
         }
     };
 
-    public static final MergeStrategy SUM =
-        new MergeStrategy() {
-        @Override
-        public double reduce (List<Double> scores) {
-            if (scores.size() <= 0) return Double.NaN;
-
-            double total = 0;
-
-            for (Double s : scores) {
-                total += s;
-            }
-
-            return total;
-        }
-    };
-
-
-    private abstract class AbstractIterator<T>
-    implements Iterator<T> {
-        private int id = 0;
-
-        protected abstract T get (int id);
-        protected int getId () {
-            return id;
-        }
-
-        @Override
-        public void remove () {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public T next () {
-            if (!hasNext())
-                throw new NoSuchElementException();
-
-            return get(id++);
-        }
-    }
-
-    private class TIterable implements Iterable<Transaction<A, TM> > {
-        public Iterator<Transaction<A, TM> > iterator () {
-            return new AbstractIterator<Transaction<A, TM> > () {
-                       @Override
-                       public boolean hasNext () {
-                           return getId() < getTransactionCount();
-                       }
-
-                       @Override
-                       protected Transaction<A, TM> get (int i) {
-                           return getTransaction(i);
-                       }
-            };
-        }
-    }
-
-    private class PIterable implements Iterable<Probe> {
-        public Iterator<Probe> iterator () {
-            return new AbstractIterator<Probe> () {
-                       @Override
-                       public boolean hasNext () {
-                           return getId() < getProbeCount();
-                       }
-
-                       @Override
-                       protected Probe get (int i) {
-                           return getProbe(i);
-                       }
-            };
-        }
-    }
 
     Spectrum () {}
 
+    @JSON(include = true)
     public abstract Tree getTree ();
 
+    @JSON(include = false)
     public abstract int getTransactionCount ();
+
+    @JSON(include = false)
     public abstract int getProbeCount ();
 
-    public abstract Transaction<A, TM> getTransaction (int transactionId);
+    /**
+     * @brief Retreives a transaction by id.
+     * @return A transaction or null if a transaction with such id
+     * does not exist.
+     */
+    public abstract Transaction getTransaction (int transactionId);
 
+    /**
+     * @brief Retreives a probe by id.
+     * @return A probe or null if a probe with such id does
+     * not exist/is not linked with any node in the tree.
+     */
     public abstract Probe getProbe (int probeId);
 
-    public abstract List<Probe> getProbes ();
 
-    public List<Probe> getNodeProbes (int nodeId) {
-        List<Probe> nodeProbes = new ArrayList<Probe> ();
-
-        for (Probe p : getProbes()) {
-            if (p.getNodeId() == nodeId)
-                nodeProbes.add(p);
-        }
-
-        return nodeProbes;
+    /**
+     * @brief Returns an immutable list of transactions.
+     * @note Uses getTransaction()/getTransactionCount()
+     */
+    @JSON(include = true)
+    public final List<Transaction> getTransactions () {
+        return transactions;
     }
 
+    /**
+     * @brief Returns an immutable list of probes.
+     * @note Uses getProbe()/getProbeCount()
+     */
+    @JSON(include = true)
+    public final List<Probe> getProbes () {
+        return probes;
+    }
+
+    /**
+     * @brief Returns an iterable over the spectrum's transactions. null transactions are ommited.
+     * The transactions are iterated in ascending ID order.
+     */
+    public final Iterable<Transaction> byTransaction () {
+        return new Iterable() {
+                   @Override
+                   public Iterator<Transaction> iterator () {
+                       return new SkipNullIterator(getTransactions().iterator());
+                   }
+        };
+    }
+
+    /**
+     * @brief Returns an iterable over the spectrum's probes. null probes are ommited.
+     * The probes are iterated in ascending ID order.
+     */
     public final Iterable<Probe> byProbe () {
-        return new PIterable();
-    }
-
-    public final Iterable<Transaction<A, TM> > byTransaction () {
-        return new TIterable();
+        return new Iterable() {
+                   @Override
+                   public Iterator<Probe> iterator () {
+                       return new SkipNullIterator(getProbes().iterator());
+                   }
+        };
     }
 
     private List<Double> reduce (List<List<Double> > l,
@@ -168,15 +128,16 @@ public abstract class Spectrum<A extends Activity,
     /**
      * @brief Calculates a score value per Tree Node using an arbitrary MergeStrategy.
      * This is used to convert a multiple fault ranking into single fault ranking.
-     * @post ret.size() == getTree.size()
+     * @post ret.size() == getTree().size()
      * @return A list containing the score for each node.
      */
-    public List<Double> getScorePerNode (Diagnostic diagnostic,
-                                         MergeStrategy ms) {
+    public final List<Double> getScorePerNode (Diagnostic diagnostic,
+                                               MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getTree().size());
 
-        while (tmp.size() < getTree().size())
+        while (tmp.size() < getTree().size()) {
             tmp.add(null);
+        }
 
         for (DiagnosticElement e : diagnostic) {
             for (int probeId : e.getCandidate()) {
@@ -205,12 +166,13 @@ public abstract class Spectrum<A extends Activity,
      * @post ret.size() == getProbeCount()
      * @return A list containing the score for each probe.
      */
-    public List<Double> getScorePerProbe (Diagnostic diagnostic,
-                                          MergeStrategy ms) {
+    public final List<Double> getScorePerProbe (Diagnostic diagnostic,
+                                                MergeStrategy ms) {
         List<List<Double> > tmp = new ArrayList<List<Double> > (getProbeCount());
 
-        while (tmp.size() < getProbeCount())
+        while (tmp.size() < getProbeCount()) {
             tmp.add(null);
+        }
 
         for (DiagnosticElement e : diagnostic) {
             for (int probeId : e.getCandidate()) {
@@ -300,7 +262,7 @@ public abstract class Spectrum<A extends Activity,
 
         first = true;
 
-        for (Transaction<A, TM> transaction : byTransaction()) {
+        for (Transaction transaction : byTransaction()) {
             if (!first)
                 str.append(",");
 

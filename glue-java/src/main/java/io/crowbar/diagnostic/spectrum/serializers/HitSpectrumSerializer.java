@@ -1,17 +1,16 @@
 package io.crowbar.diagnostic.spectrum.serializers;
 
 
-import io.crowbar.diagnostic.spectrum.Activity;
 import io.crowbar.diagnostic.spectrum.Transaction;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 
 
 public final class HitSpectrumSerializer {
-    public static String serialize (Spectrum< ? extends Activity, ? > spectrum) {
+    public static String serialize (Spectrum spectrum) {
         return HitSpectrumSerializer.serialize(spectrum, "\n");
     }
 
-    public static String serialize (Spectrum< ? extends Activity, ? > spectrum,
+    public static String serialize (Spectrum spectrum,
                                     String separator) {
         int numComp = spectrum.getProbeCount();
         int numTran = spectrum.getTransactionCount();
@@ -32,14 +31,14 @@ public final class HitSpectrumSerializer {
     }
 
     public static void serialize (StringBuilder str,
-                                  Transaction< ? extends Activity, ? > transaction,
+                                  Transaction transaction,
                                   int probeCount) {
         int i = 0;
 
 
         if (transaction != null) {
             for (i = 0; i < transaction.size(); i++) {
-                str.append(transaction.get(i).isActive() ? "1" : "0");
+                str.append(transaction.isActive(i) ? "1" : "0");
                 str.append(" ");
             }
         }
@@ -54,7 +53,7 @@ public final class HitSpectrumSerializer {
         // str.append(transaction == null ? 0 : transaction.getConfidence());
     }
 
-    public static String serialize (Transaction< ? extends Activity, ? > transaction,
+    public static String serialize (Transaction transaction,
                                     int probeCount) {
         StringBuilder str = new StringBuilder();
 

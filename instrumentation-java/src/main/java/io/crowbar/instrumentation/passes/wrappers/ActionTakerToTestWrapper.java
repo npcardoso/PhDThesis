@@ -36,8 +36,11 @@ public final class ActionTakerToTestWrapper implements TestWrapper {
     }
 
     @Override
-    public boolean isDefaultPass (CtClass c,
-                                  CtMethod m) {
-        return true;
+    public String getOracleCode (CtClass c,
+                                 CtMethod m,
+                                 Node n,
+                                 int probeId,
+                                 String collectorVar) {
+        return null;
     }
 }

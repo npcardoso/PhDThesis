@@ -9,7 +9,6 @@ import io.crowbar.diagnostic.spectrum.EditableTree;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Tree;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.unserializers.HitSpectrumUnserializer;
 import io.crowbar.messages.DiagnosticMessages.Request;
 
@@ -52,6 +51,7 @@ public class VisualizationMessagesTest {
 
         // FIXME: this asser implies that the ordering of elements is always equal.
         // Its better to deserialize and test it using proper methods.
-        assertTrue(jsonRequest.startsWith("{\"scores\":[0.3624116251182534,0.23679368533093226,0.1716916465415933],\"tree\""));
+        String s = "{\"scores\":[0.3624116251182534,0.23679368533093226,0.1716916465415933],\"tree\"";
+        assertTrue(jsonRequest.startsWith(s));
     }
 }

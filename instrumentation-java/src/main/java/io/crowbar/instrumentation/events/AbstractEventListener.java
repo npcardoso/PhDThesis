@@ -20,9 +20,11 @@ public abstract class AbstractEventListener implements EventListener {
 
     @Override
     public void endTransaction (int probeId,
-                                String exceptionClass,
-                                String exceptionMessage,
                                 boolean[] hitVector) throws Exception {}
+
+    @Override
+    public void logException (String exceptionClass,
+                              String exceptionMessage) throws Exception {}
 
     @Override
     public void oracle (int probeId,

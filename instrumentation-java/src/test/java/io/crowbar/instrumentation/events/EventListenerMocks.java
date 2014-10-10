@@ -17,8 +17,9 @@ public final class EventListenerMocks {
         public int startTransactionId;
 
         public int endTransactionId;
-        public String endTransactionExceptionClass;
-        public String endTransactionExceptionMessage;
+
+        public String exceptionClass;
+        public String exceptionMessage;
 
         public int oracleId;
         public double oracleError;
@@ -93,15 +94,27 @@ public final class EventListenerMocks {
 
         @Override
         public void endTransaction (int probeId,
-                                    String exceptionClass,
-                                    String exceptionMessage,
                                     boolean[] hitVector) {
             assertEquals(checks.endTransactionId, probeId);
-            assertEquals(checks.endTransactionExceptionClass, exceptionClass);
-            assertEquals(checks.endTransactionExceptionMessage, exceptionMessage);
             triggered = true;
         }
     }
+
+    public static final class TestableLogExceptionListener extends TestableEventListener {
+        public TestableLogExceptionListener (EventListenerChecks eventListenerChecks) {
+            super(eventListenerChecks);
+        }
+
+        @Override
+        public void logException (String exceptionClass,
+                                  String exceptionMessage) {
+            assertEquals(checks.exceptionClass, exceptionClass);
+            assertEquals(checks.exceptionMessage, exceptionMessage);
+
+            triggered = true;
+        }
+    }
+
 
     public static final class OracleListener extends TestableEventListener {
         public OracleListener (EventListenerChecks checks) {

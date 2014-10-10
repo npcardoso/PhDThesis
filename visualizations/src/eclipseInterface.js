@@ -1,3 +1,12 @@
+function initializeVisualizationREST(jsonData) {
+    $('body').html('');
+
+    tmp = JSON.parse(jsonData);
+
+    window.data_ex = tmp.response
+    init();
+}
+
 function initializeVisualization(jsonData) {
     $('body').html('');
     window.data_ex = JSON.parse(jsonData);

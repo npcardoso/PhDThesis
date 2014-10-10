@@ -31,14 +31,10 @@ implements Comparable<DiagnosticElement> {
         }
 
         return -Double.compare(score, e.score);
-        /*double diff = (e.score - score);
-         *
-         * if(Double.isNAN(e.score) && Double.isNAN(score))
-         *  return 0;
-         * if(diff > 0)
-         *  return 1;
-         * if(diff < 0)
-         *  return -1;
-         *  return 0;*/
+    }
+
+    @Override
+    public String toString () {
+        return "[" + candidate + "," + score + "]";
     }
 }

@@ -42,8 +42,11 @@ public class JUnit3TestWrapper implements TestWrapper {
     }
 
     @Override
-    public boolean isDefaultPass (CtClass c,
-                                  CtMethod m) {
-        return true;
+    public final String getOracleCode (CtClass c,
+                                       CtMethod m,
+                                       Node n,
+                                       int probeId,
+                                       String collectorVar) {
+        return null;
     }
 }

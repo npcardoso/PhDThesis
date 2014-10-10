@@ -1,7 +1,6 @@
 package io.crowbar.diagnostic.spectrum;
 
 import static org.junit.Assert.*;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.matchers.IdMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.NegateMatcher;
 import io.crowbar.diagnostic.spectrum.matchers.ValidTransactionMatcher;
@@ -19,11 +18,12 @@ public class SpectrumViewFactoryTest {
         String in = "3 3 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
 
-        SpectrumView<Hit, ? > sv = svf.getView();
+        SpectrumView sv = svf.getView();
+
 
         assertEquals(sv.getProbeCount(), 3);
     }
@@ -33,11 +33,12 @@ public class SpectrumViewFactoryTest {
         String in = "3 3 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
 
-        SpectrumView<Hit, ? > sv = svf.getView();
+        SpectrumView sv = svf.getView();
+
 
         assertEquals(sv.getTransactionCount(), 3);
     }
@@ -47,15 +48,16 @@ public class SpectrumViewFactoryTest {
         String in = "3 4 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0 0 0 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
 
         ValidTransactionMatcher v = new ValidTransactionMatcher();
 
+
         svf.addStage(v);
 
-        SpectrumView<Hit, ? > sv = svf.getView();
+        SpectrumView sv = svf.getView();
 
         assertEquals(sv.getTransactionCount(), 3);
     }
@@ -65,20 +67,22 @@ public class SpectrumViewFactoryTest {
         String in = "3 4 1 0 1 1.0 1 1 0 1.0 1 1 1 0.0 0 0 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
 
         ValidTransactionMatcher v = new ValidTransactionMatcher();
+
+
         svf.addStage(v);
 
-        SpectrumView<Hit, ? > view = svf.getView();
+        SpectrumView view = svf.getView();
         assertEquals(view.getTransactionCount(), 3);
         assertNotEquals(s, view);
 
         for (int i = 0; i < 10; i++) {
             svf.addStage(v);
-            SpectrumView<Hit, ? > sv = svf.getView();
+            SpectrumView sv = svf.getView();
             assertEquals(view, sv);
         }
     }
@@ -88,16 +92,17 @@ public class SpectrumViewFactoryTest {
         String in = "4 4 1 1 0 1 1.0 1 1 1 0 1.0 1 1 1 1 0.0 0 0 0 0 0.0";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
 
         NegateMatcher m = new NegateMatcher(
             new IdMatcher(new int[] {0}, new int[] {0}));
 
+
         for (int i = 4; i > 0; i--) {
             svf.addStage(m);
-            SpectrumView<Hit, ? > sv = svf.getView();
+            SpectrumView sv = svf.getView();
             assertEquals(i - 1, sv.getProbeCount());
             assertEquals(i - 1, sv.getTransactionCount());
         }
@@ -109,13 +114,13 @@ public class SpectrumViewFactoryTest {
         int filteredTr = 1;
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
 
 
         svf.addStage(new NegateMatcher(new IdMatcher(new int[] {filteredTr}, null)));
-        SpectrumView<Hit, ? > view = svf.getView();
+        SpectrumView view = svf.getView();
 
         assertEquals(s.getProbeCount(), view.getProbeCount());
         assertEquals(s.getTransactionCount() - 1, view.getTransactionCount());
@@ -131,11 +136,12 @@ public class SpectrumViewFactoryTest {
         int filteredPr = 1;
 
 
-        Spectrum<Hit, ? > s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        Spectrum s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
+
 
         svf.addStage(new NegateMatcher(new IdMatcher(null, new int[] {filteredPr})));
-        SpectrumView<Hit, ? > view = svf.getView();
+        SpectrumView view = svf.getView();
 
         assertEquals(s.getProbeCount() - 1, view.getProbeCount());
     }
@@ -145,11 +151,12 @@ public class SpectrumViewFactoryTest {
         int filteredPr = 1;
 
 
-        Spectrum<Hit, ? > s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        Spectrum s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
+
 
         svf.addStage(new NegateMatcher(new IdMatcher(null, new int[] {filteredPr})));
-        SpectrumView<Hit, ? > view = svf.getView();
+        SpectrumView view = svf.getView();
 
         assertEquals(s.getTransactionCount(), view.getTransactionCount());
     }
@@ -159,11 +166,12 @@ public class SpectrumViewFactoryTest {
         int filteredPr = 1;
 
 
-        Spectrum<Hit, ? > s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        Spectrum s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
+
 
         svf.addStage(new NegateMatcher(new IdMatcher(null, new int[] {filteredPr})));
-        SpectrumView<Hit, ? > view = svf.getView();
+        SpectrumView view = svf.getView();
 
         int index = 0;
 
@@ -178,10 +186,11 @@ public class SpectrumViewFactoryTest {
         int filteredPr = 1;
 
 
-        Spectrum<Hit, ? > s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
-        SpectrumViewFactory<Hit, ? > svf = new SpectrumViewFactory(s);
+        Spectrum s = SpectraGenerator.generateSpectrum(10, 5, 10, 0.5, 0.3);
+        SpectrumViewFactory svf = new SpectrumViewFactory(s);
 
         int pid = 0;
+
 
         for (Probe p : s.getProbes()) {
             assertEquals(p.getId(), pid++);

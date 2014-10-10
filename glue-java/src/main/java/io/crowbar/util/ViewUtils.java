@@ -2,7 +2,7 @@ package io.crowbar.util;
 
 import java.util.BitSet;
 
-public class ViewUtils {
+public final class ViewUtils {
     public static int[] toMappingArray (BitSet bs) {
         int[] ret = new int[bs.cardinality()];
         int i = 0;

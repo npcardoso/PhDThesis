@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import flexjson.JSON;
-
+// TODO: Create an interface for Node
 public class Node {
     public static enum Type {
         PACKAGE(0, "."),
@@ -52,7 +52,6 @@ public class Node {
     private int depth;
     private Node parent;
     private List<Node> children = new ArrayList<Node> ();
-    private Map<String, Node> childrenByName = new HashMap<String, Node> ();
 
     Node () {}
 
@@ -124,9 +123,9 @@ public class Node {
 
 
         if (p == null || getDepth() <= fromDepth)
-            return type.getSymbol() + name;
+            return getName();
 
-        return p.getFullNameWithSymbol(fromDepth) + type.getSymbol() + name;
+        return p.getFullNameWithSymbol(fromDepth) + p.getType().getSymbol() + getName();
     }
 
     /**
@@ -189,7 +188,12 @@ public class Node {
      */
     @JSON(include = false)
     public Node getChild (String name) {
-        return childrenByName.get(name);
+        for (Node n : children) {
+            if (n.getName().equals(name))
+                return n;
+        }
+
+        return null;
     }
 
     @JSON(include = false)
@@ -212,6 +216,5 @@ public class Node {
     @JSON(include = false)
     void addChild (Node node) {
         children.add(node);
-        childrenByName.put(node.getName(), node);
     }
 }

@@ -3,7 +3,6 @@ package io.crowbar.diagnostic.spectrum.serializers;
 import static org.junit.Assert.assertTrue;
 import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.diagnostic.spectrum.Transaction;
-import io.crowbar.diagnostic.spectrum.activity.Hit;
 import io.crowbar.diagnostic.spectrum.unserializers.HitSpectrumUnserializer;
 
 import java.util.Scanner;
@@ -34,7 +33,8 @@ public class HitSpectrumSerializerTest {
         String del = "-";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+
 
         assertTrue(HitSpectrumSerializer.serialize(s, del).toString().replaceAll(del, " ").trim().equals(in));
     }
@@ -44,9 +44,10 @@ public class HitSpectrumSerializerTest {
         String del = "-";
 
 
-        Spectrum<Hit, ? > s = HitSpectrumUnserializer.unserialize(new Scanner(in));
+        Spectrum s = HitSpectrumUnserializer.unserialize(new Scanner(in));
 
-        for (Transaction<Hit, ? > t : s.byTransaction()) {
+
+        for (Transaction t : s.byTransaction()) {
             HitSpectrumSerializer.serialize(t, s.getProbeCount());
         }
 

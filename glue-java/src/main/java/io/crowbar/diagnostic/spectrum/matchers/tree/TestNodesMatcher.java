@@ -1,7 +1,5 @@
 package io.crowbar.diagnostic.spectrum.matchers.tree;
 
-import io.crowbar.diagnostic.spectrum.Activity;
-import io.crowbar.diagnostic.spectrum.Metadata;
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.Probe;
 import io.crowbar.diagnostic.spectrum.ProbeType;
@@ -12,7 +10,7 @@ import java.util.TreeSet;
 public class TestNodesMatcher extends AbstractNodeMatcher {
     TreeSet<Integer> permanentIds = new TreeSet<Integer> ();
 
-    public TestNodesMatcher (Spectrum< ? extends Activity, ? extends Metadata> spectrum) {
+    public TestNodesMatcher (Spectrum spectrum) {
         for (Probe p : spectrum.byProbe()) {
             if (p.getType() == ProbeType.TRANSACTION_START)
                 permanentIds.add(p.getNode().getPermanentId());

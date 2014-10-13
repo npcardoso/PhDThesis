@@ -32,6 +32,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
         self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
+            .attr("style","overflow: hidden;")
             .attr("width", dimensions.width)
             .attr("height", dimensions.height)
             .append("g");

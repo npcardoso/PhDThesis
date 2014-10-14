@@ -1,5 +1,11 @@
 function ConfigurationView(data, elementSel, configuration, events) {
     var self = this;
+
+    var scrollState = 0;
+    this.onEnter = function(){
+            $(elementSel).scrollTop(scrollState);
+    };
+
     this.render = function() {
         $(elementSel).html("");
         self.setDimension();
@@ -14,6 +20,10 @@ function ConfigurationView(data, elementSel, configuration, events) {
         self.renderChosenScript();
         this.renderKeyBindings(false);
         this.renderResetButton();
+
+        $(elementSel).scroll(function(){
+            scrollState = $(elementSel).scrollTop();
+        });
     };
 
     this.setDimension = function(){

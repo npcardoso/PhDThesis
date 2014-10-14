@@ -1,6 +1,14 @@
 function Table(data, elementSel, configuration, events) {
     var self = this;
 
+    var scrollState = 0;
+    var rendered = false;
+    this.onEnter = function(){
+        if(rendered){
+            $('.dataTables_scrollBody').scrollTop(scrollState);
+            table.columns.adjust();
+        }
+    };
 
 
     this.getTableRows = function() {
@@ -18,13 +26,14 @@ function Table(data, elementSel, configuration, events) {
     this.resize = function() {
         self.render();
     }
-
+    var table;
     var tableData = this.getTableRows();
     this.render = function() {
+        rendered = true;
 
         $(elementSel).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="tableData"></table>');
 
-        var table = $('#tableData').DataTable({
+        table = $('#tableData').DataTable({
             "scrollY": $(window).height() - 160 + "px",
             "retrieve": true,
             "scrollCollapse": true,
@@ -95,6 +104,10 @@ function Table(data, elementSel, configuration, events) {
                     /* Do stuff with the element that fired the event */
                 });
             }
+        });
+
+        $('.dataTables_scrollBody').scroll(function(){
+            scrollState = $('.dataTables_scrollBody').scrollTop();
         });
 
     }

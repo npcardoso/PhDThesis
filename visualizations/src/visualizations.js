@@ -34,6 +34,9 @@ function Visualizations(configuration, dataManager) {
 
 
     this.prepareVisualization = function(visN) {
+        if(currentVisualization !== undefined && currentVisualization.hasOwnProperty('onExit')){
+            currentVisualization.onExit();
+        }
         configuration.currentConfig.lastViewed = visN;
         configuration.saveConfig();
         currentVisualizationN = visN;
@@ -56,6 +59,10 @@ function Visualizations(configuration, dataManager) {
                 document.onkeydown = currentVisualization.keyBindings.keyPress;
             } else {
                 document.onkeydown = null;
+            }
+
+            if(currentVisualization.hasOwnProperty('onEnter')){
+                currentVisualization.onEnter();
             }
         }
     }

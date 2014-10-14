@@ -1,5 +1,6 @@
 package io.crowbar.instrumentation;
 
+import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
 
 import java.io.IOException;
@@ -88,6 +89,13 @@ public class Agent implements ClassFileTransformer {
                 }
             }
 
+            try {
+            	sun.reflect.Reflection.registerFieldsToFilter(aClass, InjectPass.HIT_VECTOR_NAME);
+            } catch (Throwable t) {
+            	logger.error("Error in Class: {}", c.getName());
+            	logger.error(t,t);
+            }
+            
             ret = c.toBytecode();
             logger.debug("Instrumented Class: {}", c.getName());
         }

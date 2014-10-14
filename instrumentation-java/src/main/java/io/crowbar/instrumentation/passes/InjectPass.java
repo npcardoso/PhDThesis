@@ -28,12 +28,13 @@ public class InjectPass extends AbstractPass {
     }
 
     private static final String HIT_VECTOR_TYPE = "[Z";
+    public static final String HIT_VECTOR_NAME = "__CROWBAR_HIT_VECTOR__";
 
     private final Granularity granularity;
     private final String hitVectorName;
 
     public InjectPass (Granularity granularity) {
-        this(granularity, "__CROWBAR_HIT_VECTOR__");
+        this(granularity, HIT_VECTOR_NAME);
     }
 
     public InjectPass (Granularity granularity,

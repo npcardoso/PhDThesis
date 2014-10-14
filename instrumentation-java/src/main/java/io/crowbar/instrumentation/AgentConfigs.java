@@ -132,9 +132,9 @@ public class AgentConfigs {
             new ActionTakerToTestWrapper(
                 new BlackList(
                     new ModifierMatcher(Modifier.ABSTRACT))), // Skip Abstract Methods
-            new JUnit3TestWrapper(),
+            new TestNGTestWrapper(),
             new JUnit4TestWrapper(),
-            new TestNGTestWrapper());
+            new JUnit3TestWrapper());
         passes.add(twp);
 
         // Recalculates the stack size for all methods

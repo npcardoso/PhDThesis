@@ -23,6 +23,29 @@ extends AbstractSet<Integer> {
         }
     }
 
+    public String getCandidateString () {
+        return this.getCandidateString('<', '>', ',');
+    }
+
+    public String getCandidateString (char tagOpen,
+                                      char tagClose,
+                                      char delim) {
+        StringBuffer cand = new StringBuffer(new String("<"));
+
+
+        Iterator<Integer> it = this.iterator();
+
+        while (it.hasNext()) {
+            Integer c = it.next();
+            cand.append(c.toString());
+            cand.append(delim);
+        }
+
+        cand.setCharAt(cand.length() - 1, tagClose);
+
+        return cand.toString();
+    }
+
     public Candidate (List<Integer> elements) {
         this.elements = new HashSet<Integer> (elements);
     }

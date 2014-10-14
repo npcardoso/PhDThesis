@@ -1,14 +1,12 @@
 package io.crowbar.rest.handlers;
 
 
-import io.crowbar.diagnostic.spectrum.Spectrum;
 import io.crowbar.rest.database.Database;
 import io.crowbar.rest.database.SessionEntry;
 import io.crowbar.rest.models.ApiResponseModel;
 import io.crowbar.rest.models.IndexListModel;
 
 import com.wordnik.swagger.annotations.*;
-import java.util.Map;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

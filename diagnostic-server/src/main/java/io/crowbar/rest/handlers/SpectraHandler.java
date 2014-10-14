@@ -113,7 +113,7 @@ public final class SpectraHandler {
     @ApiResponses({@ApiResponse(code = 404, message = "Invalid spectrum Id.")})
     public ApiResponseModel<SpectrumSummaryModel> getSummary (@ApiParam(value = "The spectrum's id") @PathParam("spectrumId") int spectrumId) {
         SpectrumModel s = getSpectrumPvt(spectrumId);
-        SpectrumSummaryModel ss = new SpectrumSummaryModel(spectrumId, s.getOriginal());
+        SpectrumSummaryModel ss = new SpectrumSummaryModel(s.getSessionId(), s.getOriginal());
 
 
         return new ApiResponseModel<SpectrumSummaryModel> (ss);

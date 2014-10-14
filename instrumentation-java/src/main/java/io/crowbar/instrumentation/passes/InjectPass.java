@@ -2,11 +2,12 @@ package io.crowbar.instrumentation.passes;
 
 import io.crowbar.diagnostic.spectrum.Node;
 import io.crowbar.diagnostic.spectrum.ProbeType;
+import io.crowbar.instrumentation.runtime.Collector;
 import io.crowbar.instrumentation.runtime.ProbeGroup.HitProbe;
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
-import javassist.Modifier;
 import javassist.bytecode.Bytecode;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.CodeIterator;
@@ -14,8 +15,8 @@ import javassist.bytecode.ConstPool;
 import javassist.bytecode.MethodInfo;
 import javassist.bytecode.Opcode;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class InjectPass extends AbstractPass {
@@ -60,10 +61,17 @@ public class InjectPass extends AbstractPass {
 
         if (injected) {
             logger.debug("Adding hit vector to {}", c.getName());
-            CtField f = CtField.make("private static boolean[]  " + hitVectorName + " = " +
-                                     "Collector.instance().getHitVector(" +
-                                     "\"" + c.getName() + "\");", c);
+            CtField f = CtField.make("private static boolean[]  " + hitVectorName + ";", c);
             c.addField(f);
+            
+            CtConstructor initializer = c.makeClassInitializer();
+            StringBuilder sb = new StringBuilder();
+            sb.append("try {");
+            sb.append(hitVectorName + " = Collector.instance().getHitVector(\"" + c.getName() + "\");");
+            sb.append("} catch (Throwable t) {");
+            sb.append(hitVectorName + " = new boolean["+ Collector.instance().getHitVector(c.getName()).length +"];");
+            sb.append("}");
+            initializer.insertBefore(sb.toString());
         }
 
         return Outcome.CONTINUE;

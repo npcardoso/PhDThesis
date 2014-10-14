@@ -121,12 +121,6 @@ public class AgentConfigs {
                                        new BlackList(pMatcher));
         passes.add(fp);
 
-
-        // Injects instrumentation instructions
-        InjectPass inject = new InjectPass(granularity);
-        passes.add(inject);
-
-
         // Wraps unit tests with instrumentation instrunctions
         TestWrapperPass twp = new TestWrapperPass(
             new ActionTakerToTestWrapper(
@@ -137,6 +131,10 @@ public class AgentConfigs {
             new JUnit3TestWrapper());
         passes.add(twp);
 
+        // Injects instrumentation instructions
+        InjectPass inject = new InjectPass(granularity);
+        passes.add(inject);
+        
         // Recalculates the stack size for all methods
         StackSizePass stackSizePass = new StackSizePass();
         passes.add(stackSizePass);

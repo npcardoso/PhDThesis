@@ -1,6 +1,5 @@
 package io.crowbar.instrumentation;
 
-import io.crowbar.instrumentation.passes.InjectPass;
 import io.crowbar.instrumentation.passes.Pass;
 
 import java.io.IOException;
@@ -12,8 +11,8 @@ import java.security.ProtectionDomain;
 import javassist.ClassPool;
 import javassist.CtClass;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class Agent implements ClassFileTransformer {
@@ -87,13 +86,6 @@ public class Agent implements ClassFileTransformer {
                 default:
                     break;
                 }
-            }
-
-            try {
-            	sun.reflect.Reflection.registerFieldsToFilter(aClass, InjectPass.HIT_VECTOR_NAME);
-            } catch (Throwable t) {
-            	logger.error("Error in Class: {}", c.getName());
-            	logger.error(t,t);
             }
             
             ret = c.toBytecode();

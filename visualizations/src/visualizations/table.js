@@ -59,6 +59,10 @@ function Table(data, elementSel, configuration, events) {
         });
 
         table.on('click', 'tr', function() {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            var node = data[row.data()[4]];
+            events.click(node);
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {

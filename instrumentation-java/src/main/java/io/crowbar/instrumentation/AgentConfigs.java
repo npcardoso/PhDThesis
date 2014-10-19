@@ -12,6 +12,7 @@ import io.crowbar.instrumentation.passes.Pass;
 import io.crowbar.instrumentation.passes.StackSizePass;
 import io.crowbar.instrumentation.passes.TestWrapperPass;
 import io.crowbar.instrumentation.passes.matchers.BlackList;
+import io.crowbar.instrumentation.passes.matchers.FieldNameMatcher;
 import io.crowbar.instrumentation.passes.matchers.Matcher;
 import io.crowbar.instrumentation.passes.matchers.ModifierMatcher;
 import io.crowbar.instrumentation.passes.matchers.OrMatcher;
@@ -117,8 +118,11 @@ public class AgentConfigs {
         Matcher mMatcher = new OrMatcher(new ModifierMatcher(Modifier.NATIVE),
                                          new ModifierMatcher(Modifier.INTERFACE));
 
+        Matcher alreadyInstrumented = new FieldNameMatcher(InjectPass.HIT_VECTOR_NAME);
+
         FilterPass fp = new FilterPass(new BlackList(mMatcher),
-                                       new BlackList(pMatcher));
+                                       new BlackList(pMatcher),
+                                       new BlackList(alreadyInstrumented));
         passes.add(fp);
 
         // Wraps unit tests with instrumentation instrunctions
@@ -134,7 +138,7 @@ public class AgentConfigs {
         // Injects instrumentation instructions
         InjectPass inject = new InjectPass(granularity);
         passes.add(inject);
-        
+
         // Recalculates the stack size for all methods
         StackSizePass stackSizePass = new StackSizePass();
         passes.add(stackSizePass);

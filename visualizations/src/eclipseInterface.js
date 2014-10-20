@@ -26,3 +26,8 @@ function sendClickEvent(node) {
         }));
     }
 }
+
+
+function showTrialWatermark(){
+    $('#preview').show();
+}

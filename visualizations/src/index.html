@@ -23,7 +23,8 @@
 	<link rel="stylesheet" href="components/zoom-control/style.css">
 
 	<script src="components/keyBindings/keyBindingsRender.js"></script>
-	<script src="components/keyBindings/keyBindings.js"></script>
+	<script src="compo
+	nents/keyBindings/keyBindings.js"></script>
 	<script src="libs/KeyboardJS/keyboard.js"></script>
 
 
@@ -59,6 +60,14 @@
   padding: 0;
 }
 
+#preview {
+	  position: absolute; /* or absolute */
+  top: 10%;
+  left: 10%;
+  z-index: 999999999;
+  pointer-events:none;
+  display: none;
+}
 
 
 html { overflow: hidden; }
@@ -99,5 +108,6 @@ html { overflow: hidden; }
 	</style>
 </head>
 <body>
+	<div id="preview"><img src="watermark.png" /></div>
 </body>
 </html>

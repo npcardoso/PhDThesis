@@ -1,6 +1,9 @@
+var showTrial = fals;
 function initializeVisualizationREST(jsonData) {
-    $('body').html('');
-
+    $('body').html('<div id="preview"><img src="watermark.png" /></div>');
+    if(showTrial == true){
+        showTrialWatermark();
+    }
     tmp = JSON.parse(jsonData);
 
     window.data_ex = tmp.response
@@ -29,5 +32,6 @@ function sendClickEvent(node) {
 
 
 function showTrialWatermark(){
+    showTrial = true;
     $('#preview').show();
 }

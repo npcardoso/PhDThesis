@@ -11,7 +11,10 @@ function initializeVisualizationREST(jsonData) {
 }
 
 function initializeVisualization(jsonData) {
-    $('body').html('');
+    $('body').html('<div id="preview"><img src="watermark.png" /></div>');
+    if(showTrial == true){
+        showTrialWatermark();
+    }
     window.data_ex = JSON.parse(jsonData);
     init();
 }

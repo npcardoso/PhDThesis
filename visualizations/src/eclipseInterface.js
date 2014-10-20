@@ -1,4 +1,4 @@
-var showTrial = fals;
+var showTrial = false;
 function initializeVisualizationREST(jsonData) {
     $('body').html('<div id="preview"><img src="watermark.png" /></div>');
     if(showTrial == true){

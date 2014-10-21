@@ -38,9 +38,6 @@ function typeInline(node) {
 
 function mixChild(dataArray, parentNode) {
     var child = parentNode.children[0];
-    console.log(dataArray[0]);
-    console.log(parentNode.n);
-    console.log(child.n);
     if (parentNode.n == 'root') {
         parentNode.n = child.n;
     } else {
@@ -224,7 +221,6 @@ function filterData(data, N) {
     var array = getLastLevelNodes(data);
     sortByProbability(array);
     var end = Math.min(N, array.length);
-    console.log(end);
     for (var i = 0; i < end; i++) {
         var nodes = getAncestors(array[i]);
         for (var j = nodes.length - 1; j >= 0; j--) {

@@ -39,7 +39,6 @@ function StateManager(visualization) {
     }
 
     this.undoPossible = function() {
-        console.log(currentNumber);
         return currentNumber > 0;
     }
 
@@ -88,7 +87,6 @@ function StateManager(visualization) {
         if(!self.redoPossible()){
             return;
         }
-        console.log(stack);
         if (self.gotoState(stack[currentNumber+1])) {
             currentNumber++;
             maxRedo--;

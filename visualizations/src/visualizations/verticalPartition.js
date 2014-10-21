@@ -80,7 +80,6 @@ function VerticalPartition(data, elementSel, configuration, events) {
 
 
     this.gotoNode = function(node, animationTime) {
-        console.log(isMovingNode);
         if (isMovingNode)
             return false;
         isMovingNode = true;
@@ -95,7 +94,6 @@ function VerticalPartition(data, elementSel, configuration, events) {
     this.click = function(node) {
         if (d3.event.hasOwnProperty('zoomed')) return;
         events.click(node);
-        console.log(node);
     }
 
     this.resize = function() {

@@ -21,10 +21,6 @@ function initializeVisualization(jsonData) {
 
 
 function sendClickEvent(node) {
-    console.log(JSON.stringify({
-        "type": "click",
-        "nodeId": node.id
-    }));
     if("triggerEvent" in window){
         triggerEvent(JSON.stringify({
             "type": "click",

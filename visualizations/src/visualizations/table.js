@@ -84,7 +84,6 @@ function Table(data, elementSel, configuration, events) {
         }
 
         table.on('click', '.tableCircle', function() {
-            console.log(table);
             var tr = $(this).closest('tr');
             var row = table.row(tr);
 

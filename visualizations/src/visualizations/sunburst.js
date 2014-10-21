@@ -99,7 +99,6 @@ function Sunburst(data, elementSel, configuration, events) {
 
 
     this.gotoNode = function(node, animationTime) {
-        console.log(isMovingNode);
         if (isMovingNode)
             return false;
         isMovingNode = true;
@@ -116,7 +115,6 @@ function Sunburst(data, elementSel, configuration, events) {
 
     this.click = function(node) {
         if (d3.event.hasOwnProperty('zoomed')) return;
-        console.log(node);
         events.click(node);
     };
 

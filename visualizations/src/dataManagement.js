@@ -105,12 +105,21 @@ function getFunction(lastNode){
 function getClass(lastNode){
     var classNode = lastNode.parent.parent;
     var curname = lastNode.parent.parent.n;
-    var name = curname
-    while(isNumber(curname)){
-        classNode.n = classNode.parent
+    var name = curname;
+    while(isNumber(curname) && classNode !== null && classNode !== undefined){
+        if(classNode.hasOwnProperty('parent')){
+            classNode = classNode.parent
+        }
+        else    {
+            break;
+        }
         if(classNode !== null){
             curname = classNode.n;
             name = curname + '$'+name;
+        }
+        else
+        {
+            break;
         }
     }
     return name;

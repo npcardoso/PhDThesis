@@ -15,6 +15,8 @@ public class VisualizationMessages {
         private Tree tree = null;
         private List<Double> scores = null;
 
+        private List<int[]> freqs = null;
+
         /*! Used for JSON deserialization */
         private Request () {}
 
@@ -35,17 +37,23 @@ public class VisualizationMessages {
             }
         }
 
+        private void setFreqs (List<int[]> freqs) {
+            this.freqs = freqs;
+        }
+
         /**
          * @brief Creates a visualization request.
          * @pre tree.size() == scores.size()
          */
         Request (Tree tree,
-                 List<Double> scores) {
+                 List<Double> scores,
+                 List<int[]> freqs) {
             if (tree.size() != scores.size())
                 throw new RuntimeException("tree.size() !=  scores.size() (" + tree.size() + " != " + scores.size() + ")");
 
             setTree(tree);
             setScores(scores);
+            setFreqs(freqs);
         }
 
         @Override
@@ -62,11 +70,17 @@ public class VisualizationMessages {
         public List<Double> getScores () {
             return scores;
         }
+
+        @JSON
+        public List<int[]> getFreqs () {
+            return freqs;
+        }
     }
 
     public static VisualizationMessages.Request issueRequest (Tree tree,
-                                                              List<Double> scores) {
-        return new Request(tree, scores);
+                                                              List<Double> scores,
+                                                              List<int[]> freqs) {
+        return new Request(tree, scores, freqs);
     }
 
     static {

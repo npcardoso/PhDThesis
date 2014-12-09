@@ -42,7 +42,7 @@ public class VisualizationMessagesTest {
         assertTrue(t != null);
         assertTrue(lscores != null);
 
-        VisualizationMessages.Request v = VisualizationMessages.issueRequest(t, lscores);
+        VisualizationMessages.Request v = VisualizationMessages.issueRequest(t, lscores, null);
 
         String jsonRequest = Messages.serialize(v);
 

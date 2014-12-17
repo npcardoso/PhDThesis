@@ -47,6 +47,7 @@ function VerticalPartition(data, elementSel, configuration, events) {
             .attr("y", rect_render.y)
             .attr("width", rect_render.width)
             .attr("height", rect_render.height)
+             .attr("title", "<table><tr><td>Failed test racio:</td><td>NaN%</td></tr><tr><td>Passed test racio</td><td>NaN%</td></tr></table>")
             .style("stroke", "#fff")
             .attr("fill", configuration.gradiante.normal)
             .on("click", self.click)
@@ -66,6 +67,8 @@ function VerticalPartition(data, elementSel, configuration, events) {
         {
             self.keyBindings.setKeyBindings();
         }
+
+        $('rect').tooltipster({arrow: false, positionTracker: true, contentAsHTML: true});
     }
 
     var isMovingNode = false;

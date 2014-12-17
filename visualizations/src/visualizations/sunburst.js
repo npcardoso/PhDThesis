@@ -59,7 +59,7 @@ function Sunburst(data, elementSel, configuration, events) {
             .data(partition.nodes(self.data))
             .enter(partitionLayoutData).append("path")
             .attr("d", arc_render.arc)
-            .attr("title", "<table><tr><td>Failed test racio:</td><td>NaN%</td></tr><tr><td>Passed test racio</td><td>NaN%</td></tr></table>")
+            .attr("title", "<table><tr><td>Failed test ratio:</td><td>NaN%</td></tr><tr><td>Passed test ratio</td><td>NaN%</td></tr></table>")
             .style("stroke", "#fff")
             .style("fill", self.configuration.gradiante.normal)
             .style("fill-rule", "evenodd")

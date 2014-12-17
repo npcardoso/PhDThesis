@@ -80,11 +80,11 @@ function Table(data, elementSel, configuration, events) {
             '<td>'+getPackage(node)+'</td>'+
             '</tr>'+
             '<tr>'+
-            '<td>Number of tests passed:</td>'+
+            '<td>Failed test ratio:</td>'+
             '<td>NaN</td>'+
             '</tr>'+
-                        '<tr>'+
-            '<td>Number of tests failed:</td>'+
+            '<tr>'+
+            '<td>Passed test ratio:</td>'+
             '<td>NaN</td>'+
             '</tr>'+
             '</table><button class="vizb" id="vizb0">Go to Sunburst</button><button class="vizb" id="vizb1">Go to Vertical Partition</button>';

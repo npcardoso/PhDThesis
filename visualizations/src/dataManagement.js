@@ -2,6 +2,7 @@ function dataInlining(data) {
     var tree = data.tree;
     var scores = data.scores;
     var node;
+
     for (var i = tree.length - 1; i >= 0; i--) {
         node = tree[i];
         typeInline(node);
@@ -12,6 +13,11 @@ function dataInlining(data) {
         node.score = (scores[i] >= 0 ? Math.round(scores[i] * 10000) / 100 : -1);
 
         node.children = [];
+    }
+    if(data.hasOwnProperty('freqs')){
+        for (var k = tree.length - 1; k >= 0; k--) {
+            tree[k].freq = data.freqs[k];
+        }
     }
     for (var j = tree.length - 1; j >= 0; j--) {
         node = tree[j];

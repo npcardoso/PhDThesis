@@ -13,9 +13,9 @@ function Sunburst(data, elementSel, configuration, events) {
 
     //Partion layout preparion (Create of the function that computes elements relative size)
     var partition = d3.layout.partition()
-        .value(function(node) {
-            return 1;
-        });
+    .value(function(node) {
+        return 1;
+    });
 
 
     var partitionLayoutData = partition.nodes(self.data);
@@ -39,39 +39,47 @@ function Sunburst(data, elementSel, configuration, events) {
         self.stateManager.initRender(elementSel);
 
         var zoomElement = element.append("svg")
-            .attr("class", "sunBurstArea")
-            .attr("width", dimensions.width)
-            .attr("height", dimensions.height + 15)
-            .append("g")
-            .attr("transform", centerTranslation());
+        .attr("class", "sunBurstArea")
+        .attr("width", dimensions.width)
+        .attr("height", dimensions.height + 15)
+        .append("g")
+        .attr("transform", centerTranslation());
 
         zoomElement.append("rect")
-            .attr("class", "overlay")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .attr("transform", "translate(" + (-dimensions.width / 2) + "," + (-dimensions.height / 2) + ")")
-            .attr("fill", "none")
-            .attr("pointer-events", "all");
+        .attr("class", "overlay")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("transform", "translate(" + (-dimensions.width / 2) + "," + (-dimensions.height / 2) + ")")
+        .attr("fill", "none")
+        .attr("pointer-events", "all");
 
         svg = zoomElement.append("g");
 
         path = svg.selectAll("path")
-            .data(partition.nodes(self.data))
-            .enter(partitionLayoutData).append("path")
-            .attr("d", arc_render.arc)
-            .attr("title", "<table><tr><td>Failed test ratio:</td><td>NaN%</td></tr><tr><td>Passed test ratio</td><td>NaN%</td></tr></table>")
-            .style("stroke", "#fff")
-            .style("fill", self.configuration.gradiante.normal)
-            .style("fill-rule", "evenodd")
-            .on("click", self.click)
-            .on("dblclick", self.dblclick)
-            .on("mouseover", self.nodeInfoDisplay.mouseover)
-            .on("mouseleave", self.nodeInfoDisplay.mouseleave);
+        .data(partition.nodes(self.data))
+        .enter(partitionLayoutData).append("path")
+        .attr("d", arc_render.arc)
+        .attr("title", function(node){
+            if(node.hasOwnProperty('freq')){
+                return '<table><tr><td>Failed test ratio:</td><td>'+Number(100*node.freq[3]/(node.freq[1]+node.freq[3])).toFixed(2)+'%</td></tr><tr><td>Passed test ratio:</td><td>'+Number(100*node.freq[2]/(node.freq[0]+node.freq[2])).toFixed(2)+'%</td></tr></table>';
+            }
+            else
+            {
+                return "";
+            }
+        })
+        .style("stroke", "#fff")
+        .style("fill", self.configuration.gradiante.normal)
+        .style("fill-rule", "evenodd")
+        .on("click", self.click)
+        .on("dblclick", self.dblclick)
+        .on("mouseover", self.nodeInfoDisplay.mouseover)
+        .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
         self.nodeInfoDisplay.setClicked(self.data);
         self.nodeInfoDisplay.setPath(path);
 
-       
+
         self.zoomEvents = ZoomController(elementSel, zoomElement, svg, self.configuration);
 
         if (self.keyBindings === null) {
@@ -107,11 +115,11 @@ function Sunburst(data, elementSel, configuration, events) {
         isMovingNode = true;
         self.nodeInfoDisplay.setClicked(node);
         path.transition()
-            .duration(animationTime)
-            .attrTween("d", arc_render.arcTween(node))
-            .each("end", function() {
-                isMovingNode = false;
-            });
+        .duration(animationTime)
+        .attrTween("d", arc_render.arcTween(node))
+        .each("end", function() {
+            isMovingNode = false;
+        });
         self.clicked = node;
         return true;
     };
@@ -141,33 +149,33 @@ function ArcRender(width, height) {
     var radius = Math.min(width, height + 15) / 2;
 
     var x = d3.scale.linear()
-        .range([0, 2 * Math.PI]);
+    .range([0, 2 * Math.PI]);
 
     var y = d3.scale.pow().exponent(0.75)
-        .range([0, radius]);
+    .range([0, radius]);
 
     //Returns Function that computes an svg arc for specied dimensions
     var arc = d3.svg.arc()
-        .startAngle(function(d) {
-            return Math.max(0, Math.min(2 * Math.PI, x(d.x)));
-        })
-        .endAngle(function(d) {
-            return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx)));
-        })
-        .innerRadius(function(d) {
-            return Math.max(0, y(d.y));
-        })
-        .outerRadius(function(d) {
-            return Math.max(0, y(d.y + d.dy));
-        });
+    .startAngle(function(d) {
+        return Math.max(0, Math.min(2 * Math.PI, x(d.x)));
+    })
+    .endAngle(function(d) {
+        return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx)));
+    })
+    .innerRadius(function(d) {
+        return Math.max(0, y(d.y));
+    })
+    .outerRadius(function(d) {
+        return Math.max(0, y(d.y + d.dy));
+    });
 
     this.arc = arc;
 
     //Computes the arc animation
     this.arcTween = function(node) {
         var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]),
-            yd = d3.interpolate(y.domain(), [node.y, 1]),
-            yr = d3.interpolate(y.range(), [node.y ? 20 : 0, radius]);
+        yd = d3.interpolate(y.domain(), [node.y, 1]),
+        yr = d3.interpolate(y.range(), [node.y ? 20 : 0, radius]);
         return function(node, i) {
             return i ? function(t) {
                 return arc(node);

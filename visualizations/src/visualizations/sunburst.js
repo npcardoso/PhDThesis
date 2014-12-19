@@ -31,6 +31,7 @@ function Sunburst(data, elementSel, configuration, events) {
 
 
     self.keyBindings = null;
+    var activations = ActivationsInfo(configuration);
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
         element.html('');
@@ -59,15 +60,7 @@ function Sunburst(data, elementSel, configuration, events) {
         .data(partition.nodes(self.data))
         .enter(partitionLayoutData).append("path")
         .attr("d", arc_render.arc)
-        .attr("title", function(node){
-            if(node.hasOwnProperty('freq')){
-                return '<table><tr><td>Failed test ratio:</td><td>'+Number(100*node.freq[3]/(node.freq[1]+node.freq[3])).toFixed(2)+'%</td></tr><tr><td>Passed test ratio:</td><td>'+Number(100*node.freq[2]/(node.freq[0]+node.freq[2])).toFixed(2)+'%</td></tr></table>';
-            }
-            else
-            {
-                return "";
-            }
-        })
+        .attr("title", activations.tooltipContent)
         .style("stroke", "#fff")
         .style("fill", self.configuration.gradiante.normal)
         .style("fill-rule", "evenodd")
@@ -90,7 +83,7 @@ function Sunburst(data, elementSel, configuration, events) {
             self.keyBindings.setKeyBindings();
         }
         //tooltip instanciation
-        $('path').tooltipster({arrow: false, positionTracker: true, contentAsHTML: true});
+        activations.renderTooltip($('path'));
     };
 
     var centerTranslation = function() {

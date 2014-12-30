@@ -4,10 +4,10 @@ function ActivationsInfo(configuration) {
 	self.renderTableLines = function(node){
 		if(node.hasOwnProperty('freq')){
 			hasFreqs = true;
-			return '<tr><td>Non-activations in passing tests:</td><td>'+node.freq[0]+'</td></tr>'
-			+'<tr><td>Non-activations in failing tests:</td><td>'+node.freq[1]+'</td></tr>'
-			+'<tr><td>Activations in passing tests:</td><td>'+node.freq[2]+'</td></tr>'
-			+'<tr><td>Activitaions in failing tests:</td><td>'+node.freq[3]+'</td></tr>';
+			return '<tr><td>Non involvement in passing tests:</td><td>'+node.freq[0]+'</td></tr>'
+			+'<tr><td>Non involvement in failing tests:</td><td>'+node.freq[1]+'</td></tr>'
+			+'<tr><td>Involvement in passing tests:</td><td>'+node.freq[2]+'</td></tr>'
+			+'<tr><td>Involvement in failing tests:</td><td>'+node.freq[3]+'</td></tr>';
 
 		}
 		else

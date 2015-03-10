@@ -4,7 +4,7 @@
 #include "similarity.h"
 #include "mhs/cutoff.h"
 #include "mhs/parallelization.h"
-#include "../diagnostic_system.h"
+#include "../candidate_generator.h"
 #include "../utils/time.h"
 
 namespace diagnostic {
@@ -40,8 +40,9 @@ public:
                          const t_spectrum_filter & filter_first,
                          const t_spectrum_filter & filter_second);
 
-    inline virtual std::string get_name () const { return "mhs2"; }
-
+    inline virtual std::string get_name () const {
+        return "mhs2";
+    }
 
 protected:
     virtual void json_configs (t_configs & out) const;
@@ -61,9 +62,10 @@ public:
                               t_ret_type & D,
                               const t_spectrum_filter * filter=NULL) const;
 
-    inline virtual std::string to_string() const {
+    inline virtual std::string to_string () const {
         return "t_mhs_parallel";
     }
+
 private:
     class t_args {
 public:

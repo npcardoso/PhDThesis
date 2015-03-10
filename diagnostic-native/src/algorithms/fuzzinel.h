@@ -1,5 +1,6 @@
 #ifndef __FUZZINEL_H_ceba8192faeec08ddc2b9f84ca6b52db29dbae59__
 #define __FUZZINEL_H_ceba8192faeec08ddc2b9f84ca6b52db29dbae59__
+
 #include "../diagnostic_system.h"
 #include "../types.h"
 
@@ -9,12 +10,10 @@
 
 namespace diagnostic {
 namespace algorithms {
-
 // Arbitrary Precision
 namespace mp = boost::multiprecision;
-typedef mp::number<mp::mpfr_float_backend<300>, mp::et_off>  t_probability_mp;
+typedef mp::number<mp::mpfr_float_backend<300>, mp::et_off> t_probability_mp;
 typedef t_probability_mp t_goodness_mp;
-
 
 
 class t_fuzzinel : public t_candidate_ranker {
@@ -36,7 +35,7 @@ public:
         return PROBABILITY;
     }
 
-    inline virtual std::string get_name() const {
+    inline virtual std::string get_name () const {
         return "fuzzinel";
     }
 

@@ -35,6 +35,8 @@ public final class ProbeGroup {
             if (hitVector == null)
                 return false;
 
+            // System.out.println("getActivation: " + nodeId + ", " + id + ", " + localId + ", " + hitVector + ": " + hitVector.length);
+
             return hitVector[localId];
         }
 
@@ -56,7 +58,12 @@ public final class ProbeGroup {
     public HitProbe register (int globalId,
                               int nodeId,
                               ProbeType type) {
-        assert hitVector == null;
+        if (hitVector != null) {
+            System.out.println("New Probe: " + nodeId + ", " + globalId + ", " + size + ", " + hitVector);
+            // throw new IllegalStateException("The hit vector was already initialized");
+        }
+
+
         return new HitProbe(globalId, size++, nodeId, type);
     }
 

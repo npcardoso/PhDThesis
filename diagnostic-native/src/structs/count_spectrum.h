@@ -2,18 +2,17 @@
 #define __COUNT_SPECTRUM_H_06d5fd34e1ffdf10f1925f830cad5b1473cdad22__
 
 #include "../types.h"
-#include "../structs/spectrum.h"
+#include "../structs/basic_spectrum.h"
 
 
 namespace diagnostic {
-
 class t_count_spectrum : public t_basic_spectrum {
 public:
 
     inline t_count_spectrum () {}
 
     inline t_count_spectrum (t_count component_count,
-                            t_count transaction_count) {
+                             t_count transaction_count) {
         set_count(component_count, transaction_count);
     }
 

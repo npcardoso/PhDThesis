@@ -2,16 +2,15 @@
 #define __TRIE_H_037b1d52aa2e47a40fa8548c585fcab5ed49afef__
 
 #include "../candidate.h"
-#include "../serialization/json.h"
 #include "../types.h"
 #include "../utils/boost.h"
+#include "../utils/json.h"
 
 #include <boost/lexical_cast.hpp>
 #include <iterator>
 #include <map>
 
 namespace diagnostic {
-
 class t_trie_iterator;
 
 
@@ -34,24 +33,18 @@ public:
     typedef t_iterator iterator; // Compatibility with stl
     typedef t_iterator const_iterator; // Compatibility with stl
 
-    inline t_trie () {
-        exists = false;
-        parent = NULL;
-        elements = 0;
-    }
+    t_trie ();
 
     bool add (const t_value_type & candidate,
               bool purge_composites=true,
               bool check_composite=true);
 
-    inline bool is_composite (const t_value_type & candidate,
-                              bool strict=false) const {
-        return is_composite(candidate, candidate.begin(), strict);
-    }
+    void clear ();
 
-    inline t_count size () const {
-        return elements;
-    }
+    bool is_composite (const t_value_type & candidate,
+                       bool strict=false) const;
+
+    t_count size () const;
 
     std::ostream & generic_write (std::ostream & out,
                                   std::string prefix,
@@ -61,46 +54,17 @@ public:
                                   std::string cand_suffix,
                                   std::string cand_separator) const;
 
-    inline std::ostream & write (std::ostream & out) const {
-        return generic_write(out,
-                             TRIE_NORMAL_PREFIX,
-                             TRIE_NORMAL_SUFFIX,
-                             TRIE_NORMAL_SEP,
-                             CANDIDATE_NORMAL_PREFIX,
-                             CANDIDATE_NORMAL_SUFFIX,
-                             CANDIDATE_NORMAL_SEP);
-    }
+    std::ostream & write (std::ostream & out) const;
 
-    inline std::ostream & pretty_write (std::ostream & out) const {
-        return generic_write(out,
-                             TRIE_PRETTY_PREFIX,
-                             TRIE_PRETTY_SUFFIX,
-                             TRIE_PRETTY_SEP,
-                             CANDIDATE_PRETTY_PREFIX,
-                             CANDIDATE_PRETTY_SUFFIX,
-                             CANDIDATE_PRETTY_SEP);
-    }
+    std::ostream & pretty_write (std::ostream & out) const;
 
-    inline std::ostream & latex_write (std::ostream & out) const {
-        return generic_write(out,
-                             TRIE_LATEX_PREFIX,
-                             TRIE_LATEX_SUFFIX,
-                             TRIE_LATEX_SEP,
-                             CANDIDATE_LATEX_PREFIX,
-                             CANDIDATE_LATEX_SUFFIX,
-                             CANDIDATE_LATEX_SEP);
-    }
+    std::ostream & latex_write (std::ostream & out) const;
 
     virtual std::ostream & json (std::ostream & out) const;
 
     iterator begin () const;
     iterator end () const;
 
-    inline void clear () {
-        children.clear();
-        exists = false;
-        elements = 0;
-    }
 
     bool operator == (const t_trie & t) const;
     friend class t_trie_iterator;
@@ -127,8 +91,10 @@ private:
     t_count elements;
 };
 
-std::ostream & operator << (std::ostream & out, const t_trie & trie);
-std::istream & operator >> (std::istream & in, t_trie & trie);
+std::ostream & operator << (std::ostream & out,
+                            const t_trie & trie);
+std::istream & operator >> (std::istream & in,
+                            t_trie & trie);
 
 
 class t_trie_iterator : public std::iterator<std::forward_iterator_tag, // type of iterator

@@ -51,6 +51,7 @@ public final class Collector {
             listener.registerNode(n.getId(), parentId, name, type);
         }
         catch (Throwable e) {
+            logger.error("name: {}, type: {}, parentId: {}", name, type, parentId);
             logger.error(e, e);
         }
         return n;
@@ -68,6 +69,7 @@ public final class Collector {
             listener.registerProbe(p.getId(), p.getNodeId(), p.getType());
         }
         catch (Throwable e) {
+            logger.error("groupName: {}, nodeId: {}, type: {}", groupName, nodeId, type);
             logger.error(e, e);
         }
         return p;
@@ -81,6 +83,7 @@ public final class Collector {
             listener.startTransaction(probeId);
         }
         catch (Throwable e) {
+            logger.error("probeId: {}", probeId);
             logger.error(e, e);
         }
     }
@@ -90,6 +93,7 @@ public final class Collector {
             listener.endTransaction(probeId, hitVector.get());
         }
         catch (Throwable e) {
+            logger.error("probeId: {}", probeId);
             logger.error(e, e);
         }
 
@@ -113,11 +117,13 @@ public final class Collector {
             listener.oracle(probeId, error, confidence);
         }
         catch (Throwable e) {
+            logger.error("probeId: {}, error: {}, confidence: {}", probeId);
             logger.error(e, e);
         }
     }
 
     public synchronized boolean[] getHitVector (String className) {
+        // return new boolean[1000];
         return hitVector.get(className);
     }
 

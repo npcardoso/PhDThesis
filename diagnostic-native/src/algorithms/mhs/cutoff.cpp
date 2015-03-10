@@ -10,7 +10,7 @@ bool t_basic_cutoff::stop (t_count depth) const {
     return false;
 }
 
-bool t_basic_cutoff::stop (const t_rank & rank,
+bool t_basic_cutoff::stop (const t_single_component_ranking & rank,
                            t_id pos,
                            const t_trie & D,
                            t_time_interval time_elapsed) const {
@@ -32,7 +32,7 @@ bool t_cutoff::stop (t_count depth) const {
     return false;
 }
 
-bool t_cutoff::stop (const t_rank & rank,
+bool t_cutoff::stop (const t_single_component_ranking & rank,
                      t_id pos,
                      const t_trie & D,
                      t_time_interval time_elapsed) const {

@@ -12,7 +12,7 @@ public:
     typedef t_algorithm::t_configs t_configs;
 
     virtual bool stop (t_count depth) const;
-    virtual bool stop (const t_rank & rank,
+    virtual bool stop (const t_single_component_ranking & rank,
                        t_id pos,
                        const t_trie & D,
                        t_time_interval time_elapsed) const;
@@ -22,11 +22,10 @@ public:
 
 protected:
     inline virtual ~t_basic_cutoff () {}
-
 };
 
 class t_no_cutoff : public t_basic_cutoff  {
-    public:
+public:
     inline virtual void json_configs (t_configs & out) const {}
 };
 
@@ -35,7 +34,7 @@ public:
     t_cutoff ();
     virtual bool stop (t_count depth) const;
 
-    virtual bool stop (const t_rank & rank,
+    virtual bool stop (const t_single_component_ranking & rank,
                        t_id pos,
                        const t_trie & D,
                        t_time_interval time_elapsed) const;

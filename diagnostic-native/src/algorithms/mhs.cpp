@@ -69,7 +69,7 @@ void t_mhs::calculate (const t_spectrum & spectrum,
             spectrum.get_component_count(&filter);
 
         /* Ranking */
-        t_ptr<t_rank> rank = (* similarity)(spectrum, & filter);
+        t_ptr<t_single_component_ranking> rank = (*similarity)(spectrum, &filter);
         rank->sort();
 
         /* Remove components that will not generate new candidates */
@@ -77,8 +77,7 @@ void t_mhs::calculate (const t_spectrum & spectrum,
             if (rank->get_score(remaining_components - 1) < EPSILON) {
                 filter.components.filter(rank->get_component(remaining_components - 1));
                 remaining_components--;
-            }
-            else
+            } else
                 break;
         }
 
@@ -192,12 +191,9 @@ void t_mhs::combine (const t_spectrum & spectrum,
     }
 }
 
-
-void t_mhs::json_configs (t_configs & out) const{
+void t_mhs::json_configs (t_configs & out) const {
     cutoff->json_configs(out);
 }
-
-
 
 t_mhs_parallel::t_mhs_parallel (const t_const_ptr<t_parallelization_factory> pf,
                                 t_count n_threads) {
@@ -218,11 +214,10 @@ void t_mhs_parallel::operator () (const t_spectrum & spectrum,
     list<thread> threads;
     list<t_args> args;
 
-
     for (t_id i = 0; i < n_threads; i++) {
         args.push_back(t_args());
 
-        t_ptr<t_parallelization> p((* pf)(i, n_threads));
+        t_ptr<t_parallelization> p((*pf)(i, n_threads));
         t_ptr<t_mhs> mhs(new t_mhs(*this));
         mhs->set_parallelization(p);
 

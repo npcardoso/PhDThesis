@@ -1,18 +1,16 @@
 #include "spectrum.h"
 
 #include "trie.h"
-#include "../exceptions.h"
 
 #include <boost/foreach.hpp>
 #include <cmath>
 #include <iomanip>
 
 namespace diagnostic {
-
 t_probability t_spectrum::get_activation_rate (const t_spectrum_filter * filter) const {
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
+                           get_transaction_count(),
+                           filter);
 
     t_probability hit_count = 0;
 
@@ -36,7 +34,7 @@ t_count t_spectrum::get_suspicious_components_count (const t_spectrum_filter * f
 }
 
 t_count t_spectrum::get_suspicious_components_count (t_candidate & suspicious,
-                                                    const t_spectrum_filter * filter) const {
+                                                     const t_spectrum_filter * filter) const {
     t_spectrum_filter tmp;
 
 
@@ -46,8 +44,8 @@ t_count t_spectrum::get_suspicious_components_count (t_candidate & suspicious,
     tmp.components.filter_all(suspicious);
 
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          &tmp);
+                           get_transaction_count(),
+                           &tmp);
 
     while (it.transaction.next()) {
         if (!is_error(it.transaction.get())) // TODO: Improve performance by maintaining a filter of all failing transactions
@@ -66,15 +64,15 @@ t_count t_spectrum::get_suspicious_components_count (t_candidate & suspicious,
 }
 
 bool t_spectrum::is_active (t_component_id component,
-                           t_transaction_id transaction) const {
+                            t_transaction_id transaction) const {
     return get_activations(component, transaction) > 0;
 }
 
 bool t_spectrum::is_candidate (const t_candidate & candidate,
-                              const t_spectrum_filter * filter) const {
+                               const t_spectrum_filter * filter) const {
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
+                           get_transaction_count(),
+                           filter);
 
 
     while (it.transaction.next()) {
@@ -100,7 +98,7 @@ bool t_spectrum::is_candidate (const t_candidate & candidate,
 
 // FIXME: Not very efficient
 bool t_spectrum::is_minimal_candidate (const t_candidate & candidate,
-                                      const t_spectrum_filter * filter) const {
+                                       const t_spectrum_filter * filter) const {
     if (!is_candidate(candidate, filter))
         return false;
 
@@ -118,8 +116,8 @@ bool t_spectrum::is_minimal_candidate (const t_candidate & candidate,
 
 bool t_spectrum::is_invalid (const t_spectrum_filter * filter) const {
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
+                           get_transaction_count(),
+                           filter);
 
 
     while (it.transaction.next()) {
@@ -143,8 +141,8 @@ bool t_spectrum::is_invalid (const t_spectrum_filter * filter) const {
 
 bool t_spectrum::is_all_pass (const t_spectrum_filter * filter) const {
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
+                           get_transaction_count(),
+                           filter);
 
 
     // TODO: Improve performance by maintaining a filter of all failing transactions
@@ -160,10 +158,10 @@ t_confidence t_spectrum::get_confidence (t_transaction_id transaction) const {
 }
 
 bool t_spectrum::get_invalid (t_invalid_transactions & ret,
-                             const t_spectrum_filter * filter) const {
+                              const t_spectrum_filter * filter) const {
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
+                           get_transaction_count(),
+                           filter);
 
 
     ret.clear();
@@ -208,8 +206,8 @@ void t_spectrum::get_minimal_conflicts (t_spectrum_filter & f) const {
     std::vector<t_conflict_size> conflict_sizes;
 
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          &f);
+                           get_transaction_count(),
+                           &f);
 
     // Filter non-error transactions
     // TODO: Move to a separate function
@@ -269,23 +267,23 @@ void t_spectrum::set_transaction_count (t_count transaction_count) {
 }
 
 t_confidence t_spectrum::set_confidence (t_transaction_id transaction,
-                                        t_confidence confidence) {
+                                         t_confidence confidence) {
     assert(transaction > 0);
     assert(transaction <= get_transaction_count());
     assert(confidence >= 0);
     assert(confidence <= 1);
 
-    throw e_not_implemented();
+    throw;
 }
 
 std::ostream & t_spectrum::print (std::ostream & out,
-                                 const t_spectrum_filter * filter) const {
+                                  const t_spectrum_filter * filter) const {
     assert(filter ? (filter->components.size() <= get_component_count()) : true);
     assert(filter ? (filter->transactions.size() <= get_transaction_count()) : true);
 
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
+                           get_transaction_count(),
+                           filter);
 
     t_count width_comp = log10(get_component_count());
     t_count width_tran = 2 + log10(get_transaction_count());
@@ -320,9 +318,9 @@ std::ostream & t_spectrum::print (std::ostream & out,
         while (it.component.next())
             out << std::setw(width_comp) << get_activations(it.component.get(), it.transaction.get()) << " |";
 
-        out << "| " << is_error(it.transaction.get())
-            << "  (" << get_error(it.transaction.get())
-            << "," << get_confidence(it.transaction.get()) << ")\n";
+        out << "| " << is_error(it.transaction.get()) <<
+            "  (" << get_error(it.transaction.get()) <<
+            "," << get_confidence(it.transaction.get()) << ")\n";
     }
 
     fill = out.fill('-');
@@ -339,13 +337,13 @@ std::ostream & t_spectrum::print (std::ostream & out,
 }
 
 std::ostream & t_spectrum::write (std::ostream & out,
-                                 const t_spectrum_filter * filter) const {
+                                  const t_spectrum_filter * filter) const {
     assert(filter ? (filter->components.size() <= get_component_count()) : true);
     assert(filter ? (filter->transactions.size() <= get_transaction_count()) : true);
 
     t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
+                           get_transaction_count(),
+                           filter);
     out << get_component_count(filter) << " " << get_transaction_count(filter) << "\n";
 
     while (it.transaction.next()) {
@@ -361,113 +359,16 @@ std::ostream & t_spectrum::write (std::ostream & out,
 std::istream & t_spectrum::read (std::istream & in) {
     throw;
 }
-
-t_basic_spectrum::t_basic_spectrum () {
-    set_transaction_count(0);
-    set_component_count(0);
-}
-
-t_basic_spectrum::t_basic_spectrum (t_count component_count,
-                                  t_count transaction_count) {
-    set_transaction_count(transaction_count);
-    this->transaction_count = transaction_count;
-    set_component_count(component_count);
-}
-
-t_count t_basic_spectrum::get_error_count (const t_spectrum_filter * filter) const {
-    // FIXME: Improve performance
-    t_count total_errors = 0;
-
-    t_spectrum_iterator it(get_component_count(),
-                          get_transaction_count(),
-                          filter);
-
-
-    while (it.transaction.next())
-        if (is_error(it.transaction.get()))
-            total_errors++;
-
-    return total_errors;
-}
-
-t_count t_basic_spectrum::get_component_count (const t_spectrum_filter * filter) const {
-    assert(!filter || filter->components.size() <= component_count);
-
-    if (filter)
-        return component_count - filter->components.get_filtered_count();
-
-    return component_count;
-}
-
-t_count t_basic_spectrum::get_transaction_count (const t_spectrum_filter * filter) const {
-    assert(!filter || filter->transactions.size() <= transaction_count);
-
-    if (filter)
-        return transaction_count - filter->transactions.get_filtered_count();
-
-    return transaction_count;
-}
-
-void t_basic_spectrum::set_count (t_count component_count,
-                                 t_count transaction_count) {
-    this->component_count = component_count;
-
-    this->transaction_count = transaction_count;
-
-    errors.resize(transaction_count, 0);
-    confidences.resize(transaction_count, 1);
-}
-
-t_error t_basic_spectrum::get_error (t_transaction_id transaction) const {
-    assert(transaction > 0);
-    assert(transaction <= transaction_count);
-
-    return errors[transaction - 1];
-}
-
-t_confidence t_basic_spectrum::get_confidence (t_transaction_id transaction) const {
-    assert(transaction > 0);
-    assert(transaction <= transaction_count);
-
-    return confidences[transaction - 1];
-}
-
-
-bool t_basic_spectrum::is_error (t_transaction_id transaction) const {
-    assert(transaction > 0);
-    assert(transaction <= transaction_count);
-
-    return get_error(transaction) * get_confidence(transaction) >= 1; // TODO: arbitrary threshold
-}
-
-void t_basic_spectrum::set_error (t_transaction_id transaction,
-                                 t_error error) {
-    assert(transaction > 0);
-    assert(transaction <= transaction_count);
-    assert(error >= 0);
-    assert(error <= 1);
-
-    errors[transaction - 1] = error;
-}
-
-t_confidence t_basic_spectrum::set_confidence (t_transaction_id transaction,
-                                              t_confidence confidence) {
-    assert(transaction > 0);
-    assert(transaction <= transaction_count);
-    assert(confidence >= 0);
-    assert(confidence <= 1);
-
-    return confidences[transaction - 1] = confidence;
-}
-
 }
 
 namespace std {
-std::istream & operator >> (std::istream & in, diagnostic::t_spectrum & spectrum) {
+std::istream & operator >> (std::istream & in,
+                            diagnostic::t_spectrum & spectrum) {
     return spectrum.read(in);
 }
 
-std::ostream & operator << (std::ostream & out, const diagnostic::t_spectrum & spectrum) {
+std::ostream & operator << (std::ostream & out,
+                            const diagnostic::t_spectrum & spectrum) {
     return spectrum.write(out);
 }
 }

@@ -5,20 +5,31 @@
 
 namespace diagnostic {
 namespace configuration {
+/**
+ * This class stores the algorithm name and configurations.  It is
+ * mainly used as representation for the JSON's algorithm
+ * object.
+ */
 class t_algorithm {
-    public:
+public:
     typedef std::map<std::string, std::string> t_configs;
 
     t_algorithm (std::string name,
                  t_const_ptr<t_configs> configs);
 
-    const std::string & get_name() const;
+    /**
+     * @brief Returns the algorithm's name.
+     */
+    const std::string & get_name () const;
 
-    const t_configs & get_configs() const;
+    /**
+     * @brief Returns the algorithm's configurations.
+     */
+    const t_configs & get_configs () const;
 
     static t_ptr<t_configs> new_configs ();
 
-    private:
+private:
     std::string name;
     t_const_ptr<t_configs> configs;
 };

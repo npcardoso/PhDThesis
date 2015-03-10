@@ -3,12 +3,13 @@
 #include <cassert>
 #include <boost/foreach.hpp>
 namespace diagnostic {
-
-std::ostream & operator << (std::ostream & out, const t_trie & trie) {
+std::ostream & operator << (std::ostream & out,
+                            const t_trie & trie) {
     return trie.write(out);
 }
 
-std::istream & operator >> (std::istream & in, t_trie & trie) {
+std::istream & operator >> (std::istream & in,
+                            t_trie & trie) {
     while (true) {
         t_trie::t_value_type c;
         in >> c;
@@ -20,6 +21,12 @@ std::istream & operator >> (std::istream & in, t_trie & trie) {
     }
 
     return in;
+}
+
+t_trie::t_trie () {
+    exists = false;
+    parent = NULL;
+    elements = 0;
 }
 
 bool t_trie::add (const t_value_type & candidate,
@@ -46,6 +53,21 @@ bool t_trie::add (const t_value_type & candidate,
     }
 
     return false;
+}
+
+void t_trie::clear () {
+    children.clear();
+    exists = false;
+    elements = 0;
+}
+
+bool t_trie::is_composite (const t_value_type & candidate,
+                           bool strict) const {
+    return is_composite(candidate, candidate.begin(), strict);
+}
+
+t_count t_trie::size () const {
+    return elements;
 }
 
 bool t_trie::purge_composites (const t_value_type & candidate,
@@ -120,26 +142,52 @@ std::ostream & t_trie::generic_write (std::ostream & out,
                                       std::string cand_prefix,
                                       std::string cand_suffix,
                                       std::string cand_separator) const {
-    bool first = true;
+    t_group group;
 
 
-    out << prefix;
-
-    BOOST_FOREACH(const value_type &d,
-                  *this) {
-        if (!first)
-            out << separator;
-
-        d.generic_write(out, cand_prefix, cand_suffix, cand_separator);
-        first = false;
+    group.open(out, prefix, suffix, separator);
+    BOOST_FOREACH(const auto & el, *this) {
+        group.element(out);
+        el.generic_write(out, cand_prefix, cand_suffix, cand_separator);
     }
-    return out << suffix;
+    group.close(out);
+
+    return out;
+}
+
+std::ostream & t_trie::write (std::ostream & out) const {
+    return generic_write(out,
+                         TRIE_NORMAL_PREFIX,
+                         TRIE_NORMAL_SUFFIX,
+                         TRIE_NORMAL_SEP,
+                         CANDIDATE_NORMAL_PREFIX,
+                         CANDIDATE_NORMAL_SUFFIX,
+                         CANDIDATE_NORMAL_SEP);
+}
+
+std::ostream & t_trie::pretty_write (std::ostream & out) const {
+    return generic_write(out,
+                         TRIE_PRETTY_PREFIX,
+                         TRIE_PRETTY_SUFFIX,
+                         TRIE_PRETTY_SEP,
+                         CANDIDATE_PRETTY_PREFIX,
+                         CANDIDATE_PRETTY_SUFFIX,
+                         CANDIDATE_PRETTY_SEP);
+}
+
+std::ostream & t_trie::latex_write (std::ostream & out) const {
+    return generic_write(out,
+                         TRIE_LATEX_PREFIX,
+                         TRIE_LATEX_SUFFIX,
+                         TRIE_LATEX_SEP,
+                         CANDIDATE_LATEX_PREFIX,
+                         CANDIDATE_LATEX_SUFFIX,
+                         CANDIDATE_LATEX_SEP);
 }
 
 std::ostream & t_trie::json (std::ostream & out) const {
     return json_write_container(out, *this, "[", "]");
 }
-
 
 t_trie::iterator t_trie::begin () const {
     return iterator(this);

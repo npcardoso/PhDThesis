@@ -11,7 +11,6 @@
 #include <boost/shared_ptr.hpp>
 
 namespace diagnostic {
-
 class t_spectrum {
 public:
     typedef std::set<t_transaction_id> t_invalid_transactions;
@@ -97,43 +96,6 @@ public:
     const T & requires () const;
 };
 
-class t_basic_spectrum : public t_spectrum {
-public:
-
-    t_basic_spectrum ();
-
-    t_basic_spectrum (t_count component_count,
-                     t_count transaction_count);
-
-    // Gets
-
-    virtual t_count get_error_count (const t_spectrum_filter * filter=NULL) const;
-    virtual t_count get_component_count (const t_spectrum_filter * filter=NULL) const;
-    virtual t_count get_transaction_count (const t_spectrum_filter * filter=NULL) const;
-    virtual t_error get_error (t_transaction_id transaction) const;
-
-    virtual t_confidence get_confidence (t_transaction_id transaction) const;
-
-    // Sets
-
-    virtual void set_count (t_count component_count,
-                            t_count transaction_count);
-    virtual void set_error (t_transaction_id transaction,
-                            t_error error);
-    virtual t_confidence set_confidence (t_transaction_id transaction,
-                                         t_confidence confidence);
-
-    // Checks
-
-    virtual bool is_error (t_transaction_id transaction) const;
-private:
-    typedef std::vector<t_error> t_errors;
-    typedef std::vector<t_confidence> t_confidences;
-    t_errors errors;
-    t_confidences confidences;
-    t_count component_count;
-    t_count transaction_count;
-};
 
 template <class T>
 T & t_spectrum::requires () {
@@ -159,13 +121,14 @@ const T & t_spectrum::requires () const {
 }
 
 namespace std {
-std::istream & operator >> (std::istream & in, diagnostic::t_spectrum & spectrum);
-std::ostream & operator << (std::ostream & out, const diagnostic::t_spectrum & spectrum);
+std::istream & operator >> (std::istream & in,
+                            diagnostic::t_spectrum & spectrum);
+std::ostream & operator << (std::ostream & out,
+                            const diagnostic::t_spectrum & spectrum);
 }
 
 #else
 namespace diagnostic {
-
 class t_spectrum;
 }
 #endif

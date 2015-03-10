@@ -7,12 +7,13 @@
 #include <list>
 
 namespace diagnostic {
-
 class t_candidate_ranker : public t_algorithm {
 public:
-    class t_ret_type : public std::list<t_score> {
-public:
-    };
+    typedef std::list<t_score> t_ret_type;
+
+    // class t_ret_type : public std::list<t_score> {
+    // public:
+    // };
 
     virtual void operator () (const t_spectrum & spectrum,
                               const t_candidate_generator::t_ret_type & D,
@@ -22,6 +23,5 @@ public:
     virtual t_score_type get_score_type () const = 0;
     inline virtual ~t_candidate_ranker () {}
 };
-
 }
 #endif

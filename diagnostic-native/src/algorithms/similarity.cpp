@@ -2,60 +2,8 @@
 
 #include <boost/foreach.hpp>
 
-#include <cstring>
-#include <cmath>
-
-#include <random>
-
-#include <algorithm>
-#include <functional>
-#include <boost/random/uniform_real_distribution.hpp>
-
 namespace diagnostic {
 namespace algorithms {
-
-t_rank::t_rank (t_count size) : rank(size) {}
-
-void t_rank::set (t_id i,
-                  t_score s,
-                  t_component_id c) {
-    assert(i < rank.size());
-    rank[i] = t_rank_element(s, c);
-}
-
-void t_rank::sort () {
-    std::sort(rank.begin(), rank.end(), std::greater<t_rank_element> ());
-}
-
-void t_rank::normalize () {
-    t_score total = 0;
-
-
-    BOOST_FOREACH(t_rank_element & e,
-                  rank) {
-        total += e.first;
-    }
-
-    BOOST_FOREACH(t_rank_element & e,
-                  rank) {
-        e.first /= total;
-    }
-}
-
-t_component_id t_rank::get_component (t_id i) const {
-    assert(i < rank.size());
-    return rank[i].second;
-}
-
-t_score t_rank::get_score (t_id i) const {
-    assert(i < rank.size());
-    return rank[i].first;
-}
-
-t_count t_rank::size () const {
-    return rank.size();
-}
-
 void t_similarity::operator () (const t_spectrum & spectrum,
                                 const t_trie & D,
                                 t_ret_type & probs,
@@ -67,27 +15,27 @@ void t_similarity::operator () (const t_spectrum & spectrum,
 
         if (d.size() == 1) {
             t_component_id c = *d.begin();
-            score = (* this)(spectrum, c, filter);
+            score = (*this)(spectrum, c, filter);
         }
 
         probs.push_back(score);
     }
 }
 
-t_ptr<t_rank> t_similarity::operator () (const t_spectrum & spectrum,
-                                         const t_spectrum_filter * filter) const {
+t_ptr<t_single_component_ranking> t_similarity::operator () (const t_spectrum & spectrum,
+                                                             const t_spectrum_filter * filter) const {
     t_spectrum_iterator it(spectrum.get_component_count(),
-                          spectrum.get_transaction_count(),
-                          filter);
+                           spectrum.get_transaction_count(),
+                           filter);
 
 
-    t_ptr<t_rank> rank(new t_rank(spectrum.get_component_count(filter)));
+    t_ptr<t_single_component_ranking> rank(new t_single_component_ranking(spectrum.get_component_count(filter)));
     t_id i = 0;
 
     while (it.component.next()) {
-        t_score score = (* this)(spectrum,
-                                 it.component.get(),
-                                 filter);
+        t_score score = (*this)(spectrum,
+                                it.component.get(),
+                                filter);
 
         rank->set(i++, score, it.component.get());
     }
@@ -99,8 +47,8 @@ t_score t_similarity::operator () (const t_spectrum & spectrum,
                                    t_component_id comp,
                                    const t_spectrum_filter * filter) const {
     t_spectrum_iterator it(spectrum.get_component_count(),
-                          spectrum.get_transaction_count(),
-                          filter);
+                           spectrum.get_transaction_count(),
+                           filter);
 
     t_count n[2][2];
 
@@ -117,69 +65,8 @@ t_score t_similarity::operator () (const t_spectrum & spectrum,
     return similarity_coefficient(n);
 }
 
-
 void t_similarity::json_configs (t_configs & out) const {
     out["type"] = get_similarity_type();
 }
-
-
-t_score t_ochiai::similarity_coefficient (const t_count n[2][2]) const {
-    if (!n[1][1])
-        return 0;
-
-    t_score tmp = ((n[1][1] + n[0][1]) * (n[1][1] + n[1][0]));
-    return n[1][1] / sqrt(tmp);
-}
-
-std::ostream & t_ochiai::write (std::ostream & out) const {
-    return out << "t_ochiai";
-}
-
-t_score t_tarantula::similarity_coefficient (const t_count n[2][2]) const {
-    if (!n[1][1])
-        return 0;
-
-    t_score tmp1 = n[1][1] / (t_score) (n[1][1] + n[0][1]);
-    t_score tmp2 = 0;
-
-    if (n[1][0])
-        tmp2 = n[1][0] / (t_score) (n[1][0] + n[0][0]);
-
-    return tmp1 / (tmp1 + tmp2);
-}
-
-std::ostream & t_tarantula::write (std::ostream & out) const {
-    return out << "t_tarantula";
-}
-
-t_score t_jaccard::similarity_coefficient (const t_count n[2][2]) const {
-    if (!n[1][1])
-        return 0;
-
-    t_score tmp = (n[1][1] + n[0][1] + n[1][0]);
-    return n[1][1] / tmp;
-}
-
-std::ostream & t_jaccard::write (std::ostream & out) const {
-    return out << "t_jaccard";
-}
-
-t_score t_random::operator () (const t_spectrum & spectrum,
-                               t_component_id comp,
-                               const t_spectrum_filter * filter) const {
-    std::mt19937 gen;
-    boost::random::uniform_real_distribution<t_error> rand(0, 1);
-
-
-    return rand(gen);
-}
-}
-}
-namespace std {
-ostream & operator << (ostream & out, const diagnostic::algorithms::t_rank & r) {
-    for (t_id i = 0; i < r.size(); i++)
-        out << r.get_score(i) << ", " << r.get_component(i) << "\n";
-
-    return out;
 }
 }

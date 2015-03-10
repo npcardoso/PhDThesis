@@ -1,38 +1,97 @@
 #include "json.h"
 
-#include "../types.h"
+#include <boost/foreach.hpp>
+#include <iostream>
+#include <cmath>
 
-void json_copy_object (std::istream & in, std::ostream & out) {
-    bool in_str = false;
-    bool escape = false;
-    t_count stack_size = 0;
+namespace diagnostic {
+std::ostream & json_write (std::ostream & out,
+                           const char * i) {
+    return json_write(out, std::string(i));
+}
 
-    char c;
+std::ostream & json_write (std::ostream & out,
+                           const t_json_writable & w) {
+    return w.json(out);
+}
 
+std::ostream & json_write (std::ostream & out,
+                           const bool & i) {
+    out << (i ? "true" : "false");
+    return out;
+}
 
-    while (in >> c) {
-        if (escape) {
-            escape = false;
-        }
-        else if (c == '"') {
-            in_str = !in_str;
-        }
-        else if (in_str) {
-            escape = c == '\\';
-        }
-        else if (c == '[' || c == '{') {
-            stack_size++;
-        }
-        else if (c == ']' || c == '}') {
-            stack_size--;
+std::ostream & json_write (std::ostream & out,
+                           const int & i) {
+    out << i;
+    return out;
+}
 
-            if (!stack_size) {
-                out << c;
-                break;
-            }
-        }
+std::ostream & json_write (std::ostream & out,
+                           const unsigned int & i) {
+    out << i;
+    return out;
+}
 
-        if (stack_size && (in_str || isprint(c)))
+std::ostream & json_write (std::ostream & out,
+                           const long & i) {
+    out << i;
+    return out;
+}
+
+std::ostream & json_write (std::ostream & out,
+                           const double & i) {
+    if (std::isnan(i))
+        out << "NaN";
+    else
+        out << i;
+
+    return out;
+}
+
+std::ostream & json_write (std::ostream & out,
+                           std::string str) {
+    out << '"';
+    BOOST_FOREACH(auto c, str) {
+        switch (c) {
+        case '\\':
+            out << "\\\\";
+            break;
+
+        case '"':
+            out << "\\\"";
+            break;
+
+        case '/':
+            out << "\\/";
+            break;
+
+        case '\b':
+            out << "\\b";
+            break;
+
+        case '\f':
+            out << "\\f";
+            break;
+
+        case '\n':
+            out << "\\n";
+            break;
+
+        case '\r':
+            out << "\\r";
+            break;
+
+        case '\t':
+            out << "\\t";
+            break;
+
+        default:
             out << c;
+            break;
+        }
     }
+    out << '"';
+    return out;
+}
 }

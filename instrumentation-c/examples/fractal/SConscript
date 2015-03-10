@@ -1,7 +1,0 @@
-Import('env')
-
-target = "fractal"
-sources = Glob("*.cpp")
-env.Append(LINKFLAGS="-lpthread")
-
-obj = env.Instrument(target, sources, "-spectrum_instrument")

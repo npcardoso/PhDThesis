@@ -1,4 +1,0 @@
-Import('env')
-
-env.SConscript('frontends/llvm/SConscript')
-env.SConscript('backend//SConscript')

@@ -1,9 +1,0 @@
-Import('env')
-env = env.Clone()
-env.Append(LINKFLAGS = "-lpthread -lboost_system -lboost_thread -lmpfr -L%s -ldiag" % env['lib_dir'] )
-
-sources = Glob('*.cpp')
-
-obj = env.Program(target = "diagnostic.test", source = sources)
-env.Depends(obj, env['libdiag_shared'])
-env.Default(env.Install(env['bin_dir'], obj))

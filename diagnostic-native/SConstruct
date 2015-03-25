@@ -22,10 +22,7 @@ vars.Add('COMPILER', '', '')
 vars.Add('prefix', '', '#/target/install/')
 vars.Add('build_dir', '', '#/target/build/')
 
-vars.Add('boost_filesystem', '', 'boost_filesystem')
 vars.Add('boost_system', '', 'boost_system')
-vars.Add('boost_date_time', '', 'boost_date_time')
-vars.Add('boost_thread', '', '')
 
 vars.Add('debug', '', False)
 vars.Update(env)
@@ -76,9 +73,7 @@ env['CCFLAGS'] += " -std=c++11  -Wall -pedantic"
 # Link Flags
 link_flags = ["-Wl,-rpath,'$$ORIGIN/../../lib/%s'" % env['PLATFORM']]
 
-libs = [env['boost_filesystem'],
-        env['boost_system'],
-        env['boost_date_time'],
+libs = [env['boost_system'],
         "mpfr",
         "gmp",]
 
@@ -87,14 +82,6 @@ if plat == 'windows':
   libs.append("ws2_32")
 else:
   libs.append("pthread")
-
-if env['boost_thread'] == '':
-  if plat == 'darwin':
-    libs.append("boost_thread-mt")
-  else:
-    libs.append("boost_thread")
-else:
-  libs.append(env['boost_thread'])
 
 env.Append(LINKFLAGS = "   ".join(link_flags))
 env.Append(LIBS=libs)

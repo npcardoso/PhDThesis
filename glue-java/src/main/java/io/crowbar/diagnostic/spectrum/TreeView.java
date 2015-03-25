@@ -105,4 +105,14 @@ public final class TreeView extends AbstractTree {
 
         return newScores;
     }
+
+    public List<int[]> updateFreqs (List<int[]> freqs) {
+        List<int[]> newFreqs = new ArrayList<int[]> ();
+
+        for (int i : nodes) {
+            newFreqs.add(freqs.get(i));
+        }
+
+        return newFreqs;
+    }
 }

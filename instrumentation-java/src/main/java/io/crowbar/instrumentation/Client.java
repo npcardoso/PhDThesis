@@ -13,7 +13,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Client implements EventListener {
+    private static final Logger logger = LogManager.getLogger(Client.class);
+
+    private Boolean seenByeMessage = false;
+
     class Dispatcher extends Thread {
         public void run () {
             Message message = getMessage();
@@ -29,10 +36,15 @@ public class Client implements EventListener {
                     }
 
                     if (message != null) {
-                        ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-                        // System.out.println("Sending " + message);
-                        out.writeObject(message);
-                        out.flush();
+                        if (!seenByeMessage) {
+                            seenByeMessage |= message instanceof ByeMessage;
+                            ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+                            // System.out.println("Sending " + message + "("+seenByeMessage+")");
+                            out.writeObject(message);
+                            out.flush();
+                        } else {
+                            logger.debug("Message not sent after bye msg: " + message);
+                        }
                     }
 
                     message = getMessage();
@@ -73,15 +85,15 @@ public class Client implements EventListener {
          */
         Runtime.getRuntime().addShutdownHook(
             new Thread() {
-                public void run() {
-                    try {
-                        postMessage(new ByeMessage()).join();
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            public void run() {
+                try {
+                    postMessage(new ByeMessage()).join();
                 }
-            });
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public final String getCliendId () {

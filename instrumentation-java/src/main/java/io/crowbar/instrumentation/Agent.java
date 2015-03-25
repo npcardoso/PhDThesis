@@ -11,8 +11,8 @@ import java.security.ProtectionDomain;
 import javassist.ClassPool;
 import javassist.CtClass;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class Agent implements ClassFileTransformer {

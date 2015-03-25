@@ -4,8 +4,8 @@ import io.crowbar.diagnostic.Diagnostic;
 import io.crowbar.diagnostic.DiagnosticElement;
 import io.crowbar.util.MergeStrategy;
 import io.crowbar.util.SkipNullIterator;
-
 import flexjson.JSON;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,6 +14,11 @@ import java.util.NoSuchElementException;
 import java.util.AbstractList;
 
 public abstract class Spectrum {
+    public static final int N00 = 0;
+    public static final int N01 = 1;
+    public static final int N10 = 2;
+    public static final int N11 = 3;
+
     private final List<Transaction> transactions =
         new AbstractList() {
         @Override
@@ -328,5 +333,55 @@ public abstract class Spectrum {
         str.append("]}");
 
         return str.toString();
+    }
+
+    public List<int[]> getFreqsPerNode () {
+        List<int[]> freqs = new ArrayList<int[]> (getTree().size());
+
+        for (int i = 0; i < getTree().size(); i++) {
+            freqs.add(new int[] {0, 0, 0, 0});
+        }
+
+        for (Transaction t : byTransaction()) {
+            boolean[] activations = new boolean[getTree().size()];
+
+            for (int i = 0; i < activations.length; i++) {
+                activations[i] = false;
+            }
+
+            for (Probe p : byProbe()) {
+                if (t.isActive(p.getId())) {
+                    propagateActivation(activations, p.getNode());
+                }
+            }
+
+            for (int i = 0; i < activations.length; i++) {
+                if (t.isError()) {
+                    if (activations[i]) {
+                        freqs.get(i)[N11]++;
+                    } else {
+                        freqs.get(i)[N01]++;
+                    }
+                } else {
+                    if (activations[i]) {
+                        freqs.get(i)[N10]++;
+                    } else {
+                        freqs.get(i)[N00]++;
+                    }
+                }
+            }
+        }
+
+        return freqs;
+    }
+
+    private static void propagateActivation (boolean[] activations,
+                                             Node n) {
+        if (n == null) return;
+
+        if (!activations[n.getId()]) {
+            activations[n.getId()] = true;
+            propagateActivation(activations, n.getParent());
+        }
     }
 }

@@ -102,6 +102,6 @@ public final class DiagnosticReportHandler {
          * scores = t.updateScores(scores);
          */
 
-        return new ApiResponseModel(VisualizationMessages.issueRequest(s.getTree(), scores));
+        return new ApiResponseModel(VisualizationMessages.issueRequest(s.getTree(), scores, s.getFreqsPerNode()));
     }
 }

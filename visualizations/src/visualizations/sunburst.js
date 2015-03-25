@@ -18,7 +18,6 @@ function Sunburst(data, elementSel, configuration, events) {
     });
 
 
-
     var partitionLayoutData = partition.nodes(self.data);
     var svg;
 
@@ -27,10 +26,12 @@ function Sunburst(data, elementSel, configuration, events) {
     var element = d3.select(elementSel);
 
     this.zoomEvents = null;
-    this.clicked = data;
+    this.clicked = self.data;
     this.stateManager = new StateManager(self);
-    console.log(this.stateManager);
 
+
+    self.keyBindings = null;
+    var activations = ActivationsInfo(configuration);
     //Public rendering function renders the visualion on the element passed
     this.render = function() {
         element.html('');
@@ -59,6 +60,7 @@ function Sunburst(data, elementSel, configuration, events) {
         .data(partition.nodes(self.data))
         .enter(partitionLayoutData).append("path")
         .attr("d", arc_render.arc)
+        .attr("title", activations.tooltipContent)
         .style("stroke", "#fff")
         .style("fill", self.configuration.gradiante.normal)
         .style("fill-rule", "evenodd")
@@ -67,10 +69,21 @@ function Sunburst(data, elementSel, configuration, events) {
         .on("mouseover", self.nodeInfoDisplay.mouseover)
         .on("mouseleave", self.nodeInfoDisplay.mouseleave);
 
-        self.nodeInfoDisplay.setClicked(data);
+        self.nodeInfoDisplay.setClicked(self.data);
         self.nodeInfoDisplay.setPath(path);
+
+
         self.zoomEvents = ZoomController(elementSel, zoomElement, svg, self.configuration);
-        keyBindings(self, configuration);
+
+        if (self.keyBindings === null) {
+            self.keyBindings = new KeyBindings(self, configuration);
+        }
+        else
+        {
+            self.keyBindings.setKeyBindings();
+        }
+        //tooltip instanciation
+        activations.renderTooltip($('path'));
     };
 
     var centerTranslation = function() {
@@ -90,7 +103,6 @@ function Sunburst(data, elementSel, configuration, events) {
 
 
     this.gotoNode = function(node, animationTime) {
-        console.log(isMovingNode);
         if (isMovingNode)
             return false;
         isMovingNode = true;
@@ -107,22 +119,22 @@ function Sunburst(data, elementSel, configuration, events) {
 
     this.click = function(node) {
         if (d3.event.hasOwnProperty('zoomed')) return;
-        console.log(node);
         events.click(node);
     };
 
 
     this.resize = function() {
-        if(self.resizeTimeOut !== undefined){
+        if (self.resizeTimeOut !== undefined) {
             clearTimeout(self.resizeTimeOut);
         }
-        self.resizeTimeOut  = setTimeout(function(){
+        self.resizeTimeOut = setTimeout(function() {
             dimensions = getDimensions();
             arc_render = new ArcRender(dimensions.width, dimensions.height);
             self.render();
             self.gotoNode(self.clicked, 0);
-        },250);
+        }, 250);
     };
+
 }
 
 

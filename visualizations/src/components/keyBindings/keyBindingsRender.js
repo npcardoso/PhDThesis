@@ -6,18 +6,20 @@ function renderKeyCodesArray(keyCodes) {
     return renderStr;
 }
 
-function renderKeyBindingsDisplay(configuration,renderChange) {
+function renderKeyBindingsDisplay(configuration, renderTry) {
 
     function keyBindingsRender(arrayKeyBindings, modeID) {
-        var renderStr = '';
+        var renderStr = '<table>';
         for (var i = 0; i < arrayKeyBindings.length; i++) {
-            renderStr += '<p><small>' + arrayKeyBindings[i].name + ': ';
-            renderStr += renderKeyCodesArray(arrayKeyBindings[i].keyCodes);
-            if(renderChange){
-                renderStr += ' <a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a>';
+            renderStr += '<small><tr><td>' + arrayKeyBindings[i].name + '</td>';
+            renderStr += '<td>'+renderKeyCodesArray(arrayKeyBindings[i].keyCodes)+'</td>';
+            renderStr += '<td><a id="mode_' + modeID + '_' + i + '" href="#" class="keyChange">Change</a></td>';
+            if (renderTry) {
+                renderStr += '<td><a id="modeTry_' + modeID + '_' + i + '" href="#" class="keyTry">Try</a></td>';
             }
-            renderStr += '</small></p>';
+            renderStr += '</tr></small>';
         }
+        renderStr += '</table>';
         return renderStr;
     }
 
@@ -32,24 +34,20 @@ function renderKeyBindingsDisplay(configuration,renderChange) {
 
 
     return keyBindingsRender(configuration.currentConfig.keyBindings.allwaysActive, -1) +
-    modesRender(configuration.currentConfig.keyBindings.modes);
+        modesRender(configuration.currentConfig.keyBindings.modes);
 }
 
 
-function showKeybindingsPopup(configuration){
-   $("#dialog").remove();
-   $('#tabs').append('<div id="dialog" title="Key Bindings">'+renderKeyBindingsDisplay(configuration,false)+'</div>');
-   $("#dialog").dialog({
-    autoOpen: true,
-    modal: true,
-    height: "200",
-    show: {
-        effect: "blind",
-        duration: 1000
-    },
-    hide: {
-        effect: "explode",
-        duration: 1000
-    }
-});
+function showKeybindingsPopup(configuration) {
+    $("#dialogKeybindings").remove();
+    $('body').append('<div id="dialogKeybindings" title="Key Bindings"></div>');
+    $("#dialogKeybindings").dialog({
+        autoOpen: true,
+        modal: false,
+        height: "200",
+    });
+    var conf_view = new ConfigurationView(null, "#dialogKeybindings", configuration, null);
+    conf_view.renderKeyBindings(true);
+    $('.keyBindingsp').remove();
+
 }

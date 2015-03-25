@@ -1,8 +1,6 @@
 var ZoomController_HTML;
 
 function ZoomController(elementSel, zoomElement, svg, configuration) {
-    var showZoom = false;
-    var eventsBlocked = false;
     var zoomListener = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom",
         function() {
             if (d3.event) {
@@ -11,99 +9,63 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
             }
         });
 
-    var zoomStack = [];
+
+    zoomListener(zoomElement);
+    zoomElement.on("dblclick.zoom", null)
+    zoomListener.event(zoomElement);
+    zoomElement.on("mousedown", function() {
+        d3.event.preventDefault();
+    });
 
 
-    function eventsUnlock() {
-        eventsBlocked = false;
+    function translate(vec) {
+        var curTranslate = zoomListener.translate();
+        curTranslate[0] += vec[0];
+        curTranslate[1] += vec[1];
+        setZoom([curTranslate, zoomListener.scale()]);
     }
+
+    var eventsBlocked = false;
+
+    function setZoom(zoom) {
+        if (eventsBlocked)
+            return;
+        eventsBlocked = true;
+        zoomListener.translate(zoom[0]);
+        zoomListener.scale(zoom[1]);
+        zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", function() {
+            eventsBlocked = false;;
+        }));
+    }
+
+    var zoomContainerElem;
     var events = {
         up: function() {
-            if (eventsBlocked)
-                return;
-            eventsBlocked = true;
-            var curTranslate = zoomListener.translate();
-            curTranslate[1] += 100;
-            zoomListener.translate(curTranslate);
-            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+            translate([0, 100]);
         },
         down: function() {
-            if (eventsBlocked)
-                return;
-            eventsBlocked = true;
-            var curTranslate = zoomListener.translate();
-            curTranslate[1] -= 100;
-            zoomListener.translate(curTranslate);
-            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+            translate([0, -100]);
         },
         right: function() {
-            if (eventsBlocked)
-                return;
-            eventsBlocked = true;
-            var curTranslate = zoomListener.translate();
-            curTranslate[0] -= 100;
-            zoomListener.translate(curTranslate);
-            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+            translate([-100, 0]);
         },
         left: function() {
-            if (eventsBlocked)
-                return;
-            eventsBlocked = true;
-            var curTranslate = zoomListener.translate();
-            curTranslate[0] += 100;
-            zoomListener.translate(curTranslate);
-            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+            translate([100, 0]);
         },
         zoomIn: function() {
-            if (eventsBlocked)
-                return;
-            eventsBlocked = true;
-            var curScale = zoomListener.scale();
-            ++curScale
-            if (curScale <= 10) {
-                zoomListener.scale(curScale);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            }
-            eventsUnlock();
+            setZoom([zoomListener.translate(), Math.min(10, zoomListener.scale() + 1)]);
         },
         zoomOut: function() {
-            if (eventsBlocked)
-                return;
-            eventsBlocked = true;
-            var curScale = zoomListener.scale();
-            --curScale;
-            if (curScale < 1) {
-                curScale = 1;
-            }
-            zoomListener.scale(curScale);
-            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+            setZoom([zoomListener.translate(), Math.max(1, zoomListener.scale() - 1)]);
         },
         zoomReset: function() {
-            //if(eventsBlocked)
-            //   return;
-            //eventsBlocked = true;
-            zoomListener.scale(1);
-            zoomListener.translate([0, 0]);
-            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-        },
-
-        zoomSave: function() {
-            zoomStack.push([zoomListener.translate(), zoomListener.scale()]);
-        },
-
-        zoomRecover: function() {
-            var lastZoom = zoomStack.pop();
-            if (lastZoom != null) {
-                zoomListener.translate(lastZoom[0]);
-                zoomListener.scale(lastZoom[1]);
-                zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
-            }
+            setZoom([
+                [0, 0], 1
+            ]);
         },
 
         setZoom: function(zoom) {
-            zoomListener.translate(zoom[0]);
-            zoomListener.scale(zoom[1]);
-            zoomListener.event(zoomElement.transition().duration(configuration.currentConfig.zoomAnimationTime).each("end", eventsUnlock));
+            setZoom(zoom);
         },
 
         getZoom: function() {
@@ -116,29 +78,28 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
 
         zoomUnlock: function() {
             eventsBlocked = false;
-        }
+        },
+
+        showZoom: function() {
+            zoomContainerElem.show();
+        },
+
+        hideZoom: function() {
+            zoomContainerElem.hide();
+        },
 
     };
 
-
-    zoomListener(zoomElement);
-    zoomElement.on("dblclick.zoom", null)
-    zoomListener.event(zoomElement);
-    zoomElement.on("mousedown", function() {
-        d3.event.preventDefault();
-    });
-
-    $('#zoomContainer').remove();
-    $(elementSel).prepend(ZoomController_HTML);
-    $('#panUp').click(events.up);
-    $('#panDown').click(events.down);
-    $('#panLeft').click(events.left);
-    $('#panRight').click(events.right);
-    $('#zoomIn').click(events.zoomIn);
-    $('#zoomOut').click(events.zoomOut);
-    $('#zoomReset').click(events.zoomReset);
-
-    $('#zoomContainer').hide();
+    zoomContainerElem = $(ZoomController_HTML);
+    $(elementSel).prepend(zoomContainerElem);
+    continuousClick($('.panUp', zoomContainerElem), events.up);
+    continuousClick($('.panDown', zoomContainerElem), events.down);
+    continuousClick($('.panLeft', zoomContainerElem), events.left);
+    continuousClick($('.panRight', zoomContainerElem), events.right);
+    continuousClick($('.zoomIn', zoomContainerElem), events.zoomIn);
+    continuousClick($('.zoomOut', zoomContainerElem), events.zoomOut);
+    continuousClick($('.zoomReset', zoomContainerElem), events.zoomReset);
+    zoomContainerElem.hide();
 
     $(document).click(function(e) {
         if (e.which == 2) {
@@ -146,9 +107,27 @@ function ZoomController(elementSel, zoomElement, svg, configuration) {
         }
     });
 
-
-
     return events;
+}
+
+function continuousClick(element, func) {
+    var timeout;
+    element.mousedown(function() {
+        func();
+        timeout = setInterval(function() {
+            func();
+        }, 100);
+
+        return false;
+    });
+    element.mouseup(function() {
+        clearInterval(timeout);
+        return false;
+    });
+    element.mouseout(function() {
+        clearInterval(timeout);
+        return false;
+    });
 }
 
 function multiline(f) {
@@ -158,35 +137,36 @@ function multiline(f) {
 }
 
 
+
 ZoomController_HTML = multiline(function() {
     /*!
-          <div id="zoomContainer" class="leaflet-control-container">
-            <div id="zoomInside">
+          <div class="leaflet-control-container">
+            <div class="zoomInside">
             <div class="leaflet-top leaflet-left has-leaflet-pan-control">
               <div class="leaflet-control-pan leaflet-control">
                 <div class="leaflet-control-pan-up-wrap">
-                  <a id="panUp" class="leaflet-control-pan-up" title="Up"></a>
+                  <a class="panUp leaflet-control-pan-up" title="Up"></a>
                 </div>
                 <div class="leaflet-control-pan-left-wrap">
-                  <a id="panLeft" class="leaflet-control-pan-left" title="Left"></a>
+                  <a class="panLeft leaflet-control-pan-left" title="Left"></a>
                 </div>
                 <div class="leaflet-control-pan-right-wrap">
-                  <a id="panRight" class="leaflet-control-pan-right" title="Right"></a>
+                  <a class="panRight leaflet-control-pan-right" title="Right"></a>
                 </div>
                 <div class="leaflet-control-pan-down-wrap">
-                  <a id="panDown" class="leaflet-control-pan-down" title="Down"></a>
+                  <a class="panDown leaflet-control-pan-down" title="Down"></a>
                 </div>
 
                 <div class="leaflet-control-pan-center-wrap">
-                  <a id="zoomReset" class="leaflet-control-pan-center" title="Left"></a>
+                  <a class="zoomReset leaflet-control-pan-center" title="Left"></a>
                 </div>
               </div>
               <div class="leaflet-control-zoom leaflet-bar leaflet-control">
-                <a id="zoomIn" class="leaflet-control-zoom-in" title="Zoom in">+</a>
-                <a id="zoomOut" class="leaflet-control-zoom-out" title="Zoom out">-</a>
+                <a class="zoomIn leaflet-control-zoom-in" title="Zoom in">+</a>
+                <a class="zoomOut leaflet-control-zoom-out" title="Zoom out">-</a>
               </div>
             </div>
           </div>
           </div>
-    */
+          */
 });

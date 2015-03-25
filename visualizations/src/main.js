@@ -46,13 +46,14 @@ function init() {
     dataManager.applyFilters();
 
     var visualization = new Visualizations(configuration, dataManager);
+    window.addEventListener("resize", visualization.resize);
     renderButtonsHtml(visualization.setVisualization, visualization.getInitVisN());
 
 
 
     visualization.init();
 
-    $(window).resize(visualization.resize);
+
 }
 
 function getVizID(vizNo) {
@@ -81,8 +82,8 @@ function renderButtonsHtml(visActivationCallBack, defaultTab) {
 
 function getDimensions() {
     return {
-        width: $(window).width() - 50,
-        height: $(window).height() - 132
+        width: $(window).width() - 5,
+        height: $(window).height() - 90
     }
 }
 

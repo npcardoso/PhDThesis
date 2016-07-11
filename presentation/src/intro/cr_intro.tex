@@ -1,0 +1,40 @@
+\begin{frame}
+  \frametitle{Candidate Ranking}
+  \framesubtitle{Diagnostic Report}
+  \monocolumn{
+    \begin{tikzpicture}
+      \tikzstyle{every node}=[
+      align=center,
+      minimum height=1.2cm,
+      font=\small];
+      \node [rectangle, rounded corners, draw, anchor=north, minimum width=0.5\columnwidth,fill=white,thick,    minimum height=1.5cm,
+      ] (box) at (0, 0){};
+
+
+      \node [left=0.5cm of box] (obs) {Spectrum};
+      \node [right=0.5cm of box] (diag){Diagnostic \\ Report};
+
+
+      \node [opacity=0.1,fill=clra,rectangle, rounded corners, draw, left = -0.5cm of box, anchor=west] (cg) {Candidate \\ Generation};
+      \node [fill=clrb,rectangle, rounded corners, draw, right = -0.5cm of box, anchor=east] (cr) {Candidate \\ Ranking};
+      \path [line] (obs.east) --(cg);
+      \path [line] (cg) -> (cr);
+      \path [line] (cr) -- (diag.west);
+    \end{tikzpicture}%
+
+    \vspace{2em}
+
+
+    \begin{description}
+    \item [Intermittent Fault] A fault that is \alert{not consistently triggered} when activated
+    \end{description}
+  }
+  \note{
+    \begin{itemize}
+    \item \alert{Falha intermitente} quando é ativada \alert{nem
+        sempre resulta num erro} (Problema de abstracao!)
+    \item \alert{Ex:} função que se propõe a calcular o valor
+      \alert{absoluto} de um numero definida como $f(x) = x$
+    \end{itemize}
+  }
+\end{frame}

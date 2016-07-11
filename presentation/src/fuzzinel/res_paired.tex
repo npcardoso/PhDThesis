@@ -1,0 +1,33 @@
+\begin{frame}
+  \frametitle{Benchmark}
+  \framesubtitle{Paired Comparison}
+  \monocolumn{
+    \begin{tikzbenchmarkfig}{Quality improvement density plot \hfill(Paired Comparison)}
+      \tikzstyle{filled}=[inner sep=1mm,fill=white!100!black,draw, rounded corners=0.5mm,thick];
+
+      \begin{pgfonlayer}{background}
+        \node[main plot,anchor=south] (main) at (0,0){
+          \includegraphics[trim=1.5cm 1.14cm 0.9cm 0.6cm,clip=true]
+          {figures/fuzzinel/plot1}};
+      \end{pgfonlayer}
+      \node[left=0cm and 0cm of main.north west, anchor=north east] (axisy){
+        \includegraphics[trim=0.7cm 1cm 8.05cm 0.6cm,clip=true]
+        {figures/fuzzinel/plot1}};
+      \node[anchor=east,left=0.1cm of axisy.west] {
+        \rotatebox{90}{Density}};
+
+      \node[anchor=north,below=0cm of main.south] (axisx){
+        \includegraphics[trim=1.5cm 0.4cm 0.9cm 5.5cm,clip=true]
+        {figures/fuzzinel/plot1}};
+      \node[anchor=north,below=0cm of axisx.south] {$Q(${\color{clrb}Fuzzy}$) - Q(${\color{clra}Crisp}$)$};
+
+      \node[filled,anchor=west] (f1) at (1.6,1) {$65\%$};
+      \node[filled,anchor=east,left=3cm of f1] {$6\%$};
+      \node[filled,anchor=center] at (0,1) {$29\%$};
+
+      \node[filled,anchor=west] at (0.6,4)  (f3) {
+        $Q($Fuzzy$) \geq Q($Crisp$)$: $94\%$ \\[0.5em]
+        Relative $Q$ Improvement: $21\%$};
+    \end{tikzbenchmarkfig}
+  }
+\end{frame}

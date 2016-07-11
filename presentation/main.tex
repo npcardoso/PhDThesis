@@ -1,0 +1,308 @@
+% \documentclass[handout]{beamer}
+%\documentclass[notes]{beamer}
+\documentclass{beamer}
+\errorcontextlines 10000
+%\usepackage{pgfpages}
+%\setbeamertemplate{note page}[compress] % default/compress/plain
+%\setbeameroption{show notes on second screen=right}
+
+
+\batchmode
+\graphicspath{ {./figures/} }
+
+
+\usetheme[greybg]{sthlm}
+\setbeamercovered{dynamic}
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{headline}{%
+  \leavevmode%
+  \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+  \end{beamercolorbox}
+  \begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[colsep=10.5pt]{lower separation line head}
+  \end{beamercolorbox}
+}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fill,rightskip=.3cm]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\centering\insertshortauthor
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+      \usebeamerfont{title in head/foot}\hfill\insertframenumber/\inserttotalframenumber\hspace{2em}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+
+
+\usepackage[shortlabels]{enumitem}
+\setlist{itemsep=0.2cm}
+\setlist[itemize]{label={\tiny$\color{issrBlue!30!white}\blacktriangleright$}}
+\setlist[itemize,1]{itemsep=0.5cm}
+\setlist[enumerate]{label={\small\protect\color{issrBlue!50!white}\arabic*.}}
+\setlist[description]{font=\color{issrBlue}}
+
+\newcommand{\compresslist}{%
+  \setlength{\itemsep}{0em}%
+  \setlength{\parskip}{0pt}%
+  \setlength{\parsep}{0pt}%
+}
+
+\usepackage[utf8]{inputenc}
+
+
+\renewcommand*{\familydefault}{\sfdefault}
+\def\tt{\normalfont\ttfamily}
+
+\usepackage[sorting=none,backend=bibtex,autocite=footnote]{biblatex}
+
+\bibliography{references}
+
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{xifthen}
+
+\usepackage{relsize}
+\usepackage{soul}
+\usepackage{cancel}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{bm}
+\newcommand*\circled[1]{%
+  \tikz[baseline=(char.base)]{%
+    \node[circle,draw=none,inner sep=0pt,minimum height=1em] (char) {#1};
+    \draw (char) circle (0.55em);
+  }}
+
+\newcommand{\fn}[1]{\bm{\mathit{#1}}}
+\newcommand{\angledlist}[1]{\langle #1 \rangle}
+\newcommand{\pr}[1]{\mbox{Pr}(#1)}
+
+% Staccato
+\newcommand{\bigO}[1]{\fn{\mathcal O}\big(#1\big)}
+\newcommand{\powSet}[1]{\fn{\mathcal P}(#1)}
+
+\newcommand{\staccato}{\textit{Staccato}}
+\newcommand{\mhsII}{\texorpdfstring{$\textit{MHS}^\text{\smaller2}$}{MHS2}}
+\renewcommand{\mhsII}{$MHS^\text{\smaller2}$}
+\newcommand{\mhsIIURL}{\url{https://github.com/npcardoso/MHS2}}
+
+\newcommand{\HS}{\fn{HS}}
+\newcommand{\MHS}{\fn{MHS}}
+
+\newcommand{\setupName}[1]{\textit{#1}}
+\newcommand{\Opt}[1]{\setupName{Opt $\mathit{#1}$}}
+\newcommand{\Opts}[2]{\setupName{Opts $\mathit{#1}$ -- $\mathit{#2}$}}
+
+
+% Fuzzinel
+\newcommand{\cerror}[1][F]{\fn{\mu_{#1}}}
+\newcommand{\ferror}[1][F]{\fn{\mu_{\widetilde{#1}}}}
+\newcommand{\fuzzinel}{\texorpdfstring{$\textit{Fuzzinel}$}{Fuzzinel}}
+\newcommand{\likelihoodii}[2][d]{\pr{A_{#2},e_{#2}\mid #1}}
+\newcommand{\likelihoodi}[1][d]{\pr{A_i,e_i\mid #1}}
+\newcommand{\likelihood}[1][d]{\pr{A,e\mid #1}}
+\newcommand{\prior}[1][d]{\pr{#1}}
+\newcommand{\posterior}[1][d]{\pr{#1\mid A,e}}
+\newcommand{\gFunc}[1][d]{\fn{G}(#1, A_i)}
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
+
+\newcommand{\likelihoodcii}[2][d]{\pr{A_{#2},e_{#2},c_{#2}\mid #1}}
+\newcommand{\likelihoodci}[1][d]{\pr{A_i,e_i,c_i\mid #1}}
+\newcommand{\likelihoodc}[1][d]{\pr{A,e,c\mid #1}}
+\newcommand{\posteriorc}[1][d]{\pr{#1\mid A,e,c}}
+
+% NFGE
+\newcommand{\BW}{\mathit{bw}}
+\newcommand{\ST}{\mathit{st}}
+\newcommand{\FB}{\mathit{FB}}
+\newcommand{\KDEfunc}[1][ej]{\fn{pdf_{#1}}}
+\newcommand{\KDE}[1][ej]{\KDEfunc[#1](\ST)}
+% \newcommand{\NFGE}{\texorpdfstring{$\textit{NFGE}$}{NFGE}}
+\newcommand{\NFGE}{NFGE}
+\newcommand{\supergjcomb}[1][j]{\fn{g^+_{#1}}(\ST)}
+\newcommand{\supergjcall}[2][\ST]{\texorpdfstring{\fn{\breve{g}_{#2}}(#1)}{g#2(#1)}}
+\newcommand{\supergj}[1][j]{\supergjcall{#1}}
+
+
+\newcommand{\supergFunc}[1][j,S]{\fn{\breve{G}}(#1)}
+
+\newcommand{\etc}{\emph{etc.}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\vs}{\textit{vs.}}
+
+
+
+\usepackage{multirow}
+
+
+\usepackage{color, colortbl}
+\setlength{\tabcolsep}{8pt}
+\definecolor{Gray}{gray}{0.5}
+\definecolor{limegreen}{rgb}{0.5,0.7,0}
+\definecolor{lightred}{rgb}{1,0.2,0.2}
+\definecolor{lightgreen}{rgb}{0.2,1,0.2}
+\colorlet{highlight}{teal!25!white}
+\newcolumntype{n}{C{1.6em}}
+\newcolumntype{g}{C{1.6em}}
+
+\usepackage{subfig,caption}
+\usepackage{float}
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{matrix}
+\usetikzlibrary{chains,matrix,scopes}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{shapes,snakes}
+\usetikzlibrary{decorations.markings}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}
+\tikzset{
+  >=stealth',
+  invisible/.style={opacity=0.1},
+  visible on/.style={alt=#1{}{invisible}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+
+\newcommand\cthit{\circled{$\bm{\times}$}}
+\newcommand\chit{\circled{\checkmark}}
+\newcommand\hit{$\bullet$}
+\newcommand\nhit{.}
+
+
+
+\newcommand{\citep}{}
+\newcommand{\ac}[1]{#1}
+\newcommand{\acl}[1]{#1}
+
+
+\colorlet{clra}{teal}
+\colorlet{clrb}{orange!80!white}
+\colorlet{clrc}{cyan}
+\colorlet{clrd}{lime}
+\colorlet{clre}{red!60!white}
+\colorlet{dkclra}{clra!50!black}
+\colorlet{dkclrb}{clrb!90!black}
+\colorlet{dkclrc}{clrc!50!black}
+\colorlet{dkclrd}{clrd!50!black}
+\colorlet{dkclre}{clre!60!white!80!black}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Notes page%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\defbeamertemplate{note page}{infolines}
+{%
+  \hspace{-0.6cm}%
+  \vbox{%
+    \hbox{%
+      \begin{columns}%
+        \column{\dimexpr\paperwidth-10pt}%
+        \bicolumn{%
+          \vspace{-1cm}%
+          \insertslideintonotes{0.5}%
+        }{%
+          \displaytargettime%
+        }
+        \LARGE%
+        \insertnote%
+      \end{columns}
+    }%
+  }%
+}
+\makeatother
+
+
+\setbeamertemplate{note page}[infolines]
+
+\newcommand{\lasttargettime}{0 min}
+\newcommand{\targettime}{0 min}
+\newcommand{\settargettime}[1]{
+  \edef\x{\targettime}
+  \renewcommand{\lasttargettime}{\x}
+  \renewcommand{\targettime}{#1}
+}
+
+
+\newcommand{\displaytargettime}{%
+  \begin{tikzpicture}
+    \node{};
+    \node[anchor=north,align=center,draw=blue, ultra thick, rounded corners,inner sep=5mm,fill=white] at (0,0.5cm){
+      \color{black!40!green}\LARGE\lasttargettime \\
+      $\downarrow$ \\
+      \color{red}\Huge\targettime};
+  \end{tikzpicture}
+}
+
+\newenvironment{slideHeader}{
+  \vspace{1em}
+  %	\fbox{
+  \begin{minipage}[b][5em][t]{\textwidth}
+    % }
+  }{\end{minipage}}
+
+\newcommand{\centeredExample}[4]{
+  \begin{example}
+    #1
+    \begin{columns}
+      \column{0.5\textwidth}
+      \begin{center}
+        #2
+      \end{center}
+      \column{0.5\textwidth}
+      \begin{center}
+        #3
+      \end{center}
+    \end{columns}
+    #4
+  \end{example}
+}
+
+\usepackage{adjustbox}
+\newcommand{\drawaxes}[1]{
+  \begin{pgfonlayer}{foreground}
+    \draw[->,>=stealth, thick,black] (#1.south west) -- (#1.south east) -> +(0.2cm,0);
+    \draw[->,>=stealth, thick,black] (#1.south west) -- (#1.north west) -> +(0,0.2cm);
+  \end{pgfonlayer}
+}
+\newenvironment{tikzbenchmarkfig}[2][]{
+  \centering
+  \begin{tikzpicture}%
+    \tikzstyle{every node}=[node distance=0pt,line width=0.1mm,anchor=north, inner sep=0pt,font=\scriptsize\mdseries,text centered,align=center,#1,black];
+    \tikzstyle{main plot}=[fill=none,draw=none]
+  }{%
+    \drawaxes{main}
+  \end{tikzpicture}%
+}
+\newcommand{\scaleig}[2][scale=0.7]{\includegraphics[#1]{#2}}
+\colorlet{bggray}{white!99!black}
+
+
+
+
+\tikzstyle{inner box} = [box, clip]
+\tikzstyle{outer box} = [fill=none,box, thick, draw]
+\tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+\tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+
+
+
+\begin{document}
+\input{src/__init__}
+\end{document}

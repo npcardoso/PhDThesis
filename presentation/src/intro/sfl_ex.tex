@@ -1,0 +1,64 @@
+\begin{frame}
+  \frametitle{Spectrum-based Fault Localization}
+  \framesubtitle{Spectrum}
+    \monocolumn{%
+      \begin{description}
+      \item [\alert{Spectrum} --] A pair $(A, e)$ encoding:
+        \begin{description}
+        \item[\alert{$A_{ij}$} --] \alert{Activity} of component $j$ in transaction $i$
+        \item[\alert{$e_i$} --] \alert{Error} state of transaction $i$ (pass/fail)
+        \end{description}
+      \end{description}
+    }%
+
+  \vfill%
+  \vfill%
+
+  \monocolumn{%
+    \begin{tikzpicture}[
+      act/.style = {fill=clrc,ultra thick},
+      inact/.style = {fill=white!80!black,thick},
+      pass/.style = {fill=clrd},
+      fail/.style = {fill=clre},
+      cmp/.style = {circle, draw, align=center,minimum size=1.5em,inner sep=0.1cm,anchor=center},
+      tr/.style = {draw,box,thick, minimum width=4cm, inner sep = 0.5cm}]
+
+      \setlength{\tabcolsep}{0pt}%
+      \renewcommand{\arraystretch}{1.2}%
+
+
+      \node[inner box] (a){%
+        \begin{tabular}[m]{C{1cm}|*{3}{C{1cm}}|C{1cm}C{0cm}}
+          \multirow{2}{*}{$i$} & \multicolumn{3}{c|}{$A_{ij}$} & \multirow{2}{*}{$e_i$}                                          \\\cline{2-4}
+                               & $c_1$                    & $c_2$             & $c_3$             &                       \\\hline%
+          \onslide<2->{ $1$     & \cellcolor{clrc}1        & \cellcolor{clrc}1 & 0                 & \cellcolor{clre}1  &\\}
+          \onslide<3->{$2$     & \cellcolor{clrc}1        & 0                 & \cellcolor{clrc}1 & \cellcolor{clre}1  &\\}
+          \onslide<4->{$3$     & \cellcolor{clrc}1        & 0                 & 0                 & \cellcolor{clrd}0  &}
+        \end{tabular}%
+      };
+      \node[outer box,fit=(a)] {};
+
+
+      \foreach \id /\ca / \cb / \cc / \res in {
+        0/inact/inact/inact/,
+        1/act/act/inact/fail,
+        2/act/inact/act/fail,
+        3/act/inact/inact/pass} {
+        \pgfmathparse{int(\id+1)}
+        \edef\slideId{\pgfmathresult}
+        \only<\slideId>{
+          \node[\res,tr,left= of a.west] (transaction){};
+          \node[\ca,cmp,right=0.5cm of transaction.west]  {$c_1$};
+          \node[\cb,cmp] at (transaction) {$c_2$};
+          \node[\cc,cmp,left=0.5cm of transaction.east] {$c_3$};
+        }
+      }
+
+    \end{tikzpicture}
+  }%
+  \note{
+    \begin{itemize}
+    \item \alert{Sistema de armazenamento de dados}
+    \end{itemize}
+  }
+\end{frame}

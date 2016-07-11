@@ -1,0 +1,47 @@
+\renewcommand{\scaleig}[2][]{\includegraphics[scale=1,#1]{#2}}
+\begin{frame}
+  \frametitle{Parallelization -- Benchmark}
+  \framesubtitle{$M,N = 40$}
+  \monocolumn{
+    \begin{tikzbenchmarkfig}{Small Problems}
+      \node(main0){};
+      \node(main){};
+      \node[main plot,below=0.6cm of main.south, anchor=north] {
+        \scaleig[trim=1.13cm 3.81cm 0.53cm 2.15cm, clip, page=2]
+        {figures/mhs2/parallel_small.pdf}
+      };
+      \begin{pgfonlayer}{background}
+        \node[main plot,below=1.4cm of main.south, anchor=north] (main){
+          \scaleig[trim=1.13cm 1.13cm 0.53cm 2.55cm, clip, page=2]
+          {figures/mhs2/parallel_small.pdf}
+        };
+        \drawaxes{main};
+        \node[below=0cm of main.south](axisx){
+          \scaleig[trim=1.13cm 0.7cm 0.53cm 5.25cm, clip, page=2]
+          {figures/mhs2/parallel_small.pdf}};
+      \end{pgfonlayer}
+
+      \node[left=0cm of main.north west,anchor=north east](axisy){
+        \scaleig[trim=0.7cm 1.13cm 9.1cm 2.55cm, clip,page=2]
+        {figures/mhs2/parallel_small.pdf}};
+
+
+      \node[left=0.2cm of axisy.west,anchor=east]{
+        \rotatebox{90}{Efficiency}};
+      \node[below=0.2cm of axisx.south]{$\#$ of \textit{CPUs}};
+
+      \node[above=-0.4cm of main0.south, anchor=south] (capt){
+        \scaleig[trim=4.3cm 4.5cm 3cm 1cm, clip, page=1]
+        {figures/mhs2/parallel_small.pdf}
+      };
+    \end{tikzbenchmarkfig}
+  }
+  \note{
+    \begin{itemize}
+    \item Random melhor que stride
+    \item Tempo de execução
+    \item R=0.25, np=8: 1 oitavo do tempo
+    \end{itemize}
+  }
+
+\end{frame}

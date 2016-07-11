@@ -1,0 +1,38 @@
+\begin{frame}
+  \frametitle{Optimizations}
+  \framesubtitle{Optimization 2}
+  \monocolumn{
+    \begin{tikzpicture}[->=latex]
+      \setlength{\tabcolsep}{0pt}%
+      \renewcommand{\arraystretch}{1.2}%
+      \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+      \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+      \tikzstyle{inner box} = [box, clip]
+      \tikzstyle{outer box} = [box, thick, draw]
+
+      \node[inner box] (a){
+        \begin{tabular}[m]{*{3}{C{0.7cm}}>{\columncolor{clra}}C{0.7cm}|C{1cm}C{0cm}}
+          {$c_1$} & $c_2$ & $c_3$ & $c_4$ & $e_i$             \\\hline%
+          \hit    & \hit  & \nhit & \nhit & \cellcolor{clre}1 \\
+          \hit    & \nhit & \hit  & \nhit & \cellcolor{clre}1 \\\hline
+          \hit    & \nhit & \nhit & \hit  & \cellcolor{clrd}0
+        \end{tabular}%
+      };
+      \node[outer box,fit=(a)] {};
+
+      \node[inner box, right=2cm of a.east, anchor=west] (b){
+        \begin{tabular}[m]{*{3}{C{0.7cm}}|C{1cm}C{0cm}}
+          {$c_1$} & $c_2$ & $c_3$ & $e_i$             \\\hline%
+          \hit    & \hit  & \nhit  & \cellcolor{clre}1 \\
+          \hit    & \nhit & \hit   & \cellcolor{clre}1 \\\hline
+          \hit    & \nhit & \nhit  & \cellcolor{clrd}0
+        \end{tabular}%
+
+      };
+      \node[outer box,fit=(b)] {};
+
+      \draw[line] (a.east) -> (b.west);
+    \end{tikzpicture}
+  }
+
+\end{frame}

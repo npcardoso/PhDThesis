@@ -1,0 +1,41 @@
+\begin{frame}
+  \frametitle{Spectrum-based Fault Localization}
+  \framesubtitle{Workflow}
+  \monocolumn{
+    \begin{tikzpicture}
+      \tikzstyle{every node}=[
+      align=center,
+      minimum height=1.2cm,
+      font=\small];
+
+      \node [rectangle, rounded corners, draw, anchor=north, minimum width=0.5\columnwidth,fill=white,thick,    minimum height=1.5cm,
+      ] (box) at (0, 0){};
+
+
+      \node [left=0.5cm of box] (obs) {Spectrum};
+      \node [right=0.5cm of box] (diag){Diagnostic \\ Report};
+
+
+      \node [fill=clra,rectangle, rounded corners, draw, left = -0.5cm of box, anchor=west] (cg) {Candidate \\ Generation};
+      \node [fill=clrb,rectangle, rounded corners, draw, right = -0.5cm of box, anchor=east] (cr) {Candidate \\ Ranking};
+      \path[line] (obs.east) --(cg);
+      \path[line] (cg) -> (cr);
+      \path[line] (cr) -- (diag.west);
+    \end{tikzpicture}%
+  }
+  \vfill
+  \monocolumn{
+    \begin{enumerate}
+    \item Generate possible \alert{explanations for the erroneous behavior}
+    \item Minimize the number of \alert{unnecessarily  inspected}  components
+    \end{enumerate}
+  }
+  \note{
+    \begin{itemize}
+    \item \alert{Relatório de diagnóstico}
+    \end{itemize}
+
+
+  }
+
+\end{frame}

@@ -1,0 +1,59 @@
+\begin{frame}
+  \frametitle{Candidate Ranking}
+  \framesubtitle{Algorithm}
+  \monocolumn{
+    \pgfdeclarelayer{background}
+    \pgfdeclarelayer{foreground}
+    \pgfsetlayers{background,main,foreground}
+    \monocolumn{
+      \resizebox{\columnwidth}{!}{
+        \begin{tikzpicture}[>=latex,node distance = 2cm, auto]
+          \onslide<+(1)->{
+            \node [block,  anchor=center, minimum height=3.5cm] (bayes) {
+              $\pr{d\mid A,e} = $\\[3mm] $\pr{d} \times \displaystyle\prod_{i = 1}^{|A|}\frac{\pr{A_i,e_i \mid d}}{\pr{A_i,e_i}}$\\[5mm]
+              (Na\"ive Bayes Classifier)
+            };
+          }
+
+          \onslide<+(1)->{
+            \node [block, below= 1cm of bayes] (goodness) {Estimate goodness parameters \\ (Maximum likelihood estimation)};
+            \path [line] (bayes.south)  -- (goodness.north);
+          }
+
+          \onslide<+(-2)->{
+            \begin{pgfonlayer}{background}
+              \node[inner sep=0.5cm,thick,draw,dotted,fit=(bayes.north west) (goodness.south east), fill=clrb,fill opacity=0.4] (loop) {};
+            \end{pgfonlayer}
+            \node [defaults,draw=none,anchor=south,above = 0cm of loop.north]{For each candidate $d \in D$};
+            \begin{pgfonlayer}{foreground}
+              \draw [fill=black] (loop.west) circle (0.2cm);
+              \draw [fill=black] (loop.east) circle (0.2cm);
+            \end{pgfonlayer}
+          }
+
+          \node [left=3.8cm of loop.west] (d) {};
+          \node [cloud, above=0.4cm of d] (spectrum) {$A, e$ (spectrum)};
+          \node [cloud, below=0.4cm of d] (D) {$D$ (candidate set)};
+
+          \onslide<+(-3)->{
+            \path [line] (spectrum.east) -| +(0.5,-0.5)  |- ($(loop.west)+(-0.2cm,0)$);
+            \path [line] (D.east)  -| +(0.5, 0.5)  |- ($(loop.west)+(-0.2cm,0)$);
+          }
+
+          \onslide<+(-1)->{
+            \node [block, right=1.5cm of loop.east,text width=3cm] (sort) {Sort $D$};
+            \path [line] (loop.east)  -- (sort.west);
+          }
+        \end{tikzpicture}
+      }
+    }
+  }
+  \note{
+    \begin{itemize}
+      \compresslist
+    \item Naive bayes classifier
+    \item \alert{Goodness}: Prob de um \alert{COMPONENTE} não gerar um erro
+    \item  params incógnitos $\rightarrow$ \alert{MLE}: argmax prob
+    \end{itemize}
+  }
+\end{frame}

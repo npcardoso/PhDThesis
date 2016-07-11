@@ -1,0 +1,68 @@
+\tikzstyle{c1}=[draw=black, fill=clra]
+\tikzstyle{c2}=[draw=black, fill=clrb]
+
+\tikzstyle{p}=[inner sep=0.1em, circle]
+
+\tikzstyle{p1}=[p,c1]
+\tikzstyle{p2}=[p,c2]
+\tikzset{
+  fa/.style={fill=clrb},
+  fb/.style={fill=clrc},
+  pa/.style={alt=<3->{fa}{}},
+  pb/.style={alt=<3->{fb}{}},
+  pc/.style={pa, alt=<4>{fb}{}},
+  pd/.style={pb, alt=<4>{fa}{}},
+}
+
+\begin{frame}
+  \frametitle{Parallelization}
+  \framesubtitle{Load Division}
+  \monocolumn{
+    \resizebox{\columnwidth}{!}{
+      \begin{tikzpicture}[
+        scale=1.2,
+        level 1/.style={sibling distance=8em, every node/.append style={fill=none}},
+        level 2/.style={sibling distance=3em,every node/.append style={fill=none}},
+        level 3/.style={sibling distance=1em, every node/.append style={fill=none}}]
+
+        \tikzstyle{every node}=[draw,anchor=west,rectangle,minimum size=1em,rounded corners]
+        \tikzstyle{grogz}=[font=\Large,text width=2cm,align=center,fill=white!70!black]
+
+        \begin{scope}[local bounding box=scope1,draw]
+          \onslide<2->{
+            \node[anchor=east,grogz] (L2) at (6.5, -2.5) {$L = 2$};
+            \draw[ultra thick] (-5.5,-2.5) -- (L2);
+          }
+
+          \node (Root) {$\set{}$}
+          child { node {$\set{1}$}
+            child { node[pc] {$\set{1, 2}$}
+              child { node {\ldots}}}
+            child { node[pd] {$\set{1, 3}$}
+              child { node {\ldots}}}
+            child { node[pa] {$\set{1, 4}$}}}
+          child { node {$\set{2}$}
+            child { node[pd] {$\set{2, 3}$}
+              child { node {\ldots}}}
+            child { node[pc] {$\set{2, 4}$}}}
+          child { node {$\set{3}$}
+            child { node[pd] {$\set{3, 4}$}}}
+          child { node {$\set{4}$}  };
+        \end{scope}
+      \onslide<3-4>{
+          \node[grogz,anchor=south east,left=0.1cm of scope1.south east] {%
+            \alt<-3>{Stride}{Random}
+          };
+        }
+
+      \end{tikzpicture}
+    }
+  }
+  \note{
+    \begin{itemize}
+    \item Definir nivel
+    \item Atribuir de sub-arvores a processos...
+    \item Random melhor balanceamento
+    \end{itemize}
+  }
+\end{frame}

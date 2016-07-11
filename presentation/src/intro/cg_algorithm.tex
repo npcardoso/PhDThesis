@@ -1,0 +1,86 @@
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=clra,
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=clrb,
+text width=8em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw,rounded corners=5pt, -latex',ultra thick]
+\tikzstyle{cloud} = [text badly centered,text width=8em,draw, rectangle,fill=clrc, node distance=3cm,
+minimum height=2em]
+
+\tikzstyle{decision label} = [text badly centered,anchor=center,near start,fill=white,draw=black,font=\small,execute at begin node={\begin{varwidth}{5em}},
+  execute at end node={\end{varwidth}}]
+\begin{frame}
+  \frametitle{Candidate Generation}
+  \framesubtitle{Algorithm}
+  \pgfdeclarelayer{background}
+  \pgfsetlayers{background,main}
+  \monocolumn{
+    \resizebox{\columnwidth}{!}{
+      \begin{tikzpicture}[>=latex,node distance = 2cm, auto]
+        % Place nodes
+        \node [cloud] (ft) {$S$ (failed tr.)};
+        \node [cloud, below=1cm of ft] (d) {$d$ (current set)};
+        \node [cloud, below=1cm of d] (D) {$D$ (candidate set)};
+        \begin{pgfonlayer}{background}
+          \node[inner sep=0.5cm,thick,draw,dotted,fit=(d.north west) (D.south east), fill=clrc,fill opacity=0.4] (default args) {};
+        \end{pgfonlayer}
+        \node [anchor=north,below = 0cm of default args.south]{Initially empty};
+
+        \onslide<+(1)->{
+          \node [decision, right= 2cm of d] (empty) {is $S$ empty?};
+          \path [line] (ft.east) -| +(1,-0.5)  |- (empty.west);
+          \path [line] (d.east) -- (empty.west);
+          \path [line] (D.east)  -| +(1, 0.5)  |- (empty.west);
+        }
+
+        \onslide<+(1)->{
+          \node [block, below right= 0.5cm and 10cm of empty.east] (return) {Return $D$};
+
+          \node [decision, above right= 2cm and 1cm of empty] (minimal) {is $d$ minimal?};
+          \path [line] (empty.north) -- +(0,0.5)  |-node [decision label] {\textbf{yes}: $d$ is a candidate}(minimal.west);
+          \path [line] (minimal.south) |- node [decision label] {\textbf{no}}(return.west);
+
+          \node [anchor=west, block, right= 2.5cm of minimal.east] (purge) {remove super-sets of $d$ from $D$};
+          \path [line] (minimal.east) -- node [decision label,midway] {\textbf{yes}}(purge.west);
+
+          \node [block] (add) at (return |- purge) {add $d$ to $D$};
+          \path [line] (purge.east) --   (add.west);
+          \path [line] (add.south) -- (return.north);
+        }
+
+        \onslide<+(1)->{
+          \coordinate [below = 2cm of empty] (sort) {};
+          \path [line,-] (empty.south) --  node [decision label,midway] {\textbf{no}: $d$ is not a candidate} (sort.north);
+
+          \node [block, below= 1cm of sort] (filter) {create temporary $S'$ filtering transactions where $c$ is active};
+
+          \node [block, right = 1cm of filter] (call) {recursive call with $S'$, $d\cup\set{c}$};
+          \path [line] (filter.east) --   (call.west);
+
+          \node [block, right= 1cm of call] (update) {update $D$ with return value};
+          \path [line] (call.east) -- (update.west);
+
+          \begin{pgfonlayer}{background}
+            \node[inner sep=0.5cm,thick,draw,dotted,fit=(filter.north west) (update.south east), fill=clrb,fill opacity=0.4] (loop) {};
+          \end{pgfonlayer}
+
+          \node [anchor=south,above = 0cm of loop.north]{For each component $c$};
+          \draw [fill=black] (loop.west) circle (0.2cm);
+          \draw [fill=black] (loop.east) circle (0.2cm);
+
+
+          \path [line] (sort.south) |-  +(-3,-0.25) |- ($(loop.west)+(-0.2cm,0)$);
+          \path [line]  ($(loop.east)+(+0.2cm,0)$) -| (return.south);
+
+        \end{tikzpicture}
+      }
+    }
+  }
+  \note{
+    \begin{itemize}
+      \LARGE
+    \item \alert{Conjunto} d
+    \item \alert{Lista de candidatos} D
+    \end{itemize}
+  }
+\end{frame}

@@ -1,0 +1,250 @@
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%	COLOR PALETTE
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+\ProvidesPackage{beamercolorthemev42}
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%	OPTIONS
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+\newif\if@beamer@sthlm@cblock
+\@beamer@sthlm@cblockfalse
+\DeclareOptionBeamer{cblock}{\@beamer@sthlm@cblocktrue}
+
+\newif\if@beamer@sthlm@greybg
+\@beamer@sthlm@greybgfalse
+\DeclareOptionBeamer{greybg}{\@beamer@sthlm@greybgtrue}
+
+\DeclareOptionBeamer*{%
+  \PackageWarning{beamercolorthemesthlm}{Unknown option `\CurrentOption'}%
+}
+
+\ProcessOptionsBeamer
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%	STOCKHOLMS COLOR THEME
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+%== BLUE
+    \definecolor{sthlmLightBlue}{RGB}{214,237,252} % HEX #d6edfc
+        \newcommand{\csthlmLightBlue}[1]{{\color{sthlmLightBlue}{#1}}}
+    \definecolor{sthlmBlue}{RGB}{0,110,191} % HEX #006ebf
+        \newcommand{\csthlmBlue}[1]{{\color{sthlmBlue}{#1}}}
+    %\definecolor{sthlmDarkBlue}{RGB}{} %HEX #
+        %\newcommand{\csthlmDarkBlue}[1]{{\color{sthlmDarkBlue}{#1}}}
+
+%== GREEN
+
+    \definecolor{sthlmLightGreen}{RGB}{213,247,244} % HEX #d5f7f4
+        \newcommand{\csthlmLightGreen}[1]{{\color{sthlmLightGreen}{#1}}}
+    \definecolor{sthlmGreen}{RGB}{0,134,127} % #00867f
+        \newcommand{\csthlmGreen}[1]{{\color{sthlmGreen}{#1}}}
+
+%== GREY
+    %\definecolor{sthlmLightGrey}{RGB}{}
+        %\newcommand{\csthlmLightGrey}[1]{{\color{sthlmLightGrey}{#1}}}
+    \definecolor{sthlmGrey}{RGB}{245,243,238} % HEX #f5f3ee
+        \newcommand{\csthlmGrey}[1]{{\color{sthlmGrey}{#1}}}
+    \definecolor{sthlmDarkGrey}{RGB}{51,51,51} % HEX #333333
+        \newcommand{\csthlmDarkGrey}[1]{{\color{sthlmDarkGrey}{#1}}}
+
+%== ORANGE
+    \definecolor{sthlmLightOrange}{RGB}{255,215,210} % HEX #ffd7d2
+        \newcommand{\csthlmLightOrange}[1]{{\color{sthlmLightOrange}{#1}}}
+    \definecolor{sthlmOrange}{RGB}{221,74,44} % HEX #dd4a2c
+        \newcommand{\csthlmOrange}[1]{{\color{sthlmOrange}{#1}}}
+
+%== PURPLE
+
+    \definecolor{sthlmLightPurple}{RGB}{241,230,252} % HEX #f1e6fc
+        \newcommand{\csthlmLightPurple}[1]{{\color{sthlmLightPurple}{#1}}}
+    \definecolor{sthlmPurple}{RGB}{93,35,125} % HEX #5d237d
+        \newcommand{\csthlmPurple}[1]{{\color{sthlmPurple}{#1}}}
+
+%== RED
+
+    \definecolor{sthlmLightRed}{RGB}{254,222,237} % HEX #c40064
+        \newcommand{\csthlmLightRed}[1]{{\color{sthlmLightRed}{#1}}}
+    \definecolor{sthlmRed}{RGB}{196,0,100} % HEX #fedeed
+        \newcommand{\csthlmRed}[1]{{\color{sthlmRed}{#1}}}
+    %\definecolor{sthlmDarkRed}{RGB}{} % HEX #
+        %\newcommand{\csthlmDarkRed}[1]{{\color{sthlmDarkRed}{#1}}}
+
+%== YELLOW
+
+    %\definecolor{sthlmLightYellow}{RGB}{}
+        %\newcommand{\csthlmLightYellow}[1]{{\color{sthlmLightYellow}{#1}}}
+    \definecolor{sthlmYellow}{RGB}{252,191,10} % HEX #fcbf0a
+        \newcommand{\csthlmYellow}[1]{{\color{sthlmYellow}{#1}}}
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%	ISSR COLORS
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+%== BLUE
+    \definecolor{issrBlue}{RGB}{0,111,174} % HEX #0066cc
+        \newcommand{\cissrBlue}[1]{{\color{issrBlue}{#1}}}
+
+%== GREY
+    \definecolor{issrGrey}{RGB}{167,169,172} % HEX #999999
+        \newcommand{\cissrGrey}[1]{{\color{issrGrey}{#1}}}
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%	GLOBAL COLOR THEME
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+%== BLUE
+
+    \newcommand{\cLightBlue}[1]{{\color{sthlmLightBlue}{#1}}}
+    \newcommand{\crLightBlue}{\color{sthlmLightBlue}}
+    \newcommand{\cnLightBlue}{sthlmLightBlue}
+    \newcommand{\cBlue}[1]{{\color{sthlmBlue}{#1}}}
+    \newcommand{\crBlue}{\color{sthlmBlue}}
+    \newcommand{\cnBlue}{sthlmBlue}
+    %\newcommand{\cDarkBlue}[1]{{\color{}{#1}}}
+    %\newcommand{\crDarkBlue}{\color{}}
+    %\newcommand{\cnDarkBlue}{}
+
+%== GREEN
+
+    %\newcommand{\cLightGreen}[1]{{\color{}{#1}}}
+    %\newcommand{\crLightGreen}{\color{}}
+    \newcommand{\cnLightGreen}{sthlmLightGreen}
+    \newcommand{\cGreen}[1]{{\color{sthlmGreen}{#1}}}
+    \newcommand{\crGreen}{\color{sthlmGreen}}
+    \newcommand{\cnGreen}{sthlmGreen}
+    %\newcommand{\cDarkGreen}[1]{{\color{}{#1}}}
+    %\newcommand{\crDarkGreen}{\color{}}
+    %\newcommand{\cnDarkGreen}{sthlmDarkGreen}
+
+%== GREY
+
+    \newcommand{\cLightGrey}[1]{{\color{sthlmLightGrey}{#1}}}
+    \newcommand{\crLightGrey}{\color{sthlmLightGrey}}
+    \newcommand{\cnLightGrey}{sthlmLightGrey}
+    \newcommand{\cGrey}[1]{{\color{sthlmGrey}{#1}}}
+    \newcommand{\crGrey}{\color{sthlmGrey}}
+    \newcommand{\cnGrey}{sthlmGrey}
+    \newcommand{\cDarkGrey}[1]{{\color{sthlmDarkGrey}{#1}}}
+    \newcommand{\crDarkGrey}{\color{sthlmDarkGrey}}
+    \newcommand{\cnDarkGrey}{sthlmDarkGrey}
+
+%== ORANGE
+
+    \newcommand{\cLightOrange}[1]{{\color{sthlmLightOrange}{#1}}}
+    \newcommand{\crLightOrange}{\color{sthlmLightOrange}}
+    \newcommand{\cnLightOrange}{sthlmLightOrange}
+    \newcommand{\cOrange}[1]{{\color{}{#1}}}
+    \newcommand{\crOrange}{\color{sthlmOrange}}
+    \newcommand{\cnOrange}{sthlmOrange}
+    %\newcommand{\cDarkOrange}[1]{{\color{}{#1}}}
+    %\newcommand{\crDarkOrange}{\color{}}
+    %\newcommand{\cnDarkOrange}{}
+
+%== PURPLE
+
+    \newcommand{\cLightPurple}[1]{{\color{sthlmLightPurple}{#1}}}
+    \newcommand{\crLightPurple}{\color{sthlmLightPurple}}
+    \newcommand{\cnLightPurple}{sthlmLightPurple}
+    \newcommand{\cPurple}[1]{{\color{sthlmPurple}{#1}}}
+    \newcommand{\crPurple}{\color{sthlmPurple}}
+    \newcommand{\cnPurple}{sthlmPurple}
+    %\newcommand{\cDarkPurple}[1]{{\color{}{#1}}}
+    %\newcommand{\crDarkPurple}{\color{}}
+    %\newcommand{\cnDarkPurple}{}
+
+%== RED
+
+    \newcommand{\cLightRed}[1]{{\color{sthlmLightRed}{#1}}}
+    \newcommand{\crLightRed}{\color{sthlmLightRed}}
+    \newcommand{\cnLightRed}{sthlmLightRed}
+    \newcommand{\cRed}[1]{{\color{sthlmRed}{#1}}}
+    \newcommand{\crRed}{\color{sthlmRed}}
+    \newcommand{\cnRed}{sthlmRed}
+    \newcommand{\cDarkRed}[1]{{\color{sthlmDarkRed}{#1}}}
+    \newcommand{\crDarkRed}{\color{sthlmDarkRed}}
+    \newcommand{\cnDarkRed}{sthlmDarkRed}
+
+%== YELLOW
+
+    %\newcommand{\cLightYellow}[1]{{\color{}{#1}}}
+    %\newcommand{\crLightYellow}{\color{}}
+    %\newcommand{\cnLightYellow}{sthlmLightYellow}
+    \newcommand{\cYellow}[1]{{\color{sthlmYellow}{#1}}}
+    \newcommand{\crYellow}{\color{sthlmYellow}}
+    \newcommand{\cnYellow}{sthlmYellow}
+    %\newcommand{\cDarkYellow}[1]{{\color{}{#1}}}
+    %\newcommand{\crDarkYellow}{\color{}}
+    %\newcommand{\cnDarkYellow}{}
+
+
+% General
+\setbeamercolor{normal text}{fg=sthlmDarkGrey}
+\setbeamercolor{structure}{fg=sthlmDarkGrey}
+\setbeamercolor{alerted text}{fg=orange!70!white}
+\setbeamercolor{alerted text}{fg=sthlmBlue}
+
+\setbeamercolor{example text}{fg=sthlmGreen}
+\setbeamercolor{copyright text}{fg=sthlmPurple}
+
+% Palettes
+\setbeamercolor{palette primary}{fg=sthlmGrey, bg=sthlmDarkGrey}
+\setbeamercolor{palette secondary}{fg=sthlmDarkGrey,bg=sthlmGrey}
+\setbeamercolor{palette tertiary}{fg=sthlmLightBlue, bg=sthlmDarkGrey}
+\setbeamercolor{palette quaternary}{fg=sthlmGrey, bg=sthlmBlue}
+\setbeamercolor{mini frame}{bg=sthlmGrey}
+\setbeamertemplate{section in head/foot shaded}[default][50]
+
+\setbeamercolor{section in head/foot}{fg=black!30!white, bg=sthlmDarkGrey}
+
+% Titlepage
+\setbeamercolor{title}{parent=normal text}
+\setbeamercolor{subtitle}{fg=sthlmDarkGrey!70!white}
+\setbeamercolor{institute}{parent=normal text}
+
+% Content
+\setbeamercolor{frametitle}{parent=palette primary}
+
+% Blocks
+\setbeamercolor{block title}{fg=white,bg=sthlmBlue}
+\setbeamercolor{block body}{fg=sthlmDarkGrey, bg=sthlmGrey}
+\setbeamercolor{block title example}{fg=white, bg=sthlmGreen}
+\setbeamercolor{block body example}{fg=sthlmDarkGrey, bg=sthlmLightGreen}
+\setbeamercolor{block title alerted}{fg=white, bg=sthlmRed}
+\setbeamercolor{block body alerted}{fg=sthlmDarkGrey, bg=sthlmLightRed}
+
+% Notes
+\setbeamercolor{note page}{fg=sthlmDarkGrey,bg=sthlmGrey}
+\setbeamercolor{note title}{fg=white, bg=sthlmDarkGrey}
+\setbeamercolor{note date}{parent=note title}
+
+% Page Number
+\setbeamercolor{page number in head/foot}{fg=sthlmDarkGrey}
+\setbeamercolor{qed}{fg=sthlmGreen}
+\setbeamercolor{itemize item}{fg=sthlmBlue}
+\setbeamercolor{itemize subitem}{fg=sthlmBlue}
+\setbeamercolor{itemize subsubitem}{fg=sthlmBlue}
+
+\if@beamer@sthlm@greybg
+% General
+\setbeamercolor{normal text}{fg=sthlmDarkGrey,bg=sthlmGrey!90!white}
+\setbeamercolor{block body}{fg=sthlmDarkGrey, bg=sthlmGrey!90!black}
+\fi
+
+\if@beamer@sthlm@cblock
+
+\setbeamercolor{block title}{fg=white,bg=sthlmBlue}
+\setbeamercolor{block body}{fg=sthlmDarkGrey, bg=sthlmLightBlue}
+\setbeamercolor{block title example}{fg=white, bg=sthlmGreen}
+\setbeamercolor{block body example}{fg=sthlmDarkGrey, bg=sthlmLightGreen}
+\setbeamercolor{block title alerted}{fg=white, bg=sthlmOrange}
+\setbeamercolor{block body alerted}{fg=sthlmDarkGrey, bg=sthlmOrange!80!white}
+
+\setbeamercolor{qed}{fg=sthlmDarkGrey}
+\setbeamercolor{itemize item}{fg=sthlmBlue}
+\setbeamercolor{itemize subitem}{fg=sthlmBlue}
+\setbeamercolor{itemize subsubitem}{fg=sthlmBlue}
+\fi
+
+\mode<all>

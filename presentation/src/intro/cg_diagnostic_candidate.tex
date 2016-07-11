@@ -1,0 +1,108 @@
+\begin{frame}
+  \frametitle{Candidate Generation}
+  \framesubtitle{Diagnostic Candidate}
+  \only<1>{
+    \monocolumn{
+      \begin{tikzpicture}
+        \tikzstyle{every node}=[
+        align=center,
+        minimum height=1.2cm,
+        font=\small];
+        \node [rectangle, rounded corners, draw, anchor=north, minimum width=0.5\columnwidth,fill=white,thick,    minimum height=1.5cm,
+        ] (box) at (0, 0){};
+
+
+        \node [left=0.5cm of box] (obs) {Spectrum};
+        \node [right=0.5cm of box] (diag){Diagnostic \\ Report};
+
+
+        \node [fill=clra,rectangle, rounded corners, draw, left = -0.5cm of box, anchor=west] (cg) {Candidate \\ Generation};
+        \node [opacity=0.1,fill=clrb,rectangle, rounded corners, draw, right = -0.5cm of box, anchor=east] (cr) {Candidate \\ Ranking};
+        \path[line] (obs.east) --(cg);
+        \path[line] (cg) -> (cr);
+        \path[line] (cr) -- (diag.west);
+      \end{tikzpicture}%
+
+      \vspace{1em}
+
+      \begin{description}
+      \item [Candidate] Every failed transaction activates at least
+        one faulty component
+      \item [Minimal] No smaller subset of components meets the above
+        criterion
+      \end{description}
+    }
+  }
+
+  \only<2>{
+  \monocolumn{
+      \resizebox{!}{5cm}{
+        \begin{tikzpicture}[->=latex]
+          \setlength{\tabcolsep}{0pt}%
+          \renewcommand{\arraystretch}{1.2}%
+          \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+          \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+          \tikzstyle{inner box} = [box, clip]
+          \tikzstyle{outer box} = [box, thick, draw]
+
+          \node[inner box] (a){
+            \begin{tabular}[m]{*{3}{C{1cm}}|C{1cm}C{0cm}}
+              {$c_1$} & $c_2$ & $c_3$ & $e_i$             \\\hline%
+              \hit    & \hit  & \nhit & \cellcolor{clre}1 \\
+              \hit    & \nhit & \hit  & \cellcolor{clre}1 \\\hline
+              \hit    & \nhit & \nhit & \cellcolor{clrd}0
+            \end{tabular}%
+          };
+          \node[outer box,fit=(a)] {};
+
+          \node[inner box, right= of a] (b) {%
+            \begin{tabular}[m]{*{3}{C{1cm}}}
+              $c_1$ & $c_2$ & $c_3$ \\\hline%
+              \hit  & \hit  & \nhit \\
+              \hit  & \nhit & \hit
+            \end{tabular}%
+          };
+          \node[outer box,fit=(b)] {};
+
+          \node[anchor=north,inner box,below=of b.south] (d) {%
+            \begin{tabular}[m]{*{3}{C{1cm}}}%
+              $c_1$ & \cellcolor{clra}$c_2$ & \cellcolor{clra} $c_3$ \\\hline%
+              \hit  & \chit                 & \nhit                  \\
+              \hit  & \nhit                 & \chit
+            \end{tabular}%
+          };
+          \node[outer box,fit=(d)] {};
+
+          \node[anchor=north east,inner box, below left=0cm and 1cm  of d.north west] (c) {%
+            \begin{tabular}[m]{*{3}{C{1cm}}}%
+              \cellcolor{clra}$c_1$ & $c_2$ & $c_3$ \\\hline%
+              \chit                 & \hit  & \nhit \\
+              \chit                 & \nhit & \hit
+            \end{tabular}%
+          };
+          \node[outer box,fit=(c)] {};
+
+          \node[anchor=north west,inner box,below right=0cm and 1cm of d.north east] (e) {%
+            \begin{tabular}[m]{*{3}{C{1cm}}}%
+              \cellcolor{clrb}$c_1$ & \cellcolor{clrb}$c_2$ & \cellcolor{clrb} $c_3$ \\\hline%
+              \cthit                & \cthit                & \nhit                  \\
+              \cthit                & \nhit                 & \cthit
+            \end{tabular}%
+          };
+          \node[outer box,fit=(e)] {};
+
+          \draw[line] (a) -> (b);
+          \draw[line] (b) -> (c);
+          \draw[line] (b) -> (d);
+          \draw[line] (b) -> (e);
+        \end{tikzpicture}
+      }
+    }
+  }
+  \note{
+    \begin{itemize}
+      \LARGE
+    \item \alert{Conceitos importantes}
+    \end{itemize}
+  }
+\end{frame}

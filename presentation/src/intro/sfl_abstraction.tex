@@ -1,0 +1,27 @@
+\begin{frame}
+  \frametitle{Spectrum-based Fault Localization}
+  \framesubtitle{Abstraction}
+
+  \monocolumn{%
+    \begin{description}
+    \item [\alert{Component} --] An indivisible\footnotemark[1] element of the system
+    \item [\alert{Transaction} --] A set of \alert{component} activations that:
+      \begin{enumerate}
+      \item Share a \alert{common goal}
+      \item The \alert{correctness} of the output can be \alert{verified}
+      \end{enumerate}
+    \end{description}
+  }%
+
+  \footnotetext[1]{From a diagnosis point-of-view}
+
+  \note{
+    \begin{itemize}
+    \item Reasoning Based SFL
+    \item \alert{$\uparrow$ Precisão}/\alert{$\downarrow$ complexidade}$\Rightarrow$abst de alto nível
+    \item Verificar se o resultado \alert{foi o esperado}
+    \end{itemize}
+
+
+  }
+\end{frame}

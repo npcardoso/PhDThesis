@@ -1,0 +1,46 @@
+\begin{frame}
+  \frametitle{Approach}
+  \framesubtitle{Error Diagnostic}
+  \bicolumn{
+    \begin{tikzpicture}
+      \tikzstyle{every node}=[font=\footnotesize];
+      \node[outer box,inner sep=2mm](a){
+        $      \pr{A_i, e_i\mid d} =
+        \begin{cases}
+          \color{dkclre}1 - G(A_i \mid d) & \textrm{if~} \color{dkclre}e_i = 1 \\
+          \color{dkclrd}G(A_i \mid d)     & \textrm{if~} \color{dkclrd}e_i = 0
+        \end{cases}$
+      };
+      \node[outer box,inner sep=2mm, below =3cm of a.south west,anchor=north west,overlay](b){
+        $\pr{A_i, e_i \mid d} =
+        {\color{dkclre} (1 - G(A_i \mid d)) \times e_i}
+        +
+        {\color{dkclrd}G(A_i \mid d)\times (1 - e_i)}$
+      };
+
+      \draw[ultra thick,>=latex](a.south) edge[->,out=-90,in=90] (b.north);
+    \end{tikzpicture}
+
+  }{
+    \vspace{0.5cm}
+    \hfill
+    \begin{tikzpicture}
+      \begin{axis}[
+        every axis/.append style={font=\tiny},
+        view={-35}{20},
+        width=0.9\columnwidth,
+        samples=15,
+        xlabel={$G(A_i \mid d)$},
+        ylabel={$e_i$},
+        zlabel={$\pr{A_i, e_i\mid d}$},
+        enlargelimits=0,
+        axis on top,
+        tick label style={font=\tiny},
+        colormap={bw}{gray(0cm)=(0); gray(1cm)=(1)}]
+        \addplot3 [ultra thick,domain=0:1, samples y=0, dkclre] (x,1,{1-x});
+        \only<2->{\addplot3[surf,domain=0:1,opacity=0.4,fill opacity=0.2,gray] {x*(1-y)+(1-x)*y};}
+        \addplot3 [ultra thick,domain=0:1, samples y=1, dkclrd] (x,0,{x});
+      \end{axis}
+    \end{tikzpicture}
+  }
+\end{frame}

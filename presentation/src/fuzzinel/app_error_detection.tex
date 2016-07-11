@@ -1,0 +1,25 @@
+\begin{frame}
+  \frametitle{Approach}
+  \framesubtitle{Error Encoding}
+  \monocolumn{
+    \begin{tikzpicture}
+      \node[outer box,inner sep=2mm](a){
+        $e =
+        \begin{cases}
+        1  & \longrightarrow \textnormal{\color{dkclre}Fail}                    \\
+        0      & \longrightarrow \textnormal{\color{dkclrd}Pass}                    \\
+      \end{cases}$
+    };
+    \node[outer box,inner sep=2mm, below right=1cm and 0cm of a](b){
+      $e =
+      \begin{cases}
+        1  & \longrightarrow \textnormal{\color{dkclre}Fail}                    \\
+        0      & \longrightarrow \textnormal{\color{dkclrd}Pass}                    \\
+        ]0; 1[ & \longrightarrow \textnormal{\color{dkclrb}Sub-optimal performance} \\
+      \end{cases}$
+    };
+
+    \draw[ultra thick,>=latex](a.east) edge[in=90,out=0,->] (b.north);
+    \end{tikzpicture}
+  }
+\end{frame}

@@ -1,0 +1,122 @@
+\newcommand{\rhit}{\rowcolor{clra}}
+\newcommand{\hhit}[1]{\cellcolor{clrb}$#1$}
+\newcommand{\staccatospectracall}[2]{%
+  \begin{tabular}[b]{#1}
+    #2
+  \end{tabular}%
+}
+
+\tikzset{
+  vis/.style={visible on=<#1->},
+  mcand/.style={line width=5pt},
+  cand/.style={alt=<#1->{}{mcand}},
+}
+\tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+
+\begin{frame}
+  \frametitle{Candidate Generation}
+  \framesubtitle{Example}
+  \monocolumn{
+    \resizebox{\columnwidth}{!}{
+      \begin{tikzpicture}[thick]
+        \tikzstyle{every node}=[fill=white,node distance=1.5cm, anchor=west, align=left, rounded corners, draw, inner sep=2pt]
+
+        \setlength{\tabcolsep}{6pt}
+
+        \node (a0) {
+          \staccatospectracall{nnn}
+          {$c_1$ & $c_2$ & $c_3$ \\ \hline
+            \hit  & \hit   & \nhit   \\
+            \hit  & \nhit   & \hit   \\}};
+
+        \node[align=center,mcand,above left=1cm and 3cm of a0.west,inner sep=1em](xxxx)  {Minimal \\ Candidate};
+
+        \node[left=1cm of xxxx.west]  {
+          \begin{tabular}{cc}
+            $c\not\in d$&\cellcolor{clrb} $c\in d$ \\ \hline
+            \multicolumn{2}{c}{Unfiltered} \\
+            \multicolumn{2}{c}{\cellcolor{clra}Filtered} \\
+          \end{tabular}};
+
+        \onslide<3->{
+          \node[mcand,below=of a0] (b1) {
+            \staccatospectracall{gnn}
+            {\hhit{c_1}  & $c_2$ & $c_3$ \\ \hline
+              \rhit\chit & \hit  & \nhit \\
+              \rhit\chit & \nhit & \hit  \\}};
+        }
+        \onslide<2->{
+          \node[left=3cm of b1] (b0) {
+            \staccatospectracall{ngn}
+            {$c_1$      & \hhit{c_2} & $c_3$ \\ \hline
+              \rhit\hit & \chit      & \nhit \\
+              \hit      & \nhit      & \hit  \\}};
+        }
+
+
+
+        \onslide<2->{
+          \node [cand=3,below=of b0.south west](c0) {
+            \staccatospectracall{ggn}
+            {\hhit{c_1} & \hhit{c_2} & $c_3$ \\ \hline
+              \rhit\chit & \chit      & \nhit \\
+              \rhit\chit     & \nhit      & \hit  \\}};
+
+          \node[mcand,right=of c0] (c1) {
+            \staccatospectracall{ngg}
+            {$c_1$      & \hhit{c_2} & \hhit{c_3} \\ \hline
+              \rhit\hit & \chit      & \nhit      \\
+              \rhit\hit & \nhit      & \chit      \\}};
+        }
+
+        \onslide<4->{
+          \node[right=3cm of b1] (b2) {
+            \staccatospectracall{nng}
+            {$c_1$      & $c_2$ & \hhit{c_3} \\ \hline
+              \hit      & \hit  & \nhit      \\
+              \rhit\hit & \nhit & \chit      \\}};
+
+
+          \node[cand=0,below=of b2.south east] (c3) {
+            \staccatospectracall{ngg}
+            {$c_1$      & \hhit{c_2} & \hhit{c_3} \\ \hline
+              \rhit\hit & \chit      & \nhit      \\
+              \rhit\hit & \nhit      & \chit      \\}};
+
+          \node[cand=0,left =of c3] (c2) {
+            \staccatospectracall{gng}
+            {\hhit{c_1}  & $c_2$ & \hhit{c_3} \\ \hline
+              \rhit\chit & \hit  & \nhit      \\
+              \rhit\chit & \nhit & \chit      \\}};
+        }
+
+
+
+        \onslide<2->{
+          \draw (a0.south) --  (b0.north);
+          \draw (b0.south) --  (c0.north);
+          \draw (b0.south) --  (c1.north);
+        }
+        \onslide<3->{
+          \draw (a0.south) --  (b1.north);
+        }
+
+        \onslide<4->{
+          \draw (a0.south) --  (b2.north);
+          \draw (b2.south) --  (c2.north);
+          \draw (b2.south) --  (c2.north);
+          \draw (b2.south) --  (c3.north);
+        }
+
+
+      \end{tikzpicture}
+    }
+  }
+  \note{
+    \begin{itemize}
+    \item Arvore de pesquisa
+    \item No $\rightarrow$ chamada ao algoritmo
+    \end{itemize}
+  }
+
+\end{frame}

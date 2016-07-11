@@ -1,0 +1,59 @@
+\begin{frame}
+  \frametitle{Optimizations}
+  \framesubtitle{Optimization 3}
+  \monocolumn{
+    \begin{tikzpicture}
+      \setlength{\tabcolsep}{0pt}%
+      \renewcommand{\arraystretch}{1.2}%
+      \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+      \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+      \tikzstyle{inner box} = [box, clip]
+      \tikzstyle{outer box} = [box, thick, draw]
+
+      \node[inner box] (a){
+        \begin{tabular}[m]{*{3}{C{0.7cm}}|C{1cm}C{0cm}}
+          {$c_1$} & $c_2$ & $c_3$ & $e_i$             \\\hline%
+          \hit    & \hit  & \nhit  & \cellcolor{clre}1 \\
+          \hit    & \nhit  & \hit  & \cellcolor{clre}1 \\
+          \rowcolor{clra}\nhit   & \nhit & \nhit  & \cellcolor{clra!50!clre}1 \\\hline
+          \hit    & \nhit & \nhit  & \cellcolor{clrd}0
+        \end{tabular}%
+      };
+      \node[outer box,fit=(a)] {};
+
+
+      \tikzstyle{every node}=[inner sep=0.3cm, draw,anchor=west,rectangle,minimum size=1em,rounded corners,fill=white, font=\Large]
+
+      \begin{scope}[
+        local bounding box=scope1,
+        level distance=1cm,
+        level 1/.style={sibling distance=1.4cm},
+        level 2/.style={sibling distance=0.7cm},
+        grow=right,]
+        \node[right=2.4cm of a.east, anchor=west] (b){}
+        child {
+          node {}
+          child { node {} }
+          child { node {}}
+        }
+        child {
+          node {}
+          child { node {} }
+          child { node {}}
+        }
+        child {
+          node {}
+          child { node {} }
+          child { node {}}
+        };
+      \end{scope}
+      \begin{pgfonlayer}{background}
+        \node[fill=none,outer box,inner sep=0.4cm,fit=(scope1)] (b){};
+      \end{pgfonlayer}
+      \draw[->=latex,line] (a.east) -> (b.west);
+      \draw[ultra thick,clre] (b.north east)+(0.5,0.5) -- ($(b.south west)+(-0.5,-.5)$);
+
+    \end{tikzpicture}
+  }
+
+\end{frame}

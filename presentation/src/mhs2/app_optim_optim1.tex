@@ -1,0 +1,109 @@
+\begin{frame}
+  \frametitle{Optimizations}%
+  \framesubtitle{Optimization 1}%
+  \monocolumn{%
+    \scalebox{0.8}{
+      \begin{tikzpicture}[
+        scale=0.7,
+        level distance=1cm,
+        level 1/.style={sibling distance=2.4cm},
+        level 2/.style={sibling distance=1.2cm},
+        level 3/.style={level distance=1.3cm,},
+        grow=right]
+        \tikzstyle{every node}=[fill=none,inner sep=3pt, draw,anchor=west,rectangle,minimum size=0.5em,rounded corners,font=\footnotesize,text centered]
+
+        \tikzstyle{exopt}=[fill=clrb,opacity=0.5]
+        \tikzstyle{opt}=[fill=none,opacity=0.3]
+
+        \tikzstyle{xa}=[fill=clre,opacity=1]
+        \tikzstyle{xb}=[fill=clrb,opacity=1]
+        \tikzstyle{xc}=[fill=clrc,opacity=1]
+        \tikzstyle{xd}=[fill=clrd,opacity=1]
+
+        \tikzstyle{req}=[fill=clra,opacity=1]
+        \tikzstyle{outer box} = [fill=none,box, thick, draw]
+        \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+        \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+
+
+
+
+        \begin{scope}[local bounding box=scope1]
+          \node {$\set{}$}
+          child { node {$\set{c_3}$}
+            child { node[xb] {$\set{c_2, c_3}$}
+              child { node[xa] {$\set{c_1, c_2, c_3}$} }}
+            child { node[xd] {$\set{c_1, c_3}$}
+              child { node[xa] {$\set{c_1, c_2, c_3}$} }}}
+          child { node {$\set{c_2}$}
+            child { node[xb] {$\set{c_2, c_3}$}
+              child { node[xa] {$\set{c_1, c_2, c_3}$} }}
+            child { node[xc] {$\set{c_1, c_2}$}
+              child { node[xa] {$\set{c_1, c_2, c_3}$} }}}
+          child { node {${\set{c_1}}$}
+            child { node[xd] {$\set{c_1, c_3}$}
+              child { node[xa] {$\set{c_1, c_2, c_3}$} }}
+            child { node[xc] {$\set{c_1, c_2}$}
+              child { node[xa] {$\set{c_1, c_2, c_3}$} }}};
+        \end{scope}
+        \begin{pgfonlayer}{background}
+          \node[outer box,fit=(scope1),inner sep=0.4cm] (a) {};
+        \end{pgfonlayer}
+
+        \begin{scope}[local bounding box=scope2]
+          \node[anchor=west,right=2cm of a.east, req]  {$\set{}$}
+          child {
+            node[req] {$\set{c_3}$}
+            child {
+              node[opt] {$\set{c_2, c_3}$}
+              child[opt] {
+                node[opt] {$\set{c_1, c_2, c_3}$}
+              }
+            }
+            child {
+              node[opt] {$\set{c_1, c_3}$}
+              child[opt] {
+                node[opt] {$\set{c_1, c_2, c_3}$}
+              }
+            }
+          }
+          child {
+            node[req] {$\set{c_2}$}
+            child[opt] {
+              node[req] {$\set{c_2, c_3}$}
+              child[opt] {
+                node[opt] {$\set{c_1, c_2, c_3}$}
+              }
+            }
+            child[opt] {
+              node[opt] {$\set{c_1, c_2}$}
+              child[opt] {
+                node[opt] {$\set{c_1, c_2, c_3}$}
+              }
+            }
+          }
+          child {
+            node[req] {$\set{c_1}$}
+            child {
+              node[req] {$\set{c_1, c_3}$}
+              child[opt] {
+                node[opt] {$\set{c_1, c_2, c_3}$}
+              }
+            }
+            child {
+              node[req] {$\set{c_1, c_2}$}
+              child[opt] {
+                node[req] {$\set{c_1, c_2, c_3}$}
+              }
+            }
+          };
+        \end{scope}
+        \begin{pgfonlayer}{background}
+          \node[outer box,fit=(scope2),inner sep=0.4cm] (b) {};
+        \end{pgfonlayer}
+        \draw[->=latex,line] (a.east) -> (b.west);
+
+      \end{tikzpicture}
+    }
+  }
+\end{frame}

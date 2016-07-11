@@ -1,0 +1,155 @@
+\pgfmathdeclarefunction{gauss}{3}{%
+  \pgfmathparse{1/(#3*sqrt(2*pi))*exp(-((#1-#2)^2)/(2*#3^2))}%
+}
+\pgfplotsset{nfge example/.style= {
+    height=6cm,
+    xlabel={$\ST$},
+    domain=0:60,
+    declare function={
+      pass_kde(\t,\b)=gauss(\t, 5, \b) + gauss(\t, 7, \b) + gauss(\t, 15, \b) + gauss(\t, 20, \b) + gauss(\t, 40, \b);
+      fail_kde(\t,\b)=gauss(\t, 40, \b) + gauss(\t, 44, \b) + gauss(\t, 60, \b);
+    },
+  },
+  nfge limits/.style={
+    ymax=0.25,
+  }
+}
+
+\pgfplotsset{likelihood plot/.style= {
+    width=\columnwidth,
+    samples=30,
+    domain=0:1,
+    ymin=0,
+    xmin=0,
+    xtick={0,10,...,60},
+    enlarge y limits=upper,
+    every axis plot post/.append style={thick},
+    no markers,
+    y tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator
+    },
+    z tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator
+    },
+  }}
+
+\tikzset{every picture/.style={line width=1pt}}
+\pgfplotsset{
+  cycle list name=exotic,
+  axis y line=left,
+  axis x line=bottom,
+}
+
+\newcommand{\passkdeexample}[2][]{
+  \addplot+[#1] {pass_kde(x,#2)};
+  \addlegendentry{$\BW = #2$};
+}
+
+\newcommand{\sumone}[1]{\pgfmathparse{#1+1}}
+\begin{frame}
+  \frametitle{Approach}
+  \framesubtitle{Example}
+  \vspace{0.5cm}
+
+  \monocolumn {
+    \bicolumn{%
+      $\FB_{pass} = \set{5,7,15,20,40}$
+
+      \onslide<.(2)->{%
+        $\FB_{fail} = \set{40, 44, 60}$%
+      }
+    }{%
+      \onslide<.(3)->{%
+        $\supergj = \frac{\KDE[pass]}{\KDE[pass] + \KDE[fail]}$%
+      }
+    }
+    \vspace{0.5cm}
+    \resizebox{\columnwidth}{!}{
+      \begin{tikzpicture}
+        \only<-.(1)>{
+          \begin{axis} [
+            likelihood plot,
+            nfge limits,
+            nfge example,
+            hide axis,
+            stack plots=y]
+            \foreach \k/\s[count=\y] in {5/0, 7/-1, 15/-2, 20/-3, 40/-4} {
+              \addplot+[fill,opacity=0.3] {gauss(x, \k, 6.328)}\closedcycle;;;
+            }
+          \end{axis}
+
+          \begin{axis} [
+            likelihood plot,
+            nfge limits,
+            nfge example,
+            ylabel={Density},
+            /pgfplots/extra x ticks={5,7,15},
+            ]
+
+            \foreach \k/\s[count=\y] in {5, 7, 15, 20, 40} {
+              \addplot+[ultra thin] {gauss(x, \k, 6.328)};
+            }
+
+            \foreach \k/\s[count=\y] in {5, 7, 15, 20, 40} {
+              \addplot [every axis plot post/.append style={mark=*,mark options={fill=lime!70!black,draw=black}}, ycomb, fill=black,black, draw opacity=0.3, ultra thick] plot coordinates {(\k, 0.063)};
+            }
+
+          \end{axis}
+
+          \begin{axis} [
+            nfge example,
+            likelihood plot,
+            hide axis,
+            nfge limits,
+            ]
+            \addplot[black] coordinates {(0,0)};
+            \addplot coordinates {(0,0)};
+          \end{axis}
+        }
+
+        \only<.(2)->{
+          \begin{axis} [
+            likelihood plot,
+            nfge limits,
+            nfge example,
+            ylabel={Density},
+            no marks
+            ]
+            \addplot[clrd!80!black] coordinates {(0,0)};
+            \addplot[clre!80!black] coordinates {(0,0)};
+            \addlegendentry{$\KDE[pass]$}
+            \addlegendentry{$\KDE[fail]$}
+            \only<3->{
+              \addplot[clra!80!black] coordinates {(0,0)};
+              \addlegendentry{$\supergj{}$}
+            }
+
+            \addplot[draw=clrd!50!black,fill=clrd,fill opacity=0.4] {pass_kde(x,6.328)}\closedcycle;
+            \addplot[draw=clre!50!black,fill=clre,fill opacity=0.4] {fail_kde(x,5.392)}\closedcycle;
+          \end{axis}
+        }
+        \onslide<.(3)->{
+          \begin{axis} [
+            ylabel={Probability},
+            axis y line*=right,
+            ylabel near ticks,
+            yticklabel pos=right,
+            likelihood plot,
+            nfge example,
+            hide x axis,
+            ]
+            \alt<.(3)->{
+              \addplot[clra!80!black] {pass_kde(x,6.328) / (fail_kde(x,5.392) + pass_kde(x,6.328))};
+            }{}
+          \end{axis}
+        }
+      \end{tikzpicture}
+    }
+  }
+  \note{
+    \begin{itemize}
+    \item Kernel Density Estimation
+    \item Função de densidade de probabilidade (PDF)
+    \end{itemize}
+  }
+\end{frame}

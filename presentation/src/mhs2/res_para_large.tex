@@ -1,0 +1,36 @@
+\renewcommand{\scaleig}[2][]{\includegraphics[scale=1,#1]{#2}}
+\begin{frame}
+  \frametitle{Parallelization -- Benchmark}
+  \framesubtitle{$M,N = 10000$}
+  \monocolumn{
+    \begin{tikzbenchmarkfig}{}
+      \node (main0){};
+      \node (main){};
+      \node[main plot,above=0cm of main] {%
+        \scaleig[trim=1.13cm 4.7cm  0.53cm  1cm, clip, page=1]
+        {figures/mhs2/parallel_scatter_large.pdf}
+      };
+
+      \begin{scope}[local bounding box=scope1]
+
+      \begin{pgfonlayer}{background}
+        \node[main plot,below=0.9cm of main] (main){%
+          \scaleig[trim= 1.12cm 1.13cm  0.53cm  2cm, clip, page=1]
+          {figures/mhs2/parallel_scatter_large.pdf}
+        };
+        \drawaxes{main}
+        \node[below=0cm of main.south](axisx){%
+        \scaleig[trim=1.12cm 0.7cm 0cm 5.26cm, clip, page=1]
+        {figures/mhs2/parallel_scatter_large.pdf}};
+        \node[left=0cm of main.north west,anchor=north east](axisy){
+        \scaleig[trim=0.7cm 1.13cm 9.1cm 2cm, clip,page=1]
+        {figures/mhs2/parallel_scatter_large.pdf}};
+      \end{pgfonlayer}
+      \end{scope}
+      \node[left=0.2cm of scope1.west,anchor=east]{%
+        \rotatebox{90}{\# Candidates}};
+      \node[below=0.1cm of axisx.south]{CPU Time};
+
+    \end{tikzbenchmarkfig}
+  }
+\end{frame}

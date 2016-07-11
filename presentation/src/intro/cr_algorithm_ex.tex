@@ -1,0 +1,116 @@
+\pgfplotsset{
+  cycle list name=exotic,
+  axis y line=left,
+  axis x line=bottom,
+}
+\pgfplotsset{%
+  colormap={rg}{color(0)=(lime!90!black); color(1)=(red!60!white)},
+}
+
+\pgfplotsset{likelihood plot/.style= {
+    height=4cm,
+    width=0.9\columnwidth,
+    samples=40,
+    domain=0:1,
+    ymin=0,
+    xmin=0,
+    enlarge y limits=upper,
+    every axis plot post/.append style={very thick},
+    no markers,
+    y tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator
+    },
+    z tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator
+    },
+  }}
+
+\pgfplotsset{comb/.style= {dashed, draw=gray!40,
+    every axis plot post/.append style=
+    {mark=*,mark options={fill=lime!90!black,draw=gray!60, solid}} } }
+
+\begin{frame}
+  \frametitle{Candidate Ranking}
+  \framesubtitle{Example}
+  \monocolumn{
+    \resizebox{\columnwidth}{!}{
+      \begin{tikzpicture}[]
+        \setlength{\tabcolsep}{0pt}%
+        \renewcommand{\arraystretch}{1.2}%
+
+        \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+        \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners,align=center]
+        \tikzstyle{inner box} = [box, clip]
+        \tikzstyle{outer box} = [box, thick, draw]
+        \tikzstyle{some space} = [inner sep=0.5em]
+
+        \node[inner box] (a){%
+          \begin{tabular}[m]{C{1cm}|*{3}{C{1cm}}|C{1cm}C{0cm}}
+            \multirow{2}{*}{$i$} & \multicolumn{3}{c|}{$A_{ij}$} & \multirow{2}{*}{$e_i$}                                          \\\cline{2-4}
+                                 & $c_1$                    & $c_2$             & $c_3$             &                       \\\hline%
+            $1$     & \cellcolor{clrc}1        & \cellcolor{clrc}1 & 0                 & \cellcolor{clre}1  &\\
+            $2$     & \cellcolor{clrc}1        & 0                 & \cellcolor{clrc}1 & \cellcolor{clre}1  &\\
+            $3$     & \cellcolor{clrc}1        & 0                 & 0                 & \cellcolor{clrd}0  &
+          \end{tabular}};
+        \node[outer box,thin,fit=(a)] {};
+
+        \node[inner box, below=of a,some space] (D){%
+          $D = \Big\{\set{c_1}, \set{c_2,c_3}\Big\}$
+        };
+
+        \node[outer box,fit=(a) (D),some space] (a){};
+        \onslide<+(1)->
+        {
+          \node[inner box, right= of a.east,some space,align=right]  (b){
+            $\posterior[\set{c_1}] = \overbrace{ \frac{1}{1000} \cdot \frac{999}{1000} \cdot \frac{999}{1000} }^{\prior} \times \overbrace{\vphantom{\frac{1}{1}} \underbrace{(1-g_1)}_{t_1} \cdot \underbrace{(1-g_1)}_{t_2} \cdot \underbrace{g_1}_{t_3} }^{\likelihood}$
+          };
+          \node[outer box,fit=(b)] {};
+
+          \draw[line] (a) -> (b);
+
+          \node[outer box,below right= 0.7cm of b.south,some space] (c){
+            \begin{tikzpicture}
+              \begin{axis} [
+                likelihood plot,
+                colormap name=rg,
+                xlabel={\large$g_1$},
+                xtick={0,0.33,0.66,1},
+                width=0.45\columnwidth
+                ]
+                \addplot+[mesh] {(1-x)*(1-x)*(x)};
+
+                \addplot+[ycomb,comb] plot coordinates {(0.333,0.149)};
+                \addplot+[xcomb,comb] plot coordinates {(0.333,0.149)};
+
+
+              \end{axis}
+            \end{tikzpicture}
+          };
+          \draw[line] (b) -> (c);
+        }
+        \onslide<+(1)->
+{
+          \node[outer box,below right= of a.south east,some space,anchor=west] (b2){$\posterior[\set{c_2, c_3}] = \cdots$};
+          \draw[line] (a) edge[out=0,in=180] (b2);
+
+          \node[outer box,below= 5cm of b.south,some space] (d){
+            $\posterior[\set{c_1}] = 0.993$ \\
+            $\posterior[\set{c_2,c_3}] = 0.007$
+          };
+          \draw[line] (b2) ->node[pos=0.5,outer box,some space,fill=white]{$\cdots$} (d);
+          \draw[line] (c) -> (d);
+
+        }
+      \end{tikzpicture}
+    }
+  }
+
+
+  \note{
+    \begin{itemize}
+      \compresslist
+    \item Com este exemplo acabo então a intro da minha apresentação e
+      vou  passar a descrever as minhas contribuições.
+    \end{itemize}
+  }
+\end{frame}

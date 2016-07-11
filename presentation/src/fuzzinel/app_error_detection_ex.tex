@@ -1,0 +1,90 @@
+\begin{frame}
+  \frametitle{Approach}
+  \framesubtitle{Error Encoding -- Example}
+  \begin{itemize}
+  \item[\bulletgood] The throughput of a data storage system ($tp$) must be greater $1$ GB/s
+  \item[\alt<2->{\bulletgood}{\bulletbad}] Between $1$GB/s and $2$GB/s the performance is sub-optimal
+  \end{itemize}
+
+  \monocolumn{
+    \begin{tikzpicture}
+      \node[outer box,inner sep=2mm](a){
+        $e_{crisp}(tp) =
+        \begin{cases}
+          1 & \textrm{if~} tp < 1 \\
+          0 & \textrm{if~}  tp \geq 1\\
+        \end{cases}$
+      };
+      \onslide<2->{\node[outer box,inner sep=2mm, below right=0.3cm and -1cm of a](b){
+          $e_{fuzzy}(tp) =
+          \begin{cases}
+            1 & \textrm{if~} tp < 1 \\
+            0 & \textrm{if~}  tp \geq 2\\
+            2 - (tp - 1) & \textrm{if~} 1 \leq tp < 2 \\
+          \end{cases}$
+        };
+
+        \draw[ultra thick,>=latex](a.east) edge[in=90,out=0,->] (b.north);
+      }
+    \end{tikzpicture}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Approach}
+  \framesubtitle{Error Encoding -- Example}
+
+  \monocolumn{
+    \begin{tikzpicture}
+      \begin{axis} [
+        mystyle,
+        every axis/.append style={font=\footnotesize},
+        height=3.8cm,
+        width=0.7\columnwidth,
+        samples=50,
+        ymax=1.1,
+        ymin=-0.02,
+        ytick={0.001, 0.5, 1},
+        xtick={0,0.5,1,1.5,2,2.3},
+        yticklabels={{\tiny\color{dkclrd}(pass)} $0$ , $0.5$, {\tiny\color{dkclre}(fail)} $1$},
+        xlabel=$tp$,
+        ylabel=$e$,
+        legend style={
+          at={(0.5,1.1)},
+          anchor=south},
+        ]
+
+        \addplot+[dashed,ultra thick,no marks,domain=0:2.5] {(x<1)};
+        \begin{pgfonlayer}{background}
+          \addplot+[ultra thick,no marks,domain=0:2.5] {(x<1) + (x>=1 && x < 2)*(1 - (x-1))};
+        \end{pgfonlayer}
+        \legend{$e_{crisp}(tp)$, $e_{fuzzy}(tp)$}
+        \only<2->{
+          \addplot[mark=*] coordinates {(0.5 ,1)};
+        }
+        \only<3->{
+          \addplot[color=black,mark=*] coordinates {(2.3, 0)};
+        }
+        \only<4->{
+          \addplot[mark=*] coordinates {(1.5,0.5)};
+          \addplot[mark=*] coordinates {(1.5,0)};
+        }
+
+
+      \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}[]
+      \node[inner box] (a){%
+        \begin{tabular}[b]{C{2em}|C{2em}|*{2}{C{3em}}c@{}}
+          $i$              & $tp$ &  $e_{crisp}$       & \vspace{0.1em}$e_{fuzzy}$ \\\hline
+          \onslide<2->{$1$ & 0.5  & \cellcolor{clre}1 & \cellcolor{clre}1   & } \\
+          \onslide<3->{$2$ & 2.3  & \cellcolor{clrd}0 & \cellcolor{clrd}0   & } \\
+          \onslide<4->{$3$ & 1.5  & \cellcolor{clrd}0 & \cellcolor{clrb}0.5 & }%
+        \end{tabular}%
+        \hspace{-8pt}
+      };
+
+      \node[outer box,thin,fit=(a)] {};
+    \end{tikzpicture}
+  }
+\end{frame}

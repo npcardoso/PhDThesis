@@ -1,0 +1,26 @@
+\begin{frame}
+  \frametitle{\NFGE}
+  \framesubtitle{State Spectrum}
+
+
+  \monocolumn{
+    \begin{tikzpicture}
+      \node[outer box,inner sep=2mm,font=\small](a){
+        $A_{ij} = \begin{cases}
+          1,                                   & \textrm{$c_j$ involved in transaction $i$}           \\
+          0,                                   & \textrm{otherwise}
+        \end{cases}$
+      };
+      \node[outer box,inner sep=2mm, below right=1cm and 4cm of a.south,anchor=north,font=\small](b){
+        $A_{ij} =
+        \begin{cases}
+          \angledlist{st_{1}, \cdots, st_{k}}, & \textrm{$c_j$ involved in transaction $i$}           \\
+          \emptyset,                           & \textrm{otherwise}
+        \end{cases}
+        $
+      };
+
+      \draw[ultra thick,>=latex](a.east) edge[in=90,out=-0,->] (b.north);
+    \end{tikzpicture}
+  }
+\end{frame}

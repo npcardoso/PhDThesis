@@ -1,0 +1,62 @@
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%	FONT FAMILES
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+\ProvidesPackage{beamerfontthememsthlm}
+
+% NEWPX FONT (Latex)
+
+\if@donewPxFont%
+% Load newPx Font %
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[full]{textcomp}
+\RequirePackage[osf]{newpxtext} % osf for text, not math
+\RequirePackage{cabin} % sans serif
+\RequirePackage[varqu,varl]{inconsolata} % sans serif mono font
+\RequirePackage[bigdelims,vvarbb]{newpxmath} % bb from STIX
+\RequirePackage[cal=boondoxo]{mathalfa} % This package provides a standard means of setting math alphabets associated with the macros \mathcal, \mathbb, \mathfrak
+\fi%
+
+% PROPRIETARY STOCKHOLM STAD FONTS (XeTeX)
+
+\if@dosthlmStadFont%
+% Load sthlmStad Fonts %
+\usefonttheme{professionalfonts}
+\RequirePackage[no-math]{fontspec}
+\defaultfontfeatures{Mapping=tex-text}
+\setsansfont[BoldFont={Stockholm Type Display Bold}]{Stockholm Type Display Regular}
+
+\AtBeginEnvironment{tabular}{\setsansfont[BoldFont={Stockholm Type}, Numbers={Monospaced}]{Stockholm Type}}
+\fi%
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+%	FONT ASSIGMENTS
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+% Title Page
+\setbeamerfont{title}{family=\sffamily, series=\sfshape, size=\huge}
+\setbeamerfont{subtitle}{size=\Large}
+\setbeamerfont{date}{size=\footnotesize}
+\setbeamerfont{author}{size=\Large}
+\setbeamerfont{institute}{size=\tiny}
+
+% Section
+\setbeamerfont{section title}{size=\Large}
+
+% Content
+\setbeamerfont{frametitle}{family=\sffamily, size=\Large}
+\setbeamerfont{copyright text}{size=\tiny}
+\newcommand{\addheight}{\parbox{0pt}{\rule[-0.5ex]{0pt}{2.5ex}}}
+\setbeamerfont{block title}{series=\sffamily\addheight, size=\large}
+\setbeamerfont{block title alerted}{family=\sffamily, size=\large}
+\setbeamerfont{alerted text}{series=\sffamily}%, series=\bfseries}
+\setbeamerfont{block title example}{family=\sffamily, size=\large}
+\setbeamerfont{example text}{series=\scshape}
+
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{caption name}{family=\small}
+
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+
+
+\linespread{1.15}

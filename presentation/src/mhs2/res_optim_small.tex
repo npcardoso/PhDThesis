@@ -1,0 +1,62 @@
+\renewcommand{\scaleig}[2][]{\includegraphics[scale=1,#1]{#2}}
+\begin{frame}
+  \frametitle{Optimizations -- Benchmark}
+  \framesubtitle{$M,N = 10$}
+  \monocolumn{
+    \begin{tikzbenchmarkfig}{Small Problems}
+      \node(main0){};
+      \node(main){};
+      \begin{scope}[local bounding box=scope1]
+        \begin{pgfonlayer}{background}
+          \alt<+(1-)>{
+            \node[main plot,below=0.5cm of main.south,anchor=north] (main){%
+              \scaleig[trim=1.2cm 11cm 1cm 2.2cm, clip, page=4]%
+              {figures/mhs2/optim_small.pdf}%
+            };
+            \node[left=0cm of main.north west,anchor=north east](axisy){
+              \scaleig[trim=0.7cm 11cm 9.07cm 2cm, clip,page=4]
+              {figures/mhs2/optim_small.pdf}};
+            \node[left=0.2cm of scope1.west,anchor=east]{
+              \rotatebox{90}{Relative Improvement (log)}};
+          }{
+            \node[main plot,below=0.5cm of main.south,anchor=north] (main){%
+              \scaleig[trim=1.2cm 11cm 1cm 2.2cm, clip, page=3]%
+              {figures/mhs2/optim_small.pdf}%
+            };
+            \node[left=0cm of main.north west,anchor=north east](axisy){
+              \scaleig[trim=0.7cm 11cm 9.07cm 2cm, clip,page=3]
+              {figures/mhs2/optim_small.pdf}};
+            \node[left=0.2cm of scope1.west,anchor=east]{
+              \rotatebox{90}{Throughput (log)}};
+          }
+          \node[below=0cm of main.south](axisx){
+            \scaleig[trim=1.2cm 0.6cm 1cm 15.4cm, clip, page=3]
+            {figures/mhs2/optim_small.pdf}};
+          \drawaxes{main}
+        \end{pgfonlayer}
+      \end{scope}
+
+
+
+      \node[below=0.1cm of axisx.south]{$R$};
+
+      \node[above=-0.4cm of main0.north, anchor=south,align=center] (capt){
+        \scaleig[trim=0.9cm 14.5cm 0.5cm 1cm, clip, page=3]
+        {figures/mhs2/optim_small.pdf}};
+    \end{tikzbenchmarkfig}
+  }
+  \note{
+    \begin{itemize}
+      \compresslist
+    \item \alert{Escala Log}
+    \item Staccato dependente do valor de R
+    \item Se normalizarmos... melhoria de:
+      \begin{itemize}
+      \compresslist
+      \item max: $\approx$ 1M $\times$
+      \item avg: 33k $\times$
+      \end{itemize}
+    \item A melhoria é maior quanto maior o problema
+    \end{itemize}
+  }
+\end{frame}

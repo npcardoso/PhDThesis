@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   width="1674"
+   height="852"
+   sodipodi:docname="haslab.pdf">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1336"
+     inkscape:window-height="746"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.5"
+     inkscape:cx="547.50597"
+     inkscape:cy="319.64536"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="1072.681,45.254834"
+       id="guide3993" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="864.08449,134.35029"
+       id="guide3995" />
+  </sodipodi:namedview>
+  <g
+     id="g3987">
+    <path
+       transform="matrix(0.90929853,0,0,0.93779069,13.516013,-2.409612)"
+       d="m 580.33037,178.63957 c 0,85.6318 -71.79835,155.0501 -160.36611,155.0501 -88.56775,0 -160.3661,-69.4183 -160.3661,-155.0501 0,-85.631801 71.79835,-155.050092 160.3661,-155.050092 88.56776,0 160.36611,69.418291 160.36611,155.050092 z"
+       sodipodi:ry="155.05009"
+       sodipodi:rx="160.3661"
+       sodipodi:cy="178.63957"
+       sodipodi:cx="419.96426"
+       id="path2987"
+       style="fill:#0090b2;fill-opacity:1;stroke:none"
+       sodipodi:type="arc" />
+    <path
+       transform="matrix(0.90929853,0,0,0.93779069,-216.84878,406.4973)"
+       d="m 580.33037,178.63957 c 0,85.6318 -71.79835,155.0501 -160.36611,155.0501 -88.56775,0 -160.3661,-69.4183 -160.3661,-155.0501 0,-85.631801 71.79835,-155.050092 160.3661,-155.050092 88.56776,0 160.36611,69.418291 160.36611,155.050092 z"
+       sodipodi:ry="155.05009"
+       sodipodi:rx="160.3661"
+       sodipodi:cy="178.63957"
+       sodipodi:cx="419.96426"
+       id="path2987-6"
+       style="fill:#0090b2;fill-opacity:1;stroke:none"
+       sodipodi:type="arc" />
+    <path
+       transform="matrix(0.90929853,0,0,0.93779069,244.81126,405.5853)"
+       d="m 580.33037,178.63957 c 0,85.6318 -71.79835,155.0501 -160.36611,155.0501 -88.56775,0 -160.3661,-69.4183 -160.3661,-155.0501 0,-85.631801 71.79835,-155.050092 160.3661,-155.050092 88.56776,0 160.36611,69.418291 160.36611,155.050092 z"
+       sodipodi:ry="155.05009"
+       sodipodi:rx="160.3661"
+       sodipodi:cy="178.63957"
+       sodipodi:cx="419.96426"
+       id="path2987-5"
+       style="fill:#0090b2;fill-opacity:1;stroke:none"
+       sodipodi:type="arc" />
+    <path
+       id="path3786"
+       d="m 650.375,196.21875 c -41.41945,0 -76.63519,26.5363 -89.59375,63.53125 l -1.34375,0 c -29.71649,52.07381 -83.62193,88.5878 -146.40625,94.21875 l 0,29.53125 c 20.08792,7.03922 34.46875,25.97257 34.46875,48.21875 0,28.24122 -23.17304,51.125 -51.78125,51.125 -28.60821,0 -51.8125,-22.88378 -51.8125,-51.125 0,-22.17724 14.31391,-41.06538 34.3125,-48.15625 l 0,-29.6875 C 315.78106,348.00397 262.2136,311.5997 232.625,259.75 l -1.03125,0 c -13.15967,-36.3963 -48.26666,-62.4375 -89.53125,-62.4375 -52.519243,0 -95.09375,42.18883 -95.09375,94.21875 0,52.02992 42.574507,94.21875 95.09375,94.21875 3.30348,0 6.56458,-0.17429 9.78125,-0.5 l 0,0.8125 c 4.88664,-0.38081 9.82811,-0.5625 14.8125,-0.5625 103.82922,0 188,84.17079 188,188 0,40.98929 -13.13929,78.88911 -35.40625,109.78125 -0.12954,0.18137 -0.27795,0.34892 -0.40625,0.53125 -0.044,0.0606 -0.0809,0.12697 -0.125,0.1875 -10.86679,15.51981 -17.25,34.47888 -17.25,54.9375 0,52.58041 42.18883,95.21875 94.21875,95.21875 52.02992,0 94.1875,-42.63834 94.1875,-95.21875 0,-20.45862 -6.38321,-39.41769 -17.25,-54.9375 l 1.03125,0 c -22.55568,-31.01134 -35.875,-69.15671 -35.875,-110.4375 0,-103.82921 84.17078,-188 188,-188 4.6339,0 9.2314,0.17043 13.78125,0.5 l 0,-0.625 c 3.54577,0.40176 7.15929,0.59375 10.8125,0.59375 52.41918,0 94.90625,-42.48708 94.90625,-94.90625 0,-52.41917 -42.48707,-94.90625 -94.90625,-94.90625 z M 395.5625,411.0625 c -11.29836,0 -20.4375,9.1704 -20.4375,20.46875 0,11.29835 9.13914,20.4375 20.4375,20.4375 11.29836,0 20.46875,-9.13915 20.46875,-20.4375 0,-11.29835 -9.17039,-20.46875 -20.46875,-20.46875 z"
+       style="opacity:1;fill:#9e0125;fill-opacity:1;stroke:none"
+       inkscape:connector-curvature="0" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:211.21563721000001124px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#9e0125;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+     x="849.47113"
+     y="654.44153"
+     id="text3935"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3937"
+       x="849.47113"
+       y="654.44153">HASLab</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:137.94700623px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0090b2;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+     x="855.12396"
+     y="805.44043"
+     id="text3935-3"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3937-3"
+       x="855.12396"
+       y="805.44043">INESC</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:140.98193359px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#47cced;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+     x="1274.7841"
+     y="804.09259"
+     id="text3935-4"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3937-7"
+       x="1274.7841"
+       y="804.09259">TEC</tspan></text>
+</svg>

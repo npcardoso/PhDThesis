@@ -1,0 +1,67 @@
+\begin{frame}
+  \frametitle{Context}
+  \framesubtitle{Self-healing Systems}
+  \monocolumn{
+    \begin{itemize}
+    \item Research in \alert{Self-healing Systems} aims at:
+      \begin{enumerate}
+        \setlength{\itemsep}{0pt}
+      \item Improving the systems' dependability
+      \item Reducing human intervention
+      \end{enumerate}
+    \end{itemize}
+    \vspace{2em}
+    \resizebox{0.4\columnwidth}{!}{
+      \begin{tikzpicture}[y=0.80pt, x=0.8pt, inner sep=0pt, outer sep=0pt,yscale=-1,font=\LARGE]
+        \tikzstyle{ll}=[draw=black,line join=round,line cap=butt,miter
+        limit=4,nonzero rule,ultra thick,rounded corners];
+
+        \tikzstyle{aw}=[anchor=west];
+        \tikzstyle{ae}=[anchor=east];
+        \tikzstyle{ac}=[anchor=center];
+
+
+        \begin{scope}[xscale=1.4,yscale=1.5]
+
+          \begin{scope}[yshift=100,xscale=250,yscale=40]
+            \path[ll,fill=clrc] (0,1) rectangle (1,2.2);
+            \draw[ll,fill=white!80!black] (0.05,0.5) rectangle (0.95,1.6);
+            \path[ll,fill=white] (-0.05,0.2) rectangle (1.05,-3.2);
+            \path[ll] (0.15,-2) rectangle (0.85,1.2);
+            \path[ll,fill=clrd] (0.1,1) rectangle (0.4,1.4);
+            \path[ll,fill=clrd] (0.6,1) rectangle (0.9,1.4);
+          \end{scope}
+
+          \begin{scope}[xshift=0,xscale=250]
+            \path[ll,fill=clrb] (0.3,125) -- (0,125) -- (0,28) -- (0.38,95) --  cycle;
+            \path[ll,fill=clrb,line width=4pt] (0.02,23) -- (0.4,89) -- (0.48,89) -- (0.48,23)  -- cycle;
+            \path[ll,fill=clrb] (0.98,23) -- (0.6,89) -- (0.52,89) -- (0.52,23)  -- cycle;
+            \path[ll,fill=clrb] (1,125) -- (1,28) -- (0.62,95) -- (0.62,125) -- cycle;
+            \path[ll,fill=clre] (0.25,127) -- (0.35,80) -- (0.65,80) -- (0.75,127) -- cycle;
+
+
+            \begin{scope}[yshift=20, yscale=230]
+              \path(0.5,-0.065) node {Autonomic Manager};
+              \path[ac](0.25,0.64) node {Sensors};
+              \path[ac](0.75,0.64) node {Effectors};
+              \path(0.5,0.775) node {Managed Resource};
+              \path[aw] (0.05,0.3) node {Monitor};
+              \path(0.35,0.1) node {Analyze};
+              \path(0.65,0.1) node {Plan};
+              \path[ae] (0.95,0.3) node {Execute};
+              \path(0.5,0.37) node {Knowledge};
+            \end{scope}
+          \end{scope}
+        \end{scope}
+      \end{tikzpicture}
+    }
+  }
+  \note{
+    \begin{itemize}
+    \item \alert{Como resposta a este problema} ....
+    \item Em contraste... \alert{automatismos que permitam}
+    \item As contribuições inserem-se na fase de analise
+    \end{itemize}
+
+  }
+\end{frame}

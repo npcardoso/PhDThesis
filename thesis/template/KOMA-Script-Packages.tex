@@ -1,0 +1,22 @@
+%%% File encoding is ISO-8859-1 (also known as Latin-1)
+%%% You can use special characters just like ä,ü and ñ
+
+% Special KOMA-Script package - I added it because I also use the float package in this template, see:
+% http://tex.stackexchange.com/questions/51867/koma-warning-about-toc
+% CTAN: http://www.ctan.org/tex-archive/macros/latex/contrib/koma-script/doc
+\usepackage{scrhack}
+
+% Better support for marginnotes
+% new command: \marginnote
+% LaTeX standard command: \marginpar
+% CTAN: http://www.ctan.org/pkg/marginnote
+%\usepackage{marginnote}
+
+% Extended header and footer support
+% CTAN: http://www.ctan.org/pkg/scrpage2
+\usepackage[%
+    automark
+    ,ilines
+    ,headsepline
+    ,footsepline
+]{scrpage2}

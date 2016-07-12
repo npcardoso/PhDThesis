@@ -1,0 +1,87 @@
+\usepackage{bm}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\imply}{\Rightarrow}
+\newcommand{\diag}{\mathit{D}}
+\newcommand{\COMPS}{\mathit{COMPS}}
+\newcommand{\SD}{\mathit{SD}}
+\newcommand{\DS}{\mathit{DS}}
+\newcommand{\OBS}{\mathit{OBS}}
+\newcommand{\OBSJ}{\OBS_j}
+
+
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
+\newcommand{\fn}[1]{\bm{\mathit{#1}}}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\angledlist}[1]{\langle #1 \rangle}
+
+\newcommand{\pr}[1]{\fn{Pr}(#1)}
+\newcommand{\likelihoodii}[2][d]{\pr{A_{#2},e_{#2}\mid #1}}
+\newcommand{\likelihoodi}[1][d]{\pr{A_i,e_i\mid #1}}
+\newcommand{\likelihood}[1][d]{\pr{A,e\mid #1}}
+\newcommand{\prior}[1][d]{\pr{#1}}
+\newcommand{\posterior}[1][d]{\pr{#1\mid A,e}}
+\newcommand{\gFunc}[1][d]{\fn{G}(#1, A_i)}
+
+\newcommand{\likelihoodcii}[2][d]{\pr{A_{#2},e_{#2},c_{#2}\mid #1}}
+\newcommand{\likelihoodci}[1][d]{\pr{A_i,e_i,c_i\mid #1}}
+\newcommand{\likelihoodc}[1][d]{\pr{A,e,c\mid #1}}
+\newcommand{\posteriorc}[1][d]{\pr{#1\mid A,e,c}}
+
+\newcommand{\nfunc}[1]{\fn{n}_{#1}(j)}
+
+\newcommand{\mTrue}{\mathit{True}}
+\newcommand{\mFalse}{\mathit{False}}
+
+
+%Staccato
+\newcommand{\bigO}[1]{\fn{\mathcal O}\big(#1\big)}
+\newcommand{\powSet}[1]{\fn{\mathcal P}(#1)}
+
+\newcommand{\staccato}{\textit{Staccato}}
+\newcommand{\mhsII}{\texorpdfstring{$\textit{MHS}^\text{\smaller2}$}{MHS2}}
+\newcommand{\mhsIIURL}{\url{https://github.com/npcardoso/MHS2}}
+
+\newcommand{\HS}{\fn{HS}}
+\newcommand{\MHS}{\fn{MHS}}
+
+\newcommand{\setupName}[1]{\textit{#1}}
+\newcommand{\Opt}[1]{\setupName{Opt $\mathit{#1}$}}
+\newcommand{\Opts}[2]{\setupName{Opts $\mathit{#1}$ -- $\mathit{#2}$}}
+
+
+% Fuzzinel
+\newcommand{\cerror}[1][F]{\fn{\mu_{#1}}}
+\newcommand{\ferror}[1][F]{\fn{\mu_{\widetilde{#1}}}}
+\newcommand{\fuzzinel}{\texorpdfstring{$\textit{Fuzzinel}$}{Fuzzinel}}
+
+% NFGE
+\newcommand{\BW}{\mathit{bw}}
+\newcommand{\ST}{\mathit{st}}
+\newcommand{\FB}{\mathit{Fb}}
+\newcommand{\KDEfunc}[1][ej]{\fn{\hat{f}_{#1}}}
+\newcommand{\KDE}[1][ej]{\KDEfunc[#1](\ST)}
+\newcommand{\NFGE}{\texorpdfstring{$\textit{NFGE}$}{NFGE}}
+\newcommand{\supergjcomb}[1][j]{\fn{g^+_{#1}}(\ST)}
+\newcommand{\supergjcall}[2][\ST]{\texorpdfstring{\fn{\breve{g}_{#2}}(#1)}{g#2(#1)}}
+\newcommand{\supergj}[1][j]{\supergjcall{#1}}
+
+
+\newcommand{\supergFunc}[1][j,S]{\fn{\breve{G}}(#1)}
+
+\newcommand{\etc}{\emph{etc.}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\vs}{\textit{vs.}}
+
+
+\newcommand{\CrefPageParen}[1]{\Cref{#1} (page \pageref{#1})}
+\newcommand{\CrefPageSee}[2][see ]{#1\Cref{#2}, page \pageref{#2}}
+\newcommand{\pagerefTwo}[3][]{%
+  \ifthenelse{\equal{\pageref{#2}}{\pageref{#3}}}%
+  {page \pageref{#2}}%
+  {pages \pageref{#2} and \pageref{#3}#1}%
+}
+
+
+\AtBeginEnvironment{quote}{\sffamily \itshape}

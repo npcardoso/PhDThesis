@@ -1,0 +1,509 @@
+\newcommand\previewmode{}
+\input{template/template}
+
+\input{src/introduction/sprinkler}
+
+\begin{document}
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{irrigationexample-sprinklers}
+    \end{irrigationexample-sprinklers}
+    \node (legend_sprinkler) at (-3,1) {Sprinkler};
+    \draw[->,thick] (legend_sprinkler) -- (s4);
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{scope}[opacity=0.2]
+      \begin{irrigationexample-sprinklers}
+      \end{irrigationexample-sprinklers}
+    \end{scope}
+    \begin{scope}[ yshift=0,every node/.append style={
+        yslant=0.5,xslant=-1},yslant=0.5,xslant=-1]
+      \fill[brown,fill opacity=.3, rounded corners=2em] (-1,-1) rectangle (3,3);
+      \node [style=joint] (1_0) at (0, -0) {};
+      \node [style=joint] (1_1) at (0, 1) {};
+      \node [style=joint] (1_2) at (0, 2) {};
+      \node [style=joint] (1_3) at (1, 2) {};
+      \node [style=joint] (1_4) at (1, 1) {};
+      \node [style=joint] (1_5) at (1, -0) {};
+      \node [style=joint] (1_6) at (2, 1) {};
+      \node [style=joint] (1_7) at (2, 2) {};
+      \node [style=joint] (1_8) at (2, -0) {};
+      \node [style=joint] (1_9) at (0, -1) {};
+      \draw[thick] (1_0) -- (1_9);
+      \draw[thick] (1_0) -- (1_1);
+      \draw[thick] (1_1) -- (1_2);
+      \draw[thick] (1_0) -- (1_5);
+      \draw[thick] (1_5) -- (1_4);
+      \draw[thick] (1_4) -- (1_3);
+      \draw[thick] (1_5) -- (1_8);
+      \draw[thick] (1_3) -- (1_7);
+      \draw[thick] (1_8) -- (1_6);
+    \end{scope}
+    \node (water_supply) at (-3.5,-1){Water Supply};
+    \draw[->,thick] (water_supply) -- (1_9);
+    \node (water_supply) at (-3.5,0){Piping};
+    \draw[->,thick] (water_supply) -- (1_1);
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    % [background rectangle/.style={fill=YellowGreen}, show background rectangle]
+
+    \begin{irrigationexample-sprinklers}
+      \node [style=sensor] (sens1) at (0.5, 1.5) {};
+      \node [style=sensor] (sens2) at (1.5, 1.5) {};
+      \node [style=sensor] (sens3) at (1.5, 0.5) {};
+      \node [style=sensor] (sens4) at (0.5, 0.5) {};
+    \end{irrigationexample-sprinklers}
+    \node (legend_sensor) at (-3.5,1){Sensor};
+    \draw[->,thick] (legend_sensor) -- (sens1);
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}%
+\begin{tikzpicture}
+%      \tikzset{>=latex}
+      \tikzstyle{every node}=[
+      inner sep=3mm,
+      align=center,
+      font=\large];
+
+      \node [rectangle, rounded corners, draw, anchor=north, minimum width=0.55\columnwidth,fill=white,thick,    minimum height=1.9cm,
+      ] (box) at (0, 0){};
+
+    \node [above=-0em of box](fd) {Diagnostic Engine};
+
+      \node [left=0.5cm of box] (obs) {Observations};
+      \node [right=0.5cm of box] (diag){Diagnostic \\ Report};
+
+      \tikzstyle{every node}=[
+      inner sep=3mm,
+      align=center,
+      font=\large,
+      minimum height=1.2cm,
+      rectangle,
+      rounded corners,
+      draw,];
+
+      \node [fill=clra, right = 1cm of box.west, anchor=west] (cg) {Candidate \\ Generation};
+      \node [fill=clrb, left = 1cm of box.east, anchor=east] (cr) {Candidate \\ Ranking};
+      \path[line] (obs.east) --(cg);
+      \path[line] (cg) -> (cr);
+      \path[line] (cr) -- (diag.west);
+    \end{tikzpicture}%
+  \end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{irrigationexample-pipes}
+    \end{irrigationexample-pipes}
+    \tikzstyle{every node}=[font=\footnotesize]
+
+    \node [anchor=south, style=none, above right = 0.1em and -0em of s1] {$c_{1}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0em of s2] {$c_{2}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0em of s3] {$c_{3}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0.5em of s4] {$c_{4}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0.5em of s5] {$c_{5}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0.5em of s6] {$c_{6}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0.5em of s7] {$c_{7}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0.5em of s8] {$c_{8}$};
+    \node [anchor=south, style=none, above right = 0.1em and -0.5em of s9] {$c_{9}$};
+
+    \node [style=none, below left = 0em and 0em of p1]  {$c_{10}$};
+    \node [style=none, below left = 0em and 0em of p2]  {$c_{11}$};
+    \node [style=none, below left = 0em and 0em of p3]  {$c_{12}$};
+    \node [style=none, below right = 0em and 0em of p4] {$c_{13}$};
+    \node [style=none, below left = 0em and 0em of p5]  {$c_{14}$};
+    \node [style=none, below left = 0em and 0em of p6]  {$c_{15}$};
+    \node [style=none, below right = 0em and 0em of p7] {$c_{16}$};
+    \node [style=none, below right = 0em and 0em of p8] {$c_{17}$};
+    \node [style=none, below left = 0em and 0em of p9]  {$c_{18}$};
+
+    \node [style=none, below right = 0em and 0.3em of sup] {$c_{19}$};
+
+
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{irrigationexample-base}
+    \end{irrigationexample-base}
+    \begin{scope}[opacity=0.2]
+      \begin{irrigationexample-pipes}
+        \node [style=sensor] (sens1) at (0.5, 1.5) {};
+        \node [style=sensor] (sens2) at (1.5, 1.5) {};
+        \node [style=sensor] (sens3) at (0.5, 0.5) {};
+        \node [style=sensor] (sens4) at (1.5, 0.5) {};
+      \end{irrigationexample-pipes}
+    \end{scope}
+
+
+    \begin{irrigationexample-perspective}
+      \node [style=joint] at (0, -1) {};
+      \node [style=sprinkler] at (0, 1) {};
+      \node [style=sprinkler] at (0, 2) {};
+      \node [style=sprinkler] at (1, 2) {};
+      \node [style=sprinkler] at (1, 1) {};
+      \draw[thick] (s1) -- (s4);
+      \draw[thick] (s4) -- (s7);
+      \draw[thick] (s7) -- (sup);
+      \draw[thick] (s7) -- (s8);
+      \draw[thick] (s5) -- (s8);
+      \draw[thick] (s5) -- (s2);
+      \node [style=sensor] (10) at (0.5, 1.5) {};
+    \end{irrigationexample-perspective}
+    \tikzstyle{sens}=[font=\footnotesize, inner sep=0em]
+
+    \node [style=sens, above right = 0em and 0em of sens1]  {$s_{1}$};
+    \node [style=sens, above right = 0em and 0em of sens2] {$s_{2}$};
+    \node [style=sens, above right = 0em and 0em of sens3] {$s_{3}$};
+    \node [style=sens, above right = 0em and 0em of sens4]  {$s_{4}$};
+
+    \node (legend_sensor) at (-3,1){Active Sensor};
+    \draw[->,thick] (legend_sensor) -- (10);
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \tikzstyle{every node}=[font=\small, rounded corners,draw]
+
+    \node (max) at (5.5, 0.75) {$\set{1,2,3}$};
+    \node[rectangle,fill=highlight](a) at (3.5,0) {$\set{2,3}$};
+    \node (b) at (3.5, 0.75) {$\set{1,3}$};
+    \node (c) at (3.5,1.5) {$\set{1,2}$};
+    \node (d) at (1.5,0) {$\set{3}$};
+    \node (e) at (1.5,0.75) {$\set{2}$};
+    \node[rectangle,fill=highlight] (f) at (1.5,1.5) {$\set{1}$};
+    \node (min) at (0,0.75) {$\set{}$};
+    \draw (min) -- (d) -- (a) -- (max) -- (b) -- (f)
+    (e) -- (min) -- (f) -- (c) -- (max)
+    (d) -- (b);
+    \draw[preaction={draw=white, -,line width=6pt}] (a) -- (e) -- (c);
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \newcommand\staccatocall[5]{
+    \begin{tabular}[b]{C{7em}}
+      \cclra $#1$\\
+      \hline
+      \cclrb $#2$\\
+      \hline%
+      \cclrc $#3$\\
+      \hline%
+      \cclrd $#4$\\
+      \hline\hline%
+      \cclre $#5$\\
+    \end{tabular}}
+
+  \begin{tikzpicture}[line width=2pt]
+    \tikzstyle{every node}=[node distance=1cm,font=\large, anchor=west, align=left,rounded corners,draw, inner sep=1pt,clip]
+
+    \node (c0) at (0,0) {
+      \staccatocall
+      {\set{3}}
+      {\emptyset}
+      {\set{1,2}}
+      {\emptyset}
+      {\set{\set{1,2}}}};
+
+    \node[below=of c0] (c1) {
+      \staccatocall
+      {\set{1}}
+      {\emptyset}
+      {\set{2,3}}
+      {\set{\set{1,2}}}
+      {\set{\set{1,2},\set{2,3}}}};
+
+    \node[below=of c1]  (c2) {
+      \staccatocall
+      {\set{2}}
+      {\emptyset}
+      {\set{1,3}}
+      {\set{\set{1},\set{2,3}}}
+      {\set{\set{1},\set{2,3}}}};
+
+    \node[below=of c2] (c3) {
+      \staccatocall
+      {\set{1}}
+      {\emptyset}
+      {\set{2,3}}
+      {\set{\set{1},\set{2,3}}}
+      {\set{\set{1},\set{2,3}}}};
+
+    \coordinate (data-center) at ($(c0.west) !.5! (c3.west)$);
+
+    \node[left=of c0]  (b0) {
+      \staccatocall
+      {\set{1,3}}
+      {\set{\set{1,3}}}
+      {\set{2}}
+      {\emptyset}
+      {\set{\set{1,2},\set{2,3}}}};
+
+    \node[left=of data-center] (b1) {
+      \staccatocall
+      {\set{2,3}}
+      {\emptyset}
+      {\set{1}}
+      {\set{\set{1,2},\set{2,3}}}
+      {\set{\set{1},\set{2,3}}}};
+
+    \node[left=of c3] (b2) {
+      \staccatocall
+      {\set{1,2}}
+      {\set{\set{1,2}}}
+      {\set{3}}
+      {\set{\set{1},\set{2,3}}}
+      {\set{\set{1},\set{2,3}}}};
+
+    \node[left=of b1] (a0) {
+      \staccatocall
+      {\set{1,2,3}}
+      {\set{\set{1,2}, \set{1,3}}}
+      {\emptyset}
+      {\emptyset}
+      {\set{\set{1},\set{2,3}}}};
+
+
+    \node[anchor=north west] (legend) at (a0.west|- b0.north) {
+      \staccatocall{U}{S}{d}{D}{Return}};
+
+
+
+    \tikzstyle{every node}=[font=\Large, anchor=west, align=left]
+
+    \draw (a0.east) --  (b0.west);
+    \draw (a0.east) --  (b1.west);
+    \draw (a0.east) --  (b2.west);
+    \draw (b0.east) --  (c0.west);
+    \draw (b0.east) --  (c1.west);
+    \draw (b2.east) --  (c2.west);
+    \draw (b2.east) --  (c3.west);
+
+
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      colormap name=rg,
+      xlabel={\large$g_1$},
+      xtick={0,0.33,0.66,1},
+      width=0.45\columnwidth
+      ]
+      \addplot+[mesh] {(1-x)*(1-x)*(x)};
+
+      % \node (max) at (axis cs:0.333,0.149){};
+      % \node[rectangle, black, align=center,anchor=west] (ann) at (axis cs:.6,0.147){Maximum};
+      % \draw[->,ultra thick] (ann) -- (max);
+
+      \addplot+[ycomb,comb] plot coordinates {(0.333,0.149)};
+      \addplot+[xcomb,comb] plot coordinates {(0.333,0.149)};
+
+      % \draw[dashed, ultra thick](axis cs:0.333,0)--(axis cs:0.333,0.1477);
+
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      view={45}{50},
+      ylabel={\large$g_{3}$},
+      xlabel={\large$g_{2}$},
+      ztick={0,0.03,0.06},
+      zmin=0,
+      zmax=0.0625,
+      scaled z ticks = false,
+      zticklabel pos=left,
+      samples=30,
+      width=0.45\columnwidth,
+      ]
+      \addplot3[opacity=0.3,fill opacity=0.7,colormap name=rg,surf,domain=0:1] {(1-x)*(1-y)*(x*y)};
+
+      % \node (max) at (axis cs:0.5,0.5,0.0625){};
+      % \node[rectangle, black, align=center,anchor=west] (ann) at (axis cs:.65,0.65,0.0625){Maximum};
+      % \draw[->,ultra thick] (ann.west) -- (max);
+
+      \addplot3[comb,no markers, domain=0.5:1, samples = 60, samples y=0] ({x}, {0.5}, {(1-x)*(1-0.5)*(x*0.5)});
+      \addplot3[comb,no markers, domain=0:0.5, samples = 60, samples y=0] ({0.5}, {x}, {(1-x)*(1-0.5)*(x*0.5)});
+
+      \addplot3[comb,no markers, domain=0:0.5, samples = 60, samples y=0] ({x}, {x}, {0.0625});
+
+      \addplot3[comb,opacity=1,only marks] coordinates {(0.5,0.5,0.0625)};
+
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{irrigationexample-fuzzyerrors-continuous}
+    \end{irrigationexample-fuzzyerrors-continuous}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{irrigationexample-fuzzyerrors-discrete}
+    \end{irrigationexample-fuzzyerrors-discrete}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[y=0.80pt, x=0.8pt, inner sep=0pt, outer sep=0pt,yscale=-1]
+    \tikzstyle{ll}=[draw=black,line join=round,line cap=butt,miter
+    limit=4,nonzero rule,ultra thick,rounded corners];
+
+    \tikzstyle{aw}=[anchor=west];
+    \tikzstyle{ae}=[anchor=east];
+    \tikzstyle{ac}=[anchor=center];
+
+
+    \begin{scope}[xscale=1.4,yscale=1.5]
+
+      \begin{scope}[yshift=100,xscale=250,yscale=40]
+        \path[ll,fill=clrc] (0,1) rectangle (1,2.2);
+        \draw[ll,fill=white!80!black] (0.05,0.5) rectangle (0.95,1.6);
+        \path[ll] (-0.05,0.2) rectangle (1.05,-3.2);
+        \path[ll] (0.15,-2) rectangle (0.85,1.2);
+        \path[ll,fill=clrd] (0.1,1) rectangle (0.4,1.4);
+        \path[ll,fill=clrd] (0.6,1) rectangle (0.9,1.4);
+      \end{scope}
+
+      % \path[ll,fill=clra] (10,138) -- (228,138) -- (228,187) -- (0,187) -- (0,138) -- cycle;
+      \begin{scope}[xshift=0,xscale=250]
+        \path[ll,fill=clrb] (0.3,125) -- (0,125) -- (0,28) -- (0.38,95) --  cycle;
+        \path[ll,fill=clrb] (0.02,23) -- (0.4,89) -- (0.48,89) -- (0.48,23)  -- cycle;
+        \path[ll,fill=clrb] (0.98,23) -- (0.6,89) -- (0.52,89) -- (0.52,23)  -- cycle;
+        \path[ll,fill=clrb] (1,125) -- (1,28) -- (0.62,95) -- (0.62,125) -- cycle;
+        \path[ll,fill=clre] (0.25,127) -- (0.35,80) -- (0.65,80) -- (0.75,127) -- cycle;
+
+
+        \begin{scope}[yshift=20, yscale=230]
+          \path(0.5,-0.065) node {Autonomic Manager};
+          \path[aw] (0.1,0.3) node {Monitor};
+          \path(0.35,0.1) node {Analyze};
+          \path(0.65,0.1) node {Plan};
+          \path[ae] (0.9,0.3) node {Execute};
+          \path(0.5,0.37) node {Knowledge};
+          \path(0.5,0.57) node {Managed Resource Touchpoint};
+          \path[ac](0.25,0.64) node {Sensors};
+          \path[ac](0.75,0.64) node {Effectors};
+          \path(0.5,0.775) node {Managed Resource};
+        \end{scope}
+      \end{scope}
+    \end{scope}
+
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[>=latex,node distance = 2cm, auto]
+    % Place nodes
+    \node [cloud] (ft) {$S$};
+    \node [cloud, above=1cm of ft] (U) {$U$};
+    \node [cloud, below=1cm of ft] (d) {$d$ (current set)};
+    \node [cloud, below=1cm of d] (D) {$D$ (candidate set)};
+    \begin{pgfonlayer}{background}
+      \node[inner sep=0.5cm,thick,draw,dotted,fit=(d.north west) (D.south east), fill=clrc,fill opacity=0.4] (default args) {};
+    \end{pgfonlayer}
+    \node [anchor=north,below = 0cm of default args.south]{Initially empty};
+
+    \node [decision, right= 2cm of d] (empty) {is $S$ empty?};
+    \path [line] (U.east) -| +(1,-1)  |- (empty.west);
+    \path [line] (ft.east) -| +(1,-0.5)  |- (empty.west);
+    \path [line] (d.east) -- (empty.west);
+    \path [line] (D.east)  -| +(1, 0.5)  |- (empty.west);
+
+
+    \node [decision, above right= 3cm and 1cm of empty] (minimal) {is $d$ minimal?};
+    \path [line] (empty.north) |- node [decision label] {\textbf{yes}: $d$ is a candidate}  (minimal.west){};
+
+    \node [anchor=west, block, right= 2.5cm of minimal.east] (purge) {remove super-sets of $d$ from $D$};
+    \path [line] (minimal.east) -- node [decision label,midway] {\textbf{yes}}(purge.west);
+
+    \node [block,below=of purge] (add) {add $d$ to $D$};
+
+    \node [block, below= of add] (return) {Return $D$};
+    \path [line] (minimal.south) |- node [decision label] {\textbf{no}}(return.west);
+    \path [line] (purge.south) --   (add.north);
+    \path [line] (add.south) -- (return.north);
+
+    \coordinate [below = 3cm of empty] (sort) {};
+    \node [block, below = 3cm of empty] (sort) {heuristically sort components};
+    \path [line] (empty.south) --  node [decision label,midway] {\textbf{no}: $d$ is not a candidate} (sort.north);
+
+    \node [block, below left= 2cm and 2cm of sort.south] (filter) {create temporary $S'$ filtering transactions where $c$ is active};
+
+    \node [block, right = 1cm of filter] (call) {recursive call with $S'$, $d\cup\set{c}$};
+    \path [line] (filter.east) --   (call.west);
+
+    \node [block, right= 1cm of call] (update) {update $D$ with return value};
+    \path [line] (call.east) -- (update.west);
+
+    \begin{pgfonlayer}{background}
+      \node[inner sep=0.5cm,thick,draw,dotted,fit=(filter.north west) (update.south east), fill=clrb,fill opacity=0.4] (loop) {};
+    \end{pgfonlayer}
+
+    \node [anchor=south,above = 0cm of loop.north]{For each component $c \in U$};
+    \draw [fill=black] (loop.west) circle (0.2cm);
+    \draw [fill=black] (loop.east) circle (0.2cm);
+
+
+    \path [line,-] (sort.west) --  +(-5,0) |- ($(loop.west)+(-0.2cm,0)$);
+    \path [line]  ($(loop.east)+(+0.2cm,0)$) -| (return.south);
+
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \pgfdeclarelayer{background}
+  \pgfdeclarelayer{foreground}
+  \pgfsetlayers{background,main,foreground}
+  \begin{tikzpicture}[>=latex,node distance=2cm, auto]
+    \node [block,text width=15em,  anchor=center, minimum height=3.5cm] (bayes) {
+      % \alt<+(1)->{
+      $\pr{d\mid A,e} = $\\[3mm] $\pr{d} \times \displaystyle\prod_{i = 1}^{|A|}\frac{\pr{A_i,e_i \mid d}}{\pr{A_i,e_i}}$\\[5mm]
+      (Na\"ive Bayes Classifier)
+      % }
+      %   {
+      %   $\text{Posterior} =$\\[4mm] $ \text{Prior} \times \dfrac{\text{Likelihood}} {\text{Evidence}}$
+      % }
+    };
+
+    \node [block,text width=15em,below= 1cm of bayes] (goodness) {Estimate goodness parameters \\ (Maximum likelihood estimation)};
+    \path [line] (bayes.south)  -- (goodness.north);
+
+    \begin{pgfonlayer}{background}
+      \node[inner sep=0.5cm,thick,draw,dotted,fit=(bayes.north west) (goodness.south east), fill=clrb,fill opacity=0.4] (loop) {};
+    \end{pgfonlayer}
+    \node [draw=none,anchor=south,above = 0cm of loop.north]{For each candidate $d \in D$};
+    \begin{pgfonlayer}{foreground}
+      \draw [fill=black] (loop.west) circle (0.2cm);
+      \draw [fill=black] (loop.east) circle (0.2cm);
+    \end{pgfonlayer}
+
+    \node [anchor=east,left=1cm of loop.west] (d) {};
+    \node [cloud, anchor=south east, above left=0.4cm and 0cm of d] (spectrum) {$A, e$ (spectrum)};
+    \node [cloud, anchor=north east, below left=0.4cm and 0cm of d] (D) {$D$ (candidate set)};
+
+    \path [line] (spectrum.east) -| +(0.5,-0.5)  |- ($(loop.west)+(-0.2cm,0)$);
+    \path [line] (D.east)  -| +(0.5, 0.5)  |- ($(loop.west)+(-0.2cm,0)$);
+
+    \node [block, right=1cm of loop.east,text width=4em] (sort) {Sort $D$};
+    \path [line] (loop.east)  -- (sort.west);
+  \end{tikzpicture}
+\end{preview}
+\end{document}

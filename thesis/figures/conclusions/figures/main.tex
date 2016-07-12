@@ -1,0 +1,308 @@
+\newcommand\previewmode{}
+\input{template/template}
+\begin{document}
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis}[
+      hide axis,
+      scale only axis,
+      height=0pt,
+      width=0pt,
+      colorbar horizontal,
+      colormap name=rg,
+      point meta min=0,
+      point meta max=1,
+      fill opacity=0.7,
+      colorbar style={
+        width=15em,
+        xtick={0, 0.25, 0.5, 0.75, 1}
+      }]
+      \addplot [draw=none] coordinates {(0,0)};
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      view={0}{90},
+      height=15em,
+      samples=16,
+      xlabel={$\gFunc{}$},
+      ylabel={$e_i$},
+      zlabel={$\likelihoodi{}$},
+      colormap name=rg,
+      trim axis left,
+      trim axis right]
+
+      \addplot3[surf,domain=0:1,opacity=0.3,fill opacity=0.7] {(1-y) + y *x};
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      view={-135}{15},
+      height=15em,
+      samples=16,
+      zmin=0,
+      xlabel={$\likelihoodi$},
+      ylabel={$c_i$},
+      zlabel={$\likelihoodi{}$},
+      colormap name=rg,]
+
+      \addplot3[surf,domain=0:1,opacity=0.3,fill opacity=0.5] {(1-y) + y *x};
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      xlabel={$g_1$},
+      height=15em,
+      extra y ticks={0.5},
+      xtick={0,0.25,...,1},
+      width=0.45\columnwidth,]
+
+      \addplot+[mesh] {(1-x)*(0.5+0.5*x)};
+
+      % \node (max) at (axis cs:0,0.5){};
+      % \node[rectangle, black, align=center,anchor=west] (ann) at (axis cs:0.3,0.5){Maximum};
+      % \draw[->,ultra thick] (ann) -- (max);
+
+      \addplot+[xcomb,comb] plot coordinates {(0, 0.5)};
+      \addplot+[ycomb,comb] plot coordinates {(0,0.5)};
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      xlabel={$g_2$},
+      height=15em,
+      extra y ticks={0.25},
+      width=0.45\columnwidth,]
+
+      \addplot+[mesh] {(1-x)*x};
+
+      % \node (max) at (axis cs:0.5,0.25){};
+      % \node[rectangle, black, align=center,anchor=east] (ann) at (axis cs:1,0.25){Maximum};
+      % \draw[->,ultra thick] (ann) -- (max);
+
+      \addplot+[xcomb,comb] plot coordinates {(0.5,0.25)};
+      \addplot+[ycomb,comb] plot coordinates {(0.5,0.25)};
+
+      %\draw[dashed, ultra thick](axis cs:0.5,0)--(axis cs:0.5,0.25);
+
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \pgfplotsset{overlaystyle/.style={
+        axis lines=none
+      }}
+    \pgfplotsset{tmpstyle/.style={
+        set layers,
+        height=4cm,
+        width=0.9\columnwidth,
+        ymin=-0.5,
+        ymax=1.5,
+        xmin=0,
+        xmax=2,
+        xlabel=$\ST$,
+        mark size=4pt,
+        scatter/classes={
+          a={mark=square*},%
+          b={mark=triangle*},%
+          c={mark=*, mark size=6pt},
+          d={mark=text, text mark=\textbf{?}}}}}
+
+    \begin{axis}[
+      tmpstyle,
+      overlaystyle
+      ]
+
+      \addplot[opacity=0.1]{1};
+      \addplot[opacity=0.1]{0.5};
+      \addplot[opacity=0.1]{0};
+
+      \tikzstyle{ll}=[dashed]
+
+
+      \draw[ll] (1.46, 0) -> (1.34, 0.5);
+      \draw[ll] (1.35, 1) -> (1.34, 0.5);
+      \draw[ll] (1.05, 1) -> (1.34, 0.5);
+      \draw[ll] (0.42, 0) -> (0.49, 0.5);
+      \draw[ll] (0.58, 0) -> (0.49, 0.5);
+      \draw[ll] (0.14, 0) -> (0.49, 0.5);
+      \draw[ll] (0.86, 0) -> (0.81, 0.5);
+      \draw[ll] (0.58, 0) -> (0.81, 0.5);
+      \draw[ll] (1.05, 1) -> (0.81, 0.5);
+      \draw[ll] (1.46, 0) -> (1.67, 0.5);
+      \draw[ll] (1.86, 0) -> (1.67, 0.5);
+      \draw[ll] (1.79, 1) -> (1.67, 0.5);
+
+      \node[circle, fill=cyan!50!white] at (1.34,0.5) {};
+      \node[circle, fill=cyan!50!white] at (0.49,0.5) {};
+      \node[circle, fill=cyan!50!white] at (0.81,0.5) {};
+      \node[circle, fill=cyan!50!white] at (1.67,0.5) {};
+      % \addplot+[scatter,only marks,scatter src=explicit symbolic]
+      % coordinates {
+      % (0.49,0.5) [a]
+      % (0.81,0.5) [a]
+      % (1.34,0.5) [b]
+      % (1.67,0.5) [a]
+
+      % };
+
+    \end{axis}
+    \begin{axis}[
+      tmpstyle,
+      ytick={0,0.5,1},
+      yticklabels={Nominal,Undetermined,Error},
+      ]
+
+      \addplot+[scatter,only marks,scatter src=explicit symbolic]
+      coordinates {
+        (0.14,0) [a]
+        % (0.23,0) [a]
+        % (0.30,0) [a]
+        (0.42,0) [a]
+        (0.58,0) [a]
+        (0.86,0) [a]
+        (1.46,0) [a]
+        (1.86,0) [a]
+      };
+      \addplot+[scatter,only marks,scatter src=explicit symbolic]
+      coordinates {
+        (1.05,1) [b]
+        (1.35,1) [b]
+        (1.79,1) [b]
+      };
+
+    \end{axis}
+
+    \begin{axis}[
+      tmpstyle,
+      overlaystyle
+      ]
+      \addplot+[scatter,only marks, mark size=2pt,scatter src=explicit symbolic]
+      coordinates {
+
+        (0.49,0.5) [a]
+        (0.81,0.5) [a]
+        (1.67,0.5) [a]
+      };
+      \addplot+[scatter,only marks, mark size=2pt,scatter src=explicit symbolic]
+      coordinates {
+        (1.34,0.5) [b]
+      };
+    \end{axis}
+
+  \end{tikzpicture}
+\end{preview}
+\begin{comment}
+('0.12', 1.46, 0.5, 1.34, 0),
+('0.26', 1.08, 0.5, 1.34, 1),
+('0.29', 1.05, 0.5, 1.34, 1)
+
+('0.07', 0.42, 0.5, 0.49, 0),
+('0.09', 0.58, 0.5, 0.49, 0),
+('0.19', 0.3, 0.5, 0.49, 0)
+
+('0.05', 0.86, 0.5, 0.81, 0),
+('0.23', 0.58, 0.5, 0.81, 0),
+('0.24', 1.05, 0.5, 0.81, 1)
+
+
+a = ((0.14,0),
+(0.23,0),
+(0.30,0),
+(0.42,0),
+(0.58,0),
+(0.86,0),
+(1.05,1),
+(1.08,1),
+(1.46,0),
+(1.79,1),
+(1.81,1),
+(1.90,0),
+(1.92,0),
+(1.98,1))
+
+(1.34,0.5)
+(0.49,0.5)
+(0.81,0.5)
+\end{comment}
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \pgfplotsset{kde example/.style= {
+        domain=0:20,
+        declare function={
+          pass_kde(\t,\b)=20*gauss(\t, 3, \b) + 100*gauss(\t, 10, \b) + 20*gauss(\t, 17, \b);
+          fail_kde(\t,\b)=10*gauss(\t, 2, \b) +30*gauss(\t, 11, \b) + 40*gauss(\t, 12, \b) + 40*gauss(\t, 14, \b) + 40*gauss(\t, 16, \b);
+        }
+      }
+    }
+    % pass_kde = function(x, bw=0.9155) 20*dnorm(x, 3,bw) + 100*dnorm(x, 10, bw) + 20*dnorm(x, 17, bw)
+    % fail_kde = function (x,bw=1.5) 10*dnorm(x, 2, bw) +30*dnorm(x, 11, bw) + 40*dnorm(x, 12, bw) + 40*dnorm(x, 14, bw) + 40*dnorm(x, 16, bw)
+
+    \begin{axis} [
+      likelihood plot,
+      kde example,
+      ymax=60,
+      ymin=0,
+      height=18em,
+      width=0.9\columnwidth,
+      extra y ticks={30},
+      ylabel={Density},
+      xlabel={$\ST$},
+      ]
+      \addplot+ {pass_kde(x,0.9155)};
+      \addlegendentry{$\KDE[0j]$}
+      \addplot+ {fail_kde(x,1.5)};
+      \addlegendentry{$\KDE[1j]$}
+      \pgfplotsset{cycle list shift=2}
+
+      \addplot+ {pass_kde(x,0.9155) + fail_kde(x,1.5)};
+      \addlegendentry{$\KDE[0j] + \KDE[1j]$}
+      \addplot+[dashed] {30 * min(30, pass_kde(x,0.9155) + fail_kde(x,1.5)) / 30};
+      \addlegendentry{$\fn{\Phi_j}(\ST), T=30$}
+
+    \end{axis}
+
+    \begin{axis}[
+      width=0.9\columnwidth,
+      height=9em+1.15\baselineskip,%1em,
+      ymin=0,
+      ymax=60,
+      ylabel={Confidence},
+      ytick = {0,30,60},
+      yticklabels={$0$, $0.5$, $1$},
+      axis y line*=right,
+      hide x axis]
+      \addplot [opacity=0.3] {60};
+
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+\begin{preview}
+\end{preview}
+\begin{preview}
+\end{preview}
+\begin{preview}
+\end{preview}
+\end{document}

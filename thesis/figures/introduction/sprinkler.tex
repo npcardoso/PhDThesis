@@ -1,0 +1,88 @@
+%%%%%%%%%%% Sprinkler Example Stuff%%%%%%%%%%%%%
+\colorlet{grass}{clrd!80!green}
+
+\tikzstyle{joint}=[cross out,rotate=45,line width=1 pt,draw=Black]
+\tikzstyle{sensor}=[cross out,draw=Black,line width=1 pt,align=center,inner sep=0pt,minimum size=0.15cm,font=\tiny]
+\tikzstyle{sprinkler}=[circle,draw=Black,line width=1.8 pt,align=center,inner sep=0pt,minimum size=0.2cm,font=\tiny]
+\tikzstyle{radius}=[circle, dashed,draw=MidnightBlue,minimum size=1.5cm,line width=0.2 pt,align=center,font=\tiny]
+
+
+\newenvironment{irrigationexample-perspective}{
+  \begin{scope}[
+    yshift=45,every node/.append style={
+      yslant=0.5,xslant=-1},yslant=0.5,xslant=-1]
+  }{
+  \end{scope}
+}
+
+\newenvironment{irrigationexample-base}{
+  \begin{irrigationexample-perspective}
+    \fill[fill=grass,rounded corners=2em] (-1,-1) rectangle (3,3);
+    \draw[opacity=0.1,step=1.0,black,thin] (-1,-1) grid (3,3);
+
+  }{
+  \end{irrigationexample-perspective}
+}
+
+\newenvironment{irrigationexample-sprinklers}{
+  \begin{irrigationexample-base}
+    \node [style=sprinkler] (s1) at (0, 2) {};
+    \node [style=sprinkler] (s2) at (1, 2) {};
+    \node [style=sprinkler] (s3) at (2, 2) {};
+    \node [style=sprinkler] (s4) at (0, 1) {};
+    \node [style=sprinkler] (s5) at (1, 1) {};
+    \node [style=sprinkler] (s6) at (2, 1) {};
+    \node [style=sprinkler] (s7) at (0, 0) {};
+    \node [style=sprinkler] (s8) at (1, 0) {};
+    \node [style=sprinkler] (s9) at (2, 0) {};
+  }{
+  \end{irrigationexample-base}
+}
+
+\newenvironment{irrigationexample-pipes}{
+  \begin{irrigationexample-sprinklers}
+    \node [style=joint] (sup) at (0, -1) {};
+
+    \draw[thick] (s4) -- (s1) node[inner sep=0em, pos=0.5] (p1) {};
+    \draw[thick] (s7) -- (s4) node[inner sep=0em, pos=0.5] (p2) {};
+    \draw[thick] (sup) -- (s7)node[inner sep=0em, pos=0.5] (p3) {};
+    \draw[thick] (s7) -- (s8) node[inner sep=0em, pos=0.5] (p4) {};
+    \draw[thick] (s5) -- (s2) node[inner sep=0em, pos=0.5] (p5) {};
+    \draw[thick] (s8) -- (s5) node[inner sep=0em, pos=0.5] (p6) {};
+    \draw[thick] (s2) -- (s3) node[inner sep=0em, pos=0.5] (p7) {};
+    \draw[thick] (s8) -- (s9) node[inner sep=0em, pos=0.5] (p8) {};
+    \draw[thick] (s9) -- (s6) node[inner sep=0em, pos=0.5] (p9) {};
+  }{
+  \end{irrigationexample-sprinklers}
+}
+
+
+\newenvironment{irrigationexample-fuzzyerrors-continuous}{
+  \begin{irrigationexample-perspective}
+    \begin{scope}[transparency group]
+      \clip[rounded corners=2em] (-1,-1) rectangle (3,3);
+      \fill[grass,fill,rounded corners=2em] (-1,-1) rectangle (3,3);
+
+      %\shade[shading=radial, inner color=brown, outer color=green, rounded  corners=2em] (-1,-4) rectangle (3,3);
+      \fill[brown, path fading=fade out] (-1, -1) circle (6);
+    \end{scope}
+    \draw[opacity=0.1,step=1.0,black,thin] (-1,-1) grid (3,3);
+  }{
+  \end{irrigationexample-perspective}
+}
+
+\newenvironment{irrigationexample-fuzzyerrors-discrete}{
+  \begin{irrigationexample-perspective}
+    \begin{scope}
+      \clip[rounded corners=2em] (-1,-1) rectangle (3,3);
+      \fill[grass,fill,rounded corners=2em] (-1,-1) rectangle (3,3);
+
+      \fill[brown] (-1,-1) rectangle (1,1);
+
+
+    \end{scope}
+    \draw[opacity=0.1,step=1.0,black,thin] (-1,-1) grid (3,3);
+
+}{
+  \end{irrigationexample-perspective}
+}

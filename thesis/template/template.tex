@@ -1,0 +1,71 @@
+%%% If you use this template then please give credit like this:
+%%% ----------------------------
+% LaTeX code inspired by the LaTeX Thesis Template by Manuel Kuehner
+% www.bedienhaptik.de/latex-template/
+%%% ----------------------------
+
+%\overfullrule=2cm
+
+
+\input{template/documentclass}
+
+% Standard packages
+\input{template/CommonPackages}
+
+\definecolor[named]{myColorMainA}{RGB}{0,0,0}
+\definecolor[named]{myColorMainB}{RGB}{174,49,54}
+
+
+% Math related
+\input{template/Math}
+
+% Algorithm
+\input{template/Algorithm}
+
+% PDF related packages
+\input{template/PDF-Related}
+
+% Bibliography related
+\input{template/Bibliography}
+
+% PDF related packages
+\input{template/RandomTextPackage}
+
+% Custom Macros
+\input{template/macros}
+
+% Tables
+\input{template/Tables}
+
+% Tikz
+\input{template/tikz}
+
+% Title Page
+\input{template/TitlePage}
+
+
+
+%\makeatletter
+%\@ifundefined{previewmode}{
+% Loading additional packages from the KOMA-Script family
+\input{template/KOMA-Script-Packages}
+
+% Page layout definition
+\input{template/PageLayout}
+
+% Customization of
+% - Floating Objects (Caption)
+% - Table of Contents (TOC)
+% - List of Figures
+% - List of Tables
+% - Headings (like chapter, section, etc.)
+\input{template/Floating-AND-TOC-AND-ListOf-AND-Headings}
+
+% Customization of the header, footer and teh margin note
+\input{template/HeaderFooterMarginnote}
+
+% Optimize paragraphs (avoid overfull... warnings)
+\input{template/ParagraphOptimization}
+
+% Research questions macros
+\input{template/ResearchQuestions}

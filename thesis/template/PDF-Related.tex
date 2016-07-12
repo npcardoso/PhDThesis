@@ -1,0 +1,25 @@
+%%% File encoding is ISO-8859-1 (also known as Latin-1)
+%%% You can use special characters just like ä,ü and ñ
+
+% Package for PDF features such as bookmarks and hyperlinks.
+% Important: Should be loaded at the end.
+% CTAN: http://www.ctan.org/pkg/hyperref
+\definecolor{hyperrefcolor}{gray}{0.25}
+
+\usepackage[%
+bookmarks, % Create bookmarks
+bookmarksopen=true, % Unfold bookmatk tree in PDF viewer when document is opened
+bookmarksopenlevel=1, % Level of unfolding
+bookmarksnumbered=true, % Number bookmarks
+hidelinks, % do not highlight hyperlinks -- looks ugly
+% Ansicht beim Öffnen
+pdfpagelabels=true, % See manual...
+plainpages=false, % See manual...
+hyperfootnotes=true, % Hyperlinks for footnotes
+hyperindex=true, % Indexeinträage verweisen auf Text
+colorlinks=true,
+linkcolor=hyperrefcolor,
+citecolor=hyperrefcolor,
+urlcolor=hyperrefcolor,
+hypertexnames=true,
+pagebackref=true]{hyperref}

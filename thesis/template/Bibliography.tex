@@ -1,0 +1,62 @@
+\DeclareRobustCommand{\van}[3]{#2 #1}
+
+\usepackage[square,sort,comma]{natbib}
+%\bibliographystyle{abbrvnat}
+\bibliographystyle{apalike}
+
+%
+
+\setcitestyle{square}
+
+
+\newlength\mybibindent
+\setlength\mybibindent{10mm}
+
+\makeatletter
+
+\renewenvironment{thebibliography}[1]
+     {\chapter*{\bibname}%
+      \@mkboth{\bibname}{\bibname}%
+      \addcontentsline{toc}{chapter}{\bibname}
+
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\dimexpr\labelsep+\mybibindent\relax\itemindent-\mybibindent% new
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\def\@lbibitem[#1]#2{%
+\if\relax\@extra@b@citeb\relax\else
+\@ifundefined{br@#2\@extra@b@citeb}{}{%
+\@namedef{br@#2}{\@nameuse{br@#2\@extra@b@citeb}}}\fi
+\@ifundefined{b@#2\@extra@b@citeb}{\def\NAT@num{}}{\NAT@parse{#2}}%
+\item[\hfil\hyper@natanchorstart{#2\@extra@b@citeb}{\protect\NoHyper\citep{#2}\protect\endNoHyper}%
+\hyper@natanchorend]%
+\NAT@ifcmd#1(@)(@)\@nil{#2}}
+\makeatother
+
+
+% nicer backref links
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+\ifcase #1 %
+%(Not cited.)%
+\relax
+\or
+(Cited on page~#2)%
+\else
+(Cited on pages~#2)%
+\fi}
+\renewcommand*{\backrefsep}{, }
+\renewcommand*{\backreftwosep}{ and~}
+\renewcommand*{\backreflastsep}{ and~}

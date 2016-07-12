@@ -1,0 +1,22 @@
+\newcommand{\finalversion}{}
+\documentclass%
+[%
+paper=a4
+,fontsize=11pt % common are 10, 11 or 12
+,headings=big
+,parskip
+,cleardoublepage=current
+,numbers=noendperiod % 2.3.1 vs 2.3.1. (no dot after the last chapter number)
+,twoside=true
+,toc=bibliography % Bibliography appears in Table of Contents (without a number)
+,toc=listof % List of Figures and List of Tables appear in Table of Contents
+,version=last % Use latest version of the KOMA-Script
+]%
+{scrbook}
+
+\renewcommand*{\familydefault}{\sfdefault}
+  \def\tt{\normalfont\ttfamily}
+
+\ifx\finalversion\undefined
+\overfullrule=2cm
+\fi

@@ -1,0 +1,186 @@
+%\newcommand\finalversion{}
+\newcommand\previewmode{}
+\input{template/template}
+
+\begin{document}
+\begin{preview}
+  \begin{tikzpicture}
+    \tikzstyle{common}=[align=center, node distance=-2pt];
+    \tikzstyle{every node}=[ultra thick,anchor=center, common];
+    \tikzstyle{bbox}=[common, minimum height=1.5cm, minimum width=2.5cm,draw];
+
+
+    \begin{scope}
+      Program \\[0.25cm]
+      \draw[black] (-1.25,-4) rectangle (1.25cm,4);
+      \node[fill=clra, bbox] (inst) at (0,0){Original \\ Instruction};
+      \node[anchor=south] at (0,4){Program};
+    \end{scope}
+
+    \begin{scope}[xshift=4cm]
+      Base\\Trampoline\\[0.25cm]
+      \tikzstyle{xxx}=[fill=clrb,bbox];
+      \node[xxx](reli) at (0,0){Relocated \\ Instruction};
+      \node[xxx,above = of reli] (pre){Pre};
+      \node[xxx,below = of reli.south] (post){Post};
+      \node[above = of pre]{Base\\Trampoline};
+    \end{scope}
+
+    \begin{scope}[xshift=8cm]
+      \tikzstyle{xxx}=[fill=clrc,bbox,minimum height=1.5cm];
+      \node[xxx,anchor=south] (setup){Setup \\ Args};
+      \node[xxx,above = of setup](save){Save \\ Registers};
+      \node[xxx,below = of setup] (snippet){Snippet};
+      \node[xxx,below = of snippet] (restore){Restore};
+      \node[above = of save]{Mini\\Trampoline};
+    \end{scope}
+
+    \begin{scope}[yshift=-0.75cm,xshift=12cm]
+      Mini\\Trampoline\\[0.25cm]
+      \tikzstyle{every node}=[fill=clrd,bbox,minimum height=3cm];
+      \node (foo){$\fn{foo}()$};
+    \end{scope}
+
+
+
+    \draw (inst.north east) edge[->,out=0,in=-180]  (pre.north west);
+    \draw (post.south west) edge[->,out=-180,in=0]  (inst.south east);
+
+    \draw (pre.north east) edge[->,out=0,in=-180]  (save.north west);
+    \draw (restore.south west) edge[->,out=-180,in=0]  (pre.south east);
+
+    \draw (snippet.north east) edge[->,out=0,in=-180]  (foo.north west);
+    \draw (foo.south west) edge[->,out=-180,in=0]  (snippet.south east);
+
+
+    % \tikzstyle{common}=[draw,font=\footnotesize,align=center,anchor=west,rounded
+    % corners=0.1cm, inner sep=0.2cm];
+
+    % \tikzstyle{sources}=[minimum width=3.2cm, common];
+    % \tikzstyle{props}=[minimum width=2cm,common];
+
+    % \tikzstyle{every node}=[sources];
+
+    % \node[fill=clrb](ac) at (0,0){Autonomic\\Computing \\ \citep{IBM06}};
+    % \node[fill=clrb,below = 1.5cm of ac](sas){Self-Adaptive\\Systems\\ \citep{Laddaga03}};
+    % \node[anchor=west,fill=clrb,below = 1.5cm of sas](fts){Fault-Tolerant\\Systems\\ \citep{Pierce65}};
+
+    % \node[fill=clrb,above right = 0em and 0.5cm of fts](sss){
+    % Self-Stabilizing\\Systems  \\\citep{Dijkstra82}};
+    % \node[fill=clrb,below = 1.5cm of sss](ss){
+    % Survivable\\Systems \\ \citep{Linger98}};
+
+
+    % \tikzstyle{every node}=[common];
+    % \node[fill=clrb,ultra thick,fill=clra,font=\bfseries,above right= 2cm and -1cm of sss](shs){Self-Healing\\Systems};
+
+    % \draw (ac) edge[->,out=0,in=-180] (shs.west);
+    % \draw (sas) edge[->,out=0,in=-180]  (shs.west);
+    % \draw (fts) edge[->,out=0,in=-180]  (sss.west);
+    % \draw (fts) edge[->,out=0,in=-180]  (ss.west);
+    % \draw (sss) edge[->,out=40,in=-90]  (shs.south);
+    % \draw (ss) edge[->,out=40,in=-90] (shs.south);
+
+
+    % \tikzstyle{every node}=[props];
+
+
+    % \node[fill=clrc,above right = 0cm and 1cm of shs](vis){Vision};
+    % \node[fill=clrc,below = 1.25cm of vis](obj){Objectives};
+
+
+    % \node[fill=clrc,right = of vis](ca){Continuous\\Availability};
+    % \node[fill=clrc,below = 0.2cm of ca](mh){Maintenance\\of Health};
+    % \node[fill=clrc,below = 0.2cm of mh](sur){Survivability};
+
+
+
+    % \node[fill=clrc,below = 0.2cm of sur](det){Detecting};
+    % \node[fill=clrc,below = 0.2cm of det](dia){Diagnosing};
+    % \node[fill=clrc,below = 0.2cm of dia](rec){Recovery};
+    % \node[fill=clrc,left = of dia](att){Attributes};
+
+    % \node[fill=clrc,below = 0.2cm of rec](cl){Closed-loop};
+    % \node[fill=clrc,below = 0.2cm of cl](pol){Policies};
+    % \node[fill=clrc,below = 1.8cm of att](mea){Means};
+
+    % \draw (shs) edge[->,out=0,in=-180] (vis.west);
+    % \draw (shs) edge[->,out=0,in=-180] (obj.west);
+    % \draw (shs) edge[->,out=-60,in=-180] (att.west);
+    % \draw (shs) edge[->,out=-60,in=-180] (mea.west);
+
+
+    % \draw (vis) edge[->,out=0,in=-180] (ca.west);
+    % \draw (obj) edge[->,out=0,in=-180] (mh.west);
+    % \draw (obj) edge[->,out=0,in=-180] (sur.west);
+    % \draw (att) edge[->,out=0,in=-180] (det.west);
+    % \draw (att) edge[->,out=0,in=-180] (dia.west);
+    % \draw (att) edge[->,out=0,in=-180] (rec.west);
+    % \draw (mea) edge[->,out=0,in=-180] (cl.west);
+    % \draw (mea) edge[->,out=0,in=-180] (pol.west);
+
+    % \end{tikzpicture}
+
+    % \begin{tikzpicture}
+    %   \tikzstyle{every node}=[draw,font=\footnotesize,align=center,anchor=west,rounded
+    %   corners=0.1cm, inner sep=0.2cm, minimum width=2.5cm];
+
+    %   \node[fill=clrb](ac){Autonomic\\Computing};
+    %   \node[fill=clrb,below = 1.5cm of ac](sas){Self-Adaptive\\Systems};
+    %   \node[fill=clrb,below = 1.5cm of sas](fts){Fault-Tolerant\\Systems};
+
+    %   \node[fill=clrb,above right = 0em and 0.5cm of fts](sss){Self-Stabilizing\\Systems};
+    %   \node[fill=clrb,below = 1.5cm of sss](ss){Survivable\\Systems};
+    %   \node[fill=clrb,ultra thick,fill=clra,font=\bfseries,above right= 2cm and -1cm of sss](shs){Self-Healing\\Systems};
+
+    %   \draw (ac) edge[->,out=0,in=-180] (shs.west);
+    %   \draw (sas) edge[->,out=0,in=-180]  (shs.west);
+    %   \draw (fts) edge[->,out=0,in=-180]  (sss.west);
+    %   \draw (fts) edge[->,out=0,in=-180]  (ss.west);
+    %   \draw (sss) edge[->,out=40,in=-90]  (shs.south);
+    %   \draw (ss) edge[->,out=40,in=-90] (shs.south);
+
+
+    %   \node[fill=clrc,above right = 0cm and 1cm of shs](vis){Vision};
+    %   \node[fill=clrc,below = 1.25cm of vis](obj){Objectives};
+
+
+    %   \node[fill=clrc,right = of vis](ca){Continuous\\Availability};
+    %   \node[fill=clrc,below = 0.2cm of ca](mh){Maintenance\\of Health};
+    %   \node[fill=clrc,below = 0.2cm of mh](sur){Survivability};
+
+
+
+    %   \node[fill=clrc,below = 0.2cm of sur](det){Detecting};
+    %   \node[fill=clrc,below = 0.2cm of det](dia){Diagnosing};
+    %   \node[fill=clrc,below = 0.2cm of dia](rec){Recovery};
+    %   \node[fill=clrc,left = of dia](att){Attributes};
+
+    %   \node[fill=clrc,below = 0.2cm of rec](cl){Closed-loop};
+    %   \node[fill=clrc,below = 0.2cm of cl](pol){Policies};
+    %   \node[fill=clrc,below = 1.8cm of att](mea){Means};
+
+    %   \draw (shs) edge[->,out=0,in=-180] (vis.west);
+    %   \draw (shs) edge[->,out=0,in=-180] (obj.west);
+    %   \draw (shs) edge[->,out=-60,in=-180] (att.west);
+    %   \draw (shs) edge[->,out=-60,in=-180] (mea.west);
+
+
+    %   \draw (vis) edge[->,out=0,in=-180] (ca.west);
+    %   \draw (obj) edge[->,out=0,in=-180] (mh.west);
+    %   \draw (obj) edge[->,out=0,in=-180] (sur.west);
+    %   \draw (att) edge[->,out=0,in=-180] (det.west);
+    %   \draw (att) edge[->,out=0,in=-180] (dia.west);
+    %   \draw (att) edge[->,out=0,in=-180] (rec.west);
+    %   \draw (mea) edge[->,out=0,in=-180] (cl.west);
+    %   \draw (mea) edge[->,out=0,in=-180] (pol.west);
+
+
+
+  \end{tikzpicture}
+\end{preview}
+
+
+\bibliography{references}
+
+\end{document}

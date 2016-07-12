@@ -1,0 +1,10 @@
+%%% File encoding is ISO-8859-1 (also known as Latin-1)
+%%% You can use special characters just like ä,ü and ñ
+
+% Package to create test text -- just for demonstration purposes
+% The command \blindtext produces a test text -- good for testing the layout
+% CTAN: http://www.ctan.org/pkg/blindtext
+\usepackage[]{blindtext}
+% The custom command \myMarginnote is defined in the file:
+% 01_Preamble/HeaderFooterMarginnote.tex
+\renewcommand{\blindmarkup}[1]{#1}

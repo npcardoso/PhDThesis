@@ -1,0 +1,72 @@
+\pdfpageattr {/Group << /S /Transparency /I true /CS /DeviceRGB>>}
+\documentclass{article}
+\pdfoptionpdfminorversion 7
+\usepackage[table,svgnames]{xcolor}
+\usepackage[tightpage,active,noconfig]{preview}
+\usepackage{tikz,pgfplots}
+\usepackage{intcalc}
+
+
+\newcommand\glideranim[2] {
+  \foreach \i in {0,...,#1} {
+    \pgfmathparse{#2*(\i+3)/#1}
+    \edef\pos{\pgfmathresult}
+
+    \pgfmathparse{int(\pos)}
+    \edef\cpos{\pgfmathresult}
+    \pgfmathparse{int(\pos + 1)}
+    \edef\npos{\pgfmathresult}
+
+    \pgfmathparse{int(\pos)}
+    \pgfmathparse{int(\intcalcMod{\pgfmathresult}{4} + 1)}
+    \edef\p{\pgfmathresult}
+
+
+    \pgfmathparse{int(\intcalcMod{\npos}{4} + 1)}
+    \edef\np{\pgfmathresult}
+
+
+    \pgfmathparse{1 - (\npos - \pos - #2/#1) * (#1/#2)}
+    \pgfmathparse{1 - (0.70 + 0.20 * (\pgfmathresult))}
+
+    %\pgfmathparse{3*(\pos - int(\pos))/4}
+    \edef\alphatmp{\pgfmathresult}
+    \pgfmathparse{1 - \alphatmp * \alphatmp}
+    \edef\alpha{\pgfmathresult}
+
+    \begin{preview}
+      \begin{tikzpicture}
+        \tikzstyle{every node}=[anchor=center]
+        \coordinate (top) at (3/4*#2,3/4*#2);
+        \coordinate (bottom) at (-3/2*#2,-3/2*#2);
+        \coordinate[draw,fill=blue](ref) at (-\cpos, -\cpos);
+        \coordinate[draw,fill=green](grid_ref) at (-\cpos+1, -\cpos+2);
+
+        \useasboundingbox (bottom) rectangle (top);
+
+        \begin{scope}
+          \clip[rotate=45,clip] (grid_ref) circle(11cm and 4cm);
+          \node (old) at (ref) {\includegraphics[page=\p]{gliders.pdf}};
+        \end{scope}
+        \begin{scope}[rotate=45]
+          \draw[draw=none,opacity=\alpha,fill=white] (grid_ref) circle (11cm and 4cm);
+        \end{scope}
+        \node (new)at (-\npos, -\npos) {\includegraphics[page=\np]{gliders.pdf}};
+        % \node at (-1,-1) {\Huge \cpos -- \npos -- \p -- \np -- \alpha};
+
+
+        \begin{scope}[shift={(0.5,0.5)}]
+          \clip[rotate=45] (grid_ref) circle(11 and 4);
+          \draw[white!95!black, line width=3pt] (bottom) grid (top);
+        \end{scope}
+
+        % \node[draw,fill=red] at (ref){};
+        % \node[draw,fill=green] at (grid_ref){};
+
+      \end{tikzpicture}
+    \end{preview}
+  }
+}
+\begin{document}
+\glideranim{70}{18}
+\end{document}

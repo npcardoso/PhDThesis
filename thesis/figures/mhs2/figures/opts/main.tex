@@ -1,0 +1,608 @@
+\newcommand\previewmode{}
+\input{template/template}
+
+\begin{document}
+
+\begin{preview}
+  \begin{tikzpicture}[
+    scale=0.7,
+    rotate=90,
+    level distance=2.5em,
+    level 1/.style={sibling distance=6em},
+    level 2/.style={sibling distance=3em}]
+
+    \tikzstyle{every node}=[font=\footnotesize,draw,anchor=west,rectangle,minimum size=1em,rounded corners]
+
+    \tikzstyle{rednode}=[fill=clra]
+    \tikzstyle{optnode}=[fill=clrb]
+
+    \node[optnode] (Root) {$\set{}$}
+    child { node[optnode] {$\set{3}$}
+      child { node[rednode] {$\set{2, 3}$}
+        child { node[rednode] {$\set{1, 2, 3}$} }}
+      child { node[rednode] {$\set{1, 3}$}
+        child { node[rednode] {$\set{1, 2, 3}$} }}}
+    child { node[optnode] {$\set{2}$}
+      child { node[optnode] {$\set{2, 3}$}
+        child { node[rednode] {$\set{1, 2, 3}$} }}
+      child { node[rednode] {$\set{1, 2}$}
+        child { node[rednode] {$\set{1, 2, 3}$} }}}
+    child { node[optnode] {$\set{1}$}
+      child { node[optnode] {$\set{1, 3}$}
+        child { node[rednode] {$\set{1, 2, 3}$} }}
+      child { node[optnode] {$\set{1, 2}$}
+        child { node[optnode] {$\set{1, 2, 3}$} }}};
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[
+    scale=0.7,
+    rotate=90,
+    level distance=2.5em,
+    level 1/.style={sibling distance=6em},
+    level 2/.style={sibling distance=3em}]
+
+    \tikzstyle{every node}=[font=\footnotesize,draw,anchor=west,rectangle,minimum size=1em,rounded corners]
+
+    \tikzstyle{optnode}=[fill=clrb]
+
+    \node[optnode] (Root) {$\set{}$}
+    child { node[optnode] {$\set{3}$}  }
+    child { node[optnode] {$\set{2}$}
+      child { node[optnode] {$\set{2, 3}$}}}
+    child { node[optnode] {$\set{1}$}
+      child { node[optnode] {$\set{1, 3}$}  }
+      child { node[optnode] {$\set{1, 2}$}
+        child { node[optnode] {$\set{1, 2, 3}$}  }}};
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      height=13em,
+      width=30em,
+      xlabel={\large$|U|$},
+      xtick={0,1,...,15},
+      ylabel={Upper-bound size (log)},
+      scaled y ticks = false,
+      ymode=log,
+      legend cell align=left,
+      legend pos=north west,
+      cycle list name=exotic,
+      y tick label style={/pgf/number format/fixed,/pgf/number format/1000 sep = \thinspace}
+      ]
+
+      \addplot table[x=a,y=b] {
+        a b c
+        0 1 1
+        1 2 2
+        2 5 4
+        3 16 8
+        4 65 16
+        5 326 32
+        6 1957 64
+        7 13700 128
+        8 109601 256
+        9 986410 512
+        10 9864101 1024
+        11 108505112 2048
+        12 1302061345 4096
+        13 16926797486 8192
+        14 236975164805 16384
+        15 3554627472076 32768
+      };
+      \addplot table[x=a,y=c] {
+        a b c
+        0 1 1
+        1 2 2
+        2 5 4
+        3 16 8
+        4 65 16
+        5 326 32
+        6 1957 64
+        7 13700 128
+        8 109601 256
+        9 986410 512
+        10 9864101 1024
+        11 108505112 2048
+        12 1302061345 4096
+        13 16926797486 8192
+        14 236975164805 16384
+        15 3554627472076 32768
+      };
+      \legend{Without optimization 1 --- $\fn{a}(U)$, With optimization 1 \hspace{1.15em} --- $\fn{c}(U)$}
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \newcommand\staccatospectracall[5]{%
+    \begin{tabular}[b]{#1}
+      #2
+      \hline
+      \multicolumn{3}{c}{\cclrc #3}\\
+      \hline%
+      \multicolumn{3}{c}{\cclrd #4}\\
+      \hline%
+      \hline%
+      \multicolumn{3}{c}{\cclre #5}
+    \end{tabular}}
+
+  \begin{tikzpicture}[line width=2pt]
+    \tikzstyle{every node}=[node distance=1cm,font=\large, anchor=west, align=left, rounded corners, draw, inner sep=1pt,clip]
+    \setlength{\tabcolsep}{6pt}
+
+    \node (c0) at (0,0) {
+      \staccatospectracall{ggn}
+      {$\bm{c_1}$                 & $\bm{c_2}$ & $c_3$ \\ \hline
+        \rowcolor{highlight}\hit  & \chit      & \nhit \\
+        \rowcolor{highlight}\chit & \nhit      & \hit  \\}
+      {$\{1,2\}$}{$\{\}$}{$\{\{1,2\}\}$}};
+
+    \node[below=of c0] (c1) {
+      \staccatospectracall{ngg}
+      {$c_1$                     & $\bm{c_2}$ & $\bm{c_3}$ \\ \hline
+        \rowcolor{highlight}\hit & \chit      & \nhit      \\
+        \rowcolor{highlight}\hit & \nhit      & \chit      \\}
+      {$\{2,3\}$}{$\{\{1,2\}\}$}{$\{\{1,2\},\{2,3\}\}$}};
+
+    \node[below=of c1] (c2) {
+      \staccatospectracall{gng}
+      {$\bm{c_1}$                 & $c_2$ & $\bm{c_3}$ \\ \hline
+        \rowcolor{highlight}\chit & \hit  & \nhit      \\
+        \rowcolor{highlight}\hit  & \nhit & \chit      \\}
+      {$\{1,3\}$}{$\{\{1\},\{2,3\}\}$}{$\{\{1\},\{2,3\}\}$}};
+
+    \node[below=of c2] (c3) {
+      \staccatospectracall{ngg}
+      {$c_1$                     & $\bm{c_2}$ & $\bm{c_3}$ \\ \hline
+        \rowcolor{highlight}\hit & \chit      & \nhit      \\
+        \rowcolor{highlight}\hit & \nhit      & \chit      \\}
+      {$\{2,3\}$}{$\{\{1\},\{2,3\}\}$}{$\{\{1\},\{2,3\}\}$}};
+
+    \coordinate (data-center) at ($(c0.west) !.5! (c3.west)$);
+
+
+    \node[left=of data-center] (b1) {
+      \staccatospectracall{gnn}
+      {$\bm{c_1}$                 & $c_2$ & $c_3$ \\ \hline
+        \rowcolor{highlight}\chit & \hit  & \nhit \\
+        \rowcolor{highlight}\chit & \nhit & \hit  \\}
+      {$\{1\}$}{$\{\{1,2\},\{2,3\}\}$}{$\{\{1\},\{2,3\}\}$}};
+
+    \node[left=of c0] (b0) {
+      \staccatospectracall{ngn}
+      {$c_1$                     & $\bm{c_2}$ & $c_3$ \\ \hline
+        \rowcolor{highlight}\hit & \chit      & \nhit \\
+        \hit                     & \nhit      & \hit  \\}
+      {$\{2\}$}{$\{\}$}{$\{\{1,2\},\{2,3\}\}$}};
+
+
+    \node[left=of c3] (b2) {
+      \staccatospectracall{nng}
+      {$c_1$                     & $c_2$ & $\bm{c_3}$ \\ \hline
+        \hit                     & \hit  & \nhit      \\
+        \rowcolor{highlight}\hit & \nhit & \chit      \\}
+      {$\{3\}$}{$\{\{1\},\{2,3\}\}$}{$\{\{1\},\{2,3\}\}$}};
+
+    \node [left=of b1] (a0) {
+      \staccatospectracall{nnn}
+      {$c_1$ & $c_2$ & $c_3$ \\ \hline
+        \hit & \hit  & \nhit \\
+        \hit & \nhit & \hit  \\}
+      {$\{\}$}{$\{\}$}{$\{\{1\},\{2,3\}\}$}};
+
+
+    \node[anchor=north west] (legend) at (a0.west|- b0.north) {
+      \staccatospectracall{nnn}
+      { & \multirow{2}{*}{$A$} & \\
+        &                      & \\
+      }
+      {$d$}{$D$}{$Return$}};
+
+
+    \tikzstyle{every node}=[font=\Large, anchor=west, align=left, above, sloped]
+
+    \draw (a0.east) --  (b0.west);
+    \draw (a0.east) --  (b1.west);
+    \draw (a0.east) --  (b2.west);
+    \draw (b0.east) --  (c0.west);
+    \draw (b0.east) --  (c1.west);
+    \draw (b2.east) --  (c2.west);
+    \draw (b2.east) --  (c3.west);
+
+
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}[level distance=4em,
+    level 1/.style={sibling distance=8em},
+    level 2/.style={sibling distance=4em},
+    scale=0.7]
+
+    \tikzstyle{every node}=[circle,draw,minimum size=1em]
+    \tikzstyle{marked node}=[fill=highlight]
+
+    \node[draw,minimum size=1.75em] (Root) {}
+    child { node {$1$}
+      child { node {$2$}
+        child { node {$3$} child { node [marked node] {$5$} }}
+        child { node {$4$} child { node [marked node] {$6$} }}
+        child { node [marked node] {$5$}}
+      }
+    }
+    child { node {$2$}
+      child { node {$4$}
+        child { node [marked node] {$6$}
+          child { node {$7$}
+            child { node[marked node] {$8$}
+            }}}}
+    }
+    child { node [marked node] {$8$}};
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}[
+    level distance=4em,
+    level 1/.style={sibling distance=4em},
+    scale=0.7]
+
+    \tikzstyle{every node}=[circle,draw,minimum size=1em]
+    \tikzstyle{marked node}=[fill=highlight]
+
+    \node[draw,minimum size=1.75em] (Root) {}
+    child { node {$1$}
+      child { node {$2$}
+        child { node {$4$}
+          child { node [marked node] {$6$} }}}}
+    child { node {$2$}
+      child { node {$4$}
+        child { node [marked node] {$6$}
+        }}}
+    child { node {$3$}
+      child { node {$2$}
+        child { node {$1$}
+          child { node [marked node] {$5$}}}}}
+    child { node {$5$}
+      child { node {$1$}
+        child { node [marked node] {$2$}}}}
+    child { node {$7$}
+      child { node {$8$}
+        child { node {$2$}
+          child { node {$6$}
+            child { node [marked node] {$4$}
+            }}}}}
+    child { node [marked node] {$8$}};
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \newcommand\staccatospectracallochiai[2]{
+    \begin{tabular}[b]{#1}
+      #2
+    \end{tabular}}
+  \begin{tikzpicture}[line width=2pt]
+    \tikzstyle{every node}=[node distance=1cm,font=\large, anchor=west, align=left, rounded corners, draw,inner sep=1pt,clip]
+    \setlength{\tabcolsep}{2pt}
+
+    \node (c0) at (0,0) {
+      \staccatospectracallochiai{ggng|n}
+      { $c_1$                     & $\bm{c_2}$ & $c_3$ & $\bm{c_4}$ & $e$   \\ \hline
+        \rowcolor{highlight}\hit  & \chit      & \nhit & \nhit      & \hit  \\
+        \rowcolor{highlight}\hit  & \chit      & \nhit & \nhit      & \hit  \\
+        \rowcolor{highlight}\nhit & \nhit      & \hit  & \chit      & \hit  \\
+        \hit                      & \nhit      & \hit  & \nhit      & \nhit \\ \hline
+        &            &       &
+      }};
+
+    \node[below=of c0] (c1) {
+      \staccatospectracallochiai{gggn|n}
+      { $c_1$                     & $\bm{c_2}$ & $\bm{c_3}$ & $c_4$ & $e$   \\ \hline
+        \rowcolor{highlight}\hit  & \chit      & \nhit      & \nhit & \hit  \\
+        \rowcolor{highlight}\hit  & \chit      & \nhit      & \nhit & \hit  \\
+        \rowcolor{highlight}\nhit & \nhit      & \chit      & \hit  & \hit  \\
+        \hit                      & \nhit      & \hit       & \nhit & \nhit \\ \hline
+        &            &            &
+      }};
+
+    \node[below=of c1] (c2) {
+      \staccatospectracallochiai{ggng|n}
+      {  $\bm{c_1}$               & $c_2$ & $c_3$ & $\bm{c_4}$ & $e$   \\ \hline
+        \rowcolor{highlight}\chit & \hit  & \nhit & \nhit      & \hit  \\
+        \rowcolor{highlight}\chit & \hit  & \nhit & \nhit      & \hit  \\
+        \rowcolor{highlight}\nhit & \nhit & \hit  & \chit      & \hit  \\
+        \hit                      & \nhit & \hit  & \nhit      & \nhit \\ \hline
+        &       &       &
+      }};
+
+    \node[below=of c2] (c3) {
+      \staccatospectracallochiai{gggg|n}
+      { $\bm{c_1}$                & $c_2$ & $\bm{c_3}$ & $c_4$ & $e$   \\ \hline
+        \rowcolor{highlight}\chit & \hit  & \nhit      & \nhit & \hit  \\
+        \rowcolor{highlight}\chit & \hit  & \nhit      & \nhit & \hit  \\
+        \rowcolor{highlight}\nhit & \nhit & \chit      & \hit  & \hit  \\
+        \hit                      & \nhit & \hit       & \nhit & \nhit \\ \hline
+        &       &            &
+      }};
+
+    \node[left=of c0] (b0) {
+      \staccatospectracallochiai{ngnn|n}
+      { $c_1$                    & $\bm{c_2}$ & $c_3$ & $c_4$ & $e$   \\ \hline
+        \rowcolor{highlight}\hit & \chit      & \nhit & \nhit & \hit  \\
+        \rowcolor{highlight}\hit & \chit      & \nhit & \nhit & \hit  \\
+        \nhit                    & \nhit      & \hit  & \hit  & \hit  \\
+        \hit                     & \nhit      & \hit  & \nhit & \nhit \\ \hline
+        \nhit                    &            & $0.7$ & \hit
+      }};
+
+    \node[left=of c1] (b1) {
+      \staccatospectracallochiai{ggnn|n}
+      {  $\bm{c_1}$               & $c_2$ & $c_3$ & $c_4$ & $e$   \\ \hline
+        \rowcolor{highlight}\chit & \hit  & \nhit & \nhit & \hit  \\
+        \rowcolor{highlight}\chit & \hit  & \nhit & \nhit & \hit  \\
+        \nhit                     & \nhit & \hit  & \hit  & \hit  \\
+        \hit                      & \nhit & \hit  & \nhit & \nhit \\ \hline
+        &       & $0.7$ & $0.1$
+      }};
+
+    \node[left=of c2] (b2) {
+      \staccatospectracallochiai{ggng|n}
+      { $c_1$                     & $c_2$ & $c_3$ & $\bm{c_4}$ & $e$   \\ \hline
+        \hit                      & \hit  & \nhit & \nhit      & \hit  \\
+        \hit                      & \hit  & \nhit & \nhit      & \hit  \\
+        \rowcolor{highlight}\nhit & \nhit & \hit  & \chit      & \hit  \\
+        \hit                      & \nhit & \hit  & \nhit      & \nhit \\ \hline
+        &       & \nhit &
+      }};
+
+    \node[left=of c3] (b3) {
+      \staccatospectracallochiai{gggg|n}
+      { $c_1$                     & $c_2$ & $\bm{c_3}$ & $c_4$ & $e$   \\ \hline
+        \hit                      & \hit  & \nhit      & \nhit & \hit  \\
+        \hit                      & \hit  & \nhit      & \nhit & \hit  \\
+        \rowcolor{highlight}\nhit & \nhit & \chit      & \hit  & \hit  \\
+        \hit                      & \nhit & \hit       & \nhit & \nhit \\ \hline
+        &       &            &
+      }};
+
+    \coordinate (data-center) at ($(b0.west) !.5! (b3.west)$);
+
+    \node[left=of data-center] (a0) {
+      \staccatospectracallochiai{nnnn|n}
+      { $c_1$ & $c_2$ & $c_3$ & $c_4$ & $e$   \\ \hline
+        \hit  & \hit  & \nhit & \nhit & \hit  \\
+        \hit  & \hit  & \nhit & \nhit & \hit  \\
+        \nhit & \nhit & \hit  & \hit  & \hit  \\
+        \hit  & \nhit & \hit  & \nhit & \nhit \\ \hline
+        $0.7$ & $0.8$ & $0.4$ & $0.6$
+      }};
+
+
+
+    \node[anchor=north west] (legend) at (a0.west |- c0.north) {
+      \staccatospectracallochiai{nnnn|n}
+      { &                                          &  &  &                   \\
+        & \multicolumn{2}{c}{\multirow{2}{*}{$A$}} &  & \multirow{2}{*}{$e$} \\
+        &                                          &  &  &                   \\
+        &                                          &  &  &                   \\\hline
+        \multicolumn{4}{c|}{$\mathcal H(j)$}
+      }};
+
+
+
+    \tikzstyle{every node}=[anchor=west, align=left, above, sloped]
+
+    \draw (a0.east) -- (b0.west);
+    \draw (a0.east) -- (b1.west);
+    \draw (a0.east) -- (b2.west);
+    \draw (a0.east) -- (b3.west);
+    \draw (b0.east) -- (c0.west);
+    \draw (b0.east) -- (c1.west);
+    \draw (b1.east) -- (c2.west);
+    \draw (b1.east) -- (c3.west);
+
+
+
+  \end{tikzpicture}
+\end{preview}
+\begin{preview}
+  \begin{tikzpicture}[
+    scale=0.7,
+    level distance=1cm,
+    level 1/.style={
+      sibling distance=2.4cm,
+      edge from parent/.style={draw,thick}},
+    level 2/.style={sibling distance=1.2cm},
+    level 3/.style={level distance=1.3cm,},
+    grow=right]
+    \tikzstyle{every node}=[fill=none,inner sep=3pt, draw,anchor=west,rectangle,minimum size=0.5em,rounded corners,font=\footnotesize,text centered,thick]
+
+    \tikzstyle{exopt}=[fill=clrb,opacity=1]
+    \tikzstyle{opt}=[fill=none,opacity=0.1]
+
+    \tikzstyle{xa}=[fill=clre,opacity=1]
+    \tikzstyle{xb}=[fill=clrb,opacity=1]
+    \tikzstyle{xc}=[fill=clrc,opacity=1]
+    \tikzstyle{xd}=[fill=clrd,opacity=1]
+
+    \tikzstyle{req}=[fill=clra,opacity=1]
+    \tikzstyle{outer box} = [fill=none,box, thick, draw]
+    \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+    \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+
+
+
+
+    \begin{scope}[local bounding box=scope1]
+      \node {$\set{}$}
+      child { node {$\set{c_3}$}
+        child { node[xb] {$\set{c_2, c_3}$}
+          child { node[xa] {$\set{c_1, c_2, c_3}$} }}
+        child { node[xd] {$\set{c_1, c_3}$}
+          child { node[xa] {$\set{c_1, c_2, c_3}$} }}}
+      child { node {$\set{c_2}$}
+        child { node[xb] {$\set{c_2, c_3}$}
+          child { node[xa] {$\set{c_1, c_2, c_3}$} }}
+        child { node[xc] {$\set{c_1, c_2}$}
+          child { node[xa] {$\set{c_1, c_2, c_3}$} }}}
+      child { node {${\set{c_1}}$}
+        child { node[xd] {$\set{c_1, c_3}$}
+          child { node[xa] {$\set{c_1, c_2, c_3}$} }}
+        child { node[xc] {$\set{c_1, c_2}$}
+          child { node[xa] {$\set{c_1, c_2, c_3}$} }}};
+    \end{scope}
+    \begin{pgfonlayer}{background}
+      \node[outer box,fit=(scope1),inner sep=0.4cm] (a) {};
+    \end{pgfonlayer}
+
+    \begin{scope}[local bounding box=scope2]
+      \node[anchor=west,right=2cm of a.east, req]  {$\set{}$}
+      child[req] {
+        node[req] {$\set{c_3}$}
+        child[opt] {
+          node[opt] {$\set{c_2, c_3}$}
+          child[opt] {
+            node[opt] {$\set{c_1, c_2, c_3}$}
+          }
+        }
+        child[opt] {
+          node[opt] {$\set{c_1, c_3}$}
+          child[opt] {
+            node[opt] {$\set{c_1, c_2, c_3}$}
+          }
+        }
+      }
+      child {
+        node[req] {$\set{c_2}$}
+        child[opt] {
+          node[req] {$\set{c_2, c_3}$}
+          child[opt] {
+            node[opt] {$\set{c_1, c_2, c_3}$}
+          }
+        }
+        child[opt] {
+          node[opt] {$\set{c_1, c_2}$}
+          child[opt] {
+            node[opt] {$\set{c_1, c_2, c_3}$}
+          }
+        }
+      }
+      child {
+        node[req] {$\set{c_1}$}
+        child {
+          node[req] {$\set{c_1, c_3}$}
+          child[opt] {
+            node[opt] {$\set{c_1, c_2, c_3}$}
+          }
+        }
+        child {
+          node[req] {$\set{c_1, c_2}$}
+          child[opt] {
+            node[req] {$\set{c_1, c_2, c_3}$}
+          }
+        }
+      };
+    \end{scope}
+    \begin{pgfonlayer}{background}
+      \node[outer box,fit=(scope2),inner sep=0.4cm] (b) {};
+    \end{pgfonlayer}
+    \draw[->=latex,line] (a.east) -> (b.west);
+
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[->=latex]
+    \setlength{\tabcolsep}{0pt}%
+    \renewcommand{\arraystretch}{1.2}%
+    \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+    \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+    \tikzstyle{inner box} = [box, clip]
+    \tikzstyle{outer box} = [box, thick, draw]
+
+    \node[inner box] (a){
+      \begin{tabular}[m]{*{3}{C{0.7cm}}>{\columncolor{clra}}C{0.7cm}|C{1cm}C{0cm}}
+        {$c_1$} & $c_2$ & $c_3$ & $c_4$ & $e_i$             \\\hline%
+        \hit    & \hit  & \nhit & \nhit & \cellcolor{clre}\hit \\
+        \hit    & \nhit & \hit  & \nhit & \cellcolor{clre}\hit \\\hline
+        \hit    & \hit & \hit & \hit  & \cellcolor{clrd}\nhit
+      \end{tabular}%
+    };
+    \node[outer box,fit=(a)] {};
+
+    \node[inner box, right=2cm of a.east, anchor=west] (b){
+      \begin{tabular}[m]{*{3}{C{0.7cm}}|C{1cm}C{0cm}}
+        {$c_1$} & $c_2$ & $c_3$ & $e_i$                \\\hline%
+        \hit    & \hit  & \nhit & \cellcolor{clre}\hit \\
+        \hit    & \nhit & \hit  & \cellcolor{clre}\hit \\\hline
+        \hit    & \hit  & \hit  & \cellcolor{clrd}\nhit
+      \end{tabular}%
+
+    };
+    \node[outer box,fit=(b)] {};
+
+    \draw[line] (a.east) -> (b.west);
+  \end{tikzpicture}
+\end{preview}
+\begin{preview}
+  \begin{tikzpicture}
+    \setlength{\tabcolsep}{0pt}%
+    \renewcommand{\arraystretch}{1.2}%
+    \tikzstyle{line} = [draw,rounded corners, -latex',ultra thick]
+    \tikzstyle{box} = [inner sep=0pt,outer sep=0pt, rounded corners]
+    \tikzstyle{inner box} = [box, clip]
+    \tikzstyle{outer box} = [box, thick, draw]
+
+    \node[inner box] (a){
+      \begin{tabular}[m]{*{3}{C{0.7cm}}|C{1cm}C{0cm}}
+        {$c_1$} & $c_2$ & $c_3$ & $e_i$             \\\hline%
+        \hit    & \hit  & \nhit  & \cellcolor{clre}\hit \\
+        \hit    & \nhit  & \hit  & \cellcolor{clre}\hit \\
+        \rowcolor{clra}\nhit   & \nhit & \nhit  & \cellcolor{clra!50!clre}\hit \\\hline
+        \hit    & \hit & \hit  & \cellcolor{clrd}\nhit
+      \end{tabular}%
+    };
+    \node[outer box,fit=(a)] {};
+
+
+    \tikzstyle{every node}=[inner sep=0.3cm, draw,anchor=west,rectangle,minimum size=1em,rounded corners,fill=white, font=\Large]
+
+    \begin{scope}[
+      local bounding box=scope1,
+      level distance=1cm,
+      level 1/.style={sibling distance=1.4cm},
+      level 2/.style={sibling distance=0.7cm},
+      grow=right,]
+      \node[right=2.4cm of a.east, anchor=west] (b){}
+      child {
+        node {}
+        child { node {} }
+        child { node {}}
+      }
+      child {
+        node {}
+        child { node {} }
+        child { node {}}
+      }
+      child {
+        node {}
+        child { node {} }
+        child { node {}}
+      };
+    \end{scope}
+    \begin{pgfonlayer}{background}
+      \node[fill=none,outer box,inner sep=0.4cm,fit=(scope1)] (b){};
+    \end{pgfonlayer}
+    \draw[->=latex,line] (a.east) -> (b.west);
+    \draw[ultra thick,clre] (b.north east)+(0.5,0.5) -- ($(b.south west)+(-0.5,-.5)$);
+
+  \end{tikzpicture}
+\end{preview}
+
+\end{document}

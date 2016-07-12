@@ -1,0 +1,23 @@
+\usepackage{cleveref}
+
+\makeatletter
+\@ifundefined{previewmode}{
+\usepackage[tikz]{bclogo}
+
+\floatstyle{plain}
+\newfloat{researchquestionf}{thp}{lop}
+\floatname{researchquestionf}{Research Question}
+
+\crefname{researchquestionf}{research question}{research questions}
+\Crefname{researchquestionf}{Research Question}{Research Questions}
+
+\newcommand{\researchquestion}[1]{
+  \begin{researchquestionf}[!ht]
+    \phantomcaption{}
+    \begin{bclogo}{\textsf{\textbf{Research Question \theresearchquestionf}}}
+      #1
+    \end{bclogo}
+  \end{researchquestionf}
+}
+}{}
+\makeatother

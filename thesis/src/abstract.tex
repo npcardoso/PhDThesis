@@ -1,0 +1,315 @@
+\renewcommand{\BrainFuckChapter}{
+{+}{+}{+}{+}{+}{+}{+}{+}{[}{>}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{<}{<}{<}{<}{<}{-}{]}{>}{>}{>}{+}{.}{>}{>}{+}{+}
+{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{.}{-}{-}{.}{<}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{+}{.}{>}{+}{+}{.}{[}{>}{]}{<}{[}{[}{-}{]}{<}{]}{<}{<}{-}{<}{+}{+}{-}{<}{-}{-}
+}
+\chapter*{Abstract}
+%\addcontentsline{toc}{chapter}{Abstract}
+
+
+Despite the advances made in the Computer Science domain, it remains
+practically impossible to create faultless systems.
+%
+Acknowledging this fact, the concept of \emph{self-healing} control
+loops was introduced.
+%
+A \emph{self-healing} control loop is an instance of an autonomic
+control loop, having the purpose of both improving the dependability
+of some system and reducing human intervention to a minimum.
+%
+In contrast to other approaches to assure dependability,
+\emph{self-healing} systems achieve the aforementioned goals by
+employing mechanisms that, at run-time, either prevent or solve
+eventual errors.
+
+
+
+Among the tasks involved in creating a \emph{self-healing} system is
+the task of diagnosis.
+%
+The goal of this thesis is to create an automatic diagnostic framework
+for run-time/\emph{self-healing} systems.
+%
+In contrast to the existent approaches, we aim at creating a
+diagnostic framework that is both general purpose and lightweight.
+
+
+
+To achieve our goal while meeting the aforementioned criteria, we
+improve upon a development-time diagnostic approach called \ac{SFL}.
+%
+On the one hand, \ac{SFL} makes use of a high-level abstraction of the
+system under analysis (called \emph{spectrum}), making it, in
+principle, usable in a large diversity of scenarios.
+%
+Concretely, the only requirements to use \ac{SFL} in a real-world scenario are
+that
+\begin{inparaenum}[(1)]
+\item the system's activity must be divisible into transactions,
+\item the correctness of each transaction must be evaluable,
+\item the components' activations must be observable and
+\item it must be possible to associate the components' activity with
+  the corresponding transactions.
+\end{inparaenum}
+%
+On the other hand, and when compared to classical model-based
+diagnosis approaches, \ac{SFL} does not require detailed a system
+model, making both the modeling and diagnostic processes lightweight.
+%
+
+
+
+In the scope of \ac{SFL}, the diagnostic process can be divided in two
+stages: diagnostic candidate generation and ranking.
+%
+The first stage consists in computing sets of components that, by
+assuming their faultiness, would explain the observed erroneous
+behavior.
+%
+Since many sets may meet the above criteria, in the second stage, the
+sets are ranked according to their likelihood of being the real
+explanation for the system's erratic behavior.
+%
+Concretely, in this thesis, we aim at optimizing both stages.
+%
+To that end, we pointed $3$ limitations of the current \ac{SFL}
+approach.
+
+
+
+The first limitation is related to the fact that the candidate
+generation problem is \emph{NP-hard}, thereby being the bottleneck of
+the \ac{SFL} framework.
+%
+Taking this fact into account, we propose a novel algorithm, dubbed
+\acs{MHSII}, that is not only more efficient than state-of-the-art
+algorithm (\staccato{}) but is also capable of making use of multiple
+processing units to solve the candidate generation problem.
+%
+In practice, this improvement translates into:
+\begin{inparaenum}[(1)]
+\item better diagnostic accuracy when setting a time-based cutoff, due
+  to the fact that calculating more candidates increases the
+  likelihood of finding the correct diagnostic candidate, and
+\item smaller diagnostic latency when setting a solution size cutoff,
+  due to the fact that calculating a fixed number of diagnostic
+  candidates takes less time with \acs{MHSII} than with \staccato{}.
+\end{inparaenum}
+
+
+
+The second limitation is related to the fact that \ac{SFL} abstracts
+the transactions' outcome in terms of correct/incorrect behavior.
+%
+Even though this binary error abstraction is capable of correctly
+encoding functional errors, when diagnosing non-functional errors, it
+abstracts error symptoms (such as performance degradation), thus
+impairing the diagnostic accuracy.
+%
+In this thesis we propose a novel approach to encode and diagnose both
+functional and non-functional errors by incorporating in \ac{SFL}
+concepts from the fuzzy logic domain.
+%
+First, we propose the replacement of the classical binary logic for
+fuzzy logic to detect/encode error states.
+%
+The fuzzy approach to error detection encodes the error state as a
+continuous variable, taking values between $0$ and $1$ (corresponding
+to a pass and fail, respectively), allowing for a more accurate
+representation of degraded states.
+%
+Second, we generalize \ac{SFL} to take advantage of the added
+information.
+%
+For the conducted benchmark, and when compared to the classical
+approach, the fuzzy \ac{SFL} approach improved the diagnostic quality
+in $65\%$ of the test cases.
+
+
+
+The third limitation is related to how \ac{SFL} handles fault
+intermittency.
+%
+\ac{SFL} accounts for the fact that faulty components may fail
+intermittently by considering a parameter (known as \emph{goodness})
+that quantifies the probability that faulty components may still
+exhibit correct behavior.
+%
+The current \ac{SFL} approach does, however,
+\begin{inparaenum}[(1)]
+\item assume that this goodness probability is context independent and
+\item does not provide means for integrating past diagnosis experience
+  in the calculation of the goodness parameter.
+\end{inparaenum}
+%
+In this thesis we present a novel approach, coined \acs{NFGE}, aimed at
+addressing such limitations.
+%
+The first limitation was addressed by generalizing both the hit
+spectrum abstraction and \ac{SFL} to use information about the
+system's state in the diagnostic process.
+%
+The second limitation was addressed by proposing a \acl{KDE} approach
+that uses feedback observations to model the components' goodnesses as
+a non-linear function of the system's state.
+%
+We evaluated the approach with both synthetic and real data, yielding
+lower estimation errors, thus increasing the diagnosis performance.
+
+
+
+\renewcommand{\BrainFuckChapter}{
+{+}{+}{+}{+}{+}{+}{+}{+}{[}{>}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{<}{<}{<}{<}{<}{-}{]}{>}{>}{>}{>}{+}{+}{.}{>}{+}
+{+}{+}{+}{+}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{+}{.}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{+}{.}{[}{>}{]}{<}{[}{[}{-}{]}{<}{]}{+}{>}{+}{-}{>}{+}{<}{<}{+}{+}{>}{>}{<}{+}{-}{<}{<}{+}{+}{+}{>}{>}{>}{>}{-}
+}
+\chapter*{Resumo}
+
+Apesar dos avanços feitos no domínio da Ciência da Computação,
+continua a ser impossível, na prática, criar sistemas sem falhas.
+%
+Face a este facto, o conceito de sistemas \emph{self-healing} foi
+proposto.
+%
+Estes sistemas tem como objetivo maximizar a sua fiabilidade e, ao
+mesmo tempo, reduzir a necessidade de intervenção humana.
+%
+Em contraste com outras abordagens, os sistemas \emph{self-healing}
+atingem os objetivos acima mencionados, empregando mecanismos que,
+durante a execução do sistema, previnem ou resolvem eventuais erros.
+
+
+Entre as tarefas envolvidas na criação de um sistema
+\emph{self-healing} está a tarefa de diagnóstico.
+%
+Esta tese tem como objetivo criar uma sistema de diagnóstico
+automático para sistemas \emph{self-healing}.
+%
+Em contraste com as abordagens existentes, estabelecemos como
+requisitos necessários a criação de um sistema que seja tanto leve
+como de uso geral.
+
+
+Para alcançar o nosso objetivo, tendo em conta os critérios
+mencionados, decidimos melhorar uma abordagem anteriormente utilizada
+no âmbito do diagnóstico na fase de desenvolvimento do sistema,
+chamada \ac{SFL}.
+%
+Por um lado, o \ac{SFL} faz uso de uma abstração de alto nível do
+sistema sob análise (denominada de \emph{spectrum}), tornando-se, em
+princípio, utilizável numa grande diversidade de cenários.
+%
+Na prática, os únicos requisitos para utilizar o \ac{SFL} num cenário
+real são:
+\begin{inparaenum}[(1)]
+\item a atividade do sistema deve ser divisível em transações,
+\item a regularidade de cada transação deve ser avaliável,
+\item as ativações dos componentes devem ser observáveis e
+\item deve ser possível associar a atividade dos componentes com as
+  transações correspondentes.
+\end {inparaenum}
+%
+Por outro lado, e quando comparado com as abordagens tradicionais de
+diagnóstico baseado em modelos, o \ac{SFL} não requer um modelo
+detalhado do sistema, tornando leves tanto o processo de modelagem bem
+como o de diagnóstico.
+%
+
+
+No âmbito do \ac{SFL}, o processo de diagnóstico pode ser dividido em
+duas fases: fase de geração e fase de ordenação dos candidatos de
+diagnóstico.
+%
+A primeira fase consiste em computar conjuntos de componentes que,
+assumindo que se encontram num estado faltoso, explicariam o
+comportamento errático do sistema.
+%
+Uma vez que muitos conjuntos podem satisfazer este critério, na
+segunda fase, os conjuntos são classificados de acordo com a
+probabilidade de serem a verdadeira explicação para o comportamento
+observado.
+%
+Concretamente, o nosso objetivo nesta tese prende-se com a otimização
+destas duas tarefas.
+%
+Para tal propusemo-nos a resolver $3$ limitações de forma a tornar o
+\ac{SFL} mais rápido e preciso.
+
+
+Em primeiro lugar, o problema de geração de candidatos pertence à
+categoria de complexidade \emph{NP-hard}, sendo assim o \emph{bottleneck} do
+\ac{SFL}.
+%
+Tendo em conta este facto, propusemos um novo algoritmo, denominado de
+\acs{MHSII}, que não só é mais eficiente do que o algoritmo existente
+(\staccato{}) mas também é capaz de fazer uso de múltiplos \acsp{CPU}
+para resolver o problema de forma mais rápida.
+%
+Na prática, esta melhoria traduz-se em:
+\begin {inparaenum} [(1)]
+\item melhoria da precisão do diagnóstico ao definir um \emph{cutoff}
+  baseado em tempo, devido ao facto de que ao calcular mais candidatos
+  a probabilidade de encontrar o candidato diagnóstico correto aumenta
+  e,
+\item menor latência de diagnóstico ao definir \emph{cutoff} baseado no
+  tamanho da solução, devido ao facto de que o cálculo de um número
+  fixo de candidatos levar menos tempo com o \acs{MHSII} do que com o
+  \staccato{}.
+\end {inparaenum}
+
+
+Em segundo lugar, o \ac{SFL} abstrai o resultado das transações em
+termos de comportamento correto/incorreto.
+%
+Embora a abstração binária de erro seja capaz de codificar
+corretamente erros funcionais, na presença de erros não funcionais, os
+sintomas de erro (como por exemplo a degradação de desempenho) são
+completamente abstraídos, prejudicando assim a precisão do
+diagnóstico.
+%
+Nesta tese propomos uma abordagem baseada em lógica difusa, denominada
+de \fuzzinel{}, para codificar e diagnosticar tanto erros funcionais
+como não funcionais.
+%
+Em primeiro lugar, propusemos a substituição da lógica binária para
+lógica difusa no processo de deteção/codificação de estados de erro.
+%
+Esta abordagem codifica o estado de erro como sendo uma variável
+contínua, assumindo valores entre $0$ e $1$ (correspondendo aos
+estados nominais e faltosos, respetivamente), permitindo assim uma
+representação mais precisa dos estados de desempenho não ótimo.
+%
+Em segundo lugar, generalizamos o \ac{SFL} para incorporar esta
+informação adicional.
+%
+Nas experiências realizadas, e quando comparado com a abordagem
+anterior, o \fuzzinel{} melhorou a qualidade de diagnóstico em $65\%$
+dos casos de teste.
+
+
+
+Em terceiro lugar, o \ac{SFL} lida com o facto de os componentes
+defeituosos poderem falhar intermitentemente considerando um parâmetro
+(denominado de \emph{goodndess}) que quantifica a probabilidade de um
+componente defeituoso apresentar um comportamento correto.
+%
+No entanto, a abordagem atual assume que
+\begin {inparaenum} [(1)]
+\item essa probabilidade é independente do contexto de execução e
+\item não tem em conta experiência passada diagnóstico no cálculo
+  dessa probabilidade.
+\end {inparaenum}
+%
+Nesta tese apresentamos uma nova abordagem, denominada de \NFGE{}, com
+o objetivo de mitigar estas limitações.
+%
+A resolução para a primeira limitação passou por generalizar tanto a
+abstração do sistema bem como generalizar o \ac{SFL} para usar a
+informação sobre o estado do sistema no processo de diagnóstico.
+%
+Para resolver a segunda limitação, propusemos abordagem baseada numa
+técnica denominada de \aclp{KDE} que utiliza observações de
+\emph{feedback} para modelar as \emph{goodnesses} dos componentes como
+uma função não linear do estado do sistema.
+%
+Avaliamos a abordagem com dois casos de estudo, nos quais observamos
+erros de estimativa menores, aumentando consequentemente a qualidade
+do diagnóstico.

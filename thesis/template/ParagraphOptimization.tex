@@ -1,0 +1,64 @@
+%%% File encoding is ISO-8859-1 (also known as Latin-1)
+%%% You can use special characters just like ä,ü and ñ
+
+% This is an suggestion from Axel Reichert (LaTeX package author)
+% See CTAN: http://www.ctan.org/author/reichert
+% See CTAN: http://www.ctan.org/pkg/l2tabu-english (Cgapter: 1.8 Should I use \sloppy?)
+
+%\tolerance 1414
+%\hbadness 1414
+%\emergencystretch 1.5em
+%\hfuzz 0.3pt
+%\widowpenalty=10000
+\vfuzz \hfuzz
+\raggedbottom
+\interfootnotelinepenalty=10000
+\widowpenalties 1 7500
+\interlinepenalty 500
+
+% \binoppenalty=700 %the penalty for breaking a line at a binary
+%                   %operator
+
+% \relpenalty=500 %the penalty for breaking a line at a relation
+
+
+\linepenalty=100 % the penalty for breaking a page after a line within a
+%                   % paragraph
+\clubpenalty=10000 %extra penalty for breaking after first line of a
+%                   %paragraph
+
+\widowpenalty=10000 %extra penalty for breaking before last line of a
+%                   %paragraph
+
+\displaywidowpenalty=1000 %extra penalty for breaking before last line
+%                         %before a display math
+
+ \brokenpenalty=10000 %extra penalty for page breaking after a hyphenated
+%                     %line
+\hyphenpenalty=10000  %the penalty for line breaking at an automatically
+%                     % inserted hyphen
+
+\exhyphenpenalty=10000 %the penalty for line breaking at an explicit
+%                      %hyphen
+
+% \predisplaypenalty=1000 %penalty for breaking before a display
+
+% \postdisplaypenalty=5000 %penalty for breaking after a display
+
+% \floatingpenalty = 5000 %penalty for splitting an insertion (can only
+                         %be split footnote in standard LaTeX)
+
+
+
+\sloppy
+\emergencystretch 3em%
+
+\usepackage{etoolbox}
+
+% \makeatletter
+% \patchcmd{\@afterheading}%
+%     {\clubpenalty \@M}{\clubpenalties 3 \@M \@M 0}{}{}
+% \patchcmd{\@afterheading}%
+%     {\clubpenalty \@clubpenalty}{\clubpenalties 2 \@clubpenalty 0}{}{}
+
+% \makeatother

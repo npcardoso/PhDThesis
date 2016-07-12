@@ -1,0 +1,83 @@
+%%% File encoding is ISO-8859-1 (also known as Latin-1)
+%%% You can use special characters just like ä,ü and ñ
+
+% ##############################################
+% Start: Table of Contents (TOC) Customization
+% ##############################################
+%
+
+% Level for numbered captions
+\setcounter{secnumdepth}{5}
+
+% Level of chapters that appear in Table of Contents
+\setcounter{tocdepth}{5} % bis wohin ins Inhaltsverzeichnis aufnehmen
+% -2 no caption at all
+% -1 part
+% 0  chapter
+% 1  section
+% 2  subsection
+% 3  subsubsection
+% 4  paragraph
+% 5  subparagraph
+
+% KOMA-Script code to adjust TOC
+% Applying the color 'myColorMainA' which is defined in the main file (MainFile.tex)
+%\makeatletter
+%\addtokomafont{chapterentrypagenumber}{\color{myColorMainA}}
+%\addtokomafont{chapterentry}{\color{myColorMainA}}
+%\makeatother
+
+%
+% #######################
+% End: Table of Contents (TOC) Customization
+% #######################
+
+% ##############################################
+% Start: Floating Object Customization
+% ##############################################
+%
+
+% Extended support for catioons of figures and tables etc.
+% CTAN: http://www.ctan.org/pkg/caption
+\usepackage[%
+    font={small},
+    labelfont={bf,sf},
+    format=hang, % try plain or hang
+    margin=5pt,
+]{caption}
+%
+
+\setcounter{topnumber}{10}
+\setcounter{bottomnumber}{10}
+\setcounter{totalnumber}{20}
+\renewcommand{\topfraction}{1}
+\renewcommand{\bottomfraction}{1}
+% \renewcommand{\textfraction}{0.15}
+\renewcommand{\floatpagefraction}{1}
+\renewcommand{\dblfloatpagefraction}{1}	% require fuller float pages
+\setlength{\textfloatsep}{1em plus 1em minus 1em}
+
+
+% Auto center floats
+\makeatletter
+\g@addto@macro\@floatboxreset\centering
+\apptocmd\subcaption@minipage{\centering}{}{}
+\makeatother
+
+\usepackage[section]{placeins}
+
+% Auto flush floats before each subsection
+\makeatletter
+\AtBeginDocument{%
+  \expandafter\renewcommand\expandafter\section\expandafter
+    {\expandafter\@fb@secFB\section}%
+  \g@addto@macro\@afterheading{\@fb@afterHHook}%
+  \gdef\@fb@afterHHook{}%
+}
+\makeatother
+
+
+
+% #######################
+% End: Floating Object Customization
+% #######################

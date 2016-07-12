@@ -1,0 +1,200 @@
+\makeatletter
+
+
+%% University
+\gdef\@school{Engineering Faculty, University of Porto}
+\def\school#1{\gdef\@school{#1}}
+
+%% Thesis date
+\gdef\@thesisdate{\today}
+\def\thesisdate#1{\gdef\@thesisdate{#1}}
+
+% Programa Doutoral em Engenharia Electrotecnica e de Computadores
+\gdef\@program{Doctoral Programme in Informatics Engineering}
+\gdef\@department{Department of Informatics Engineering}
+
+%% Degree
+\gdef\@degree{Doctor Philosophiae in Informatics Engineering}
+\def\degree#1{\gdef\@degree{#1}}
+
+%% Provisional text space
+\gdef\@provisionaltext{\@empty}
+\def\additionalfronttext#1{\gdef\@provisionaltext{#1}}
+
+%% Committee text
+\def\@vivatext{}
+
+%\def\committeetext#1{}
+% %
+%   \setbox\@vivatext\vbox
+%   {\Large\noindent #1
+%     \par\vskip 0.5\baselineskip}}
+
+% For more than 1 member
+\def\committeemember#1#2#3{%
+  \g@addto@macro\@vivatext{
+    \item[#1:] #2 \hfill\rule{0.4\linewidth}{0.2mm}\hspace*{1.5cm}\\
+      {\smaller#3}
+  }}
+
+%% Supervisor text
+\gdef\@supervisorstext{}
+
+\gdef\supervisor#1#2{%
+  \g@addto@macro\@supervisorstext{
+  \item[#1:] #2
+  }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Copyright Info %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\gdef\@permission{\null}
+\def\permission#1{\gdef\@permission{#1}}
+
+%% define a copyrightnotice variable and initialize it
+\gdef\@copyrightnotice{}
+\def\copyrightnotice#1{\gdef\@copyrightnotice{\copyright\ #1\par\@permission}}
+
+\copyrightnotice{\@author: \@thesisdate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\def\maketitle{%
+  \newbox\@crestbox
+
+  %% Title page
+  \begin{titlepage}
+    \includegraphics[width=0.66\columnwidth]{template/logos/uporto-feup.pdf}
+    \vfill%
+
+    % \vspace*{20mm}%
+    {\def\baselinestretch{1.2}\Huge\bfseries \@title \par} % Title
+    \vskip 25mm%
+
+    {\huge\bfseries \@author} % Author
+    \vskip 10mm%
+
+
+    {\Large \@provisionaltext} % Provisional text
+    \vfill
+
+    {\large
+      \begin{description}
+        \centering
+        \@supervisorstext
+      \end{description}
+    } % Supervisor
+    \vskip 5mm
+
+
+    {\large \@program} % Program
+    \vskip 30mm
+    \vfill
+
+    \@thesisdate % Date
+
+  \end{titlepage}
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%% Copyright Page %%%%%%%%%%%%%%%%%%%%%%%%%
+
+  % copyright page
+  \thispagestyle{empty}
+
+  \ifx\@copyrightnotice\@empty
+  \relax
+  \else
+  \vspace*{\fill}
+  \par
+  \begin{center}
+    \@copyrightnotice
+  \end{center}
+  \fi
+  \committeepage
+  \funding
+} % maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Second Page %%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+\def\committeepage
+{%
+  \cleardoublepage
+  \thispagestyle{empty}
+  \begin{center}%
+    \null\vskip 12mm
+    {\Large\@school}\\[16mm]
+    {\LARGE\bfseries \@title}\\[16mm]
+    {\Large\bfseries \@author}\\[16mm]
+    % {\Large \@degree}%
+  \end{center}
+  \vspace*{\fill}
+
+  \begin{center}
+    Dissertation submitted to Faculdade de Engenharia da Universidade do Porto\\ to obtain the degree of
+    \vskip 3mm
+    \large{\textbf{\@degree}}
+
+  {\large
+    \begin{description}
+      \centering
+      \@supervisorstext
+    \end{description}
+  }
+  \end{center}
+  \vspace*{\fill}
+
+  {
+    \begin{description}
+      \@vivatext
+    \end{description}
+  }
+
+
+  \begin{center}
+    \@thesisdate
+  \end{center}
+}
+
+%% Second Title Page Grooming
+\def\titlepage
+{
+  \cleardoublepage\centering
+  \thispagestyle{empty}
+  \parindent 0pt \parskip 10pt plus 1fil minus 1fil
+  \def\baselinestretch{1}\@normalsize\vbox to \vsize\bgroup\vbox to 9in\bgroup
+}
+
+%% The \kern0pt pushes any depth into the height.  Thanks to Richard Stone.
+\def\endtitlepage{\par\kern 0pt\egroup\vss\egroup\clearpage}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Third Page %%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage
+\def\funding
+{%
+  \cleardoublepage
+  \thispagestyle{empty}
+  \begin{center}
+    \Large \sffamily
+
+    The work developed for this thesis was co-supported by the
+    National Science Foundation under Grant No. CNS 1116848, and by
+    the scholarship number SFRH/BD/79368/2011 from Funda\c{c}\~{a}o
+    para a Ci\^{e}ncia e Tecnologia.  \vspace*{\fill}
+    \\[2em]
+    \hspace{2em}\includegraphics[height=3cm]{template/logos/haslab}
+    \\[2em]
+    \hfill\includegraphics[height=3cm]{template/logos/NSF}
+    \hfill\includegraphics[height=3cm]{template/logos/FCT}
+    \hfill\\[2em]
+    \hfill\includegraphics[height=3cm]{template/logos/POPH}
+    \hfill\includegraphics[height=3cm]{template/logos/QREN}
+    \hfill\\[2em]
+    \includegraphics[width=\columnwidth,clip,trim=10cm 10cm 10cm 10cm]{template/logos/PT}\\[2em]
+    \includegraphics[height=3cm]{template/logos/UE}
+  \end{center}
+  \vspace*{\fill}
+}
+
+\makeatother

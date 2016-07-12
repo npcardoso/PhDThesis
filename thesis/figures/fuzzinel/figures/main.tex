@@ -1,0 +1,289 @@
+\newcommand\previewmode{}
+\input{template/template}
+
+\begin{document}
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      membership functions example,
+      xtick={0,0.3,0.5,0.9,1,1.5},
+      xticklabels={$0$, $rt_1$, $0.5$, $rt_2$, $1$, $rt_3$},
+      extra y ticks={0.8},
+      ]
+
+      \begin{scope}[no markers]
+        \addplot {(x>1)};
+        \addplot {(x>1) + (x>=0.5 && x < 1)*(2*(x-0.5))};
+      \end{scope}
+
+
+      \begin{scope}[dashed]
+        \addplot+[ycomb,comb,gray] plot coordinates {(0.3,0) (0.9,0.8) (1.5,1)};
+        \addplot+[xcomb,comb,gray] plot coordinates {(0.9,0.8)};
+        \addplot+[ycomb,comb,gray] plot coordinates {(0.9,0.8)};
+      \end{scope}
+
+%      \addplot+[comb, only marks] plot coordinates {(0.3,0) (0.9,0.8) (1.5,1)};
+      \legend{$\cerror$, $\ferror$}
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      membership functions example,
+      xtick={0,0.5,1,1.5},
+      no markers, ]
+
+      \addplot {(x>1) + (x>=0.5 && x < 1) * (2*x - 1) * (rnd+2) / 3};
+      \addplot {(x>1) + (x>=0.5 && x < 1) * (2*x - 1) *
+        (cos(10*360*x)+2) / 3}; \addplot {(x>1) + (x>=0.5 && x < 1) *
+        round((2*x-1)^(1/5)*10 ) / 10};
+
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      membership functions example,
+      xtick={0,0.5,1,1.5},
+      no markers, ]
+
+      \addlegendimage{empty legend} \addlegendentry{} \addplot {(x>1)
+        + (x>=0.5 && x < 1) * (2*x - 1)};
+      \addlegendentryexpanded{$\ferror$}
+      \addlegendimage{empty legend} \addlegendentry{}
+
+      \begin{scope}[dotted]
+        \foreach \pow in {2,8,32} { \addplot { (x>1) + (x>=0.5 && x
+            < 1) * (2*x - 1)^(\pow) };
+
+          \addlegendentryexpanded{$\ferror~^{\pow}$} };
+      \end{scope}
+      \begin{scope}[dashed]
+        \foreach \pow in {1/2,1/8,1/32} { \addplot { (x>1) + (x>=0.5
+            && x < 1) * (2*x - 1)^(\pow) };
+          \addlegendentryexpanded{$\ferror~^{\pow}$}
+
+        };
+      \end{scope}
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis}[
+      hide axis,
+      scale only axis,
+      height=0pt,
+      width=0pt,
+      colorbar horizontal,
+      colormap name=rg,
+      point meta min=0,
+      point meta max=1,
+      fill opacity=0.5,
+      colorbar style={
+        width=15em,
+        xtick={0, 0.25, 0.5, 0.75, 1}
+      }]
+      \addplot [draw=none] coordinates {(0,0)};
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      view={0}{90},
+      height=15em,
+      samples=16,
+      xlabel={$\gFunc{}$},
+      ylabel={$e_i$},
+      zlabel={$\likelihoodi{}$},
+      colormap name=rg,
+      trim axis left,
+      trim axis right]
+
+      \addplot3[surf,domain=0:1,opacity=0.3,fill opacity=0.7] {x*(1-y)+(1-x)*y};
+      %
+      \addplot3[ultra thick,domain=0:1, samples y=0, black] (x,0.99,{1-x});
+      %
+      \addplot3 [ultra thick,domain=0:1, samples y=1, black] (x,0.01,{x});
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      view={-35}{15},
+      height=15em,
+      samples=16,
+      zmin=0,
+      xlabel={$\gFunc{}$},
+      ylabel={$e_i$},
+      zlabel={$\likelihoodi{}$},
+      colormap name=rg,]
+
+      \addplot3[surf,domain=0:1,opacity=0.3,fill opacity=0.5] {x*(1-y)+(1-x)*y};
+      %
+      \addplot3 [ultra thick,domain=0:1, samples y=0, black] (x,1,{1-x});
+      %
+      \addplot3 [ultra thick,domain=0:1, samples y=1, black] (x,0,{x});
+      % \addplot3 [ultra thick,domain=0:1, samples y=1, black]
+      % (x,0.5,{0.5});
+      % \addplot3 [ultra thick,domain=0:1, samples y=1, black]
+      % (0.5,x,{0.5});
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      xlabel={$g_1$},
+      height=15em,
+      xtick={0,0.25,...,1},
+      width=0.45\columnwidth,]
+
+      \addplot+[mesh] {(0.8 * (1-x) + 0.2 * x) * (1-x)};
+
+      % \node (max) at (axis cs:0,0.8){};
+      % \node[rectangle, black, align=center,anchor=west] (ann) at (axis cs:.4,0.8){Maximum};
+      % \draw[->,ultra thick] (ann) -- (max);
+
+      \addplot+[xcomb,comb] plot coordinates {(0,0.8)};
+
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      xlabel={$g_2$},
+      height=15em,
+      xtick={0,0.25,...,1},
+      extra y ticks={0.25},
+      width=0.45\columnwidth,]
+
+      \addplot+[mesh] {x * (1-x)};
+
+      % \node (max) at (axis cs:0.5,0.25){};
+      % \node[rectangle, black, align=center,anchor=west] (ann) at (axis cs:.65,0.25){Maximum};
+      % \draw[->,ultra thick] (ann) -- (max);
+
+      \addplot+[ycomb,comb] plot coordinates {(0.5,0.25)};
+      \addplot+[xcomb,comb] plot coordinates {(0.5,0.25)};
+
+      %\draw[dashed, ultra thick](axis cs:0.5,0)--(axis cs:0.5,0.25);
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+
+\begin{preview}
+  \begin{tikzpicture}[>=stealth',auto]
+    \matrix[table] (c0) {
+      |[fill=clra]|$c_0$ \\
+      |[fill=clrb]|$c_1:0.2,c_2: 0.8$\\
+      |[fill=clrb]|$c_3: 0.5, \emptyset: 0.5$\\
+    };
+
+    \matrix[table, below right=1em and 2em of c0] (c2) {
+      |[fill=clra]|$c_2$ \\
+      |[fill=clrb]|$c_1: 0.1, c_3: 0.9$\\
+    };
+
+    \matrix[table, above=5em of c2] (c1) {
+      |[fill=clra]|$c_1$ \\
+      |[fill=clre]|$\angledlist{0.5, 0.2, 0.3, 0.4}$\\
+    };
+
+    \matrix[table, below left=1em and 2em of c0] (c3) {
+      |[fill=clra]|$c_3$ \\
+      |[fill=clrb]|$c_4: 1$\\
+    };
+
+    \matrix[table, above=5em of c3] (c4) {
+      |[fill=clra]|$c_4$ \\
+      |[fill=clre]|$\angledlist{0, 0.1, 0.9, 1}$\\
+    };
+
+    \node[above=2em of c0, rounded corners, draw,fill=clrd](start)
+    {Start};
+
+    \draw[->] (start) -> (c0-1-1.north);
+    \draw (c0-2-1.east) edge[->,out=0,in=90] node[above,sloped]   {$80\%$} (c2-1-1.north);
+    \draw(c0-2-1.east) edge[->,out=0,in=180] node[above,sloped]   {$20\%$} (c1-1-1.west);
+    \draw (c2-2-1.east) edge[->,out=0,in=0] node[above,sloped]    {$10\%$} (c1-1-1.east);
+    \draw (c2-2-1.west) edge[->,out=180,in=0] node[above,sloped]  {$90\%$} (c3-1-1.east);
+    \draw (c3-2-1.west) edge[->,out=180,in=180] node[above,sloped]{$100\%$} (c4-1-1.west);
+    \draw (c0-3-1.west) edge[->,out=-180,in=90] node[above,sloped]{$50\%$} (c3-1-1.north);
+
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[scale=1.3]
+    \edef\W{8}
+    \edef\sep{2}
+    \edef\radius{0.75em}
+    \pgfmathparse{\sep * 3}
+    \edef\H{\pgfmathresult}
+
+    \foreach \i / \c / \prevCount in {1/3/0,2/2/3,3/4/2,4/3/5} {
+      \pgfmathparse{\sep * (\i - 1)}
+      \edef\y{\pgfmathresult}
+      \foreach \ii   in {1,...,\c}{
+%        \pgfmathparse{\W / (\c - 1) * (\ii - 1)}
+
+        \pgfmathparse{\W / (\c) * (\ii - 0.5)}
+        \edef\x{\pgfmathresult}
+        \node[circle, inner sep=\radius, draw] (N-\ii-\i) at (\x,\y) {};
+      }
+    }
+    \foreach \iprev / \i/ \ca / \cb in {1/2/2/3,2/3/4/2,3/4/3/4} {
+      \foreach \ii   in {1,...,\ca}{
+        \foreach \iii   in {1,...,\cb}{
+          \pgfmathparse{(\ii-\ca/2.0-0.5) * -45 + 90}
+          \edef\inang{\pgfmathresult}
+          \pgfmathparse{(\iii-\cb/2.0-0.5) * 45 - 90}
+          \edef\outang{\pgfmathresult}
+
+          \draw[densely dotted ]  (N-\ii-\i.south) edge[out=\outang,in=\inang] (N-\iii-\iprev.north);
+        }
+      }
+    }
+    \node[ellipse, minimum width=20em, draw, fill=white,inner sep=1.5em] at (4, \sep) {...};
+
+    \node[circle, inner sep=\radius, fill=clre] (f1) at (N-2-3) {};
+    \node[circle, inner sep=\radius, fill=clre] (f2) at (N-3-4) {};
+
+    \node[anchor=east,align=center,draw,rounded corners] (faults) at (0.5, 7) {Faults};
+    \draw[->] (faults) edge[->,out=-50,in=180] (f1);
+    \draw[->] (faults) edge[->,out=0,in=155] (f2);
+
+    \draw[<->] (\W, 0) -- node [midway, below, sloped] {$T \in [3,10]$} (\W, \H);
+
+    \draw[<->] (\W/8, -1) -- node [midway, below, sloped] {$C_i \in [3,10]$} (7*\W/8, -1);
+  \end{tikzpicture}
+\end{preview}
+
+\end{document}

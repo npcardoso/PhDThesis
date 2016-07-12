@@ -1,0 +1,195 @@
+\newcommand\previewmode{}
+\input{template/template}
+
+\tikzstyle{c1}=[draw=black, fill=clra]
+\tikzstyle{c2}=[draw=black, fill=clrb]
+
+\tikzstyle{p}=[inner sep=0.1em, circle]
+
+\tikzstyle{p1}=[p,c1]
+\tikzstyle{p2}=[p,c2]
+
+\begin{document}
+
+\begin{preview}
+  \begin{tikzpicture}[
+    scale=1.2,
+    level 1/.style={sibling distance=8em},
+    level 2/.style={sibling distance=3em},
+    level 3/.style={sibling distance=1em}]
+
+    \tikzstyle{every node}=[draw,anchor=west,rectangle,minimum size=1em,rounded corners]
+    \node[anchor=east] (L1) at (6.5, -0.5) {$L = 1$};
+    \node[anchor=east] (L2) at (6.5, -2.5) {$L = 2$};
+
+    \draw[ultra thick] (-5.5,-0.5) -- (L1);
+    \draw[ultra thick] (-5.5,-2.5) -- (L2);
+
+    \node (Root) {$\set{}$}
+    child { node[fill=clra] {$\set{1}$}
+      child { node[fill=clrb] {$\set{1, 2}$}
+        child { node {\ldots}}}
+      child { node[fill=clrb] {$\set{1, 3}$}
+        child { node {\ldots}}}
+      child { node[fill=clrb] {$\set{1, 4}$}}}
+    child { node[fill=clra] {$\set{2}$}
+      child { node[fill=clrb] {$\set{2, 3}$}
+        child { node {\ldots}}}
+      child { node[fill=clrb] {$\set{2, 4}$}}}
+    child { node[fill=clra] {$\set{3}$}
+      child { node[fill=clrb] {$\set{3, 4}$}}}
+    child { node[fill=clra] {$\set{4}$}  };
+    \begin{scope}
+      \node[anchor=north east,inner sep=0.5pt,clip] (table) at (6.5, -3.5) {%
+        \setlength{\tabcolsep}{3pt}%
+        \begin{tabular}[m]{c|c|c|c}
+                   & \multicolumn{2}{c|}{Evaluations}    & \multirow{2}{*}{Decisions}                                          \\\cline{2-3}
+                   & Redundant                           & Non-redundant                                 &                     \\\hline
+          $1$      & $1$                                 & $15$                                          & \cellcolor{clra}$4$ \\
+          $2$      & $5$                                 & $11$                                          & \cellcolor{clrb}$6$ \\
+          $\ldots$ & $\ldots$                            & $\dots$                                       & $\ldots$            \\
+          $L$      & $\sum_{i=0}^{L-1}   {|U|\choose i}$ & $2^{|U|} - \sum_{i=0}^{L-1}   {|U|\choose i}$ & ${|U|  \choose L}$
+      \end{tabular}};
+    \end{scope}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[node distance=0.3em and 0.3em]
+    \node[p1] (p0) at (3, 1.5) {$p_1$};
+    \node[p2] (p1) at (3, -1.5) {$p_2$};
+    \node[p1] (b0) at (0, 0) {$b_0$};
+    \node[p2,right=of b0] (b1) {$b_1$};
+    \node[p1,right=of b1] (b2) {$b_2$};
+    \node[p2,right=of b2] (b3) {$b_3$};
+    \node[p1,right=of b3] (b4) {$b_4$};
+    \node[p2,right=of b4] (b5) {$b_5$};
+    \node[p1,right=of b5] (b6) {$b_6$};
+    \node[p2,right=of b6] (b7) {$b_7$};
+    \node[p1,right=of b7] (b8) {$b_8$};
+    \node[p2,right=of b8] (b9) {$b_9$};
+
+    \draw
+    (p0) edge[bend right,->] (b0)
+    (p0) edge[->] (b2)
+    (p0) edge[->] (b4)
+    (p0) edge[->] (b6)
+    (p0) edge[bend left,->] (b8)
+    (p1) edge[bend left,->] (b1)
+    (p1) edge[->] (b3)
+    (p1) edge[->] (b5)
+    (p1) edge[->] (b7)
+    (p1) edge[bend right,->] (b9);
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[node distance=0.3em and 0.3em]
+    \node[p1] (p0) at (3, 1.5) {$p_1$};
+    \node[p2] (p1) at (3, -1.5) {$p_2$};
+    \node[p2] (b0) at (0, 0) {$b_0$};
+    \node[p1,right=of b0] (b1) {$b_1$};
+    \node[p1,right=of b1] (b2) {$b_2$};
+    \node[p2,right=of b2] (b3) {$b_3$};
+    \node[p1,right=of b3] (b4) {$b_4$};
+    \node[p1,right=of b4] (b5) {$b_5$};
+    \node[p2,right=of b5] (b6) {$b_6$};
+    \node[p2,right=of b6] (b7) {$b_7$};
+    \node[p2,right=of b7] (b8) {$b_8$};
+    \node[p2,right=of b8] (b9) {$b_9$};
+
+    \draw
+    (p0) edge[bend right,->] (b1)
+    (p0) edge[->] (b2)
+    (p0) edge[->] (b4)
+    (p0) edge[->] (b5)
+    (p1) edge[bend left,->] (b0)
+    (p1) edge[->] (b3)
+    (p1) edge[->] (b6)
+    (p1) edge[->] (b7)
+    (p1) edge[bend right,->] (b8)
+    (p1) edge[bend right,->] (b9);
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[
+    scale=1.2,
+    level 1/.style={sibling distance=8em},
+    level 2/.style={sibling distance=3em},
+    level 3/.style={sibling distance=1em}]
+
+    \tikzstyle{every node}=[draw,anchor=west,rectangle,minimum size=1em,rounded corners]
+    \tikzstyle{p1}=[c1]
+    \tikzstyle{p2}=[c2]
+
+    \node[anchor=east] (L1) at (6.5, -0.5) {$L = 1$};
+
+    \draw[ultra thick] (-5.5,-0.5) -- (L1);
+
+
+    \node (Root) {$\set{}$}
+    child { node[p1] {$\set{1}$}
+      child { node[p1] {$\set{1, 2}$}
+        child { node[p1] {$\ldots$}}}
+      child { node[p1] {$\set{1, 3}$}
+        child { node[p1] {$\ldots$}}}
+      child { node[p1] {$\set{1, 4}$}}}
+    child { node[p2] {$\set{2}$}
+      child { node[p2] {$\set{2, 3}$}
+        child { node[p2] {$\ldots$}}}
+      child { node[p2] {$\set{2, 4}$}}}
+    child { node[p1] {$\set{3}$}
+      child { node[p1] {$\set{3, 4}$}}}
+    child { node[p2] {$\set{4}$}  };
+
+
+    \node[p1,anchor=east,below=5em of L1] (p1_count)  {$10$ nodes};
+    \node[p2,anchor=east,below=1em of p1_count] (p2_count)  {$5$ nodes};
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}[node distance=0.5cm]
+    \tikzstyle{every node}=[align=center];
+    \tikzstyle{map}=[ellipse,draw,minimum width=3.5cm];
+
+    \node [rectangle, rounded corners, draw, anchor=north, minimum width=11cm, inner sep=1.5em,
+    minimum height=6cm] (box) at (0, 0){};
+    \node [above=-0em of box](fd) {\mhsII{}};
+
+    \node [right = 0cm of box.center,anchor=center] (dots) {\rotatebox{90}{\Large\textbf{$\cdots$}}};
+
+    \node [fill=clra,ellipse, draw, left = 3cm of dots, anchor=east,minimum width=2cm] (map) {Map};
+    \node [fill=clrb,ellipse, draw, right = 2.5cm of dots, anchor=west,minimum width=2.5cm] (reduce) {Reduce};
+
+    \node [left=1cm of map,minimum width=0cm] (obs) {$(U,S)$};
+    \node [right=1cm of reduce,minimum width=0cm] (diag) {$D$};
+
+
+
+    \node [fill=clra,map,above=0cm of dots] (t2) {Thread $2$};
+    \node [fill=clra,map,above=of t2] (t1) {Thread $1$};
+
+    \node [fill=clra,map,below=0cm of dots] (t3) {Thread $np-1$};
+    \node [fill=clra,map,below=of t3] (t4) {Thread $np$};
+
+
+
+    \draw [->] (obs.east) -- (map);
+    \draw [->] (reduce) -- (diag.west);
+
+    \draw (map) edge[->,out=90,in=180]  node[above,sloped]{$(U,S)$} (t1.west);
+    \draw (map) edge[->,out=45,in=180]  node[above,sloped]{$(U,S)$} (t2.west);
+    \draw (map) edge[->,out=-45,in=180] node[below,sloped]{$(U,S)$} (t3.west);
+    \draw (map) edge[->,out=-90,in=180] node[below,sloped]{$(U,S)$} (t4.west);
+
+    \draw (t1.east) edge[->,out=0,in=90]    node[above,sloped]{$D_1'$} (reduce);
+    \draw (t2.east) edge[->,out=0,in=135]   node[above,sloped]{$D_2'$} (reduce);
+    \draw (t3.east) edge[->,out=-0,in=-135] node[below,sloped]{$D_{\mathit{np}-1}'$} (reduce);
+    \draw (t4.east) edge[->,out=-0,in=-90]  node[below,sloped]{$D_{\mathit{np}}'$} (reduce);
+  \end{tikzpicture}
+\end{preview}
+
+
+\end{document}

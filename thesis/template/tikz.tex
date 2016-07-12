@@ -1,0 +1,171 @@
+\usepackage{tikz,pgfplots}
+\usepackage{varwidth}
+
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{decorations}
+\usetikzlibrary{shapes}
+\usetikzlibrary{shadings}
+\usetikzlibrary{calc}
+\usetikzlibrary{fadings}
+\usetikzlibrary{mindmap}
+\usetikzlibrary{matrix}
+\usetikzlibrary{pgfplots.groupplots}
+\usetikzlibrary{decorations.fractals}
+\usetikzlibrary{fit}
+
+\usepgfplotslibrary{groupplots}
+%\usepgfplotslibrary{clickable}
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+\tikzset{
+  table/.style={
+    matrix of nodes,
+    nodes={rectangle,text width=7em,draw=black,align=center},
+    nodes in empty cells
+  }
+}
+
+\tikzset{every picture/.style={line width=1pt}}
+
+
+\tikzstyle{none}=[inner sep=0pt]
+\tikzstyle{rn}=[ellipse,fill=Red,draw=Black,line width=0.8 pt,align=center,font=\tiny]
+\tikzstyle{gn}=[ellipse,fill=Lime,draw=Black,line width=0.8 pt,align=center,font=\tiny]
+\tikzstyle{yn}=[ellipse,fill=Yellow,draw=Black,line width=0.8 pt,align=center,font=\tiny]
+\tikzstyle{white}=[ellipse,fill=White,draw=Black,line width=0.8 pt,align=center]
+
+
+\tikzstyle{simple}=[-,draw=Black,line width=1.000]
+\tikzstyle{arrow}=[->,draw=Black,line width=1.000]
+\tikzstyle{tick}=[-,draw=Black,postaction={decorate},decoration={markings,mark=at position .5 with {\draw (0,-0.1) -- (0,0.1);}},line width=2.000]
+
+\pgfmathdeclarefunction{gauss}{3}{%
+  \pgfmathparse{1/(#3*sqrt(2*pi))*exp(-((#1-#2)^2)/(2*#3^2))}%
+}
+
+
+\tikzfading[name=fade out,
+inner color=transparent!0,
+outer color=transparent!100]
+
+\pgfplotsset{compat=1.12}
+\pgfplotsset{every axis label/.append style={font=\large}}
+\pgfplotsset{%
+  colormap={rg}{color(0)=(lime!90!black); color(1)=(red!60!white)},
+}
+
+\pgfplotsset{
+  cycle list name=exotic,
+  axis y line=left,
+  axis x line=bottom,
+}
+
+
+\pgfplotsset{likelihood plot/.style= {
+    height=13em,
+    width=0.9\columnwidth,
+    samples=300,
+    domain=0:1,
+    ymin=0,
+    xmin=0,
+    enlarge y limits=upper,
+    every axis plot post/.append style={very thick},
+    no markers,
+    y tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator
+    },
+    z tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator
+    },
+  }}
+
+
+\pgfplotsset{comb/.style= {dashed, draw=gray!40,
+    every axis plot post/.append style=
+    {mark=*,mark options={fill=lime!90!black,draw=gray!60, solid}} } }
+
+\pgfplotsset{membership functions example/.style= {
+    height=14em,
+    width=0.9\columnwidth,
+    enlarge y limits=upper,
+    width=\columnwidth,
+    samples=300,
+    xlabel={$rt$},
+    every axis legend/.append style={
+      at={(0.5,1.1)},
+      anchor=south,
+      row sep=0.5em,
+      /tikz/column 2/.style={
+        column sep=2em,
+      },
+      /tikz/column 4/.style={
+        column sep=2em,
+      }},
+    legend columns=3,
+    domain=0:1.6,
+    every axis plot post/.append style={very thick},
+  }}
+
+
+\newcommand*\circled[1]{%
+  \tikz[baseline=(char.base)]{%
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+
+
+% Game of Life stuff
+
+\tikzset{%
+  cellframe/.style={%
+    minimum size=1cm,%
+    draw = Gray,%
+    fill = black,%
+    fill opacity=0.5%
+  }%
+}
+
+\tikzset{%
+  alivecell/.style={%
+    fill=white,%
+    fill opacity=1%
+  }%
+}
+
+\newcommand\GofL[1]{
+  \foreach[count=\yi] \y in #1 {
+    \foreach[count=\xi] \x in \y {%
+      \edef\one{1}
+      \ifx\x\one
+      \node[cellframe,alivecell] at (\xi, -\yi) {};
+      \else
+      \node[cellframe] at (\xi, -\yi) {};
+      \fi
+    }
+  }
+}
+
+\newcommand{\LifeChapter}{}
+\newcommand{\BrainFuckChapter}{}
+
+\newcommand\cthit{\circled{$\bm{\times}$}}
+\newcommand\chit{\checkmark}
+\newcommand\hit{$\bullet$}
+\newcommand\nhit{.}
+
+% Define block styles
+\tikzstyle{defaults} = [text badly centered, draw, font=\Large,inner sep=5mm]
+\tikzstyle{decision} = [diamond, draw, fill=clra,
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=clrb,
+text width=8em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw,rounded corners=5pt, -latex',ultra thick]
+\tikzstyle{cloud} = [text badly centered,text width=8em,draw, rectangle,fill=clrc, node distance=3cm,
+minimum height=2em]
+
+\tikzstyle{decision label} = [text badly centered,anchor=center,near start,fill=white,draw=black,font=\small,execute at begin node={\begin{varwidth}{7em}},
+  execute at end node={\end{varwidth}}]

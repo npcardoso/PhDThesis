@@ -1,0 +1,168 @@
+%\newcommand{\finalversion}{}
+\input{template/template}
+
+\graphicspath{ {src/} }
+
+
+\includeonly{
+   src/acronyms,
+   src/introduction,
+   src/mhs2o,
+   src/mhs2p,
+   src/fuzzinel,
+   src/nfge,
+   src/related_work,
+   src/conclusions,
+}
+
+
+
+\newcommand{\titleinfo}{Spectrum-based Diagnosis for Run-time Systems}
+
+\pagenumbering{Alph}
+\begin{document}
+
+
+%% Title Page
+\author{Nuno Cardoso}
+\title{\titleinfo}
+\supervisor{Supervisor}{Professor Rui Abreu}
+\supervisor{Co-Supervisor}{Professor David Garlan}
+\thesisdate{\today}
+
+%% Committee Page
+\committeemember{President}{Professor Eugénio Oliveira}{University of Porto, Portugal}
+\committeemember{Referee}  {Professor Jorge Barbosa}{University of Porto, Portugal}
+\committeemember{Referee}  {Professor Rogério de Lemos}{University of Kent, UK}
+\committeemember{Referee}  {Professor João Marques e Silva}{University of Lisbon, Portugal\\University College Dublin, Ireland}
+
+
+
+
+
+
+\maketitle
+\pagestyle{empty}
+
+\ifx\finalversion\undefined
+\else
+\clearpage
+\begin{tikzpicture}[remember picture, overlay]
+  \node[anchor=center,inner sep=0pt] at (current page.center) {%
+    \includegraphics[width=\paperwidth]{wordcloud/wordcloud0.png}
+  };
+\end{tikzpicture}
+\clearpage
+\begin{tikzpicture}[remember picture, overlay]
+  \node[anchor=center,inner sep=0pt] at (current page.center) {%
+    \includegraphics[width=\paperwidth]{wordcloud/wordcloud1.png}
+  };
+\end{tikzpicture}
+\fi
+
+\cleardoublepage
+
+\begin{center}
+
+  \vspace*{\fill}
+  \includegraphics{ve_e_aprende}\vspace*{\fill}
+
+\end{center}
+\cleardoublepage
+\renewenvironment{dedication}
+{
+  \pagestyle{empty}% no header and footer
+  \cleardoublepage
+  \begin{flushright}
+
+  \vspace*{\stretch{3}}% some space at the top
+  \itshape             % the text is in italics
+  \rmfamily
+  \Large
+}
+{%
+  \par % end the paragraph
+  \vspace{\stretch{1}} % space at bottom is three times that at the top
+  \end{flushright}
+}
+
+
+\begin{dedication}
+  To Lígia, my best friend and love of my life.
+\end{dedication}
+
+
+
+\renewcommand*{\chapterpagestyle}{empty}
+\input{src/abstract}
+\renewcommand*{\chapterpagestyle}{plain}
+\cleardoublepage
+\pagestyle{plain}
+\pagenumbering{roman}
+
+\renewcommand{\BrainFuckChapter}{
+  {+}{+}{+}{+}{+}{+}{+}{+}{[}{>}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{<}{<}{<}{<}{<}{-}{]}{>}{>}{>}{+}{+}{+}{.}{>}{>}
+  {+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{-}{.}{+}{+}{+}{+}{+}{+}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{+}{+}{+}{+}{+}{.}{-}{.}{[}{>}{]}{<}{[}{[}{-}{]}{<}{]}
+}
+
+\phantomsection
+\addcontentsline{toc}{chapter}{Contents}
+\tableofcontents
+
+\renewcommand{\BrainFuckChapter}{
+  {+}{+}{+}{+}{+}{+}{+}{+}{[}{>}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{<}{<}{<}{<}{<}{-}{]}{>}{>}{>}{>}{-}{-}{-}{-}{.}
+  {>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{.}{<}{<}{<}{<}{.}{>}{>}{>}{>}{-}{-}{-}{-}{-}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{<}{<}{<}{<}{.}{>}{>}{+}{+}{+}{+}{+}{+}{.}{>}{>}{+}{+}{+}{.}{-}
+  {-}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{-}{-}{-}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{[}{>}{]}{<}{[}{[}{-}{]}{<}{]}{-}{<}{>}{+}{>}{>}{>}{+}{>}{<}
+  % {-}{<}{-}{-}{+}{>}
+}
+\listoffigures
+
+\renewcommand{\BrainFuckChapter}{
+  {+}{+}{+}{+}{+}{+}{+}{+}{[}{>}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{<}{<}{<}{<}{<}{-}{]}{>}{>}{>}{>}{-}{-}{-}{-}{.}
+  {>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{.}{<}{<}{<}{<}{.}{>}{>}{>}{>}{-}{-}{-}{-}{-}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{<}{<}{<}{<}{.}{>}{>}{+}{.}{>}{>}{+}{+}{+}{+}{+}{+}{.}{-}{-}{-}
+  {-}{-}{.}{+}{+}{+}{+}{+}{+}{+}{+}{.}{+}{+}{+}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{+}{+}{+}{+}{.}{+}{+}{+}{+}{+}{+}{.}{[}{>}{]}{<}{[}{[}
+  {-}{]}{<}{]}{>}{>}{<}{+}{>}{>}{>}{-}{<}{+}{<}{<}{-}{<}{-}{>}{-}{>}{+}{>}{>}{<}{>}{>}{+}{>}{+}{<}{<}{<}{<}{>}{>}{-}{+}{+}{<}{>}{+}{<}{+}{+}{>}{-}{<}{>}{+}{>}{-}{-}{+}{>}{>}{>}{>}{-}{<}{-}{-}{<}{>}{+}{+}{>}{<}{>}
+}
+
+\listofalgorithms
+\addcontentsline{toc}{chapter}{List of Algorithms}
+
+
+\include{src/acronyms}
+
+\cleardoublepage
+
+\acresetall{}
+\renewcommand*{\chapterpagestyle}{scrheadings}
+
+\pagestyle{scrheadings}
+\pagenumbering{arabic}
+
+\include{src/introduction}
+\include{src/mhs2o}
+\include{src/mhs2p}
+\include{src/fuzzinel}
+\include{src/nfge}
+\include{src/related_work}
+\include{src/conclusions}
+
+
+\renewcommand{\BrainFuckChapter}{
+  {+}{+}{+}{+}{+}{+}{+}{+}{[}{>}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{>}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{<}{<}{<}{<}{<}{-}{]}{>}{>}{>}{>}{+}{+}{.}{>}{+}
+  {+}{+}{+}{+}{.}{+}{.}{-}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{+}{+}{+}{+}{+}{+}{+}{+}{.}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{+}{.}{+}{+}{+}{+}{+}{+}{+}{+}
+  {+}{+}{+}{+}{+}{+}{.}{[}{>}{]}{<}{[}{[}{-}{]}{<}{]}{<}{>}{.}{<}{.}{-}{+}{<}{+}{-}{-}{-}{-}{<}{>}{>}{>}{-}{<}{<}{-}{+}{<}{>}{>}{>}{+}{+}{>}{>}{+}{<}{>}{-}{+}{+}{+}{<}{-}{>}{+}{<}{-}{<}{-}{-}{>}{-}{>}{+}{<}{<}{-}
+}
+\renewcommand{\LifeChapter}{}
+
+\DeclareRobustCommand{\van}[3]{#2 #1}
+
+\renewcommand{\bibname}{References}
+\bibliography{references}
+\renewcommand{\BrainFuckChapter}{}
+\ifx\finalversion\undefined
+\listoftodos
+\fi
+% \appendix
+% \printindex
+\input{src/acks}
+\end{document}

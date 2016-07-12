@@ -1,0 +1,210 @@
+\newcommand\previewmode{}
+\input{template/template}
+
+\pgfplotsset{nfge example/.style= {
+    height=14em,
+    xlabel={$\ST$},
+    ylabel={Density},
+    domain=0:60,
+    declare function={
+      pass_kde(\t,\b)=gauss(\t, 5, \b) + gauss(\t, 7, \b) + gauss(\t, 15, \b) + gauss(\t, 20, \b) + gauss(\t, 40, \b);
+      fail_kde(\t,\b)=gauss(\t, 40, \b) + gauss(\t, 44, \b) + gauss(\t, 60, \b);
+    },
+  }
+}
+
+
+\begin{document}
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      ymax=0.20,
+      likelihood plot,
+      nfge example,
+      hide axis,
+      height=20em,
+      stack plots=y]
+      \foreach \k/\s in {5/0, 7/-1, 15/-2, 20/-3, 40/-4} {
+        \addplot+[fill,opacity=0.3] {gauss(x, \k, 6.328)}\closedcycle;;;
+      }
+    \end{axis}
+    \begin{axis} [
+      ymax=0.20,
+      likelihood plot,
+      nfge example,
+      extra x ticks={7},
+      height=20em,]
+      \foreach \k/\s in {5, 7, 15, 20, 40} {
+        \addplot+[ultra thin] {gauss(x, \k, 6.328)};
+      }
+
+      \foreach \k in {5, 7, 15, 20, 40} {
+        \addplot [every axis plot post/.append style={mark=*,mark options={fill=lime!70!black,draw=black}}, ycomb, fill=black,black, draw opacity=0.3, ultra thick] plot coordinates {(\k, 0.063)};
+      }
+      \addplot[black] {pass_kde(x,6.328)};
+
+    \end{axis}
+    \begin{axis} [
+      likelihood plot,
+      hide axis,
+      height=20em,
+      no marks,
+      ]
+      \addplot[black] coordinates {(0,0)};
+      \addplot coordinates {(0,0)};
+
+      \addlegendentry{$\KDE[0j]$}
+      \addlegendentry{Kernels}
+    \end{axis}
+  \end{tikzpicture}
+  % \begin{tikzpicture}
+  %   \begin{axis} [
+  %     likelihood plot,
+  %     nfge example,
+  %     extra x ticks={7},
+  %     height=15em,]
+  %     \addplot+ {pass_kde(x,6.328)};
+  %     \addlegendentry{Density}
+  %     \addlegendentry{Kernels}
+  %     \foreach \k/\s in {5/0, 7/-1, 15/-2, 20/-3, 40/-4} {
+  %       \pgfmathparse{\s * 2}
+  %       \pgfplotsset{cycle list shift=\pgfmathresult}
+
+  %       \addplot+[dotted] {gauss(x, \k, 6.328)};
+
+  %       \addplot [every axis plot post/.append style={mark=*,mark options={fill=lime!70!black,draw=black}}, ycomb, fill=black,black, draw opacity=0.3, ultra thick] plot coordinates {(\k, 0.063)};
+
+  %     }
+  %   \end{axis}
+  % \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      nfge example,
+      height=20em,]
+      \addplot+[black] {pass_kde(x,6.328)};
+      \addlegendentry{$\BW = 6.328$};
+      \begin{scope}
+        \pgfplotsinvokeforeach{3.164, 12.656} {
+          \addplot+ {pass_kde(x,#1)};
+          \addlegendentry{$\BW = #1$};
+        }
+      \end{scope}
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      likelihood plot,
+      nfge example,
+      ylabel={Density},
+      height=20em,
+      no marks
+      ]
+      \addplot+[fill,fill opacity=0.3] {pass_kde(x,6.328)}\closedcycle;
+      \addplot+[fill,fill opacity=0.3] {fail_kde(x,5.392)}\closedcycle;
+    \end{axis}
+    \begin{axis} [
+      likelihood plot,
+      nfge example,
+      height=20em,
+      ylabel={Probability},
+      axis y line*=right,
+      hide x axis,
+      ]
+      \addplot coordinates {(0,0)};
+      \addplot coordinates {(0,0)};
+
+      \addlegendentry{$\KDE[0j]$}
+      \addlegendentry{$\KDE[1j]$}
+      \pgfplotsset{cycle list shift=-2}
+      \addplot[black] {pass_kde(x,6.328) / (fail_kde(x,5.392) + pass_kde(x,6.328)};
+      \addlegendentry{$\supergj{}$}
+    \end{axis}
+  \end{tikzpicture}
+
+  % \begin{tikzpicture}
+  %   \begin{axis} [
+  %     likelihood plot,
+  %     nfge example,
+  %     height=20em,
+  %     ylabel={Density/Probability},
+  %     ]
+  %     \addplot+ {pass_kde(x,6.328)};
+  %     \addlegendentry{$\KDE[0j]$}
+  %     \addplot+ {fail_kde(x,5.392)};
+  %     \addlegendentry{$\KDE[1j]$}
+  %     \addplot+ {pass_kde(x,6.328) / (fail_kde(x,5.392) + pass_kde(x,6.328)};
+  %     \addlegendentry{$\supergj{}$}
+  %   \end{axis}
+  % \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis} [
+      membership functions example,
+      no markers,
+      xlabel=Time,
+      domain=0:10,
+      stack plots=y,
+      reverse stacked plots=false,
+      height=16em,
+      ]
+      \addplot+[fill,fill opacity=0.5] {1 / (1+10^(x/2-2.5))}\closedcycle;;
+      \addlegendentry{$\supergFunc$}
+      \addplot+[fill,fill opacity=0.5] {1-1 / (1+10^(x/2-2.5))} \closedcycle;
+      \addlegendentry{$g_j$}
+      \addplot+[ultra thick,black]{-1+1 / (1+10^(x/2-2.5)))};
+      \addlegendentry{$\alpha_j$}
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\begin{preview}
+  \begin{tikzpicture}
+    \begin{axis}[
+      likelihood plot,
+      domain=0:2.5,
+      width=0.6\columnwidth,
+      height=12em,
+      extra x ticks={0.2},
+      ylabel ={$\supergj$},
+      xlabel ={$\ST$},
+      ymax=1.2,
+      every node/.append style={black},
+      ]
+      \addplot {1/(1+e^(-6+(x*4)))};
+
+      \tikzset{
+        every pin/.style={
+          fill=white,
+          draw=black,
+          rectangle,rounded corners=3pt,
+          font=\tiny},
+        small dot/.style={
+          circle,
+          scale=0.3}
+      }
+
+      \addplot+[ycomb,comb] plot coordinates {(0.2,1)};
+      \addplot+[ycomb,comb] plot coordinates {(0.5,0.98)};
+      \addplot+[ycomb,comb] plot coordinates {(1,0.88)};
+      \addplot+[ycomb,comb] plot coordinates {(2,0.12)};
+
+      \node[small dot,pin=-85:{$\supergjcall[0.2]{j}=1$}] at (0.2, 1) {};
+      \node[small dot,pin=5:{$\supergjcall[0.5]{j}=0.98$}] at (0.5, 0.98){};
+      \node[small dot,pin=0:{$\supergjcall[1]{j}=0.88$}] at (1,0.88) {};
+      \node[small dot,pin=90:{$\supergjcall[2]{j}=0.1$}] at (2,0.12) {};
+    \end{axis}
+  \end{tikzpicture}
+\end{preview}
+
+\input{src/acronyms}
+
+\end{document}

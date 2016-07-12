@@ -1,0 +1,120 @@
+%%% File encoding is ISO-8859-1 (also known as Latin-1)
+
+% Input encoding is 'latin1' (Latin 1 - also known as ISO-8859-1)
+% CTAN: http://www.ctan.org/pkg/inputenc
+%
+% A newer package is available - you may look into:
+% \usepackage[x-iso-8859-1]{inputenc}
+% CTAN: http://www.ctan.org/pkg/inputenx
+\usepackage[utf8]{inputenc}
+
+% CTAN: http://www.ctan.org/pkg/fontenc
+\usepackage[T1]{fontenc}
+
+% Language support for 'english' (alternative 'ngerman' or 'french' for example)
+% CTAN: http://www.ctan.org/pkg/babel
+\usepackage[english]{babel}
+
+% Doing calculations with LaTeX units -- needed for the vertical line in the footer
+% CTAN: http://www.ctan.org/pkg/calc
+\usepackage{calc}
+\usepackage[nomessages]{fp}% http://ctan.org/pkg/fp
+
+% Extended graphics support
+% There is also a package named 'graphics' - watch out!
+% CTAN: http://www.ctan.org/pkg/graphicx
+\usepackage{graphicx}
+
+% Extendes support for floating objects (tables, figures), adds the [H] placing option (\begin{figure}[H]) which palces it "Here" (without any doubt).
+% CTAN: http://www.ctan.org/pkg/float
+\usepackage{float}
+
+% Extended color support
+% I use the command \definecolor for example.
+% Option 'Table': Load the colortbl package, in order to use the tools for coloring rows, columns, and cells within tables.
+% CTAN: http://www.ctan.org/pkg/xcolor
+\usepackage[table,svgnames]{xcolor}
+
+% Nice tables
+% CTAN: http://www.ctan.org/pkg/booktabs
+\usepackage{booktabs}
+
+% Better support for ragged left and right. Provides the commands \RaggedRight and \RaggedLeft.
+% Standard LaTeX commands are \raggedright and \raggedleft
+% http://www.ctan.org/pkg/ragged2e
+\usepackage{ragged2e}
+
+% Create function plots directly in LaTeX
+% CTAN: http://www.ctan.org/pkg/pgfplots
+
+%%%%%%%% Packages %%%%%%%%%%%
+\usepackage[printonlyused]{acronym}
+\renewcommand*{\acsfont}[1]{\textit{#1}}
+\renewcommand*{\acffont}[1]{\textbf{{#1}}}
+
+\usepackage{needspace}
+
+
+\usepackage{blindtext}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{helvet}
+\usepackage{times}
+
+\usepackage{listings}
+\lstset{
+  language=python,
+  literate=%
+    {0}{{{\color{lime!50!black}0}}}1
+    {1}{{{\color{lime!50!black}1}}}1
+    {2}{{{\color{lime!50!black}2}}}1
+    {3}{{{\color{lime!50!black}3}}}1
+    {4}{{{\color{lime!50!black}4}}}1
+    {5}{{{\color{lime!50!black}5}}}1
+    {6}{{{\color{lime!50!black}6}}}1
+    {7}{{{\color{lime!50!black}7}}}1
+    {8}{{{\color{lime!50!black}8}}}1
+    {9}{{{\color{lime!50!black}9}}}1,
+  basicstyle=\sffamily,
+  keywordstyle=\sffamily\bfseries\color{orange!60!black},
+  identifierstyle=\color{teal!40!black},
+}
+
+\usepackage{makeidx}
+\usepackage{multirow}
+
+\usepackage{url}
+
+
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{etoolbox}
+\usepackage{pgfgantt}
+\usepackage{rotating}
+\usepackage{relsize}
+
+\providecommand{\description}{}
+\usepackage{paralist}
+\usepackage{enumerate}
+\usepackage{enumitem}
+
+\makeatletter
+\@ifundefined{previewmode}{}{
+\usepackage[tightpage,active,noconfig]{preview}
+}
+\makeatother
+
+\usepackage[normalem]{ulem}
+
+\ifx\finalversion\undefined
+\usepackage[color=green!40, colorinlistoftodos, figwidth=\columnwidth]{todonotes}
+\newcommand{\todoI}[1]{
+
+\resizebox{0.95\columnwidth}{!}{\todo[inline]{#1}}}
+\else
+\newcommand{\todoI}[1]{}
+\newcommand{\todo}[1]{}
+\newcommand{\listoftodos}{}
+\fi

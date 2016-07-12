@@ -1,0 +1,643 @@
+\renewcommand{\BrainFuckChapter}{
+  {-}{[}{-}{-}{-}{>}{+}{<}{]}{>}{-}{-}{-}{-}{-}{-}{-}{.}{-}{-}{-}{-}{-}{-}{-}{-}{.}{+}{.}{-}{-}{.}{<}{>}{-}{+}{+}{-}{-}{<}{+}{<}{>}{-}{>}{<}{-}{>}{+}{-}{-}{>}{>}{+}{-}{>}{-}{+}{>}{+}{+}{+}{+}{+}{+}{>}{<}{-}{+}{<}
+}
+\renewcommand{\LifeChapter}{y}
+
+\chapter{\NFGE}
+\label{sec:nfge}
+In this chapter we focus on addressing the \ac{SFL} limitations
+explained in \CrefPageParen{sec:intro:research-goals:system-state}.
+%
+Concretely, we present our approach, dubbed \ac{NFGE}, aimed at
+modeling the components' goodness as a non-linear function (referred
+to as $\supergj$) of a set of observable state variables.
+%
+Additionally, we discuss how the \ac{SFL} diagnostic framework can be
+generalized to make use of state-based goodness models, such as the
+one we propose in this chapter.
+
+\section{Approach}
+\label{sec:nfge:approach}
+Our approach can be divided into two independent stages: the modeling
+and diagnostic stages.
+
+\subsection{Modeling \texorpdfstring{$\supergj$}{gj(st)}}
+\label{sec:nfge:approach:modeling}
+
+Let an abstract data type, henceforward referred to as feedback
+spectrum, be the input of our modeling approach.
+
+\begin{definition}[Feedback Spectrum]
+  The feedback spectrum encodes the result of a set of diagnoses.
+  %
+  Concretely, let $M$ denote the cardinality of $\COMPS$.
+  %
+  $\FB_{ej}$ consists of a $2 \times M$ matrix defined as:
+  \begin{equation}
+    \label{eq:nfge:feedback-spectrum}
+    \FB_{ej} = \angledlist{\ST_1, ...,  \ST_k, ..., \ST_K}
+  \end{equation}
+  $\FB_{0j}$ and $\FB_{1j}$ are the pass and fail feedback observation
+  lists for component $c_j$, respectively.
+  %
+  Each element of $\FB_{ej}$ encodes the value of a set of state
+  variables for component $c_j$.
+\end{definition}
+\noindent
+In the following we assume that a mechanism for collecting feedback
+spectra exists.
+%
+
+Our approach to model $\supergj$ consists of a probabilistic model
+that is derived from the feedback spectrum.
+%
+Concretely, we estimate the pass and fail probability density
+functions\footnote{The variables are arbitrary and must be selected on
+  component-to-component basis. Currently, the set of variables must
+  be manually selected.}, from which we trivially calculate
+$\supergj$.
+
+
+The estimation of the pass/fail probability densities consist of a
+\acf{KDE}, $\KDE$, defined as:
+\begin{equation}
+  \label{eq:nfge:kde}
+  \KDE = \frac {1}{\BW}{\mathlarger{\sum_{\ST^\prime \in \FB_{ej}}} \fn{K}\bigg(\frac{\ST - \ST^\prime}{\BW}\bigg)}
+\end{equation}
+\noindent
+where $\BW > 0$ is the bandwidth, a smoothing parameter, and
+$\fn{K}(\cdot)$ is a kernel function%
+\footnote{A kernel is a symmetric but not necessarily positive
+  function that integrates to one.}  \citep{Rosenblatt56,Parzen62}.
+%
+A key aspect of \ac{KDE} is the selection of the bandwidth parameter
+$\BW$.
+%
+In our approach, we estimate $\BW$ by using the Silverman's ``rule of
+thumb'' \citep{Silverman86}, defined as:
+\begin{equation}
+  \BW = 0.9 \times \fn{min}\bigg(\sigma,\frac{R}{1.34}\bigg) \times |\FB_{ej}|^{(-0.2)}
+\end{equation}
+where $R$ is the inter-quartile range of $\FB_{ej}$.
+%
+Regarding $\fn{K}(\cdot)$, even though several options exist, in our
+approach, we use the Gaussian kernel.
+%
+Additionally, and without loss of generality, we assume the \acp{KDE}
+are a function of a single variable.
+
+
+As an example, consider the modeling process of $\supergj$ for a
+component $c_j$ given $5$ pass and $3$ failed feedback observations
+with values $\FB_{0j} = \{5, 7, 15, 20, 40\}$ and $\FB_{1j} = \{40,
+44, 60\}$, respectively.
+
+\begin{figure}[!ht]
+  \includegraphics[page=1,width=\columnwidth,clip]{figures/nfge/figures/main}
+  \caption{Density estimation and underlying kernels}
+  \label{fig:nfge:density}
+\end{figure}
+
+The first step in modeling $\supergj$ is the estimation of the
+probability density function (\Cref{eq:nfge:kde}) for the nominal
+executions with parameters $\FB_{0j}=\{5, 7, 15, 20, 40\}$ and $\BW =
+6.328$ (\Cref{fig:nfge:density}).
+%
+Note that for each value in the horizontal axis, the \ac{KDE} value
+corresponds to the summation of all underlying kernels at the same
+point.
+%
+From \Cref{eq:nfge:kde} we can see that $\ST^\prime \in \FB_{ej}$
+determines each kernel's offset and $\BW$ the dispersion of the
+density.
+%
+In particular, when using the Gaussian kernel, $\ST^\prime$
+corresponds to its mean and $\BW$ to its standard deviation.
+
+\begin{figure}[!ht]
+  \includegraphics[page=2]{figures/nfge/figures/main}
+  \caption{Impact of $\BW$ value}
+  \label{fig:nfge:bw}
+\end{figure}
+
+\Cref{fig:nfge:bw} provides a visual intuition on the effect of the
+parameter $\BW$ in the estimate.
+%
+A sensible selection of $\BW$ is crucial in order to yield good results
+as using a small $\BW$ value will reflect sampling artifacts whereas a
+large $\BW$ value will smooth some behavioral trends.
+
+
+
+\begin{figure}[!ht]
+  \includegraphics[page=3,width=\columnwidth,clip]{figures/nfge/figures/main}
+  \caption{Goodness \vs{} pass/fail \acs{KDE}s}
+  \label{fig:nfge:goodness}
+\end{figure}
+
+The second and final step is the derivation of $\supergj$ from the
+pass/fail \ac{KDE}s.
+%
+We will assume that the previous step was repeated for the fail
+executions yielding the densities depicted in
+\Cref{fig:nfge:goodness}.
+%
+$\supergj$, is defined as:
+\begin{equation}
+  \supergj = \frac{\KDE[0j]}{\KDE[0j] + \KDE[1j]}
+\end{equation}
+
+
+\subsection{Ranking using \texorpdfstring{$\supergj$}{gj(st)}}
+\label{sec:nfge:approach:ranking}
+To use the $\supergj$ models in the \ac{SFL} framework we make use of
+a data-structure which we shall refer to as state spectrum.
+
+\begin{definition}[State spectrum]
+  State spectrum is a generalization of the hit spectrum data
+  structure (\CrefPageSee{def:intro:hit-spectrum}) that is able to
+  encode the state of a set of variables for each execution of
+  $c_j \in \COMPS$.
+  %
+  Formally, we redefine $A$ as:
+  \begin{equation}
+    A_{ij} = \begin{cases}
+      \clubsuit, & \textrm{if $c_j$ does not have a $\supergj{}$ model and was involved in transaction $i$} \\
+      \angledlist{st_{1}, \cdots, st_{k}}, & \textrm{if $c_j$ has a $\supergj{}$ model and was involved in transaction $i$}\\
+      \emptyset, & \textrm{otherwise}
+    \end{cases}
+  \end{equation}
+
+  Each element $st_k$, encodes the state of the observed variables for
+  the $k^\text{th}$ activation of component $j$ in transaction $i$.
+\end{definition}
+
+From the definition, it follows that if no component has a
+$\supergj{}$ model, only $\clubsuit$ and $\emptyset$ will appear in the
+activity matrix.
+%
+In this scenario, $\clubsuit$ corresponds to a $1$ and $\emptyset$ to
+a $0$ in the terms of \Cref{def:intro:hit-spectrum}.
+
+Furthermore, since the state spectrum may encode an arbitrary set of
+state variables, it generalizes over a range of alternative types of
+spectra described in the literature (\eg, count spectrum, time
+spectrum, path spectrum, \etc).
+
+To apply $\supergj$ to the \ac{SFL} framework we generalize $\gFunc{}$
+as:
+%
+\begin{equation}
+  \displaystyle \gFunc = \prod_{j \in (d \cap A_i)} \begin{cases}
+    g_j, & \textrm{if} A_{ij} = \clubsuit\\
+    \supergFunc[j,A_{ij}],& \textrm{otherwise}
+  \end{cases}
+\end{equation}
+\begin{equation}
+  \label{eq:nfge:supergFunc}
+  \supergFunc = \prod_{st \in S} \supergj{}
+\end{equation}
+
+In contrast to the former version of $\gFunc$, our generalization does
+take into account all the states in which $c_j$ was active.
+
+
+
+In the case of existing components with no $\supergj{}$ models, the
+\ac{MLE} procedure still needs to be executed.
+%
+To perform the \ac{MLE}, all $\supergj{}$ must be evaluated such that
+$\gFunc$ is reduced to the form:
+%
+\begin{equation}
+  \displaystyle \gFunc = P \times \prod_{j \in A_i^\prime} g_j
+\end{equation}
+\begin{equation}
+  \displaystyle A_i^\prime = \set{j \mid  j\in d \wedge A_{ij}= \clubsuit}
+\end{equation}
+\noindent
+where $P$ is the result of the product of all $\supergj{}$ for
+transaction $i$.
+
+
+
+The \ac{MLE} as the effect of maximizing the $\posterior$ function by
+fitting a set of parameters (in this case $g_j$).
+%
+In other words, by using the \ac{MLE}, the constant $g_j$ models are
+fitted to the input data (\ie, $(A,e)$) and thus the diagnostic is
+more resilient to novel errors than when using $\supergj$ models.
+%
+To address this issue, we further improve $\gFunc$ as:
+%
+\begin{equation}
+  \label{eq:nfge:alpha}
+  \displaystyle \gFunc = \prod_{j \in (d \cap A_i)}
+  \begin{cases}
+    g_j, & \textrm{if} A_{ij} = \clubsuit\\
+    (1-\alpha_j) \cdot g_j + \alpha_j \cdot \supergFunc[j,A_{ij}], & \textrm{otherwise}
+  \end{cases}
+\end{equation}
+\noindent
+where $\alpha_j \in [0,1]$ is the estimator confidence factor for
+component $j$.
+%
+In scenarios in which the $\supergFunc$ is fully trusted, $\alpha_j$
+should be set to $1$.
+%
+Alternatively, it is possible to fall back to the original \ac{SFL}
+algorithm by setting every $\alpha_j$ to $0$.
+
+As an example, consider that a $\supergj$ model is known to become
+gradually obsolete over time.
+%
+In this scenario, it should be possible to fit, for instance, a
+sigmoid function to the obsolescence pattern, as shown in
+\Cref{fig:nfge:confidence_fn}.
+%
+We can see that, as time passes, the impact of $\supergFunc$ in the
+diagnosis gradually decreases while the impact of $g_j$ increases.
+
+\begin{figure}[!ht]
+  \includegraphics[page=4]{figures/nfge/figures/main}
+  \caption{Estimation model confidence \vs{} time\label{fig:nfge:confidence_fn}}
+\end{figure}
+
+
+\begin{figure}[ht]
+  \begin{subfigure}{0.35\columnwidth}
+    \begin{minipage}[t][4.5cm][c]{\columnwidth}
+      \centering
+      \begin{tabular}[b]{c|cc|c}
+        \multirow{2}{*}{$i$} & \multicolumn{2}{c|}{$A$} & \multirow{2}{*}{$e$}     \\
+        \cline{2-3}
+                             & $c_1$                    & $c_2$              &     \\ \hline
+        $1$                  & $\angledlist{2}$         & $\angledlist{0.5}$ & $1$ \\
+        $2$                  & $\angledlist{0.2}$       & $\emptyset$        & $0$ \\
+        $3$                  & $\emptyset$              & $\angledlist{1}$   & $0$ \\
+      \end{tabular}
+    \end{minipage}
+    \caption{State spectrum\label{fig:nfge:example_constant_goodness-a}}
+  \end{subfigure}%
+  % \\[2em]
+  \begin{subfigure}{0.65\columnwidth}
+    \begin{minipage}[t][4.5cm][c]{\columnwidth}
+      \centering
+      \includegraphics[page=5]{figures/nfge/figures/main}
+    \end{minipage}
+    \caption{Goodness Function\label{fig:nfge:example_constant_goodness-b}}
+  \end{subfigure}
+  \caption{\acs{NFGE} example\label{fig:nfge:example_constant_goodness}}
+\end{figure}
+
+To compare \ac{NFGE} with the approach presented in
+\CrefPageParen{sec:intro:candidate-ranking}, consider the state
+spectrum presented in \Cref{fig:nfge:example_constant_goodness-a}, for
+which the only minimal candidates are $d_1=\set{1}$ and $d_2=\set{2}$.
+%
+Furthermore, consider that the $\supergj$ model for both $c_1$ and
+$c_2$ was defined as shown in
+\Cref{fig:nfge:example_constant_goodness-b}.
+
+By applying \ac{NFGE} with $\alpha_1 = \alpha_2 = 0$ (\ie, the
+$\supergj$ models are not used in the diagnostic process), it follows
+that:
+\begin{center}
+  \begin{minipage}[t]{0.48\columnwidth}
+    \begin{equation}
+      \likelihood[d_1] = \underbrace{(1-g_1)}_{t_1} \times \underbrace{\vphantom{(}g_1}_{t_2}
+    \end{equation}
+  \end{minipage}
+  %
+  \begin{minipage}[t]{0.48\columnwidth}
+    \begin{equation}
+      \likelihood[d_2] = \underbrace{(1-g_2)}_{t_1} \times \underbrace{\vphantom{(}g_2}_{t_3}
+    \end{equation}
+  \end{minipage}
+\end{center}
+\noindent
+We can see that, after applying the \ac{MLE} procedure, $d_1$ and
+$d_2$ are ranked equally.
+
+In contrast by applying \ac{NFGE} with $\alpha_1 = \alpha_2 = 1$ (\ie, the
+\ac{MLE} procedure is not used in the diagnostic process), it follows
+that:
+
+\begin{center}
+  \begin{minipage}[t]{0.48\columnwidth}
+    \begin{equation}
+      \begin{split}
+        \likelihood[d_1] &= \underbrace{\big(1-\supergjcall[2]{1}\big)}_{t_1} \times \underbrace{\vphantom{\big(}\supergjcall[0.2]{1}}_{t_2} \\
+        &= \underbrace{(1-0.1)}_{t_1} \times \underbrace{\vphantom{(}1}_{t_2} \\
+        &= \underbrace{0.9}_{t_1} \times \underbrace{1}_{t_2} \\
+        &= 0.9
+      \end{split}
+    \end{equation}
+  \end{minipage}
+  %
+  \begin{minipage}[t]{0.48\columnwidth}
+    \begin{equation}
+      \begin{split}
+        \likelihood[d_2] &= \underbrace{\big(1-\supergjcall[0.5]{2}\big)}_{t_1} \times \underbrace{\vphantom{\big(}\supergjcall[1]{2}}_{t_3} \\
+        &= \underbrace{(1-0.98)}_{t_1} \times \underbrace{\vphantom{(}0.88}_{t_3} \\
+        &= \underbrace{0.02}_{t_1} \times \underbrace{0.88}_{t_3} \\
+        &= 0.0176
+      \end{split}
+    \end{equation}
+  \end{minipage}
+\end{center}
+\noindent
+We can see that, for this particular example, \ac{NFGE} succeeds at
+differentiating $d_1$ from $d_2$.
+
+
+
+\section{Benchmark}
+\label{sec:nfge:results}
+
+To assess the performance of \ac{NFGE} we conducted two studies.
+%
+The first study is aimed at evaluating the prediction error of the
+modeling approach.
+%
+At this stage, we use synthetic goodness models in order to be able to
+test a wider set of goodness patterns.
+%
+After establishing the prediction error of \ac{NFGE}, the second study
+aims at exploring, in a real application, the cases where the
+classical approach tends to fail.
+
+\subsection{Prediction Error Study}
+\label{sec:nfge:benchmark:prediction-error}
+To assess the prediction error of our approach we generated a set of
+$20000$ random synthetic goodness models ($M$).
+%
+With the purpose of having different learning and observation
+generation processes, we modified \Cref{eq:nfge:kde} such that each
+underlying kernel has an individual $\BW_i$.
+%
+Formally, the synthetic goodness models have the underlying pass and
+fail distributions defined as:
+
+\begin{equation}
+  \KDE = {\sum_{i=1}^{|\FB_{ej}|} \frac {\fn{K}(\frac{st - \FB_{eji}}{\BW_i})}{\BW_i}}
+  \label{eq:nfge:synthetic_kde}
+\end{equation}
+
+Additionally, in our synthetic data setup, two types of models can be
+distinguished.
+%
+The first set of models use the Gaussian kernel as their building
+block.
+%
+These models are intended to mimic the behavior of components that
+exhibit smooth transitions between any two points in the feature space
+(\ie, the domain of the observable variables).
+%
+This can be the case of component aging in which the goodness normally
+decreases gradually over time (\eg,
+\Cref{fig:nfge:example_constant_goodness-b}).
+
+The second type of model uses the Box kernel, \ie, a
+rectangular-shaped kernel centered at $\FB_{eji}$ with $\BW_i$ width
+and $\frac{1}{\BW_i}$ height.
+%
+This set of models is intended to emulate components that exhibit
+abrupt transitions in their goodness functions.
+%
+Also, as the original kernel differs from the learning kernel, the
+process of generation and learning becomes substantially different,
+allowing us to get to more significant conclusions.
+
+Finally, the generated models range from simple patterns, such as for
+instance the one depicted in
+\Cref{fig:nfge:example_constant_goodness-b}, to more complex patterns
+with up to $20$ supporting kernels for both the pass and fail
+densities (\ie, $|\FB_{ej}| \le 20$).
+
+To generate the feedback spectra, for each model we randomly selected
+a set of $200$ values, $F$, in its feature space.
+%
+For each of them we determine whether the component performed
+nominally in a Bernoulli trial process parameterized parametrized with
+$\fn{M_l}(F_k)$.
+%
+For each $\fn{M_l} \in M$, we trained several estimators with
+different training data sizes.
+
+For each trained model, the prediction error is obtained by comparing
+the predicted goodness and the original goodness at $1000$ evenly
+distributed samples of the feature space and averaging the
+differences.
+%
+\Cref{fig:nfge:synthetic_results} summarizes the results our benchmarks.
+%
+The first two setups represent the average prediction error for
+\ac{NFGE} in both the Gaussian and Box cases, respectively.
+%
+The last setup represents the average prediction error for a constant
+estimator defined as:
+\begin{equation}
+  \supergj = \frac{|\FB_{0j}|}{|\FB_{0j}| + |\FB_{1j}|}
+\end{equation}
+As discussed, the approach presented in
+\CrefPageParen{sec:intro:candidate-ranking} is not able to incorporate
+feedback information, rendering a direct comparison with \ac{NFGE}
+impossible.
+%
+Despite, we provide the results for the constant estimator with the
+goal of establishing a ground of comparison with the hypothetical
+performance of the traditional \ac{SFL} approach if it was able to
+incorporate such information.
+
+\begin{figure}
+  \includegraphics[scale=1.3,page=1]{figures/nfge/exps/pdfs/synthetic_results.pdf}
+  \caption{Prediction errors\label{fig:nfge:synthetic_results}}
+\end{figure}
+
+
+
+From the analysis of \Cref{fig:nfge:synthetic_results}, we can see a
+clear improvement introduced by \ac{NFGE} over the baseline.
+%
+As expected, the constant estimation presents a large average error of
+$44\%$.
+%
+Moreover, the constant estimator does not scale with the amount of
+available feedback data (\ie, the average error does not significantly
+improve with the increase of the available data).
+
+In contrast, \ac{NFGE}, in its best case scenario, was able to perform
+at $10\%$ of average error.
+%
+Globally, \ac{NFGE} presented an average of $21\%$ and $26\%$ of
+prediction error for the smooth and non-smooth cases, respectively.
+%
+The reason for the $5\%$ difference relates to the fact that the
+Gaussian-based \ac{KDE} is not able, with a limited set of
+observations, to tightly fit the original box-based model.
+
+Additionally, fairly quick convergence is observed: with $42$
+observations $90\%$ of the maximum performance is obtained for both
+the Gaussian model/Gaussian estimator case and the Box model/Gaussian
+estimator case.
+
+Finally, the results showed that when the amount of available data is
+small ($<11$~observations), the constant estimate, on average,
+outperforms \ac{NFGE}.
+
+\subsection{Diagnostic Study}
+\label{sec:nfge:benchmark:diagnostic}
+In this section we evaluate the diagnostic performance of our approach
+in scenarios where the classical \ac{SFL} approach tends to fail.
+%
+The selected application for this study was a simple \textit{HTTP}
+server,
+\textit{webfs}\footnote{\url{http://linux.bytesex.org/misc/webfs.html}},
+which was instrumented to generate state spectra.
+%
+Additionally, we injected code to emulate the behavior of aging
+faults (\eg, memory leaks, hard drive wear, \etc).
+%
+The injected faults are parameterized over $3$ variables:
+$\mathit{min}$, $\mathit{max}$, and $\mathit{total}$.
+%
+For each execution of each injected fault a counter is incremented
+with a random value in the interval $[\mathit{min}, \mathit{max}]$.
+%
+Whenever a counter reaches the value of its associated
+$\mathit{total}$ variable, the fault is triggered and the transaction
+fails.
+%
+The counters may either be shared among a set of faults or, unless
+stated otherwise, independent.
+
+To collect the feedback spectra required for generating the goodness
+models, we did a prior test run where the faults were targeted
+individually.
+%
+For each injected fault execution, we recorded the number of previous
+invocations and process age, \ie, the time since the \textit{HTTP}
+server start.
+%
+For each fault we created two univariate $\supergj$ models using $20$
+feedback observations: one as a function of the number of invocations
+and the other as a function of the process age.
+%
+Since we only created \ac{NFGE} models for the components with
+injected faults, no state was recorded for the remaining components.
+
+In a first scenario we only activated one fault.
+%
+At this stage we tried to isolate the faulty component from a $5$
+element diagnostic report.
+%
+The results showed that the \ac{MLE} approach was only able to
+exonerate $1$ out of $5$ candidates.
+%
+This was due to the fact that all transactions shared the same
+``bootstrap'' sequence and the fault was injected in there.
+%
+Since the components involved in that sequence exhibited the same
+activity pattern, \ie, equal columns in the hit spectrum, it remained
+impossible to distinguish them.
+%
+In contrast, \ac{NFGE} was able to clearly isolate the real faulty
+component.
+%
+When comparing the candidates' probabilities for both approaches,
+\ac{NFGE} calculated a probability of $99.9999\%$ for the actual
+diagnostic candidate whereas \ac{MLE} calculated a probability
+$\approx 25\%$ for both the correct and the $3$
+remaining diagnostic candidates.
+%
+This great difference in the probabilities' magnitudes is in
+accordance with the results obtained in the synthetic experiments.
+
+In a second scenario, we enabled two faulty components for which we
+had created \ac{NFGE} models.
+%
+In this setup we generated a set of transactions that would eventually
+trigger one fault but not the other.
+%
+Additionally, the two components were always activated in succession,
+generating low entropy hit spectrum (\ie, several components share
+the same activation pattern).
+%
+The goal of this test was to confirm that \ac{NFGE} is both able to both
+indict and exonerate components depending on the execution context.
+
+In this scenario, the \ac{MLE} ranked equally the real error source
+and the component that should be exonerated.
+%
+In contrast, \ac{NFGE} was again able to both indict and exonerate
+components correctly.
+
+Even though the previous setups produced positive results, it is
+important to note that the correct selection of the modeling variables
+is critical to obtain a good diagnostic accuracy.
+%
+As previously stated we observed two distinct variables: the number of
+component executions and the process age.
+%
+Even though both variables are able to model the goodness pattern of
+the injected faults, the degree to which each variable is able to cope
+with new scenarios may vary.
+
+From this test setup it is easy to understand that even though
+correlated, the process age is not the cause of the fault activation:
+if a component is ``old'' but was never activated, the corresponding
+counter was never incremented.
+%
+The process age variable indirectly encodes some aspects of the
+application workload.
+%
+If an age-based model was constructed for a specific activation rate,
+\ie, activations/time unit, its ability to produce accurate estimates
+under a different workload may be limited.
+%
+On the other hand it is clear that the component activation count is
+more independent from the application's workload.
+
+In the previous setups we used independent counters.
+%
+If on the other hand we had a global counter and still used
+independent activation counters, the same variable would also
+implicitly encode workload patterns.
+%
+Furthermore, if the modeling workload is substantially different from
+the diagnostic workload (and $\forall_{\alpha_j} : \alpha_j = 1$) it
+could happen that the components that caused the errors would be
+exonerated.
+
+
+\section{Summary}
+\label{sec:nfge:summary}
+In this chapter we successfully addressed the limitations presented in
+\CrefPageParen{sec:intro:research-goals:system-state} thereby
+answering
+\Cref{rq:feedback,rq:system-state}
+(\pagerefTwo[, respectively]{rq:feedback}{rq:system-state}).
+%
+Concretely, in this chapter:
+\begin{itemize}[nolistsep]
+\item We addressed \Cref{rq:feedback} by proposing a \ac{KDE}-based
+  approach that uses feedback observations to model the components'
+  goodnesses as a non-linear function of the system's state
+  (\CrefPageSee[]{sec:nfge:approach:modeling}).
+\item We addressed \Cref{rq:system-state} by generalizing both the hit
+  spectrum abstraction and the state-of-the-art \ac{SFL} approach to
+  use information about the system's state in the diagnostic process
+  (\CrefPageSee[]{sec:nfge:approach:ranking}).
+\item We presented the conducted benchmarks showing that:
+  \begin{itemize}
+  \item The \ac{NFGE} modeling approach, in its best case scenario,
+    was able to perform at $10\%$ of average
+    error (\CrefPageSee[]{sec:nfge:benchmark:prediction-error}).
+  \item With $42$ data points, the \ac{NFGE} approach achieved $90\%$
+    of its maximum observed performance
+    (\CrefPageSee[]{sec:nfge:benchmark:prediction-error}).
+  \item The system's state was successfully used to improve the
+    diagnostic accuracy (\CrefPageSee[]{sec:nfge:benchmark:diagnostic}).
+  \end{itemize}
+\end{itemize}

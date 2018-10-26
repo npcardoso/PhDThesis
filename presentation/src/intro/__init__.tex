@@ -1,0 +1,46 @@
+\section{Introduction}
+% Define block styles
+\tikzstyle{defaults} = [text badly centered, draw, font=\Large,inner sep=5mm]
+\tikzstyle{decision} = [defaults, diamond, fill=clra, text width=4.5em,  node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [defaults, rectangle, fill=clrb, text width=7cm, rounded corners, minimum height=2cm]
+\tikzstyle{line} = [draw,rounded corners=5pt, -latex',ultra thick]
+\tikzstyle{cloud} = [defaults,text width=10em,rectangle,fill=clrc, node distance=3cm, minimum height=3em]
+
+
+\settargettime{3 min}
+\subsection{Context}
+\frameready{}{
+  \input{src/intro/ctxt_motivation}
+  \input{src/intro/ctxt_self_healing}
+  \input{src/intro/ctxt_diagnostic_problem}
+}
+
+\settargettime{5 min}
+\subsection{Spectrum-based Fault Localization}
+\frameready{}{
+  \input{src/intro/sfl_abstraction}
+  \input{src/intro/sfl_ex}
+  \input{src/intro/sfl_workflow}
+}
+
+\settargettime{10 min}
+\subsection{Candidate Generation}
+\frameready{}{
+  \input{src/intro/cg_diagnostic_candidate}
+  \input{src/intro/cg_algorithm}
+  \input{src/intro/cg_algorithm_ex}
+}
+
+\settargettime{14 min}
+\subsection{Candidate Ranking}
+\frameready{}{
+  \input{src/intro/cr_intro}
+  \input{src/intro/cr_algorithm}
+  \input{src/intro/cr_algorithm_ex}
+}
+\note{
+  \begin{itemize}
+  \item Vou passar agora a apresentar as contribuições feitas no
+    ambito do tema que apresentei.
+  \end{itemize}
+}
